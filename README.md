@@ -1,4 +1,4 @@
-# Chitra – print studio
+# Chitra Studio
 
 A fun, punchy design editor for **DTF transfers** and **sublimation** (mugs, tumblers, coasters…). Runs in the browser (Fabric.js, no build step).
 
@@ -12,6 +12,9 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 - Image DPI check ("print ready" / "may print soft"), **Remove white** background slider.
 - Gang sheets: **Pack onto sheet** auto-arranges designs, **Make copies** duplicates a design N times.
 - Changing the product size scales your artwork to fit.
+
+## New in the Studio redesign
+Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
 ## Creative features
 Punchy text styles, fun fonts, stickers, shapes, colour swatches, quick-start templates, filters, layers, undo/redo, save/open projects, PNG/JPG export.

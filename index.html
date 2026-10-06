@@ -3,202 +3,309 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chitra – Print Studio</title>
+<title>Chitra Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Bebas+Neue&family=Chewy&family=Fredoka:wght@400;500;600;700&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Righteous&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Bebas+Neue&family=Bricolage+Grotesque:wght@600;800&family=Chewy&family=Fredoka:wght@400;600&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Righteous&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">CHITRA<span>✦</span></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
-  <select id="sizePreset" title="Pick what you're printing">
-    <optgroup label="👕 DTF T-shirt transfers (300 DPI)">
-      <option value="3300x3900" data-guide="shirt">T-shirt front · 11×13 in</option>
-      <option value="3600x4800" data-guide="shirt">T-shirt back · 12×16 in</option>
-      <option value="2400x3000" data-guide="shirt">Kids tee · 8×10 in</option>
-      <option value="1200x1200" data-guide="none">Left chest · 4×4 in</option>
-    </optgroup>
-    <optgroup label="🧻 DTF gang sheets (22 in roll)">
-      <option value="6600x3600" data-guide="none">Gang sheet · 22×12 in</option>
-      <option value="6600x7200" data-guide="none">Gang sheet · 22×24 in</option>
-    </optgroup>
-    <optgroup label="☕ Sublimation (300 DPI)">
-      <option value="2475x1050" data-guide="mug">11 oz mug wrap · 8.25×3.5 in</option>
-      <option value="2700x1125" data-guide="mug">15 oz mug wrap · 9×3.75 in</option>
-      <option value="2790x2460" data-guide="none">20 oz tumbler wrap · 9.3×8.2 in</option>
-      <option value="1200x1200" data-guide="none">Coaster · 4×4 in</option>
-      <option value="2850x2370" data-guide="none">Mouse pad · 9.5×7.9 in</option>
-    </optgroup>
-    <optgroup label="📱 Social">
-      <option value="1080x1080" data-guide="none">Instagram post · 1080×1080</option>
-      <option value="1080x1920" data-guide="none">Story · 1080×1920</option>
-    </optgroup>
-  </select>
-  <button id="customSize" title="Enter your own size in inches">📐 Custom</button>
-  <span class="chip" id="sizeInfo"></span>
-
-  <span class="spacer"></span>
-  <button id="undo" title="Undo (Ctrl+Z)">↶</button>
-  <button id="redo" title="Redo (Ctrl+Y)">↷</button>
-  <button id="zoomOut" title="Zoom out">−</button>
-  <span class="chip" id="zoomLabel">100%</span>
-  <button id="zoomIn" title="Zoom in">+</button>
-  <button id="zoomFit" title="Fit to screen">Fit</button>
-  <button id="saveProject" title="Save project">💾</button>
-  <label class="btn" for="openProject" title="Open project">📂</label>
-  <input type="file" id="openProject" accept=".json" hidden>
-  <label class="check" title="Flips the file left-to-right. Turn on for sublimation transfers (not for DTF)."><input type="checkbox" id="mirror"> Mirror</label>
-  <select id="exportFormat"><option value="png">PNG</option><option value="jpeg">JPG</option></select>
-  <button id="download" class="primary">⬇ Download</button>
-</header>
-
-<div class="layout">
-  <nav class="sidebar">
-    <section class="card">
-      <h3>Print tools</h3>
-      <label class="check"><input type="checkbox" id="transparent" checked> Transparent background</label>
-      <label class="row">Colour <input type="color" id="bgColor" value="#ffffff" disabled></label>
-      <label class="check"><input type="checkbox" id="showGuides" checked> Show print guides</label>
-      <button id="pack" class="wide">🧩 Pack onto sheet</button>
-      <button id="copies" class="wide">📑 Make copies…</button>
-    </section>
-
-    <section class="card">
-      <h3>Text</h3>
-      <button data-text="heading" class="wide big">Add a heading</button>
-      <div class="grid">
-        <button data-tstyle="pop" class="ts-pop">POP!</button>
-        <button data-tstyle="retro" class="ts-retro">Retro</button>
-        <button data-tstyle="neon" class="ts-neon">Neon</button>
-        <button data-tstyle="stamp" class="ts-stamp">STAMP</button>
-      </div>
-      <button data-text="sub" class="wide">Add a subheading</button>
-      <button data-text="body" class="wide small">Add body text</button>
-    </section>
-
-    <section class="card">
-      <h3>Shapes</h3>
-      <div class="grid">
-        <button data-add="rect">▭ Box</button>
-        <button data-add="circle">◯ Circle</button>
-        <button data-add="triangle">△ Triangle</button>
-        <button data-add="line">╱ Line</button>
-        <button data-add="star">★ Star</button>
-        <button data-add="heart">♥ Heart</button>
-      </div>
-    </section>
-
-    <section class="card">
-      <h3>Stickers</h3>
-      <div class="emoji-grid" id="emojiGrid"></div>
-    </section>
-
-    <section class="card">
-      <h3>Your art</h3>
-      <label class="btn wide big-upload" for="imgUpload">＋ Upload image</label>
-      <input type="file" id="imgUpload" accept="image/*" multiple hidden>
-      <p class="tip">Drag &amp; drop or paste works too.</p>
-    </section>
-
-    <section class="card">
-      <h3>Quick starts</h3>
-      <div class="grid">
-        <button data-template="slogan">Good Vibes</button>
-        <button data-template="badge">Badge</button>
-        <button data-template="mug">Mug Quote</button>
-        <button data-template="blank">Blank</button>
-      </div>
-    </section>
-  </nav>
-
-  <main class="stage" id="stage">
-    <div class="canvas-wrap" id="canvasWrap">
-      <canvas id="c"></canvas>
-      <div class="guides" id="guides"></div>
+<div id="app">
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar glass">
+    <div class="logo"><span class="logo-mark">✦</span><b>Chitra</b><i>studio</i></div>
+    <button id="productBtn" class="product-btn" title="Choose what you're printing">
+      <span class="p-icon" id="productIcon">👕</span>
+      <span class="p-text"><b id="productName">T-shirt front</b><small id="sizeInfo"></small></span>
+      <span class="chev">▾</span>
+    </button>
+    <input id="projectName" class="project-name" value="Untitled masterpiece" aria-label="Project name" spellcheck="false">
+    <span class="spacer"></span>
+    <div class="group">
+      <button id="undo" class="ibtn" title="Undo (Ctrl+Z)">↶</button>
+      <button id="redo" class="ibtn" title="Redo (Ctrl+Y)">↷</button>
     </div>
-  </main>
+    <button id="cmdk" class="btn ghost" title="Command palette"><span>🔎 Do anything…</span><kbd>Ctrl K</kbd></button>
+    <button id="saveProject" class="ibtn" title="Save project file">💾</button>
+    <label class="ibtn" for="openProject" title="Open project file">📂</label>
+    <input type="file" id="openProject" accept=".json" hidden>
+    <button id="mockupBtn" class="btn">👀 Mockup</button>
+    <button id="exportBtn" class="cta">⬇ Export</button>
+  </header>
 
-  <aside class="props" id="props">
-    <div id="emptyProps" class="hint">
-      <div class="hint-emoji">🎨</div>
-      <b>Click anything on the canvas</b> to style it.<br><br>
-      <small>Del – delete<br>Ctrl+D – duplicate<br>Ctrl+Z / Y – undo / redo<br>Arrows – nudge (Shift = 10×)</small>
+  <div class="workspace">
+    <!-- ============ TOOL RAIL ============ -->
+    <nav class="rail glass" id="rail">
+      <button data-tab="start" class="on"><i>🚀</i><span>Start</span></button>
+      <button data-tab="text"><i>🔤</i><span>Text</span></button>
+      <button data-tab="shapes"><i>🔷</i><span>Shapes</span></button>
+      <button data-tab="stickers"><i>😎</i><span>Stickers</span></button>
+      <button data-tab="upload"><i>🖼️</i><span>Upload</span></button>
+      <button data-tab="magic"><i>🪄</i><span>Magic</span></button>
+      <button data-tab="print"><i>🖨️</i><span>Print</span></button>
+    </nav>
+
+    <!-- ============ FLYOUT PANELS ============ -->
+    <section class="flyout glass" id="flyout">
+      <div class="panel" data-panel="start">
+        <h2>Let's make something <em>loud</em></h2>
+        <button id="surprise" class="hero-btn"><span>🎲</span><b>Surprise me</b><small>Random look, instant fun</small></button>
+        <h4>Quick starts</h4>
+        <div class="tiles">
+          <button data-template="slogan" class="tile t1"><b>GOOD<br>VIBES</b></button>
+          <button data-template="badge" class="tile t2"><b>★ Badge</b></button>
+          <button data-template="mug" class="tile t3"><b>Mug<br>quote</b></button>
+          <button data-template="blank" class="tile t4"><b>Blank<br>canvas</b></button>
+        </div>
+        <button id="changeProduct" class="btn wide">👕 Change product / size</button>
+      </div>
+
+      <div class="panel" data-panel="text" hidden>
+        <h2>Text</h2>
+        <button data-text="heading" class="btn wide big">Add a heading</button>
+        <div class="row2">
+          <button data-text="sub" class="btn">Subheading</button>
+          <button data-text="body" class="btn">Body</button>
+        </div>
+        <h4>Punchy styles</h4>
+        <div class="tiles">
+          <button data-tstyle="pop" class="tile ts-pop">POP!</button>
+          <button data-tstyle="retro" class="tile ts-retro">Retro</button>
+          <button data-tstyle="neon" class="tile ts-neon">NEON</button>
+          <button data-tstyle="stamp" class="tile ts-stamp">STAMP</button>
+          <button data-tstyle="grad" class="tile ts-grad">Gradient</button>
+          <button id="addArch" class="tile ts-arch">⌒ Arch</button>
+        </div>
+        <p class="tip">Tip: double-click any text on the canvas to edit it.</p>
+      </div>
+
+      <div class="panel" data-panel="shapes" hidden>
+        <h2>Shapes</h2>
+        <div class="tiles">
+          <button data-add="rect" class="tile sh">▭<small>Box</small></button>
+          <button data-add="circle" class="tile sh">●<small>Circle</small></button>
+          <button data-add="triangle" class="tile sh">▲<small>Triangle</small></button>
+          <button data-add="star" class="tile sh">★<small>Star</small></button>
+          <button data-add="heart" class="tile sh">♥<small>Heart</small></button>
+          <button data-add="line" class="tile sh">／<small>Line</small></button>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="stickers" hidden>
+        <h2>Stickers</h2>
+        <div class="emoji-grid" id="emojiGrid"></div>
+        <p class="tip">Emoji look different on each device. For production use your own artwork.</p>
+      </div>
+
+      <div class="panel" data-panel="upload" hidden>
+        <h2>Your art</h2>
+        <label class="dropzone" for="imgUpload" id="dropzone">
+          <span>🖼️</span><b>Drop images here</b><small>or click to browse · paste works too</small>
+        </label>
+        <input type="file" id="imgUpload" accept="image/*" multiple hidden>
+        <p class="tip">Images show their print DPI once selected. Aim for 200+ at final size.</p>
+      </div>
+
+      <div class="panel" data-panel="magic" hidden>
+        <h2>Magic <span class="spark">✨</span></h2>
+        <div class="magic-list">
+          <button id="shuffleColors" class="magic-card"><i>🎨</i><span><b>Shuffle colours</b><small>Re-colour your whole design</small></span></button>
+          <button id="sparkle" class="magic-card"><i>✨</i><span><b>Sparkle burst</b><small>Sprinkle stars everywhere</small></span></button>
+          <button id="stickerOutline" class="magic-card"><i>🏷️</i><span><b>Sticker outline</b><small>White border on selected</small></span></button>
+          <button id="magicCut" class="magic-card"><i>✂️</i><span><b>Magic cut-out</b><small>Select a photo · removes its background</small></span></button>
+        </div>
+        <label class="slider-row">Cut-out strength <input type="range" id="cutTol" min="5" max="80" value="30"></label>
+        <h4>Palettes</h4>
+        <div class="palettes" id="palettes"></div>
+      </div>
+
+      <div class="panel" data-panel="print" hidden>
+        <h2>Print</h2>
+        <label class="switch"><input type="checkbox" id="transparent" checked><i></i><span>Transparent background</span></label>
+        <label class="slider-row">Background <input type="color" id="bgColor" value="#ffffff" disabled></label>
+        <label class="switch"><input type="checkbox" id="showGuides" checked><i></i><span>Print guides</span></label>
+        <h4>Gang sheet</h4>
+        <div class="row2">
+          <button id="pack" class="btn">🧩 Pack</button>
+          <button id="copies" class="btn">📑 Copies…</button>
+        </div>
+        <button id="fillSheet" class="btn wide">🪄 Fill sheet with selected</button>
+        <div class="meter"><div id="usageBar"></div></div>
+        <small class="tip" id="usageText">Sheet usage: 0%</small>
+      </div>
+    </section>
+
+    <!-- ============ STAGE ============ -->
+    <div class="stage-wrap">
+      <main class="stage" id="stage">
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="c"></canvas>
+          <div class="guides" id="guides"></div>
+          <div class="float-tb glass" id="floatTb" hidden>
+            <input type="color" id="ftColor" title="Colour">
+            <button data-ft="up" title="Bring forward">⬆</button>
+            <button data-ft="down" title="Send backward">⬇</button>
+            <button data-ft="dup" title="Duplicate">⧉</button>
+            <button data-ft="lock" title="Lock / unlock">🔒</button>
+            <button data-ft="del" title="Delete" class="danger">🗑</button>
+          </div>
+        </div>
+      </main>
+      <div class="dock glass">
+        <button id="zoomOut" class="ibtn" title="Zoom out">−</button>
+        <input type="range" id="zoomSlider" min="2" max="400" value="100" title="Zoom">
+        <button id="zoomIn" class="ibtn" title="Zoom in">+</button>
+        <span class="zoom-label" id="zoomLabel">100%</span>
+        <button id="zoomFit" class="btn small">Fit</button>
+        <span class="sep"></span>
+        <span class="dock-label">Preview on</span>
+        <div class="bgswatches" id="bgSwatches"></div>
+      </div>
     </div>
-    <div id="propsBody" hidden>
-      <section class="card">
-        <h3>Colour</h3>
-        <div class="swatches" id="swatches"></div>
-        <label class="row">Fill <input type="color" id="fill"></label>
-        <label class="row">Outline <input type="color" id="stroke"></label>
-        <label class="row">Outline size <input type="range" id="strokeWidth" min="0" max="80" value="0"></label>
-        <label class="row">Opacity <input type="range" id="opacity" min="0" max="100" value="100"></label>
-        <label class="row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
-        <label class="check"><input type="checkbox" id="shadow"> Drop shadow</label>
-      </section>
 
-      <section class="card" id="textSec" hidden>
-        <h3>Text</h3>
-        <select id="fontFamily"></select>
-        <label class="row">Size <input type="number" id="fontSize" min="6" max="2000" value="48"></label>
-        <div class="grid3">
-          <button id="bold"><b>B</b></button>
-          <button id="italic"><i>I</i></button>
-          <button id="underline"><u>U</u></button>
-          <button data-talign="left">⯇</button>
-          <button data-talign="center">≡</button>
-          <button data-talign="right">⯈</button>
-        </div>
-        <label class="row">Line height <input type="range" id="lineHeight" min="70" max="250" value="116"></label>
-        <label class="row">Spacing <input type="range" id="charSpacing" min="-100" max="800" value="0"></label>
-      </section>
+    <!-- ============ INSPECTOR ============ -->
+    <aside class="inspector glass">
+      <div class="tabs"><button data-itab="design" class="on">Design</button><button data-itab="layers">Layers</button></div>
 
-      <section class="card" id="imageSec" hidden>
-        <h3>Photo fixes</h3>
-        <div class="dpi" id="dpiInfo"></div>
-        <label class="row" title="Knocks out white/near-white background — great for DTF">Remove white <input type="range" data-filter="whiteDist" min="0" max="100" value="0"></label>
-        <label class="row">Brightness <input type="range" data-filter="brightness" min="-100" max="100" value="0"></label>
-        <label class="row">Contrast <input type="range" data-filter="contrast" min="-100" max="100" value="0"></label>
-        <label class="row">Saturation <input type="range" data-filter="saturation" min="-100" max="100" value="0"></label>
-        <label class="row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
-        <div class="grid3">
-          <button data-preset="grayscale">B&amp;W</button>
-          <button data-preset="sepia">Sepia</button>
-          <button data-preset="invert">Invert</button>
-          <button data-preset="vintage">Vintage</button>
-          <button data-preset="reset">Reset</button>
-          <button id="cropToCanvas">Fill</button>
+      <div id="tab-design">
+        <div id="emptyProps" class="empty">
+          <div class="mascot">🎨</div>
+          <b>Click anything on the canvas</b>
+          <p>to colour it, resize it, bend it, break it.</p>
+          <div class="keys"><kbd>Del</kbd> delete <kbd>Ctrl D</kbd> copy <kbd>Ctrl K</kbd> search <kbd>←↑↓→</kbd> nudge</div>
         </div>
-      </section>
+        <div id="propsBody" hidden>
+          <section>
+            <h4>Colour</h4>
+            <div class="swatches" id="swatches"></div>
+            <div class="grads" id="grads"></div>
+            <label class="slider-row">Fill <input type="color" id="fill"></label>
+            <label class="slider-row">Outline <input type="color" id="stroke"></label>
+            <label class="slider-row">Outline size <input type="range" id="strokeWidth" min="0" max="80" value="0"></label>
+            <label class="slider-row">Opacity <input type="range" id="opacity" min="0" max="100" value="100"></label>
+            <label class="slider-row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
+            <label class="switch"><input type="checkbox" id="shadow"><i></i><span>Drop shadow</span></label>
+          </section>
 
-      <section class="card">
-        <h3>Arrange</h3>
-        <div class="grid3">
-          <button id="forward">Up</button>
-          <button id="backward">Down</button>
-          <button id="toFront">Front</button>
-          <button id="toBack">Back</button>
-          <button id="flipH">Flip ↔</button>
-          <button id="flipV">Flip ↕</button>
+          <section id="textSec" hidden>
+            <h4>Text</h4>
+            <select id="fontFamily"></select>
+            <label class="slider-row">Size <input type="number" id="fontSize" min="6" max="2000" value="48"></label>
+            <div class="row3">
+              <button id="bold" class="btn"><b>B</b></button>
+              <button id="italic" class="btn"><i>I</i></button>
+              <button id="underline" class="btn"><u>U</u></button>
+              <button data-talign="left" class="btn">⯇</button>
+              <button data-talign="center" class="btn">≡</button>
+              <button data-talign="right" class="btn">⯈</button>
+            </div>
+            <label class="slider-row">Line height <input type="range" id="lineHeight" min="70" max="250" value="116"></label>
+            <label class="slider-row">Spacing <input type="range" id="charSpacing" min="-100" max="800" value="0"></label>
+          </section>
+
+          <section id="archSec" hidden>
+            <h4>Arch text</h4>
+            <input type="text" id="archText" class="text-in" placeholder="Your words">
+            <label class="slider-row">Curve <input type="range" id="archCurve" min="-100" max="100" value="60"></label>
+          </section>
+
+          <section id="imageSec" hidden>
+            <h4>Photo fixes</h4>
+            <div class="dpi" id="dpiInfo"></div>
+            <label class="slider-row" title="Knock out white / near-white">Remove white <input type="range" data-filter="whiteDist" min="0" max="100" value="0"></label>
+            <label class="slider-row">Brightness <input type="range" data-filter="brightness" min="-100" max="100" value="0"></label>
+            <label class="slider-row">Contrast <input type="range" data-filter="contrast" min="-100" max="100" value="0"></label>
+            <label class="slider-row">Saturation <input type="range" data-filter="saturation" min="-100" max="100" value="0"></label>
+            <label class="slider-row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
+            <div class="row3">
+              <button data-preset="grayscale" class="btn">B&amp;W</button>
+              <button data-preset="sepia" class="btn">Sepia</button>
+              <button data-preset="invert" class="btn">Invert</button>
+              <button data-preset="vintage" class="btn">Vintage</button>
+              <button data-preset="reset" class="btn">Reset</button>
+              <button id="cropToCanvas" class="btn">Fill</button>
+            </div>
+          </section>
+
+          <section>
+            <h4>Arrange</h4>
+            <div class="row3">
+              <button id="forward" class="btn">Up</button>
+              <button id="backward" class="btn">Down</button>
+              <button id="toFront" class="btn">Front</button>
+              <button id="toBack" class="btn">Back</button>
+              <button id="flipH" class="btn">Flip ↔</button>
+              <button id="flipV" class="btn">Flip ↕</button>
+              <button data-align="left" class="btn">⇤</button>
+              <button data-align="center" class="btn">↔</button>
+              <button data-align="right" class="btn">⇥</button>
+              <button data-align="top" class="btn">⇡</button>
+              <button data-align="middle" class="btn">↕</button>
+              <button data-align="bottom" class="btn">⇣</button>
+            </div>
+            <div class="row3">
+              <button id="duplicate" class="btn">Copy</button>
+              <button id="lock" class="btn">Lock</button>
+              <button id="delete" class="btn danger">Delete</button>
+            </div>
+          </section>
         </div>
-        <div class="grid3">
-          <button data-align="left">⇤</button>
-          <button data-align="center">↔</button>
-          <button data-align="right">⇥</button>
-          <button data-align="top">⇡</button>
-          <button data-align="middle">↕</button>
-          <button data-align="bottom">⇣</button>
-        </div>
-        <div class="grid3">
-          <button id="duplicate">Copy</button>
-          <button id="lock">Lock</button>
-          <button id="delete" class="danger">Delete</button>
-        </div>
-      </section>
-    </div>
-  </aside>
+      </div>
+
+      <div id="tab-layers" hidden>
+        <ul id="layers" class="layers"></ul>
+        <p class="tip" id="layersEmpty">Nothing here yet. Add something!</p>
+      </div>
+    </aside>
+  </div>
 </div>
+
+<!-- ============ OVERLAYS ============ -->
+<div class="modal" id="picker" hidden>
+  <div class="sheet glass">
+    <button class="x" data-close>✕</button>
+    <h1 id="pickerTitle">What are we printing?</h1>
+    <p class="sub">Pick a product — your canvas is set to the right size at 300 DPI.</p>
+    <div id="pickerGrid"></div>
+    <button id="customSize" class="btn">📐 Custom size (inches)…</button>
+  </div>
+</div>
+
+<div class="menu glass" id="exportMenu" hidden>
+  <button data-export="dtf"><i>👕</i><span><b>DTF transfer</b><small>Transparent PNG · 300 DPI</small></span></button>
+  <button data-export="sub"><i>☕</i><span><b>Sublimation</b><small>Mirrored PNG · 300 DPI</small></span></button>
+  <button data-export="jpg"><i>🖼️</i><span><b>JPG</b><small>White background</small></span></button>
+</div>
+
+<div class="modal" id="mockup" hidden>
+  <div class="sheet glass wide-sheet">
+    <button class="x" data-close>✕</button>
+    <h1>Mockup preview</h1>
+    <div class="mock-body">
+      <canvas id="mockCanvas" width="700" height="700"></canvas>
+      <div class="mock-side">
+        <h4>Product</h4>
+        <div class="row2"><button class="btn on" data-mock="shirt">👕 T-shirt</button><button class="btn" data-mock="mug">☕ Mug</button></div>
+        <h4>Colour</h4>
+        <div class="swatches" id="mockColors"></div>
+        <button id="mockDownload" class="cta wide">⬇ Save mockup image</button>
+        <p class="tip">Great for listings &amp; showing customers before you print.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="cmd" hidden>
+  <div class="cmd-box glass">
+    <input id="cmdInput" placeholder="Type a command… (try “mug”, “shuffle”, “export”)" autocomplete="off">
+    <ul id="cmdList"></ul>
+  </div>
+</div>
+
+<div id="toasts"></div>
+<canvas id="confetti"></canvas>
 
 <script src="vendor/fabric.min.js"></script>
 <script src="app.js"></script>

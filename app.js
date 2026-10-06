@@ -1,113 +1,188 @@
-/* Chitra – a print-focused design studio (DTF + sublimation) built on Fabric.js */
+/* Chitra Studio – print-focused design studio (DTF + sublimation) built on Fabric.js */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY'];
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData'];
   const DPI = 300;
   const FONTS = ['Fredoka', 'Bangers', 'Anton', 'Bebas Neue', 'Chewy', 'Lobster', 'Pacifico', 'Permanent Marker', 'Righteous',
     'Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New'];
-  const COLORS = ['#14110f', '#ffffff', '#ff3d81', '#ffd23f', '#3a86ff', '#2ec4b6', '#ff7a1a', '#8338ec', '#06d6a0', '#ef476f'];
-  const EMOJI = ['🔥', '⭐', '💖', '😎', '🌈', '🦄', '🍕', '🌴', '☀️', '🌙', '⚡', '💀', '👑', '🎸', '🐱', '🐶', '🍀', '🌸', '🎉', '💥', '👻', '🚀', '🍉', '🌮'];
+  const COLORS = ['#14110f', '#ffffff', '#ff2d95', '#ff8a1f', '#ffd23f', '#c6ff3d', '#22d3ee', '#3a86ff', '#8b5cf6', '#ef476f', '#06d6a0', '#7c2d12', '#f5f5fc', '#64748b', '#f43f5e', '#0ea5e9'];
+  const GRADS = [['#ff2d95', '#ff8a1f'], ['#8b5cf6', '#22d3ee'], ['#c6ff3d', '#22d3ee'], ['#ff8a1f', '#ffd23f'], ['#f43f5e', '#8b5cf6'], ['#06d6a0', '#3a86ff']];
+  const EMOJI = ['🔥', '⭐', '💖', '😎', '🌈', '🦄', '🍕', '🌴', '☀️', '🌙', '⚡', '💀', '👑', '🎸', '🐱', '🐶', '🍀', '🌸', '🎉', '💥', '👻', '🚀', '🍉', '🌮', '🍩', '🎃', '🐙', '🦖', '🌵', '💎', '🎧', '🏆', '🧠', '🍒', '🌊', '❄️'];
+  const PALETTES = [
+    { n: 'Sunset', c: ['#ff2d95', '#ff8a1f', '#ffd23f', '#8b5cf6', '#14110f'] },
+    { n: 'Candy', c: ['#ff77c8', '#7df9ff', '#fff176', '#b388ff', '#ffffff'] },
+    { n: 'Ocean', c: ['#0077b6', '#00b4d8', '#90e0ef', '#48cae4', '#03045e'] },
+    { n: 'Retro', c: ['#e63946', '#f4a261', '#e9c46a', '#2a9d8f', '#264653'] },
+    { n: 'Neon', c: ['#c6ff3d', '#ff2d95', '#22d3ee', '#a855f7', '#ffffff'] },
+    { n: 'Jungle', c: ['#06d6a0', '#118ab2', '#ffd166', '#ef476f', '#073b4c'] },
+  ];
+  const PRODUCTS = [
+    { g: '👕 DTF transfers', icon: '👕', name: 'T-shirt front', w: 3300, h: 3900, guide: 'shirt' },
+    { g: '👕 DTF transfers', icon: '🔙', name: 'T-shirt back', w: 3600, h: 4800, guide: 'shirt' },
+    { g: '👕 DTF transfers', icon: '🧒', name: 'Kids tee', w: 2400, h: 3000, guide: 'shirt' },
+    { g: '👕 DTF transfers', icon: '📍', name: 'Left chest', w: 1200, h: 1200, guide: 'none' },
+    { g: '🧻 DTF gang sheets · 22 in roll', icon: '🧻', name: 'Gang sheet 22×12', w: 6600, h: 3600, guide: 'none' },
+    { g: '🧻 DTF gang sheets · 22 in roll', icon: '📜', name: 'Gang sheet 22×24', w: 6600, h: 7200, guide: 'none' },
+    { g: '☕ Sublimation', icon: '☕', name: '11 oz mug wrap', w: 2475, h: 1050, guide: 'mug' },
+    { g: '☕ Sublimation', icon: '🍵', name: '15 oz mug wrap', w: 2700, h: 1125, guide: 'mug' },
+    { g: '☕ Sublimation', icon: '🥤', name: '20 oz tumbler', w: 2790, h: 2460, guide: 'none' },
+    { g: '☕ Sublimation', icon: '🟫', name: 'Coaster', w: 1200, h: 1200, guide: 'none' },
+    { g: '☕ Sublimation', icon: '🖱️', name: 'Mouse pad', w: 2850, h: 2370, guide: 'none' },
+    { g: '📱 Social', icon: '📸', name: 'Instagram post', w: 1080, h: 1080, guide: 'none' },
+    { g: '📱 Social', icon: '📱', name: 'Story', w: 1080, h: 1920, guide: 'none' },
+  ];
+  const inches = (px) => (px / DPI).toFixed(2).replace(/\.?0+$/, '');
 
-  let W = 3300, H = 3900, zoom = 1, guide = 'shirt';
+  let W = 3300, H = 3900, zoom = 1, guide = 'shirt', product = PRODUCTS[0], welcome = true;
   const canvas = new fabric.Canvas('c', { preserveObjectStacking: true, backgroundColor: '' });
   fabric.Object.prototype.set({
-    transparentCorners: false, cornerColor: '#ffd23f', cornerStrokeColor: '#14110f',
-    borderColor: '#ff3d81', cornerStyle: 'circle', cornerSize: 12, padding: 2, borderScaleFactor: 2,
+    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#ff2d95', borderColor: '#ff2d95',
+    cornerStyle: 'circle', cornerSize: 13, padding: 3, borderScaleFactor: 2.5,
   });
-  const u = () => Math.min(W, H); // unit for sizing fresh objects relative to the canvas
+  const u = () => Math.min(W, H);
+  const active = () => canvas.getActiveObject();
+  const isText = o => o && /text/.test(o.type);
+  const isImage = o => o && o.type === 'image';
+  const isArch = o => o && o.archData;
+  const toHex = c => (!c || typeof c !== 'string') ? '#000000' : '#' + new fabric.Color(c).toHex();
+  const targets = () => { const o = active(); return !o ? [] : o.type === 'activeSelection' ? o.getObjects() : [o]; };
 
-  /* ---------- history ---------- */
+  /* ================= toasts & confetti ================= */
+  function toast(msg, emoji = '✨') {
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = `${emoji}  ${msg}`;
+    $('#toasts').appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 2200);
+  }
+  function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 150) {
+    const c = $('#confetti'); c.width = innerWidth; c.height = innerHeight; const g = c.getContext('2d');
+    const cols = ['#ff2d95', '#ff8a1f', '#ffd23f', '#c6ff3d', '#22d3ee', '#8b5cf6'];
+    const ps = Array.from({ length: n }, () => ({ x, y, vx: (Math.random() - .5) * 18, vy: -Math.random() * 15 - 4, r: Math.random() * 6 + 3, c: pick(cols), rot: Math.random() * 6, vr: (Math.random() - .5) * .5 }));
+    let t = 0;
+    (function step() {
+      g.clearRect(0, 0, c.width, c.height);
+      ps.forEach(p => {
+        p.vy += .38; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.rot += p.vr;
+        g.save(); g.translate(p.x, p.y); g.rotate(p.rot); g.fillStyle = p.c; g.globalAlpha = Math.max(0, 1 - t / 110);
+        g.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); g.restore();
+      });
+      if (++t < 120) requestAnimationFrame(step); else g.clearRect(0, 0, c.width, c.height);
+    })();
+  }
+
+  /* ================= history ================= */
   const history = { stack: [], idx: -1, busy: false };
-  const snapshot = () => JSON.stringify({ W, H, canvas: canvas.toJSON(EXTRA) });
+  const snapshot = () => JSON.stringify({ W, H, name: $('#projectName').value, canvas: canvas.toJSON(EXTRA) });
   function commit() {
     if (history.busy) return;
     history.stack = history.stack.slice(0, history.idx + 1);
     history.stack.push(snapshot());
     if (history.stack.length > 40) history.stack.shift();
     history.idx = history.stack.length - 1;
+    renderLayers(); refreshUsage();
   }
   function restore(json) {
     history.busy = true;
     const d = JSON.parse(json);
+    if (d.name) $('#projectName').value = d.name;
     setSize(d.W, d.H, false);
     canvas.loadFromJSON(d.canvas, () => {
-      syncBg(); canvas.renderAll(); history.busy = false; refreshProps();
+      syncBg(); canvas.renderAll(); history.busy = false; refreshProps(); renderLayers(); refreshUsage();
     });
   }
   const undo = () => { if (history.idx > 0) restore(history.stack[--history.idx]); };
   const redo = () => { if (history.idx < history.stack.length - 1) restore(history.stack[++history.idx]); };
   ['object:added', 'object:removed', 'object:modified'].forEach(e => canvas.on(e, commit));
 
-  /* ---------- sizing / zoom / guides ---------- */
+  /* ================= size, zoom, guides ================= */
   function applyZoom() {
+    zoom = Math.min(Math.max(zoom, 0.02), 4);
     canvas.setZoom(zoom);
     canvas.setDimensions({ width: W * zoom, height: H * zoom });
     $('#zoomLabel').textContent = Math.round(zoom * 100) + '%';
-    drawGuides();
+    $('#zoomSlider').value = Math.round(zoom * 100);
+    drawGuides(); placeFloat();
   }
   function fit() {
     const s = $('#stage');
-    zoom = Math.max(Math.min((s.clientWidth - 70) / W, (s.clientHeight - 70) / H, 1), 0.02); applyZoom();
+    zoom = Math.min((s.clientWidth - 70) / W, (s.clientHeight - 150) / H, 1); applyZoom();
   }
   function drawGuides() {
     const g = $('#guides'); g.hidden = !$('#showGuides').checked; g.innerHTML = '';
     const pct = (px, total) => (px / total) * 100 + '%';
     const add = (cls, css, text) => {
       const d = document.createElement('div'); d.className = cls; Object.assign(d.style, css);
-      if (text) d.textContent = text; g.appendChild(d); return d;
+      if (text) d.textContent = text; g.appendChild(d);
     };
-    const m = DPI * 0.125; // 1/8 in safe margin
+    const m = DPI * 0.125;
     add('g-safe', { left: pct(m, W), right: pct(m, W), top: pct(m, H), bottom: pct(m, H) });
     if (guide === 'mug') {
       add('g-zone', { left: 0, width: pct(W * 0.1, W) }); add('g-zone', { right: 0, width: pct(W * 0.1, W) });
       add('g-line', { left: '50%' });
-      add('g-label', { left: '50%', top: '6px', transform: 'translateX(-50%)' }, 'FRONT CENTRE');
-      add('g-label', { left: '4px', bottom: '6px' }, 'HANDLE');
-      add('g-label', { right: '4px', bottom: '6px' }, 'HANDLE');
+      add('g-label', { left: '50%', top: '8px', transform: 'translateX(-50%)' }, 'FRONT CENTRE');
+      add('g-label', { left: '6px', bottom: '8px' }, 'HANDLE');
+      add('g-label', { right: '6px', bottom: '8px' }, 'HANDLE');
     } else if (guide === 'shirt') {
       add('g-line', { left: '50%' });
-      add('g-label', { left: '50%', top: '6px', transform: 'translateX(-50%)' }, 'COLLAR ▲  CENTRE');
+      add('g-label', { left: '50%', top: '8px', transform: 'translateX(-50%)' }, 'COLLAR ▲ CENTRE');
     }
   }
-  function updateInfo() {
-    $('#sizeInfo').textContent = `${(W / DPI).toFixed(2)} × ${(H / DPI).toFixed(2)} in · ${W}×${H}px @ ${DPI} DPI`;
+  function setProduct(p) {
+    product = p; $('#productIcon').textContent = p.icon; $('#productName').textContent = p.name;
+    $('#sizeInfo').textContent = `${inches(W)} × ${inches(H)} in · ${W}×${H}px`;
   }
   function setSize(w, h, record = true, g) {
     W = w; H = h;
-    const sel = $('#sizePreset'), val = `${w}x${h}`;
-    let opt = [...sel.options].find(o => o.value === val && (g === undefined || (o.dataset.guide || 'none') === g)) ||
-      [...sel.options].find(o => o.value === val);
-    if (!opt) {
-      opt = new Option(`Custom · ${(w / DPI).toFixed(2)}×${(h / DPI).toFixed(2)} in`, val); opt.dataset.guide = 'none'; sel.add(opt, 0);
-    }
-    sel.selectedIndex = opt.index; guide = g ?? (opt.dataset.guide || 'none');
-    updateInfo(); fit();
+    const p = PRODUCTS.find(x => x.w === w && x.h === h && (g === undefined || x.guide === g)) || PRODUCTS.find(x => x.w === w && x.h === h) ||
+      { icon: '📐', name: 'Custom size', w, h, guide: 'none' };
+    guide = g ?? p.guide; setProduct(p); fit();
     if (record) commit();
   }
-  // Changing product size keeps your artwork, scaled to fit and centred on the new canvas.
+  // Changing size keeps your artwork, scaled to fit and centred.
   function rescale(nw, nh) {
     const k = Math.min(nw / W, nh / H), dx = (nw - W * k) / 2, dy = (nh - H * k) / 2;
     canvas.discardActiveObject();
     canvas.getObjects().forEach(o => { o.set({ scaleX: o.scaleX * k, scaleY: o.scaleY * k, left: o.left * k + dx, top: o.top * k + dy }); o.setCoords(); });
   }
-  $('#sizePreset').onchange = e => {
-    const o = e.target.selectedOptions[0], [w, h] = o.value.split('x').map(Number);
-    rescale(w, h); setSize(w, h, true, o.dataset.guide || 'none');
-  };
-  $('#customSize').onclick = () => {
-    const w = parseFloat(prompt('Width in inches?', (W / DPI).toFixed(2))); if (!(w > 0)) return;
-    const h = parseFloat(prompt('Height in inches?', (H / DPI).toFixed(2))); if (!(h > 0)) return;
-    if (w * h > 600) return alert('That is too big for the browser. Try a smaller size (or a gang sheet up to 22×24 in).');
-    rescale(Math.round(w * DPI), Math.round(h * DPI)); setSize(Math.round(w * DPI), Math.round(h * DPI), true, 'none');
-  };
-  $('#zoomIn').onclick = () => { zoom = Math.min(zoom * 1.25, 4); applyZoom(); };
-  $('#zoomOut').onclick = () => { zoom = Math.max(zoom / 1.25, 0.02); applyZoom(); };
+  $('#zoomIn').onclick = () => { zoom *= 1.25; applyZoom(); };
+  $('#zoomOut').onclick = () => { zoom /= 1.25; applyZoom(); };
+  $('#zoomSlider').oninput = e => { zoom = e.target.value / 100; applyZoom(); };
   $('#zoomFit').onclick = fit;
   $('#showGuides').onchange = drawGuides;
   window.addEventListener('resize', fit);
 
-  /* ---------- background ---------- */
+  /* ================= product picker ================= */
+  function buildPicker() {
+    const grid = $('#pickerGrid'); grid.innerHTML = '';
+    let last = '';
+    PRODUCTS.forEach(p => {
+      if (p.g !== last) { const h = document.createElement('h4'); h.textContent = p.g; grid.appendChild(h); last = p.g; }
+      const b = document.createElement('button'); b.className = 'pcard' + (p === product ? ' on' : '');
+      b.innerHTML = `<i>${p.icon}</i><b>${p.name}</b><small>${inches(p.w)} × ${inches(p.h)} in</small>`;
+      b.onclick = () => chooseProduct(p); grid.appendChild(b);
+    });
+  }
+  function openPicker() {
+    $('#pickerTitle').textContent = welcome ? 'What are we printing today?' : 'Change product';
+    buildPicker(); $('#picker').hidden = false;
+  }
+  function chooseProduct(p) {
+    $('#picker').hidden = true;
+    if (welcome) { welcome = false; try { localStorage.setItem('chitra.seen', '1'); } catch { } setSize(p.w, p.h, false, p.guide); loadTemplate(p.guide === 'mug' ? 'mug' : p.guide === 'shirt' ? 'slogan' : 'badge'); confetti(innerWidth / 2, innerHeight / 2, 90); }
+    else { rescale(p.w, p.h); setSize(p.w, p.h, true, p.guide); }
+    toast(`${p.name} · ${inches(p.w)}×${inches(p.h)} in @ 300 DPI`, p.icon);
+  }
+  $('#productBtn').onclick = openPicker; $('#changeProduct').onclick = openPicker;
+  $('#customSize').onclick = () => {
+    const w = parseFloat(prompt('Width in inches?', inches(W))); if (!(w > 0)) return;
+    const h = parseFloat(prompt('Height in inches?', inches(H))); if (!(h > 0)) return;
+    if (w * h > 600) return alert('That is too big for the browser. Try a smaller size (a gang sheet up to 22×24 in works).');
+    const nw = Math.round(w * DPI), nh = Math.round(h * DPI);
+    $('#picker').hidden = true;
+    if (welcome) { welcome = false; setSize(nw, nh, false, 'none'); loadTemplate('blank'); } else { rescale(nw, nh); setSize(nw, nh, true, 'none'); }
+  };
+
+  /* ================= background & preview ================= */
   function syncBg() {
     const bg = canvas.backgroundColor;
     $('#transparent').checked = !bg; $('#bgColor').disabled = !bg;
@@ -119,30 +194,73 @@
   }
   $('#transparent').onchange = () => { setBg(); commit(); };
   $('#bgColor').oninput = setBg; $('#bgColor').onchange = commit;
+  $('#bgSwatches').innerHTML = ['check', '#ffffff', '#14110f', '#ff2d95', '#ffd23f', '#3a86ff', '#06d6a0'].map((c, i) =>
+    `<button data-pv="${c}" class="${c === 'check' ? 'check ' : ''}${i === 0 ? 'on' : ''}" style="${c === 'check' ? '' : 'background:' + c}" title="Preview your transparent design on this colour"></button>`).join('');
+  $$('[data-pv]').forEach(b => b.onclick = () => {
+    $$('[data-pv]').forEach(x => x.classList.toggle('on', x === b));
+    $('#canvasWrap').style.background = b.dataset.pv === 'check' ? '' : b.dataset.pv;
+  });
 
-  /* ---------- helpers ---------- */
-  const toHex = c => (!c || typeof c !== 'string') ? '#000000' : '#' + new fabric.Color(c).toHex();
+  /* ================= helpers ================= */
   function place(o) {
     o.set({ left: W / 2, top: H / 2, originX: 'center', originY: 'center' });
     canvas.add(o); canvas.setActiveObject(o); canvas.requestRenderAll();
   }
-  const active = () => canvas.getActiveObject();
-  const isText = o => o && /text/.test(o.type);
-  const isImage = o => o && o.type === 'image';
+  const shadow = (color, k, blur = 0) => new fabric.Shadow({ color, offsetX: u() * k, offsetY: u() * k, blur });
+  function gradFill(o, [a, b]) {
+    if (isArch(o)) return setProp(o, 'fill', a);
+    o.set('fill', new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: o.width, y2: o.height }, colorStops: [{ offset: 0, color: a }, { offset: 1, color: b }] }));
+  }
 
-  /* ---------- add elements ---------- */
+  /* ================= arch (curved) text ================= */
+  function buildArch(d) {
+    const letters = [...d.text].map(ch => new fabric.Text(ch, {
+      fontFamily: d.fontFamily, fontSize: d.fontSize, fontWeight: d.fontWeight || 'normal', fill: d.fill, stroke: d.stroke,
+      strokeWidth: d.strokeWidth || 0, paintFirst: 'stroke', strokeLineJoin: 'round', originX: 'center', originY: 'center',
+    }));
+    const sp = ((d.charSpacing || 0) / 1000) * d.fontSize;
+    const widths = letters.map(l => l.width + sp), total = widths.reduce((a, b) => a + b, 0), c = d.curve / 100;
+    let acc = 0;
+    letters.forEach((l, i) => {
+      const s = acc + widths[i] / 2 - total / 2; acc += widths[i];
+      if (Math.abs(c) < 0.02) { l.set({ left: s, top: 0 }); return; }
+      const R = total / (Math.abs(c) * Math.PI * 1.6), a = s / R, sg = Math.sign(c);
+      l.set({ left: R * Math.sin(a), top: sg * R * (1 - Math.cos(a)), angle: (sg * a * 180) / Math.PI });
+    });
+    const g = new fabric.Group(letters, { originX: 'center', originY: 'center' });
+    g.archData = { ...d }; return g;
+  }
+  function rebuildArch(o) {
+    const n = buildArch(o.archData);
+    n.set({ left: o.left, top: o.top, angle: o.angle, opacity: o.opacity, shadow: o.shadow, scaleX: o.scaleX, scaleY: o.scaleY, flipX: o.flipX, flipY: o.flipY });
+    const idx = canvas.getObjects().indexOf(o);
+    history.busy = true; canvas.remove(o); canvas.insertAt(n, idx); history.busy = false;
+    canvas.setActiveObject(n); canvas.requestRenderAll(); return n;
+  }
+  const ARCH_KEYS = ['fill', 'stroke', 'strokeWidth', 'fontFamily', 'fontSize', 'fontWeight', 'charSpacing', 'text', 'curve'];
+  function setProp(o, prop, val) {
+    if (isArch(o) && ARCH_KEYS.includes(prop)) {
+      if (prop === 'fill' && typeof val !== 'string') return o;
+      o.archData[prop] = val; return active() === o ? rebuildArch(o) : o;
+    }
+    o.set(prop, val); return o;
+  }
+  const newArch = () => place(buildArch({ text: 'CURVED TEXT', fontFamily: 'Bangers', fontSize: u() * 0.12, fill: '#ffd23f', stroke: '#14110f', strokeWidth: u() * 0.008, curve: 60 }));
+  $('#addArch').onclick = newArch;
+
+  /* ================= add elements ================= */
   const starPoints = (r, n = 5) => Array.from({ length: n * 2 }, (_, i) => {
     const rad = i % 2 ? r * 0.42 : r, a = (Math.PI / n) * i - Math.PI / 2;
     return { x: r + rad * Math.cos(a), y: r + rad * Math.sin(a) };
   });
   const SHAPES = {
-    rect: () => new fabric.Rect({ width: u() * 0.4, height: u() * 0.28, fill: '#ff3d81', rx: u() * 0.01, ry: u() * 0.01, stroke: '#14110f', strokeWidth: u() * 0.006 }),
+    rect: () => new fabric.Rect({ width: u() * 0.4, height: u() * 0.28, fill: '#ff2d95', rx: u() * 0.02, ry: u() * 0.02, stroke: '#14110f', strokeWidth: u() * 0.006 }),
     circle: () => new fabric.Circle({ radius: u() * 0.18, fill: '#ffd23f', stroke: '#14110f', strokeWidth: u() * 0.006 }),
-    triangle: () => new fabric.Triangle({ width: u() * 0.35, height: u() * 0.3, fill: '#2ec4b6', stroke: '#14110f', strokeWidth: u() * 0.006 }),
+    triangle: () => new fabric.Triangle({ width: u() * 0.35, height: u() * 0.3, fill: '#22d3ee', stroke: '#14110f', strokeWidth: u() * 0.006 }),
     line: () => new fabric.Line([0, 0, u() * 0.4, 0], { stroke: '#14110f', strokeWidth: u() * 0.012, fill: '#14110f', strokeLineCap: 'round' }),
-    star: () => new fabric.Polygon(starPoints(u() * 0.2), { fill: '#ff7a1a', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
+    star: () => new fabric.Polygon(starPoints(u() * 0.2), { fill: '#ff8a1f', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
     heart: () => new fabric.Path('M 0 -60 C -100 -140 -190 -20 0 110 C 190 -20 100 -140 0 -60 z',
-      { fill: '#ff3d81', stroke: '#14110f', strokeWidth: 5, scaleX: u() * 0.0016, scaleY: u() * 0.0016 }),
+      { fill: '#ff2d95', stroke: '#14110f', strokeWidth: 5, scaleX: u() * 0.0016, scaleY: u() * 0.0016 }),
   };
   $$('[data-add]').forEach(b => b.onclick = () => place(SHAPES[b.dataset.add]()));
 
@@ -154,37 +272,39 @@
   }
   $$('[data-text]').forEach(b => b.onclick = () => addText(b.dataset.text));
   const TSTYLES = () => ({
-    pop: { text: 'POP!', fontFamily: 'Bangers', fill: '#ffd23f', stroke: '#14110f', strokeWidth: u() * 0.012, paintFirst: 'stroke', strokeLineJoin: 'round', fontSize: u() * 0.2, shadow: new fabric.Shadow({ color: '#14110f', offsetX: u() * 0.012, offsetY: u() * 0.012, blur: 0 }) },
-    retro: { text: 'Retro Vibes', fontFamily: 'Pacifico', fill: '#ff3d81', fontSize: u() * 0.14, shadow: new fabric.Shadow({ color: '#14110f', offsetX: u() * 0.008, offsetY: u() * 0.008, blur: 0 }) },
-    neon: { text: 'NEON', fontFamily: 'Righteous', fill: '#ffffff', fontSize: u() * 0.18, shadow: new fabric.Shadow({ color: '#3a86ff', blur: u() * 0.04 }), stroke: '#3a86ff', strokeWidth: u() * 0.004 },
+    pop: { text: 'POP!', fontFamily: 'Bangers', fill: '#ffd23f', stroke: '#14110f', strokeWidth: u() * 0.012, paintFirst: 'stroke', strokeLineJoin: 'round', fontSize: u() * 0.2, shadow: shadow('#14110f', 0.012) },
+    retro: { text: 'Retro Vibes', fontFamily: 'Pacifico', fill: '#ff2d95', fontSize: u() * 0.14, shadow: shadow('#14110f', 0.008) },
+    neon: { text: 'NEON', fontFamily: 'Righteous', fill: '#ffffff', fontSize: u() * 0.18, shadow: new fabric.Shadow({ color: '#22d3ee', blur: u() * 0.04 }), stroke: '#22d3ee', strokeWidth: u() * 0.004 },
     stamp: { text: 'ORIGINAL', fontFamily: 'Anton', fill: '#14110f', fontSize: u() * 0.15, charSpacing: 200 },
+    grad: { text: 'GRADIENT', fontFamily: 'Bangers', fill: '#ff2d95', fontSize: u() * 0.2, stroke: '#14110f', strokeWidth: u() * 0.01, paintFirst: 'stroke', strokeLineJoin: 'round' },
   });
   $$('[data-tstyle]').forEach(b => b.onclick = () => {
-    const s = { ...TSTYLES()[b.dataset.tstyle] };
-    const { text, ...rest } = s;
-    place(new fabric.Textbox(text, { width: W * 0.8, textAlign: 'center', fontWeight: 'normal', ...rest }));
+    const { text, ...rest } = TSTYLES()[b.dataset.tstyle];
+    const o = new fabric.Textbox(text, { width: W * 0.8, textAlign: 'center', fontWeight: 'normal', ...rest });
+    place(o); if (b.dataset.tstyle === 'grad') { gradFill(o, pick(GRADS)); canvas.requestRenderAll(); }
   });
   $('#emojiGrid').innerHTML = EMOJI.map(e => `<button data-emoji="${e}" title="Add sticker">${e}</button>`).join('');
   $$('[data-emoji]').forEach(b => b.onclick = () => place(new fabric.Text(b.dataset.emoji, {
     fontSize: u() * 0.2, fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif',
   })));
 
+  const DEFAULT_ADJ = () => ({ brightness: 0, contrast: 0, saturation: 0, blur: 0, whiteDist: 0, preset: '' });
   function addImageFromURL(url) {
     fabric.Image.fromURL(url, img => {
       const s = Math.min((W * 0.8) / img.width, (H * 0.8) / img.height, 1);
-      img.set({ adj: { brightness: 0, contrast: 0, saturation: 0, blur: 0, whiteDist: 0, preset: '' } }).scale(s);
-      place(img);
+      img.set({ adj: DEFAULT_ADJ() }).scale(s); place(img); toast('Image added', '🖼️');
     });
   }
   const readFiles = files => [...files].filter(f => f.type.startsWith('image/')).forEach(f => {
     const r = new FileReader(); r.onload = () => addImageFromURL(r.result); r.readAsDataURL(f);
   });
   $('#imgUpload').onchange = e => { readFiles(e.target.files); e.target.value = ''; };
-  $('#stage').addEventListener('dragover', e => e.preventDefault());
-  $('#stage').addEventListener('drop', e => { e.preventDefault(); readFiles(e.dataTransfer.files); });
+  $('#stage').addEventListener('dragover', e => { e.preventDefault(); $('#dropzone').classList.add('over'); });
+  $('#stage').addEventListener('dragleave', () => $('#dropzone').classList.remove('over'));
+  $('#stage').addEventListener('drop', e => { e.preventDefault(); $('#dropzone').classList.remove('over'); readFiles(e.dataTransfer.files); });
   document.addEventListener('paste', e => readFiles(e.clipboardData?.files || []));
 
-  /* ---------- templates ---------- */
+  /* ================= templates ================= */
   function clearAll(bg = '') {
     history.busy = true; canvas.clear(); history.busy = false;
     canvas.setBackgroundColor(bg, () => { syncBg(); canvas.renderAll(); });
@@ -195,9 +315,9 @@
     blank: () => clearAll(''),
     slogan: () => {
       clearAll('');
-      canvas.add(T('GOOD', { left: W / 2, top: H * 0.3, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ffd23f', ...outline(), shadow: new fabric.Shadow({ color: '#14110f', offsetX: u() * 0.014, offsetY: u() * 0.014, blur: 0 }) }));
-      canvas.add(T('VIBES', { left: W / 2, top: H * 0.5, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ff3d81', ...outline(), shadow: new fabric.Shadow({ color: '#14110f', offsetX: u() * 0.014, offsetY: u() * 0.014, blur: 0 }) }));
-      canvas.add(T('ONLY ✦ GOOD ✦ ONLY', { left: W / 2, top: H * 0.68, fontFamily: 'Anton', fontSize: u() * 0.05, fill: '#3a86ff', charSpacing: 300, ...outline('#ffffff') }));
+      canvas.add(T('GOOD', { left: W / 2, top: H * 0.3, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.014) }));
+      canvas.add(T('VIBES', { left: W / 2, top: H * 0.5, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ff2d95', ...outline(), shadow: shadow('#14110f', 0.014) }));
+      canvas.add(T('ONLY ✦ GOOD ✦ ONLY', { left: W / 2, top: H * 0.68, fontFamily: 'Anton', fontSize: u() * 0.05, fill: '#22d3ee', charSpacing: 300, ...outline('#14110f') }));
     },
     badge: () => {
       clearAll('');
@@ -206,28 +326,119 @@
       canvas.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r * 0.86, originX: 'center', originY: 'center', fill: 'transparent', stroke: '#ffd23f', strokeWidth: u() * 0.008, strokeDashArray: [u() * 0.02, u() * 0.02] }));
       canvas.add(T('★', { left: W / 2, top: H / 2 - r * 0.55, width: r, fontSize: r * 0.35, fill: '#ffd23f' }));
       canvas.add(T('MADE WITH', { left: W / 2, top: H / 2 - r * 0.18, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.2, fill: '#fff', charSpacing: 300 }));
-      canvas.add(T('LOVE', { left: W / 2, top: H / 2 + r * 0.2, width: r * 1.5, fontFamily: 'Bangers', fontSize: r * 0.5, fill: '#ff3d81', ...outline('#ffffff') }));
+      canvas.add(T('LOVE', { left: W / 2, top: H / 2 + r * 0.2, width: r * 1.5, fontFamily: 'Bangers', fontSize: r * 0.5, fill: '#ff2d95', ...outline('#ffffff') }));
       canvas.add(T('EST. 2025', { left: W / 2, top: H / 2 + r * 0.6, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.14, fill: '#fff', charSpacing: 400 }));
     },
     mug: () => {
       clearAll('');
-      canvas.add(T('Best Mom Ever', { left: W / 2, top: H * 0.42, width: W * 0.36, fontFamily: 'Pacifico', fontSize: H * 0.2, fill: '#ff3d81', shadow: new fabric.Shadow({ color: '#14110f', offsetX: H * 0.012, offsetY: H * 0.012, blur: 0 }) }));
-      canvas.add(T('♥  ♥  ♥', { left: W / 2, top: H * 0.78, width: W * 0.3, fontSize: H * 0.1, fill: '#ff3d81' }));
+      canvas.add(T('Best Mom Ever', { left: W / 2, top: H * 0.42, width: W * 0.36, fontFamily: 'Pacifico', fontSize: H * 0.2, fill: '#ff2d95', shadow: new fabric.Shadow({ color: '#14110f', offsetX: H * 0.012, offsetY: H * 0.012, blur: 0 }) }));
+      canvas.add(T('♥  ♥  ♥', { left: W / 2, top: H * 0.78, width: W * 0.3, fontSize: H * 0.1, fill: '#ff2d95' }));
       canvas.add(T('✦', { left: W * 0.25, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#ffd23f' }));
-      canvas.add(T('✦', { left: W * 0.75, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#3a86ff' }));
+      canvas.add(T('✦', { left: W * 0.75, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#22d3ee' }));
     },
   };
+  function loadTemplate(name) {
+    history.busy = true; TEMPLATES[name](); history.busy = false;
+    canvas.discardActiveObject(); canvas.renderAll(); commit(); refreshProps();
+  }
   $$('[data-template]').forEach(b => b.onclick = () => {
     if (canvas.getObjects().length && !confirm('Replace your current design with this quick start?')) return;
-    TEMPLATES[b.dataset.template](); canvas.discardActiveObject(); canvas.renderAll(); commit(); refreshProps();
+    loadTemplate(b.dataset.template);
   });
 
-  /* ---------- print tools: gang-sheet packing & copies ---------- */
+  /* ================= magic: palettes, surprise, sparkle ================= */
+  const lum = c => { const [r, g, b] = new fabric.Color(c).getSource(); return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255; };
+  function applyPalette(p, quiet) {
+    const map = {}; let n = 0, changed = 0;
+    const remap = v => {
+      if (typeof v !== 'string' || !v || v === 'transparent') return null;
+      const key = toHex(v), l = lum(key);
+      if (l < 0.12 || l > 0.92) return null; // keep black / white neutrals
+      return map[key] ??= p.c[n++ % 4];
+    };
+    history.busy = true;
+    [...canvas.getObjects()].forEach(o => {
+      if (isArch(o)) {
+        const f = remap(o.archData.fill), s = remap(o.archData.stroke);
+        if (f) o.archData.fill = f; if (s) o.archData.stroke = s;
+        if (f || s) { const nn = buildArch(o.archData); nn.set({ left: o.left, top: o.top, angle: o.angle, scaleX: o.scaleX, scaleY: o.scaleY, shadow: o.shadow }); const i = canvas.getObjects().indexOf(o); canvas.remove(o); canvas.insertAt(nn, i); changed++; }
+        return;
+      }
+      if (isImage(o)) return;
+      const f = remap(o.fill), s = remap(o.stroke);
+      if (f) { o.set('fill', f); changed++; } if (s) { o.set('stroke', s); changed++; }
+    });
+    history.busy = false;
+    canvas.discardActiveObject(); canvas.requestRenderAll(); commit(); refreshProps();
+    if (!quiet) toast(changed ? `${p.n} palette applied` : 'Nothing to recolour yet', '🎨');
+  }
+  $('#palettes').innerHTML = PALETTES.map((p, i) => `<button class="palette" data-pal="${i}"><b>${p.n}</b><span>${p.c.map(c => `<i style="background:${c}"></i>`).join('')}</span></button>`).join('');
+  $$('[data-pal]').forEach(b => b.onclick = () => applyPalette(PALETTES[b.dataset.pal]));
+  $('#shuffleColors').onclick = () => applyPalette(pick(PALETTES));
+  function surprise() {
+    loadTemplate(pick(['slogan', 'badge', 'mug']));
+    const p = pick(PALETTES); applyPalette(p, true);
+    confetti(); toast(`Surprise! ${p.n} vibes`, '🎲');
+  }
+  $('#surprise').onclick = surprise;
+  function sparkle() {
+    const cols = pick(PALETTES).c; history.busy = true;
+    for (let i = 0; i < 12; i++) {
+      canvas.add(new fabric.Text(pick(['✦', '★', '✧', '✺']), {
+        left: Math.random() * W, top: Math.random() * H, originX: 'center', originY: 'center', angle: Math.random() * 60 - 30,
+        fontSize: u() * (0.03 + Math.random() * 0.07), fill: pick(cols), fontFamily: 'Arial',
+      }));
+    }
+    history.busy = false; canvas.requestRenderAll(); commit(); toast('Sparkle!', '✨');
+  }
+  $('#sparkle').onclick = sparkle;
+  $('#stickerOutline').onclick = () => {
+    const ts = targets().filter(o => !isImage(o));
+    if (!ts.length) return toast('Select some text or a shape first', '👆');
+    ts.forEach(o => { setProp(o, 'stroke', '#ffffff'); const t = ts.length === 1 ? active() : o; setProp(t, 'strokeWidth', u() * 0.02); if (!isArch(t)) t.set({ paintFirst: 'stroke', strokeLineJoin: 'round' }); });
+    canvas.requestRenderAll(); commit(); refreshProps(); toast('Sticker outline added', '🏷️');
+  };
+
+  /* ---- magic cut-out: flood-fill the background from the edges ---- */
+  function magicCut(o, tol) {
+    const el = o._originalElement || o.getElement(), w = el.naturalWidth || el.width, h = el.naturalHeight || el.height;
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(el, 0, 0, w, h);
+    const id = x.getImageData(0, 0, w, h), d = id.data;
+    const corners = [0, w - 1, (h - 1) * w, h * w - 1].map(i => i * 4);
+    const bg = [0, 1, 2].map(k => corners.reduce((s, i) => s + d[i + k], 0) / 4);
+    const lim = (tol / 100) * 441, lim2 = lim * lim;
+    const near = i => { const a = d[i] - bg[0], b = d[i + 1] - bg[1], cc = d[i + 2] - bg[2]; return a * a + b * b + cc * cc <= lim2; };
+    const seen = new Uint8Array(w * h), stack = new Int32Array(w * h); let sp = 0;
+    const push = p => { if (!seen[p] && (d[p * 4 + 3] < 8 || near(p * 4))) { seen[p] = 1; stack[sp++] = p; } };
+    for (let i = 0; i < w; i++) { push(i); push((h - 1) * w + i); }
+    for (let j = 0; j < h; j++) { push(j * w); push(j * w + w - 1); }
+    while (sp) {
+      const p = stack[--sp], px = p % w, py = (p / w) | 0;
+      if (px > 0) push(p - 1); if (px < w - 1) push(p + 1); if (py > 0) push(p - w); if (py < h - 1) push(p + w);
+    }
+    for (let p = 0; p < w * h; p++) if (seen[p]) d[p * 4 + 3] = 0;
+    // soften the cut edge by one pixel so it doesn't look jagged
+    for (let p = 0; p < w * h; p++) {
+      if (seen[p]) continue; const px = p % w;
+      if ((px > 0 && seen[p - 1]) || (px < w - 1 && seen[p + 1]) || (p >= w && seen[p - w]) || (p < w * (h - 1) && seen[p + w])) d[p * 4 + 3] = Math.min(d[p * 4 + 3], 150);
+    }
+    x.putImageData(id, 0, 0);
+    fabric.Image.fromURL(c.toDataURL('image/png'), n => {
+      n.set({ left: o.left, top: o.top, originX: o.originX, originY: o.originY, scaleX: o.scaleX * (o.width / w), scaleY: o.scaleY * (o.height / h), angle: o.angle, flipX: o.flipX, flipY: o.flipY, opacity: o.opacity, adj: DEFAULT_ADJ() });
+      const idx = canvas.getObjects().indexOf(o);
+      history.busy = true; canvas.remove(o); canvas.insertAt(n, idx); history.busy = false;
+      canvas.setActiveObject(n); canvas.requestRenderAll(); commit(); refreshProps(); confetti(innerWidth / 2, innerHeight / 2, 70); toast('Background removed', '✂️');
+    });
+  }
+  $('#magicCut').onclick = () => { const o = active(); if (!isImage(o)) return toast('Select a photo first', '👆'); magicCut(o, +$('#cutTol').value); };
+
+  /* ================= print tools ================= */
   function pack() {
-    const objs = canvas.getObjects().filter(o => !o.locked);
+    const objs = canvas.getObjects().filter(o => !o.locked && o.visible);
     if (!objs.length) return;
     canvas.discardActiveObject();
-    const gap = Math.round(DPI * 0.25); // 1/4 in between designs
+    const gap = Math.round(DPI * 0.25);
     const boxes = objs.map(o => ({ o, r: o.getBoundingRect(true, true) })).sort((a, b) => b.r.height - a.r.height);
     let x = gap, y = gap, rowH = 0;
     boxes.forEach(({ o, r }) => {
@@ -236,20 +447,36 @@
       x += r.width + gap; rowH = Math.max(rowH, r.height);
     });
     canvas.requestRenderAll(); commit();
-    if (y + rowH > H - gap) alert('Heads up: your designs do not all fit on this sheet. Try a longer gang sheet.');
+    if (y + rowH > H - gap) toast('Not everything fits — try a longer gang sheet', '⚠️'); else toast('Packed neatly', '🧩');
   }
   $('#pack').onclick = pack;
-  $('#copies').onclick = async () => {
-    const o = active();
-    if (!o || o.type === 'activeSelection') return alert('Click one design first, then press Make copies.');
-    const n = parseInt(prompt('How many in total (including this one)?', '4'), 10);
-    if (!(n > 1 && n <= 200)) return;
+  async function cloneN(o, n) {
     history.busy = true;
     for (let i = 1; i < n; i++) await new Promise(res => o.clone(c => { canvas.add(c); res(); }, EXTRA));
-    history.busy = false; pack();
+    history.busy = false;
+  }
+  $('#copies').onclick = async () => {
+    const o = active();
+    if (!o || o.type === 'activeSelection') return toast('Click one design first', '👆');
+    const n = parseInt(prompt('How many in total (including this one)?', '4'), 10);
+    if (!(n > 1 && n <= 200)) return;
+    await cloneN(o, n); pack();
   };
+  $('#fillSheet').onclick = async () => {
+    const o = active();
+    if (!o || o.type === 'activeSelection') return toast('Click one design first', '👆');
+    const gap = DPI * 0.25, r = o.getBoundingRect(true, true);
+    const n = Math.floor((W - gap) / (r.width + gap)) * Math.floor((H - gap) / (r.height + gap));
+    if (n < 2) return toast('Only one fits on this sheet', 'ℹ️');
+    await cloneN(o, n); pack(); confetti(innerWidth / 2, innerHeight / 2, 80); toast(`Filled the sheet with ${n}`, '🪄');
+  };
+  function refreshUsage() {
+    const area = canvas.getObjects().filter(o => o.visible).reduce((s, o) => { const r = o.getBoundingRect(true, true); return s + r.width * r.height; }, 0);
+    const pct = Math.min(100, Math.round((area / (W * H)) * 100));
+    $('#usageBar').style.width = pct + '%'; $('#usageText').textContent = `Sheet usage: ${pct}%`;
+  }
 
-  /* ---------- arrange ---------- */
+  /* ================= arrange ================= */
   const act = fn => () => { const o = active(); if (!o) return; fn(o); canvas.requestRenderAll(); commit(); refreshProps(); };
   $('#forward').onclick = act(o => canvas.bringForward(o));
   $('#backward').onclick = act(o => canvas.sendBackwards(o));
@@ -257,10 +484,11 @@
   $('#toBack').onclick = act(o => canvas.sendToBack(o));
   $('#flipH').onclick = act(o => o.set('flipX', !o.flipX));
   $('#flipV').onclick = act(o => o.set('flipY', !o.flipY));
-  $('#lock').onclick = act(o => {
+  const toggleLock = act(o => {
     const v = !o.locked;
     o.set({ locked: v, lockMovementX: v, lockMovementY: v, lockRotation: v, lockScalingX: v, lockScalingY: v, hasControls: !v });
   });
+  $('#lock').onclick = toggleLock;
   function remove() {
     const o = active(); if (!o || o.isEditing) return;
     (o.type === 'activeSelection' ? o.getObjects() : [o]).forEach(x => canvas.remove(x));
@@ -271,7 +499,7 @@
     const o = active(); if (!o) return;
     o.clone(c => {
       canvas.discardActiveObject();
-      c.set({ left: o.left + 30, top: o.top + 30, evented: true });
+      c.set({ left: o.left + 40, top: o.top + 40, evented: true });
       if (c.type === 'activeSelection') { c.canvas = canvas; c.forEachObject(x => canvas.add(x)); c.setCoords(); } else canvas.add(c);
       canvas.setActiveObject(c); canvas.requestRenderAll();
     }, EXTRA);
@@ -284,27 +512,81 @@
     o.set({ left: o.left + dx, top: o.top + dy }); o.setCoords();
   }));
 
-  /* ---------- properties ---------- */
+  /* ---- floating toolbar next to the selection ---- */
+  function placeFloat() {
+    const tb = $('#floatTb'), o = active();
+    if (!o) { tb.hidden = true; return; }
+    const r = o.getBoundingRect(), above = r.top > 64;
+    tb.hidden = false;
+    tb.style.left = r.left + r.width / 2 + 'px';
+    tb.style.top = (above ? r.top - 12 : r.top + r.height + 12) + 'px';
+    tb.style.transform = `translate(-50%,${above ? '-100%' : '0'})`;
+    tb.style.setProperty('--ft-t', tb.style.transform);
+    $('[data-ft=lock]').textContent = o.locked ? '🔓' : '🔒';
+  }
+  ['object:moving', 'object:scaling', 'object:rotating', 'object:modified', 'selection:created', 'selection:updated', 'selection:cleared'].forEach(e => canvas.on(e, placeFloat));
+  $$('[data-ft]').forEach(b => b.onclick = () => ({ up: () => $('#forward').click(), down: () => $('#backward').click(), dup: duplicate, lock: toggleLock, del: remove })[b.dataset.ft]());
+  $('#ftColor').oninput = e => setFill(e.target.value); $('#ftColor').onchange = commit;
+
+  /* ---- layers ---- */
+  const LAYER_NAMES = { rect: 'Box', circle: 'Circle', triangle: 'Triangle', polygon: 'Star', path: 'Heart', line: 'Line', group: 'Group', image: 'Image' };
+  const layerName = o => isArch(o) ? o.archData.text : isText(o) ? (o.text || '').replace(/\n/g, ' ').slice(0, 26) : LAYER_NAMES[o.type] || o.type;
+  const layerIcon = o => isArch(o) ? '⌒' : isText(o) ? '🔤' : isImage(o) ? '🖼️' : '◆';
+  let dragIdx = null;
+  function renderLayers() {
+    const ul = $('#layers'); if (!ul) return;
+    const objs = canvas.getObjects(); ul.innerHTML = ''; $('#layersEmpty').hidden = objs.length > 0;
+    [...objs].reverse().forEach((o, li) => {
+      const row = document.createElement('li'); row.draggable = true; row.className = o === active() ? 'sel' : '';
+      row.innerHTML = `<span class="ico">${layerIcon(o)}</span><span class="nm"></span><button data-eye title="Show / hide">${o.visible === false ? '🙈' : '👁'}</button><button data-lk title="Lock">${o.locked ? '🔒' : '🔓'}</button>`;
+      $('.nm', row).textContent = layerName(o);
+      row.onclick = e => {
+        if (e.target.dataset.eye !== undefined) { o.visible = o.visible === false; if (!o.visible) canvas.discardActiveObject(); canvas.requestRenderAll(); commit(); return; }
+        if (e.target.dataset.lk !== undefined) { canvas.setActiveObject(o); toggleLock(); return; }
+        if (o.visible !== false) { canvas.setActiveObject(o); canvas.requestRenderAll(); refreshProps(); }
+      };
+      row.ondragstart = () => { dragIdx = objs.length - 1 - li; };
+      row.ondragover = e => { e.preventDefault(); row.classList.add('drag-over'); };
+      row.ondragleave = () => row.classList.remove('drag-over');
+      row.ondrop = e => {
+        e.preventDefault(); const to = objs.length - 1 - li;
+        if (dragIdx !== null && dragIdx !== to) { canvas.moveTo(objs[dragIdx], to); canvas.requestRenderAll(); commit(); }
+        dragIdx = null;
+      };
+      ul.appendChild(row);
+    });
+  }
+
+  /* ================= properties ================= */
   $('#fontFamily').innerHTML = FONTS.map(f => `<option style="font-family:'${f}'">${f}</option>`).join('');
   $('#swatches').innerHTML = COLORS.map(c => `<button data-color="${c}" style="background:${c}" title="${c}"></button>`).join('');
-  const targets = () => { const o = active(); return !o ? [] : o.type === 'activeSelection' ? o.getObjects() : [o]; };
-  $$('[data-color]').forEach(b => b.onclick = () => {
-    targets().forEach(o => o.set('fill', b.dataset.color)); canvas.requestRenderAll(); commit(); refreshProps();
+  $('#grads').innerHTML = GRADS.map((g, i) => `<button data-grad="${i}" style="background:linear-gradient(135deg,${g[0]},${g[1]})" title="Gradient"></button>`).join('');
+  function setFill(c) {
+    targets().forEach(o => setProp(o, 'fill', c)); canvas.requestRenderAll(); $('#fill').value = c; $('#ftColor').value = c;
+  }
+  $$('[data-color]').forEach(b => b.onclick = () => { setFill(b.dataset.color); commit(); });
+  $$('[data-grad]').forEach(b => b.onclick = () => {
+    targets().forEach(o => gradFill(o, GRADS[b.dataset.grad])); canvas.requestRenderAll(); commit(); refreshProps();
   });
 
   function refreshProps() {
     const o = active();
     $('#emptyProps').hidden = !!o; $('#propsBody').hidden = !o;
+    renderLayers();
     if (!o) return;
-    $('#textSec').hidden = !isText(o); $('#imageSec').hidden = !isImage(o);
-    $('#fill').value = toHex(typeof o.fill === 'string' ? o.fill : '#000000');
-    $('#stroke').value = toHex(o.stroke || '#000000');
-    $('#strokeWidth').value = o.strokeWidth || 0;
+    const arch = isArch(o), fillV = arch ? o.archData.fill : o.fill, strokeV = arch ? o.archData.stroke : o.stroke;
+    $('#textSec').hidden = !(isText(o) || arch); $('#imageSec').hidden = !isImage(o); $('#archSec').hidden = !arch;
+    $('#fill').value = toHex(typeof fillV === 'string' ? fillV : '#000000'); $('#ftColor').value = $('#fill').value;
+    $('#stroke').value = toHex(strokeV || '#000000');
+    $('#strokeWidth').value = (arch ? o.archData.strokeWidth : o.strokeWidth) || 0;
     $('#opacity').value = Math.round((o.opacity ?? 1) * 100);
     $('#angle').value = Math.round(o.angle || 0);
     $('#shadow').checked = !!o.shadow;
     $('#lock').textContent = o.locked ? 'Unlock' : 'Lock';
-    if (isText(o)) {
+    if (arch) {
+      $('#fontFamily').value = o.archData.fontFamily; $('#fontSize').value = Math.round(o.archData.fontSize);
+      $('#archText').value = o.archData.text; $('#archCurve').value = o.archData.curve; $('#charSpacing').value = o.archData.charSpacing || 0;
+    } else if (isText(o)) {
       $('#fontFamily').value = o.fontFamily; $('#fontSize').value = Math.round(o.fontSize * (o.scaleY || 1));
       $('#lineHeight').value = Math.round((o.lineHeight || 1.16) * 100); $('#charSpacing').value = o.charSpacing || 0;
     }
@@ -316,51 +598,48 @@
       el.classList.toggle('warn', dpi < 200);
     }
   }
-  canvas.on('selection:created', refreshProps);
-  canvas.on('selection:updated', refreshProps);
-  canvas.on('selection:cleared', refreshProps);
-  canvas.on('object:rotating', refreshProps);
-  canvas.on('object:scaling', refreshProps);
+  ['selection:created', 'selection:updated', 'selection:cleared', 'object:rotating', 'object:scaling'].forEach(e => canvas.on(e, refreshProps));
 
   const bind = (sel, prop, conv = v => v, evt = 'input') => {
     const el = $(sel);
-    el.addEventListener(evt, () => { targets().forEach(o => o.set(prop, conv(el.value))); canvas.requestRenderAll(); });
-    el.addEventListener('change', commit);
+    el.addEventListener(evt, () => { targets().forEach(o => setProp(o, prop, conv(el.value))); canvas.requestRenderAll(); });
+    el.addEventListener('change', () => { commit(); });
   };
   bind('#fill', 'fill'); bind('#stroke', 'stroke');
   $('#stroke').addEventListener('input', () => {
-    if (!+$('#strokeWidth').value) { const w = Math.round(u() * 0.008); $('#strokeWidth').value = w; targets().forEach(o => o.set('strokeWidth', w)); canvas.requestRenderAll(); }
+    if (!+$('#strokeWidth').value) { const w = Math.round(u() * 0.008); $('#strokeWidth').value = w; targets().forEach(o => setProp(o, 'strokeWidth', w)); canvas.requestRenderAll(); }
   });
   bind('#strokeWidth', 'strokeWidth', Number); bind('#opacity', 'opacity', v => v / 100);
   bind('#fontFamily', 'fontFamily', v => v, 'change');
   bind('#lineHeight', 'lineHeight', v => v / 100); bind('#charSpacing', 'charSpacing', Number);
-  $('#angle').addEventListener('input', e => { targets().forEach(o => o.rotate(+e.target.value)); canvas.requestRenderAll(); });
+  $('#angle').addEventListener('input', e => { targets().forEach(o => o.rotate(+e.target.value)); canvas.requestRenderAll(); placeFloat(); });
   $('#angle').addEventListener('change', commit);
   $('#fontSize').addEventListener('input', e => {
-    targets().filter(isText).forEach(o => o.set({ fontSize: +e.target.value || 12, scaleX: 1, scaleY: 1 })); canvas.requestRenderAll();
+    const v = +e.target.value || 12;
+    targets().forEach(o => { if (isArch(o)) setProp(o, 'fontSize', v); else if (isText(o)) o.set({ fontSize: v, scaleX: 1, scaleY: 1 }); }); canvas.requestRenderAll();
   });
   $('#fontSize').addEventListener('change', commit);
+  $('#archText').addEventListener('input', e => { const o = active(); if (isArch(o)) setProp(o, 'text', e.target.value || ' '); });
+  $('#archCurve').addEventListener('input', e => { const o = active(); if (isArch(o)) setProp(o, 'curve', +e.target.value); });
+  $('#archText').addEventListener('change', commit); $('#archCurve').addEventListener('change', commit);
   $('#shadow').onchange = e => {
-    const k = u();
-    targets().forEach(o => o.set('shadow', e.target.checked ? new fabric.Shadow({ color: 'rgba(0,0,0,.45)', blur: k * 0.015, offsetX: k * 0.006, offsetY: k * 0.008 }) : null));
+    targets().forEach(o => o.set('shadow', e.target.checked ? new fabric.Shadow({ color: 'rgba(0,0,0,.45)', blur: u() * 0.015, offsetX: u() * 0.006, offsetY: u() * 0.008 }) : null));
     canvas.requestRenderAll(); commit();
   };
-  const toggleStyle = (prop, on, off) => act(o => { if (isText(o)) o.set(prop, o[prop] === on ? off : on); });
+  const toggleStyle = (prop, on, off) => act(o => { if (isArch(o)) setProp(o, prop, (o.archData[prop] === on ? off : on)); else if (isText(o)) o.set(prop, o[prop] === on ? off : on); });
   $('#bold').onclick = toggleStyle('fontWeight', 'bold', 'normal');
-  $('#italic').onclick = toggleStyle('fontStyle', 'italic', 'normal');
-  $('#underline').onclick = act(o => isText(o) && o.set('underline', !o.underline));
+  $('#italic').onclick = act(o => isText(o) && !isArch(o) && o.set('fontStyle', o.fontStyle === 'italic' ? 'normal' : 'italic'));
+  $('#underline').onclick = act(o => isText(o) && !isArch(o) && o.set('underline', !o.underline));
   $$('[data-talign]').forEach(b => b.onclick = act(o => isText(o) && o.set('textAlign', b.dataset.talign)));
 
-  /* ---------- image filters ---------- */
+  /* ================= image filters ================= */
   const F = fabric.Image.filters;
   const PRESETS = {
-    grayscale: () => [new F.Grayscale()],
-    sepia: () => [new F.Sepia()],
-    invert: () => [new F.Invert()],
+    grayscale: () => [new F.Grayscale()], sepia: () => [new F.Sepia()], invert: () => [new F.Invert()],
     vintage: () => [new F.Sepia(), new F.Contrast({ contrast: 0.1 }), new F.Brightness({ brightness: -0.05 })],
   };
   function applyFilters(o) {
-    const a = o.adj || (o.adj = {}), f = [];
+    const a = o.adj || (o.adj = DEFAULT_ADJ()), f = [];
     if (a.whiteDist) f.push(new F.RemoveColor({ color: '#ffffff', distance: a.whiteDist / 200 }));
     if (a.brightness) f.push(new F.Brightness({ brightness: a.brightness / 100 }));
     if (a.contrast) f.push(new F.Contrast({ contrast: a.contrast / 100 }));
@@ -370,13 +649,13 @@
     o.filters = f; o.applyFilters(); canvas.requestRenderAll();
   }
   $$('[data-filter]').forEach(i => {
-    i.addEventListener('input', () => { const o = active(); if (!isImage(o)) return; (o.adj ||= {})[i.dataset.filter] = +i.value; applyFilters(o); });
+    i.addEventListener('input', () => { const o = active(); if (!isImage(o)) return; (o.adj ||= DEFAULT_ADJ())[i.dataset.filter] = +i.value; applyFilters(o); });
     i.addEventListener('change', commit);
   });
   $$('[data-preset]').forEach(b => b.onclick = () => {
     const o = active(); if (!isImage(o)) return;
-    if (b.dataset.preset === 'reset') o.adj = { brightness: 0, contrast: 0, saturation: 0, blur: 0, whiteDist: 0, preset: '' };
-    else (o.adj ||= {}).preset = o.adj.preset === b.dataset.preset ? '' : b.dataset.preset;
+    if (b.dataset.preset === 'reset') o.adj = DEFAULT_ADJ();
+    else (o.adj ||= DEFAULT_ADJ()).preset = o.adj.preset === b.dataset.preset ? '' : b.dataset.preset;
     applyFilters(o); refreshProps(); commit();
   });
   $('#cropToCanvas').onclick = act(o => {
@@ -385,16 +664,17 @@
     o.set({ scaleX: s, scaleY: s, left: W / 2, top: H / 2, originX: 'center', originY: 'center', angle: 0 }); o.setCoords();
   });
 
-  /* ---------- save / export ---------- */
+  /* ================= save / export ================= */
   function download(href, name) { const a = document.createElement('a'); a.href = href; a.download = name; a.click(); }
+  const slug = () => ($('#projectName').value || 'design').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'design';
   $('#saveProject').onclick = () => {
-    const u = URL.createObjectURL(new Blob([snapshot()], { type: 'application/json' }));
-    download(u, 'design.chitra.json'); setTimeout(() => URL.revokeObjectURL(u), 1000);
+    const url = URL.createObjectURL(new Blob([snapshot()], { type: 'application/json' }));
+    download(url, `${slug()}.chitra.json`); setTimeout(() => URL.revokeObjectURL(url), 1000); toast('Project saved', '💾');
   };
   $('#openProject').onchange = e => {
     const f = e.target.files[0]; if (!f) return;
     const r = new FileReader();
-    r.onload = () => { try { restore(r.result); setTimeout(commit, 50); } catch { alert('That is not a Chitra project file.'); } };
+    r.onload = () => { try { welcome = false; restore(r.result); setTimeout(commit, 80); toast('Project opened', '📂'); } catch { alert('That is not a Chitra project file.'); } };
     r.readAsText(f); e.target.value = '';
   };
 
@@ -413,31 +693,141 @@
     out.set(bytes.subarray(0, 33)); out.set(chunk, 33); out.set(bytes.subarray(33), 54);
     return out;
   }
-  $('#download').onclick = () => {
+  function renderDesign(white) {
     canvas.discardActiveObject(); canvas.renderAll();
-    const fmt = $('#exportFormat').value, mime = fmt === 'jpeg' ? 'image/jpeg' : 'image/png';
     const prevBg = canvas.backgroundColor;
-    if (fmt === 'jpeg' && !prevBg) canvas.backgroundColor = '#ffffff'; // JPG has no transparency
-    let el = canvas.toCanvasElement(1 / zoom);
-    canvas.backgroundColor = prevBg;
-    if ($('#mirror').checked) {
+    if (white && !prevBg) canvas.backgroundColor = '#ffffff';
+    const el = canvas.toCanvasElement(1 / zoom);
+    canvas.backgroundColor = prevBg; canvas.renderAll(); return el;
+  }
+  function exportFile(kind) {
+    const fmt = kind === 'jpg' ? 'jpeg' : 'png', mime = `image/${fmt}`;
+    let el = renderDesign(kind === 'jpg');
+    if (kind === 'sub') {
       const m = document.createElement('canvas'); m.width = el.width; m.height = el.height;
-      const ctx = m.getContext('2d'); ctx.translate(m.width, 0); ctx.scale(-1, 1); ctx.drawImage(el, 0, 0); el = m;
+      const g = m.getContext('2d'); g.translate(m.width, 0); g.scale(-1, 1); g.drawImage(el, 0, 0); el = m;
     }
     el.toBlob(async blob => {
       const bytes = stampDpi(new Uint8Array(await blob.arrayBuffer()), fmt);
       const url = URL.createObjectURL(new Blob([bytes], { type: mime }));
-      download(url, `chitra-${W}x${H}${$('#mirror').checked ? '-mirrored' : ''}.${fmt === 'jpeg' ? 'jpg' : 'png'}`);
+      download(url, `${slug()}-${kind}-${W}x${H}.${fmt === 'jpeg' ? 'jpg' : 'png'}`);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
+      confetti(); toast(kind === 'sub' ? 'Mirrored file ready for sublimation' : kind === 'dtf' ? 'Transparent DTF file ready' : 'JPG saved', '🎉');
     }, mime, 0.95);
-  };
+  }
+  const menu = $('#exportMenu');
+  $('#exportBtn').onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
+  $$('[data-export]').forEach(b => b.onclick = () => { menu.hidden = true; exportFile(b.dataset.export); });
+  document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target)) menu.hidden = true; });
 
-  /* ---------- keyboard ---------- */
+  /* ================= mockup preview ================= */
+  const MOCK_COLORS = ['#ffffff', '#14110f', '#1e3a8a', '#ff2d95', '#ffd23f', '#2ec4b6', '#9ca3af', '#dc2626'];
+  let mockKind = 'shirt', mockColor = '#ffffff';
+  $('#mockColors').innerHTML = MOCK_COLORS.map(c => `<button data-mc="${c}" style="background:${c}"></button>`).join('');
+  $$('[data-mc]').forEach(b => b.onclick = () => { mockColor = b.dataset.mc; drawMockup(); });
+  $$('[data-mock]').forEach(b => b.onclick = () => { mockKind = b.dataset.mock; drawMockup(); });
+  function drawMockup() {
+    $$('[data-mock]').forEach(b => b.classList.toggle('on', b.dataset.mock === mockKind));
+    const c = $('#mockCanvas'), g = c.getContext('2d'); g.clearRect(0, 0, 700, 700);
+    const bgG = g.createRadialGradient(350, 320, 40, 350, 350, 480); bgG.addColorStop(0, '#3a3a58'); bgG.addColorStop(1, '#14141f');
+    g.fillStyle = bgG; g.fillRect(0, 0, 700, 700);
+    const art = renderDesign(false), k = art.width / W;
+    g.save();
+    if (mockKind === 'shirt') {
+      g.scale(700 / 600, 700 / 600);
+      const body = new Path2D('M200 60 L120 90 L40 190 L100 230 L140 190 L140 540 L460 540 L460 190 L500 230 L560 190 L480 90 L400 60 Q300 130 200 60 Z');
+      g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 40; g.shadowOffsetY = 20; g.fillStyle = mockColor; g.fill(body); g.shadowColor = 'transparent';
+      g.clip(body);
+      const sh = g.createLinearGradient(0, 0, 600, 0); sh.addColorStop(0, 'rgba(0,0,0,.28)'); sh.addColorStop(.3, 'rgba(255,255,255,.1)'); sh.addColorStop(.7, 'rgba(0,0,0,.04)'); sh.addColorStop(1, 'rgba(0,0,0,.3)');
+      g.fillStyle = sh; g.fillRect(0, 0, 600, 600);
+      g.strokeStyle = 'rgba(0,0,0,.18)'; g.lineWidth = 3;
+      g.beginPath(); g.moveTo(140, 190); g.lineTo(100, 230); g.moveTo(460, 190); g.lineTo(500, 230); g.stroke();
+      g.fillStyle = 'rgba(0,0,0,.28)'; g.fill(new Path2D('M200 60 Q300 130 400 60 Q300 98 200 60 Z'));
+      g.restore(); g.save();
+      const bw = 250, bh = 310, s = Math.min(bw / art.width, bh / art.height), dw = art.width * s, dh = art.height * s;
+      g.drawImage(art, 350 - dw / 2, 205, dw, dh);
+    } else {
+      g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 40; g.shadowOffsetY = 24;
+      g.strokeStyle = mockColor; g.lineWidth = 36; g.beginPath(); g.arc(480, 360, 82, -Math.PI / 2, Math.PI / 2); g.stroke();
+      g.fillStyle = mockColor; g.beginPath(); g.roundRect(200, 190, 280, 330, 24); g.fill(); g.shadowColor = 'transparent';
+      g.save(); g.beginPath(); g.roundRect(200, 190, 280, 330, 24); g.clip();
+      const sx = W * 0.225, sw = W * 0.55; let dw = 240, dh = dw * H / sw; if (dh > 290) { dh = 290; dw = dh * sw / H; }
+      g.drawImage(art, sx * k, 0, sw * k, H * k, 340 - dw / 2, 355 - dh / 2, dw, dh);
+      const hl = g.createLinearGradient(200, 0, 480, 0);
+      [[0, .4], [.12, 0], [.28, -.3], [.38, 0], [.82, 0], [1, .45]].forEach(([o, a]) => hl.addColorStop(o, a >= 0 ? `rgba(0,0,0,${a})` : `rgba(255,255,255,${-a})`));
+      g.fillStyle = hl; g.fillRect(200, 190, 280, 330); g.restore();
+      g.fillStyle = 'rgba(255,255,255,.25)'; g.beginPath(); g.ellipse(340, 192, 140, 14, 0, 0, Math.PI * 2); g.fill();
+    }
+    g.restore();
+  }
+  function openMockup() {
+    mockKind = guide === 'mug' ? 'mug' : 'shirt'; $('#mockup').hidden = false; drawMockup();
+  }
+  $('#mockupBtn').onclick = openMockup;
+  $('#mockDownload').onclick = () => { $('#mockCanvas').toBlob(b => { const url = URL.createObjectURL(b); download(url, `${slug()}-mockup.png`); setTimeout(() => URL.revokeObjectURL(url), 2000); confetti(); toast('Mockup saved', '👀'); }); };
+  $$('[data-close]').forEach(b => b.onclick = () => b.closest('.modal').hidden = true);
+  $$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m && m.id !== 'picker') m.hidden = true; }));
+
+  /* ================= command palette ================= */
+  const CMDS = () => [
+    { n: 'Surprise me', i: '🎲', k: 'random fun', run: surprise },
+    { n: 'Shuffle colours', i: '🎨', k: 'recolor palette', run: () => applyPalette(pick(PALETTES)) },
+    { n: 'Sparkle burst', i: '✨', k: 'stars', run: sparkle },
+    { n: 'Add heading', i: '🔤', k: 'text', run: () => addText('heading') },
+    { n: 'Add arch text', i: '⌒', k: 'curve text', run: newArch },
+    { n: 'Export DTF transfer (transparent PNG)', i: '👕', k: 'download', run: () => exportFile('dtf') },
+    { n: 'Export sublimation (mirrored PNG)', i: '☕', k: 'download mirror', run: () => exportFile('sub') },
+    { n: 'Export JPG', i: '🖼️', k: 'download', run: () => exportFile('jpg') },
+    { n: 'Show mockup preview', i: '👀', k: 'shirt mug preview', run: openMockup },
+    { n: 'Pack designs onto sheet', i: '🧩', k: 'gang sheet', run: pack },
+    { n: 'Toggle print guides', i: '📏', k: 'margin', run: () => { $('#showGuides').click(); } },
+    { n: 'Toggle transparent background', i: '🧊', k: 'bg', run: () => { $('#transparent').click(); } },
+    { n: 'Save project', i: '💾', k: 'file', run: () => $('#saveProject').click() },
+    { n: 'Undo', i: '↶', k: '', run: undo }, { n: 'Redo', i: '↷', k: '', run: redo },
+    { n: 'Fit canvas to screen', i: '🔍', k: 'zoom', run: fit },
+    ...PRODUCTS.map(p => ({ n: `Product: ${p.name}`, i: p.icon, k: `size ${p.g}`, run: () => chooseProduct(p) })),
+    ...PALETTES.map(p => ({ n: `Palette: ${p.n}`, i: '🎨', k: 'colours', run: () => applyPalette(p) })),
+  ];
+  let cmdItems = [], cmdSel = 0;
+  function renderCmd() {
+    const q = $('#cmdInput').value.toLowerCase().split(/\s+/).filter(Boolean);
+    cmdItems = CMDS().filter(c => q.every(t => (c.n + ' ' + c.k).toLowerCase().includes(t))).slice(0, 30); cmdSel = Math.min(cmdSel, Math.max(cmdItems.length - 1, 0));
+    $('#cmdList').innerHTML = cmdItems.map((c, i) => `<li class="${i === cmdSel ? 'on' : ''}" data-i="${i}"><i>${c.i}</i>${c.n}</li>`).join('') || '<li>Nothing found</li>';
+    $$('#cmdList li[data-i]').forEach(li => li.onclick = () => runCmd(+li.dataset.i));
+  }
+  function runCmd(i) { const c = cmdItems[i]; $('#cmd').hidden = true; if (c) c.run(); }
+  function openCmd() { $('#cmd').hidden = false; $('#cmdInput').value = ''; cmdSel = 0; renderCmd(); $('#cmdInput').focus(); }
+  $('#cmdk').onclick = openCmd;
+  $('#cmdInput').addEventListener('input', () => { cmdSel = 0; renderCmd(); });
+  $('#cmdInput').addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { cmdSel = Math.min(cmdSel + 1, cmdItems.length - 1); renderCmd(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { cmdSel = Math.max(cmdSel - 1, 0); renderCmd(); e.preventDefault(); }
+    else if (e.key === 'Enter') runCmd(cmdSel);
+  });
+
+  /* ================= rail tabs & inspector tabs ================= */
+  $$('#rail [data-tab]').forEach(b => b.onclick = () => {
+    const fly = $('#flyout'), already = b.classList.contains('on');
+    if (already) { fly.classList.toggle('collapsed'); setTimeout(fit, 30); return; }
+    const wasCollapsed = fly.classList.contains('collapsed'); fly.classList.remove('collapsed');
+    $$('#rail [data-tab]').forEach(x => x.classList.toggle('on', x === b));
+    $$('.panel').forEach(p => p.hidden = p.dataset.panel !== b.dataset.tab);
+    if (wasCollapsed) setTimeout(fit, 30);
+  });
+  $$('[data-itab]').forEach(b => b.onclick = () => {
+    $$('[data-itab]').forEach(x => x.classList.toggle('on', x === b));
+    $('#tab-design').hidden = b.dataset.itab !== 'design'; $('#tab-layers').hidden = b.dataset.itab !== 'layers'; renderLayers();
+  });
+
+  /* ================= keyboard ================= */
   document.addEventListener('keydown', e => {
+    const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+    if (mod && k === 'k') { e.preventDefault(); $('#cmd').hidden ? openCmd() : ($('#cmd').hidden = true); return; }
+    if (k === 'escape') { $$('.modal').forEach(m => { if (m.id !== 'picker' || !welcome) m.hidden = true; }); menu.hidden = true; return; }
     const el = document.activeElement;
     if (/INPUT|SELECT|TEXTAREA/.test(el?.tagName) && !/range|color|checkbox/.test(el.type || '')) return;
+    if ($$('.modal').some(m => !m.hidden)) return;
     const o = active(); if (o?.isEditing) return;
-    const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
     if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
     else if (mod && k === 'y') { e.preventDefault(); redo(); }
     else if (mod && k === 'd') { e.preventDefault(); duplicate(); }
@@ -445,21 +835,23 @@
     else if (o && k.startsWith('arrow')) {
       e.preventDefault(); const d = e.shiftKey ? 10 : 1;
       o.set({ left: o.left + (k === 'arrowright' ? d : k === 'arrowleft' ? -d : 0), top: o.top + (k === 'arrowdown' ? d : k === 'arrowup' ? -d : 0) });
-      o.setCoords(); canvas.requestRenderAll();
+      o.setCoords(); canvas.requestRenderAll(); placeFloat();
     }
   });
   $('#undo').onclick = undo; $('#redo').onclick = redo;
 
-  /* ---------- boot ---------- */
+  /* ================= boot ================= */
   setSize(3300, 3900, false, 'shirt');
   history.busy = true; TEMPLATES.slogan(); history.busy = false; canvas.renderAll(); commit();
+  let seen = false; try { seen = !!localStorage.getItem('chitra.seen'); } catch { }
+  if (seen) welcome = false; else openPicker();
   // Re-measure text once web fonts have arrived so layout/export match what you see.
   if (document.fonts) {
-    Promise.all(FONTS.map(f => document.fonts.load(`40px "${f}"`).catch(() => {}))).then(() => {
+    Promise.all(FONTS.map(f => document.fonts.load(`40px "${f}"`).catch(() => { }))).then(() => {
       fabric.util.clearFabricFontCache();
       canvas.getObjects().forEach(o => { if (isText(o)) { o.dirty = true; o.initDimensions(); } });
       canvas.requestRenderAll();
     });
   }
-  window.chitra = { canvas, undo, redo, addText, TEMPLATES, setSize, pack };
+  window.chitra = { canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, openMockup, applyPalette, PALETTES };
 })();
