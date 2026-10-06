@@ -140,5 +140,30 @@
   C.addCommand('Magic Resize (copy to other sizes)', openResize); C.addCommand('Brand kit', openBrand); C.addCommand('Version history', openHistory); C.addCommand('Send to print shop', openPrint);
   // Home: describe-it on the hero search
   const hf = $('#heroForm'); if (hf) { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn magic-hero'; b.innerHTML = `${ico('wand-sparkles', 15)} Surprise me with this`; hf.after(b); b.onclick = () => { const v = $('#heroInput').value.trim(); if (!v) return toast('Type an idea first — e.g. “eid mug”', ''); magic(v); }; }
+
+  /* ================= Animated video export (WebM / MP4 via MediaRecorder) ================= */
+  const an = modal('animModal', `<h2>Animate &amp; save as video</h2><p class="tip">Every element enters one after another. Perfect for stories, reels and WhatsApp status.</p><div class="chips big" id="anPresets"></div><label class="slider-row">Speed <input type="range" id="anSpeed" min="1" max="3" step="1" value="2"></label><div class="pr-btns"><button class="cta" id="anGo">${ico('video', 16)} Record video</button></div><p class="tip" id="anNote"></p>`);
+  const EASE = { out: t => 1 - Math.pow(1 - t, 3), back: t => { const c = 1.70158; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); } };
+  const PRESETS = { fade: ['Fade in', (o, e, b) => ({ opacity: b.opacity * EASE.out(e) })], rise: ['Slide up', (o, e, b, H) => ({ opacity: b.opacity * EASE.out(Math.min(1, e * 1.6)), top: b.top + (1 - EASE.out(e)) * H * 0.07 })], pop: ['Pop', (o, e, b) => { const s = 0.55 + 0.45 * EASE.back(e); return { opacity: b.opacity * Math.min(1, e * 3), scaleX: b.scaleX * s, scaleY: b.scaleY * s }; }], drop: ['Drop in', (o, e, b, H) => ({ opacity: b.opacity * Math.min(1, e * 4), top: b.top - (1 - EASE.back(e)) * H * 0.12 })] };
+  let anKind = 'rise';
+  $('#anPresets', an).innerHTML = Object.entries(PRESETS).map(([k, v]) => `<button class="chip${k === anKind ? ' on' : ''}" data-k="${k}">${v[0]}</button>`).join('');
+  $$('#anPresets [data-k]').forEach(b => b.onclick = () => { anKind = b.dataset.k; $$('#anPresets .chip').forEach(x => x.classList.toggle('on', x === b)); });
+  const bestMime = () => ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m));
+  async function recordAnimation() {
+    if (!window.MediaRecorder) return toast('This browser cannot record video — try Chrome or Safari 14.1+', '');
+    const mime = bestMime(), W = C.W, H = C.H, k = Math.min(1, 1080 / Math.max(W, H)), cv = document.createElement('canvas'); cv.width = Math.round(W * k / 2) * 2; cv.height = Math.round(H * k / 2) * 2;
+    const g = cv.getContext('2d'), objs = canvas.getObjects().filter(o => !o.slot), base = objs.map(o => ({ o, opacity: o.opacity, top: o.top, left: o.left, scaleX: o.scaleX, scaleY: o.scaleY })), speed = +$('#anSpeed').value, per = [1.1, 0.8, 0.55][speed - 1], stag = per * 0.28, total = per + stag * Math.max(0, objs.length - 1) + 1.2;
+    canvas.discardActiveObject(); const rec = new MediaRecorder(cv.captureStream(30), { mimeType: mime, videoBitsPerSecond: 6e6 }), chunks = []; rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+    const done = new Promise(r => { rec.onstop = r; }); const job = busyBar('Recording…'); canvas.__exporting = true; canvas.fire('export:start'); const prevZ = canvas.getZoom();
+    const frame = t => { base.forEach((b, i) => { const e = Math.max(0, Math.min(1, (t - i * stag) / per)); if (e >= 1) Object.assign(b.o, { opacity: b.opacity, top: b.top, left: b.left, scaleX: b.scaleX, scaleY: b.scaleY }); else if (e <= 0) b.o.opacity = 0; else b.o.set(PRESETS[anKind][1](b.o, e, b, H)); b.o.dirty = true; });
+      canvas.renderAll(); const src = canvas.toCanvasElement(k / prevZ); g.fillStyle = '#ffffff'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(src, 0, 0, cv.width, cv.height); };
+    try { rec.start(); const t0 = performance.now(); await new Promise(res => { const tick = () => { const t = (performance.now() - t0) / 1000; frame(Math.min(t, total)); job.set(`Recording… ${Math.min(100, Math.round(t / total * 100))}%`); if (t >= total) res(); else requestAnimationFrame(tick); }; tick(); }); rec.stop(); await done; }
+    finally { base.forEach(b => Object.assign(b.o, { opacity: b.opacity, top: b.top, left: b.left, scaleX: b.scaleX, scaleY: b.scaleY, dirty: true })); canvas.__exporting = false; canvas.fire('export:end'); canvas.renderAll(); job.done(); }
+    const blob = new Blob(chunks, { type: mime.split(';')[0] }), ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm', a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `${$('#projectName').value.replace(/\W+/g, '-') || 'design'}.${ext}`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    return { size: blob.size, ext };
+  }
+  $('#anGo', an).onclick = async () => { $('#anGo').disabled = true; try { const r = await recordAnimation(); an.hidden = true; if (r) toast(`Video saved (${r.ext.toUpperCase()}, ${(r.size / 1e6).toFixed(1)} MB)`, ''); } catch (e) { $('#anNote').textContent = 'Could not record: ' + e.message; } finally { $('#anGo').disabled = false; } };
+  const openAnimate = () => { $('#anNote').textContent = bestMime() ? '' : 'Video recording is not supported in this browser.'; an.hidden = false; };
+  C.addCommand('Animate & save as video', openAnimate); Object.assign(C, { openAnimate, recordAnimation });
   Object.assign(C, { openResize, openBrand, openHistory, openPrint, magic, describe, resizeTo });
 })();

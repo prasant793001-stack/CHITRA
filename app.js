@@ -1023,6 +1023,7 @@
   function exportFile(kind) {
     if (kind === 'pdf') return exportPDF();
     if (kind === 'credits') return downloadCredits(false);
+    if (kind === 'video') return chitra.openAnimate && chitra.openAnimate();
     const fmt = kind === 'jpg' ? 'jpeg' : 'png', mime = `image/${fmt}`;
     let el; try { el = renderDesign(kind === 'jpg'); } catch (err) { console.warn(err); return toast('An image on this page blocks exporting — upload it from your device instead', '⚠️'); }
     const sc = renderDesign.scale || 1, outDpi = Math.round(DPI * sc);

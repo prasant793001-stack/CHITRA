@@ -65,4 +65,10 @@ module.exports = [
     await p.evaluate(u => new Promise(r => fabric.Image.fromURL(u, i => { chitra.place(i); r(); })), url); await p.waitForTimeout(300);
     const r = await p.evaluate(() => { const o = chitra.canvas.getObjects(), im = o.find(x => x.type === 'image'), sl = o.find(x => x.slot); return { inSlot: !!im.inSlot, above: o.indexOf(im) === o.indexOf(sl) + 1, textAbove: o.slice(o.indexOf(im) + 1).some(x => /textbox/.test(x.type)) }; });
     ok('photo lands in the frame, above it, below the text', r.inSlot && r.above && r.textAbove, JSON.stringify(r)); } },
+  { name: 'animated video export', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'ig-1' })); await p.waitForTimeout(1200);
+    await p.evaluate(() => { document.querySelector('#anSpeed') || chitra.openAnimate(); document.querySelector('#anSpeed').value = 3; document.querySelectorAll('.modal').forEach(m => m.hidden = true); });
+    const [d, r] = await Promise.all([p.waitForEvent('download', { timeout: 30000 }), p.evaluate(() => chitra.recordAnimation())]);
+    ok('video downloads (.webm/.mp4) and is not empty', /\.(webm|mp4)$/.test(d.suggestedFilename()) && r.size > 5000, d.suggestedFilename() + ' ' + r.size);
+    ok('design restored after recording', await p.evaluate(() => chitra.canvas.getObjects().every(o => o.opacity > 0))); } },
 ];
