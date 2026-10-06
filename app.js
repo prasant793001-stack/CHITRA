@@ -213,6 +213,11 @@
   $('#zoomFit').onclick = fit;
   $('#showGuides').onchange = drawGuides;
   window.addEventListener('resize', fit);
+  // two-finger pinch to zoom (phones / tablets)
+  let pinch = null; const tdist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  $('#stage').addEventListener('touchstart', e => { if (e.touches.length === 2) pinch = { d: tdist(e.touches), z: zoom }; }, { passive: true });
+  $('#stage').addEventListener('touchmove', e => { if (pinch && e.touches.length === 2) { zoom = pinch.z * (tdist(e.touches) / pinch.d); applyZoom(); e.preventDefault(); } }, { passive: false });
+  $('#stage').addEventListener('touchend', e => { if (e.touches.length < 2) pinch = null; }, { passive: true });
 
   /* ================= product picker ================= */
   let pickTab = 'all';
@@ -724,7 +729,7 @@
 
   function refreshProps() {
     const o = active();
-    $('#emptyProps').hidden = !!o; $('#propsBody').hidden = !o;
+    $('#emptyProps').hidden = !!o; $('#propsBody').hidden = !o; document.body.classList.toggle('has-sel', !!o);
     renderLayers();
     if (!o) return;
     const arch = isArch(o), fillV = arch ? o.archData.fill : o.fill, strokeV = arch ? o.archData.stroke : o.stroke;
@@ -1036,6 +1041,7 @@
   /* ================= boot ================= */
   setSize(3300, 3900, false, 'shirt');
   history.busy = true; TEMPLATES.slogan(); history.busy = false; canvas.renderAll(); commit(); pages[0] = { json: snapshot(), thumb: null, hist: null }; renderPages();
+  if (matchMedia('(max-width:800px)').matches) $('#flyout').classList.add('collapsed'); // phones: tools open as a bottom sheet on tap
   let seen = false; try { seen = !!localStorage.getItem('chitra.seen'); } catch { }
   if (seen) welcome = false; else openPicker();
   // Re-measure text once web fonts have arrived so layout/export match what you see.

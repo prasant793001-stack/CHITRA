@@ -16,7 +16,10 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 ## New in the Studio redesign
 Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
-## Canva-style documents (new)
+## Phone & install (new)
+Works on phones/tablets: bottom tool bar, tool and property sheets that slide up, pinch-to-zoom. It is a **PWA** — host it on any HTTPS site (GitHub Pages, Netlify…), then "Add to Home Screen" (Android/iOS) or "Install" (desktop Chrome/Edge) and it opens like an app, with offline support for the editor itself.
+
+## Canva-style documents
 - **60+ sizes**: A0–A6, Letter/Legal/Tabloid, posters & photo sizes, business card, flyer, invitation, certificate, menu, social posts/stories/covers, YouTube, presentations, plus DTF/sublimation products. Search or browse by category.
 - **Custom size** in inches / mm / cm / px at 72–300 DPI, **portrait ⇄ landscape** swap, artwork rescales when you change size.
 - **Multi-page designs** with a page strip (add / duplicate / delete) and **PDF export at true paper size** (all pages).
