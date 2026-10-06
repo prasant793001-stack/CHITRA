@@ -100,7 +100,7 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange)}
 .btn.ghost kbd{margin-left:6px}
 
 /* ---------- layout ---------- */
-#app{height:100vh;display:grid;grid-template-rows:auto 1fr;background:var(--bg)}
+#app{height:100vh;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr);grid-template-columns:minmax(0,1fr);background:var(--bg)}
 .workspace{display:grid;grid-template-columns:78px 330px minmax(0,1fr) 300px;min-height:0}
 .rail{display:flex;flex-direction:column;gap:2px;padding:8px 6px;overflow:auto;background:#fff;border-right:1px solid var(--line)}
 .rail button{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;color:#5b6475;padding:9px 0;border-radius:14px;cursor:pointer;font:700 11px "Plus Jakarta Sans";transition:.15s}
