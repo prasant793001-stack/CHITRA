@@ -17,7 +17,7 @@ settings key shield cloud sun moon camera link external-link images badge-check 
 circle-check circle-x eye eye-off group ungroup sticker clapperboard box boxes shopping-bag shopping-cart store sprout leaf cake party-popper graduation-cap briefcase camera-off scan  droplet flip-vertical-2
 ruler rotate-ccw clock list list-ordered paintbrush palette bell heart-handshake ribbon scroll-text receipt tent-tree  gamepad-2 music headphones plane map-pin globe cherry apple pizza wine beer ice-cream-cone
 cake-slice gem layout-dashboard columns-2 rows-2 grid-2x2 panel-top app-window laptop tablet phone folder-plus file-plus file-down file-up undo redo case-sensitive baseline highlighter paint-bucket pipette
-message-circle spline sparkles brain-circuit cpu scaling door-open pin hard-hat a-large-small""".split()
+message-circle share-2 arrow-right arrow-up-right download-cloud wifi-off history wand-sparkles spline sparkles brain-circuit cpu scaling door-open pin hard-hat a-large-small""".split()
 missing = [n for n in dict.fromkeys(UI) if n not in icons]
 print('missing:', missing)
 ui = {n: icons[n] for n in dict.fromkeys(UI) if n in icons}

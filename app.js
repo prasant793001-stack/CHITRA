@@ -996,9 +996,24 @@
     savePage(); const keep = cur; let doc = null;
     for (let i = 0; i < pages.length; i++) {
       await new Promise(res => loadPage(i, res));
-      const el = renderDesign(true), wmm = (W / DPI) * 25.4, hmm = (H / DPI) * 25.4, o = wmm > hmm ? 'l' : 'p';
-      if (!doc) doc = new window.jspdf.jsPDF({ orientation: o, unit: 'mm', format: [wmm, hmm], compress: true }); else doc.addPage([wmm, hmm], o);
-      doc.addImage(el.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, wmm, hmm, undefined, 'FAST');
+      let el = renderDesign(true), wmm = (W / DPI) * 25.4, hmm = (H / DPI) * 25.4;
+      const marks = $('#pdfMarks')?.checked, BLEED = 3, SLUG = marks ? 6 : 0, trimW = wmm, trimH = hmm;
+      if (marks) { // extend the artwork by 3 mm on every side (edge pixels are stretched) and add crop marks in the slug area
+        const bpx = Math.round((BLEED / 25.4) * DPI * (renderDesign.scale || 1)), big = document.createElement('canvas'), g = big.getContext('2d');
+        big.width = el.width + 2 * bpx; big.height = el.height + 2 * bpx; g.drawImage(el, bpx, bpx);
+        g.drawImage(el, 0, 0, el.width, 1, bpx, 0, el.width, bpx); g.drawImage(el, 0, el.height - 1, el.width, 1, bpx, bpx + el.height, el.width, bpx);
+        g.drawImage(el, 0, 0, 1, el.height, 0, bpx, bpx, el.height); g.drawImage(el, el.width - 1, 0, 1, el.height, bpx + el.width, bpx, bpx, el.height);
+        [[0, 0, 0, 0], [el.width - 1, 0, bpx + el.width, 0], [0, el.height - 1, 0, bpx + el.height], [el.width - 1, el.height - 1, bpx + el.width, bpx + el.height]].forEach(([sx, sy, dx, dy]) => g.drawImage(el, sx, sy, 1, 1, dx, dy, bpx, bpx));
+        el = big; wmm += 2 * BLEED; hmm += 2 * BLEED;
+      }
+      const pw = wmm + 2 * SLUG, ph = hmm + 2 * SLUG, o = pw > ph ? 'l' : 'p';
+      if (!doc) doc = new window.jspdf.jsPDF({ orientation: o, unit: 'mm', format: [pw, ph], compress: true }); else doc.addPage([pw, ph], o);
+      doc.addImage(el.toDataURL('image/jpeg', 0.93), 'JPEG', SLUG, SLUG, wmm, hmm, undefined, 'FAST');
+      if (marks) { // crop marks sit outside the bleed so they never print on the product
+        const x0 = SLUG + BLEED, y0 = SLUG + BLEED, x1 = x0 + trimW, y1 = y0 + trimH, off = BLEED + 1.2, len = SLUG - 1.6;
+        doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.2);
+        [[x0, y0, -1, -1], [x1, y0, 1, -1], [x0, y1, -1, 1], [x1, y1, 1, 1]].forEach(([x, y, sx, sy]) => { doc.line(x + sx * off, y, x + sx * (off + len), y); doc.line(x, y + sy * off, x, y + sy * (off + len)); });
+      }
     }
     doc.save(`${slug()}.pdf`); downloadCredits(true); await new Promise(res => loadPage(keep, res)); confetti(); toast('PDF ready — sized for print', '📄');
   }

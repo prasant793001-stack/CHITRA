@@ -541,3 +541,23 @@ button:focus:not(:focus-visible){outline:none}
 .thumb img[data-tpl]:not(.ready){opacity:0}
 .thumb.chk:has(img[data-tpl]:not(.ready)){background:linear-gradient(100deg,#eeeafc 30%,#f8f6ff 50%,#eeeafc 70%) 0 0/300% 100%;animation:shimmer 1.2s linear infinite}
 @keyframes shimmer{to{background-position:-300% 0}}
+
+/* ---- studio tools ---- */
+.studio-tools{margin:0 0 12px;display:grid;gap:10px}
+.magic-form{display:flex;align-items:center;gap:6px;padding:5px 5px 5px 12px;border:1.5px solid var(--line);border-radius:14px;background:#fff;color:var(--orange)}
+.magic-form:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(109,74,255,.16)}
+.magic-form input{flex:1;border:0;box-shadow:none!important;padding:8px 2px;font-size:13px;min-width:0}
+.magic-form .cta{padding:8px 10px;border-radius:10px}
+.st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.st-grid button{display:flex;align-items:center;gap:8px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--text);font:700 12.5px "Plus Jakarta Sans",system-ui,sans-serif;cursor:pointer;transition:.15s;text-align:left}
+.st-grid button:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:var(--shadow)}.st-grid button svg{color:var(--orange);flex:none}
+.magic-hero{margin-top:10px}
+.rz-grid{max-height:48vh;overflow:auto;margin:12px 0}.rz input{position:absolute;opacity:0}.chip.rz{cursor:pointer}.chip.rz:has(input:checked){background:var(--orange);color:#fff;border-color:var(--orange)}.chip.rz small{opacity:.7;margin-left:4px}
+.ver-list{display:grid;gap:8px;margin:12px 0;max-height:46vh;overflow:auto}.ver{display:flex;align-items:center;gap:12px;padding:8px;border:1px solid var(--line);border-radius:14px}.ver img{width:64px;height:64px;object-fit:contain;background:var(--f1);border-radius:10px}.ver div{flex:1;display:grid}.ver small{color:var(--muted)}
+.brand-cols{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}.brand-cols button{width:36px;height:36px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+#brandModal h4,#printModal h4{margin:14px 0 6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+#brandModal .row,#printModal .row{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:6px 0}#brandModal label,#printModal label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}#bkLogo{max-height:46px;border-radius:8px;background:var(--f1);padding:4px}
+#printModal label.block{margin-top:10px}#printModal textarea,#printModal input,#brandModal select{width:100%}.pr-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.studio-busy{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:500;display:flex;align-items:center;gap:10px;background:#1c1840;color:#fff;padding:10px 16px;border-radius:99px;font:700 13px "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:var(--shadow-lg)}
+.studio-busy i{width:14px;height:14px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .8s linear infinite}
+.menu-switch{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;border-top:1px solid var(--line2)}.menu-switch input{accent-color:var(--orange);width:18px;height:18px}.menu-switch span{display:grid}.menu-switch small{color:var(--muted);font-size:11px}

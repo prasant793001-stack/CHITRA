@@ -467,6 +467,7 @@
   <button data-export="jpg"><i class="mi c3"><i data-ico="image" data-s="20"></i></i><span><b>JPG</b><small>White background</small></span></button>
   <button data-export="pdf"><i class="mi c4"><i data-ico="file-text" data-s="20"></i></i><span><b>PDF · all pages</b><small>Print-ready, true paper size</small></span></button>
   <button data-export="png"><i class="mi c1"><i data-ico="image" data-s="20"></i></i><span><b>PNG</b><small>Transparent, current page</small></span></button>
+  <label class="menu-switch"><input type="checkbox" id="pdfMarks"><span><b>Crop marks &amp; 3 mm bleed</b><small>For PDF · print-shop ready</small></span></label>
   <button data-export="credits"><i class="mi c2"><i data-ico="heart-handshake" data-s="20"></i></i><span><b>Thank-you credits</b><small>Photo &amp; graphic credits (.txt)</small></span></button>
 </div>
 
@@ -607,6 +608,7 @@
 <script src="templates.js"></script>
 <script src="home.js"></script>
 <script src="polish.js"></script>
+<script src="studio.js"></script>
 <script>
 if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) {
   const had = !!navigator.serviceWorker.controller;

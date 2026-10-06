@@ -43,4 +43,19 @@ module.exports = [
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'ig-3' })); await p.waitForTimeout(1500);
     const px = await p.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, x = c.getContext('2d'); const d = x.getImageData(c.width / 2 | 0, c.height * 0.2 | 0, 60, 60).data; let n = 0; for (let i = 3; i < d.length; i += 4) n += d[i]; return n; });
     ok('canvas pixels drawn after opening a template', px > 1000, px); } },
+  { name: 'studio tools', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'ig-3', name: 'Resize me' })); await p.waitForTimeout(1200);
+    await p.evaluate(() => chitra.resizeTo([chitra.productByName('Story / Reel / TikTok'), chitra.productByName('A4')])); await p.waitForTimeout(800);
+    const metas = await p.evaluate(async () => (await chitra.store.list()).map(m => m.name + '|' + m.w + 'x' + m.h));
+    ok('Magic Resize created 2 copies', metas.some(m => /Resize me · Story.*1080x1920/.test(m)) && metas.some(m => /Resize me · A4/.test(m)), metas.slice(0, 4).join(' ; '));
+    ok('resized copy has content', await p.evaluate(() => chitra.canvas.getObjects().length) > 0);
+    const d = await p.evaluate(() => chitra.describe('birthday mug for dad')); ok('describe finds a mug template', /^mug|^tee|^ig/.test(d.id) && d.title.toLowerCase().includes('dad'), JSON.stringify(d));
+    await p.evaluate(() => chitra.magic('eid mug')); await p.waitForTimeout(1500);
+    ok('magic opens a mug design', await p.evaluate(() => document.querySelector('#productName').textContent) === '11 oz mug wrap');
+    await p.evaluate(() => chitra.canvas.add(new fabric.Rect({ width: 50, height: 50, left: 10, top: 10 }))); await p.evaluate(() => chitra.saveNow()); await p.evaluate(() => chitra.openHistory()); await p.click('#verNow'); await p.waitForTimeout(600);
+    ok('version saved', await p.locator('#verList .ver').count() >= 1);
+    await p.evaluate(() => document.querySelectorAll('.modal').forEach(m => m.hidden = true));
+    await p.evaluate(() => { document.querySelector('#pdfMarks').checked = true; });
+    const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 30000 }), p.evaluate(() => chitra.exportFile('pdf'))]);
+    ok('PDF with crop marks downloads', /\.pdf$/.test(dl.suggestedFilename())); } },
 ];

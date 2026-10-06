@@ -10,6 +10,8 @@ window.CHITRA_CONFIG = {
   communityFeed: 'community.json',
   // Photo search. SAFEST: deploy worker/photos-proxy.js (free Cloudflare Worker) and paste its URL here - the keys then never reach the browser.
   photoProxy: '',
+  // Where "Send to print" delivers orders (WhatsApp number with country code, email). Leave blank to just share the file.
+  shop: { name: '', whatsapp: '', email: '' },
   // Fallback only (a deterrent, NOT real security): keys scrambled with tools/seal-key.js. Never paste raw keys in this public file.
   sealedKeys: {},
   plans: [
