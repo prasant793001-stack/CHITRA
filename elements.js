@@ -5,7 +5,7 @@
   const { $, $$, toast, canvas, ico, place } = C;
   const u = () => Math.min(C.W, C.H);
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const TINTS = ['#ff7a1a', '#ffc42e', '#1fb26b', '#14b8a6', '#ff5d8f'];
+  const TINTS = ['#6d4aff', '#ffc93c', '#12b886', '#19c3d6', '#ff5c8a'];
 
   /* ================= shapes ================= */
   const star = (n, inner) => { let d = ''; for (let i = 0; i < n * 2; i++) { const r = (i % 2 ? inner : 1) * 47, a = (Math.PI / n) * i - Math.PI / 2; d += (i ? 'L' : 'M') + (50 + r * Math.cos(a)).toFixed(1) + ' ' + (50 + r * Math.sin(a)).toFixed(1); } return d + 'Z'; };

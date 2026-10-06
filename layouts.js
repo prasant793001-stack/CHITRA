@@ -139,7 +139,7 @@
         const t = `${s.slot.label} · ${s.slot.w}×${s.slot.h} in`; ctx.font = '600 11px "Space Grotesk",system-ui,sans-serif';
         const tw = ctx.measureText(t).width + 14, ph = 20, px = x + Math.max(4, Math.min(8, w * 0.02)), py = y + 6;
         if (w > tw + 12 && h > ph + 12) { ctx.fillStyle = '#6d4aff'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, tw, ph, 10) : ctx.rect(px, py, tw, ph); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(t, px + 7, py + ph / 2 + 0.5); }
-        if (empty && w > 140 && h > 60) { ctx.fillStyle = 'rgba(82,51,224,.95)'; ctx.font = '700 13px "Space Grotesk",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+ drop a photo here', x + w / 2, y + h / 2); }
+        if (empty && w > 140 && h > 60) { const lbl = 'Drop or add a photo', tw = ctx.measureText(lbl).width; ctx.font = '700 13px "Plus Jakarta Sans",system-ui,sans-serif'; const bw = ctx.measureText(lbl).width + 28; ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x + w / 2 - bw / 2, y + h / 2 - 15, bw, 30, 15) : ctx.rect(x + w / 2 - bw / 2, y + h / 2 - 15, bw, 30); ctx.fill(); ctx.fillStyle = '#5233e0'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lbl, x + w / 2, y + h / 2 + 0.5); void tw; }
       }
       ctx.restore();
     });

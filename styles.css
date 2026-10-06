@@ -445,7 +445,7 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500;margin-left:6px}
   .ctxbar::-webkit-scrollbar{display:none}.ctxbar[hidden]{display:none}
   .ctxbar button{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;background:transparent;border:0;color:var(--text);border-radius:14px;font:700 10.5px "Plus Jakarta Sans";padding:0;cursor:pointer}
   .ctxbar .cx{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--c,var(--orange));box-shadow:0 4px 10px rgba(40,24,110,.18);transition:.15s}
-  .ctxbar button:nth-child(5n+1){--c:#ff7a1a}.ctxbar button:nth-child(5n+2){--c:#1fb26b}.ctxbar button:nth-child(5n+3){--c:#e5a400}.ctxbar button:nth-child(5n+4){--c:#14b8a6}.ctxbar button:nth-child(5n+5){--c:#ff5d8f}
+  .ctxbar button:nth-child(5n+1){--c:#6d4aff}.ctxbar button:nth-child(5n+2){--c:#19b8c9}.ctxbar button:nth-child(5n+3){--c:#e0a100}.ctxbar button:nth-child(5n+4){--c:#12b886}.ctxbar button:nth-child(5n+5){--c:#ff5c8a}
   .ctxbar button.on .cx{outline:3px solid rgba(109,74,255,.35);transform:scale(1.06)}
   .ctxbar button.danger .cx{background:#fde8ec;color:#d92d4a;box-shadow:none}
   .inspector{display:none;left:0;right:0;top:auto;bottom:calc(78px + env(safe-area-inset-bottom));width:auto;height:34vh;max-height:34vh;padding:0 14px 14px;overflow:auto;border-radius:24px 24px 0 0;z-index:61;box-shadow:0 -10px 40px rgba(40,24,110,.2);border:1px solid var(--line)}
@@ -573,3 +573,5 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 #viewer main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 340px}.v-img{display:grid;place-items:center;padding:20px;background:var(--stage);min-height:0}.v-img img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;box-shadow:var(--shadow-lg);background:#fff}
 #viewer aside{padding:20px;display:flex;flex-direction:column;gap:10px;overflow:auto;background:#fff;border-left:1px solid var(--line)}#viewer aside input,#viewer aside textarea{width:100%}
 @media (max-width:800px){#viewer main{grid-template-columns:1fr;grid-template-rows:minmax(0,45%) 1fr}#viewer aside{border-left:0;border-top:1px solid var(--line)}}
+
+.hm-foot{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;justify-content:center;padding:26px 0 90px;color:var(--muted);font-size:12.5px}.hm-foot a{color:var(--muted)}

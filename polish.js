@@ -72,7 +72,7 @@
   $('.x', help).onclick = () => { help.hidden = true; }; help.addEventListener('mousedown', e => { if (e.target === help) help.hidden = true; });
   function openHelp() { help.hidden = false; }
   $('#tourBtn', help).onclick = () => { help.hidden = true; startTour(true); };
-  C.openHelp = openHelp;
+  C.openHelp = openHelp; $('#hmHelp') && ($('#hmHelp').onclick = openHelp);
 
   /* ---------- first-run tour ---------- */
   const STEPS = [

@@ -64,3 +64,8 @@ Never commit raw keys to this public repo (`tools/seal-key.js` only scrambles th
 
 ## Template library (v4)
 `templates.js` generates ~2,000 designs (mugs, tees, social posts, stories, posters, flyers, invitations, cards, certificates, menus, YouTube, slides, Pinterest, wallpapers, merch, stickers) from hand-built layouts x palettes x font pairs x copy. Nothing is stored - each one is a tiny recipe that draws itself, and thumbnails render lazily. Add copy to the lists at the top of `templates.js`, or a new layout in `LAY`, to grow the library.
+
+## Quality, tests and backend (v5)
+- `npm test` runs: browser regression suite (desktop + phone), worker unit tests (accounts, cloud saves, Stripe webhook, approval links) and a real-browser-to-worker end-to-end test. `npm run check` / `npm run lint` catch syntax and undefined-variable bugs. CI runs everything on every push.
+- New: Magic Resize, version history, Brand kit, "describe it" template finder, send-to-print (WhatsApp/email/share), PDF crop marks + 3 mm bleed, customer approval links, photo-frame templates, first-run tour, keyboard shortcuts (press `?`), accessibility pass, offline banner.
+- Backend setup: `docs/BACKEND.md`. Launch checklist: `docs/LAUNCH.md`.
