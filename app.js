@@ -1335,7 +1335,7 @@
     setSize(p?.w ?? w, p?.h ?? h, false, g ?? p?.guide ?? 'none', p?.dpi ?? dpi ?? 300, p);
     showEditor();
     if (layoutJson) await new Promise(res => { const d = parseSnap(layoutJson); history.busy = true; canvas.loadFromJSON(d.canvas, () => { history.busy = false; res(); }); });
-    else { history.busy = true; if (template && TEMPLATES[template]) TEMPLATES[template](); history.busy = false; }
+    else { history.busy = true; if (template && TEMPLATES[template]) TEMPLATES[template](); history.busy = false; canvas.renderAll(); requestAnimationFrame(() => canvas.requestRenderAll()); }
     syncBg(); canvas.discardActiveObject(); canvas.renderAll(); history.stack = []; history.idx = -1; doCommit();
     pages[0] = { json: snapshot(), thumb: null, hist: { stack: history.stack.slice(), idx: history.idx } }; renderPages(); refreshProps(); closeSheets(); saveNow();
   }

@@ -39,4 +39,8 @@ module.exports = [
     await p.mouse.click(5, 400); await p.keyboard.press('Control+a'); ok('Ctrl+A selects all', await p.evaluate(() => chitra.canvas.getActiveObjects().length) === 2);
     await p.keyboard.press('Control+c'); await p.keyboard.press('Control+v'); await p.waitForTimeout(300); ok('Ctrl+C/V pastes', await p.evaluate(() => chitra.canvas.getObjects().length) === 4);
     await p.keyboard.press('Shift+?'); await p.waitForTimeout(200); ok('help sheet opens on ?', await p.isVisible('#helpModal')); await p.keyboard.press('Escape'); } },
+  { name: 'template opens rendered (not blank)', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'ig-3' })); await p.waitForTimeout(1500);
+    const px = await p.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, x = c.getContext('2d'); const d = x.getImageData(c.width / 2 | 0, c.height * 0.2 | 0, 60, 60).data; let n = 0; for (let i = 3; i < d.length; i += 4) n += d[i]; return n; });
+    ok('canvas pixels drawn after opening a template', px > 1000, px); } },
 ];
