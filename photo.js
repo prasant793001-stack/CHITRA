@@ -199,93 +199,71 @@
   $$('[data-pm]').forEach(b => b.onclick = () => ({ removeBg, magicFix, enhance, refine: openRefine })[b.dataset.pm]());
   $('#magicFix').onclick = () => magicFix(); $('#enhance').onclick = () => enhance();
 
-  /* ================= stock photo search ================= */
-  let keys = {}; try { keys = JSON.parse(localStorage.getItem('chitra.keys') || '{}'); } catch { }
-  const saveKeys = () => { try { localStorage.setItem('chitra.keys', JSON.stringify(keys)); } catch { } };
-  const SOURCES = {
-    openverse: {
-      name: 'Openverse', key: false,
-      async search(q, page) {
-        const r = await fetch(`https://api.openverse.org/v1/images/?q=${enc(q)}&page=${page}&page_size=24&license_type=commercial&mature=false`);
-        if (!r.ok) throw new Error('Openverse ' + r.status); const j = await r.json();
-        return { more: page < j.page_count, items: j.results.map(x => ({ id: x.id, thumb: x.thumbnail || x.url, full: x.url, by: x.creator || 'Unknown', lic: `CC ${String(x.license).toUpperCase()}${x.license_version ? ' ' + x.license_version : ''}`, link: x.foreign_landing_url })) };
-      },
-    },
-    pixabay: {
-      name: 'Pixabay', key: true, link: 'https://pixabay.com/api/docs/',
-      async search(q, page) {
-        const r = await fetch(`https://pixabay.com/api/?key=${enc(keys.pixabay)}&q=${enc(q)}&page=${page}&per_page=24&safesearch=true&image_type=all`);
-        if (!r.ok) throw new Error('Pixabay ' + r.status); const j = await r.json();
-        return { more: page * 24 < j.totalHits, items: j.hits.map(x => ({ id: x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, by: x.user, lic: 'Pixabay licence', link: x.pageURL })) };
-      },
-    },
-    pexels: {
-      name: 'Pexels', key: true, link: 'https://www.pexels.com/api/new/',
-      async search(q, page) {
-        const r = await fetch(`https://api.pexels.com/v1/search?query=${enc(q)}&page=${page}&per_page=24`, { headers: { Authorization: keys.pexels } });
-        if (!r.ok) throw new Error('Pexels ' + r.status); const j = await r.json();
-        return { more: !!j.next_page, items: j.photos.map(x => ({ id: x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, by: x.photographer, lic: 'Pexels licence', link: x.url })) };
-      },
-    },
-    unsplash: {
-      name: 'Unsplash', key: true, link: 'https://unsplash.com/developers',
-      async search(q, page) {
-        const r = await fetch(`https://api.unsplash.com/search/photos?query=${enc(q)}&page=${page}&per_page=24&client_id=${enc(keys.unsplash)}`);
-        if (!r.ok) throw new Error('Unsplash ' + r.status); const j = await r.json();
-        return { more: page < j.total_pages, items: j.results.map(x => ({ id: x.id, thumb: x.urls.small, full: x.urls.regular, by: x.user.name, lic: 'Unsplash licence', link: x.links.html })) };
-      },
-    },
+  /* ================= stock library: every source merged, source names never shown in the UI ================= */
+  const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+  const SEAL = 'chitra-studio';
+  const unseal = str => { try { return atob(str).split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ SEAL.charCodeAt(i % SEAL.length))).join(''); } catch { return ''; } };
+  function stockConfig() {
+    const CFG = window.CHITRA_CONFIG || {}, sealed = CFG.sealedKeys || {}; let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
+    const pick = n => own[n] || (sealed[n] ? unseal(sealed[n]) : '');
+    return { proxy: (lsGet('chitra.proxy') || CFG.photoProxy || '').replace(/\/$/, ''), pixabay: pick('pixabay'), pexels: pick('pexels'), unsplash: pick('unsplash') };
+  }
+  const NORM = {
+    pixabay: x => ({ id: 'px' + x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, by: x.user, site: 'Pixabay', link: x.pageURL, title: (x.tags || '').split(',')[0] }),
+    pexels: x => ({ id: 'pe' + x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, by: x.photographer, site: 'Pexels', link: x.url, title: x.alt || '' }),
+    unsplash: x => ({ id: 'un' + x.id, thumb: x.urls.small, full: x.urls.regular, by: x.user.name, site: 'Unsplash', link: x.links.html, title: x.alt_description || '' }),
+    openverse: x => ({ id: 'ov' + x.id, thumb: x.thumbnail || x.url, full: x.url, by: x.creator || 'Unknown', site: 'Openverse', link: x.foreign_landing_url, title: x.title || '' }),
   };
-  const CHIPS = ['Texture', 'Nature', 'Abstract', 'Pattern', 'Neon', 'Food', 'Animals', 'Vintage', 'Flowers', 'City'];
-  $('#photoChips').innerHTML = CHIPS.map(c => `<button type="button" class="chip">${c}</button>`).join('');
-  let ps = { q: '', page: 1 };
-  function syncKeyBox() {
-    const s = SOURCES[$('#photoSource').value];
-    $('#keyBox').hidden = !s.key || !!keys[$('#photoSource').value];
-    if (s.key) { $('#keyLink').href = s.link; $('#keyInput').value = ''; }
+  const getJSON = async (url, opt) => { const r = await fetch(url, opt); if (!r.ok) throw new Error(url.split('/')[2] + ' ' + r.status); return r.json(); };
+  const SRC = {
+    async pixabay(cfg, q, page, kind) {
+      const types = kind === 'graphic' ? ['vector', 'illustration'] : ['photo'], per = kind === 'graphic' ? 12 : 24;
+      const rs = await Promise.all(types.map(t => getJSON(`https://pixabay.com/api/?key=${enc(cfg.pixabay)}&q=${enc(q)}&page=${page}&per_page=${per}&safesearch=true&image_type=${t}${kind === 'graphic' ? '&colors=transparent' : ''}`)));
+      return { items: rs.flatMap(j => j.hits.map(NORM.pixabay)), more: rs.some(j => page * per < j.totalHits) };
+    },
+    async pexels(cfg, q, page) { const j = await getJSON(`https://api.pexels.com/v1/search?query=${enc(q)}&page=${page}&per_page=24`, { headers: { Authorization: cfg.pexels } }); return { items: j.photos.map(NORM.pexels), more: !!j.next_page }; },
+    async unsplash(cfg, q, page) { const j = await getJSON(`https://api.unsplash.com/search/photos?query=${enc(q)}&page=${page}&per_page=24&client_id=${enc(cfg.unsplash)}`); return { items: j.results.map(NORM.unsplash), more: page < j.total_pages }; },
+    async openverse(q, page) { const j = await getJSON(`https://api.openverse.org/v1/images/?q=${enc(q)}&page=${page}&page_size=24&license_type=commercial&mature=false`); return { items: j.results.map(NORM.openverse), more: page < j.page_count }; },
+  };
+  async function stockSearch(q, { page = 1, kind = 'photo' } = {}) {
+    const cfg = stockConfig();
+    if (cfg.proxy) return getJSON(`${cfg.proxy}/search?q=${enc(q)}&page=${page}&kind=${kind}`); // keys live on the server, never in the browser
+    const jobs = [];
+    if (cfg.pixabay) jobs.push(SRC.pixabay(cfg, q, page, kind));
+    if (kind === 'photo') { if (cfg.pexels) jobs.push(SRC.pexels(cfg, q, page)); if (cfg.unsplash) jobs.push(SRC.unsplash(cfg, q, page)); if (!jobs.length) jobs.push(SRC.openverse(q, page)); }
+    if (!jobs.length) return { items: [], more: false, notConnected: true };
+    const ok = (await Promise.allSettled(jobs)).filter(r => r.status === 'fulfilled').map(r => r.value);
+    if (!ok.length) throw new Error('all sources failed');
+    const out = [], max = Math.max(...ok.map(o => o.items.length)); // best of every source, interleaved
+    for (let i = 0; i < max; i++) ok.forEach(o => { if (o.items[i]) out.push(o.items[i]); });
+    return { items: out, more: ok.some(o => o.more) };
   }
-  $('#photoSource').onchange = () => { syncKeyBox(); if (ps.q) runSearch(1); };
-  $('#keySave').onclick = () => { const v = $('#keyInput').value.trim(); if (!v) return; keys[$('#photoSource').value] = v; saveKeys(); syncKeyBox(); toast('Key saved in this browser', '🔑'); if (ps.q) runSearch(1); };
-  async function runSearch(page = 1) {
-    const srcId = $('#photoSource').value, s = SOURCES[srcId];
-    if (s.key && !keys[srcId]) { syncKeyBox(); return toast(`${s.name} needs a free API key`, '🔑'); }
-    ps.page = page; const grid = $('#photoGrid'); if (page === 1) grid.innerHTML = '<p class="tip">Searching…</p>';
-    try {
-      const { items, more } = await s.search(ps.q, page);
-      if (page === 1) grid.innerHTML = '';
-      if (!items.length && page === 1) grid.innerHTML = '<p class="tip">No results. Try another word.</p>';
-      items.forEach(it => {
-        const b = document.createElement('button'); b.className = 'photo-card'; b.title = `${it.by} · ${it.lic}`;
-        b.innerHTML = `<img loading="lazy" alt=""><span></span>`; $('img', b).src = it.thumb; $('span', b).textContent = it.lic;
-        b.onclick = () => addPhoto(it); grid.appendChild(b);
-      });
-      $('#photoMore').hidden = !more;
-    } catch (e) {
-      console.warn(e); if (page === 1) $('#photoGrid').innerHTML = '';
-      toast(/40[13]/.test(e.message) ? 'That API key was rejected — check it' : 'Could not reach the photo service', '⚠️');
-    }
+  function addToCanvas(img, note, maxFrac = 0.8) {
+    const k = Math.min((C.W * maxFrac) / img.width, (C.H * maxFrac) / img.height, 1);
+    img.set({ adj: C.DEFAULT_ADJ() }).scale(k); C.place(img); toast(note, ''); return img;
   }
-  $('#photoForm').onsubmit = e => { e.preventDefault(); ps.q = $('#photoQ').value.trim(); if (ps.q) runSearch(1); };
-  $('#photoMore').onclick = () => runSearch(ps.page + 1);
-  $$('#photoChips .chip').forEach(c => c.onclick = () => { $('#photoQ').value = c.textContent; ps.q = c.textContent; runSearch(1); });
-  function addToCanvas(img, note) {
-    const k = Math.min((C.W * 0.8) / img.width, (C.H * 0.8) / img.height, 1);
-    img.set({ adj: C.DEFAULT_ADJ() }).scale(k); C.place(img); toast(note, '🌄'); return img;
-  }
-  function addPhoto(it) {
-    const job = busy('Adding photo…');
+  function addStock(it, kind = 'photo') {
+    const job = busy(kind === 'graphic' ? 'Adding graphic…' : 'Adding photo…');
+    const done = (img, low) => { job.done(); if (!img) return toast('That image could not be loaded', '⚠️'); img.credit = { site: it.site, by: it.by, link: it.link, title: it.title }; addToCanvas(img, low ? 'Added (low-res preview — try Enhance 2×)' : 'Added', kind === 'graphic' ? 0.5 : 0.8); };
     fabric.Image.fromURL(it.full, (img, err) => {
-      if (err || !img.getElement()?.width) {
-        fabric.Image.fromURL(it.thumb, (im2, err2) => {
-          job.done(); if (err2) return toast('That photo could not be loaded', '⚠️');
-          addToCanvas(im2, 'Added (low-res preview — try Enhance 2×)');
-        }, { crossOrigin: 'anonymous' });
-        return;
-      }
-      job.done(); addToCanvas(img, `Photo by ${it.by} · ${it.lic}`);
+      if (err || !img.getElement()?.width) fabric.Image.fromURL(it.thumb, (im2, e2) => done(e2 ? null : im2, true), { crossOrigin: 'anonymous' });
+      else done(img, false);
     }, { crossOrigin: 'anonymous' });
   }
-  $('#photoSource').value = 'openverse'; syncKeyBox();
+
+  /* ---- hidden owner setup: Ctrl+Shift+K or tap the logo 7 times. Keys stay in THIS browser only. ---- */
+  function openAdmin() {
+    let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
+    $('#admProxy').value = lsGet('chitra.proxy') || ''; $('#admPixabay').value = own.pixabay || ''; $('#admPexels').value = own.pexels || '';
+    const c = stockConfig(); $('#admStatus').textContent = 'Active: ' + ([c.proxy && 'proxy', c.pixabay && 'source A', c.pexels && 'source B', c.unsplash && 'source C'].filter(Boolean).join(', ') || 'none (keyless fallback)');
+    $('#adminModal').hidden = false;
+  }
+  $('#admSave').onclick = () => {
+    try { localStorage.setItem('chitra.keys', JSON.stringify({ ...own, pixabay: $('#admPixabay').value.trim(), pexels: $('#admPexels').value.trim() })); localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
+    $('#adminModal').hidden = true; toast('Saved on this device', '');
+  };
+  document.addEventListener('keydown', e => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); openAdmin(); } });
+  let taps = 0, tapT; [$('#homeBtn'), $('.hm-logo')].forEach(el => el && el.addEventListener('click', () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => { taps = 0; }, 1500); if (taps >= 7) { taps = 0; openAdmin(); } }));
 
   /* ================= AI art (Pollinations, free) ================= */
   const AI_STYLES = [['Photoreal', 'photorealistic, ultra detailed, sharp focus, studio lighting'], ['Cartoon', 'fun cartoon illustration, bold outlines, vibrant colours'], ['Retro', 'retro 70s poster style, halftone, bold colours'],
@@ -431,9 +409,9 @@
     mc.addEventListener('pointermove', e => drag && pos(e)); mc.addEventListener('pointerup', () => { drag = false; });
     $('#sceneForm').onsubmit = async e => {
       e.preventDefault(); const q = $('#sceneQ').value.trim(); if (!q) return;
-      const id = $('#photoSource').value, s = SOURCES[id].key && !keys[id] ? SOURCES.openverse : SOURCES[id], box = $('#sceneResults'); box.innerHTML = '<p class="tip">Searching…</p>';
+      const box = $('#sceneResults'); box.innerHTML = '<p class="tip">Searching…</p>';
       try {
-        const { items } = await s.search(q, 1); box.innerHTML = '';
+        const { items } = await stockSearch(q, { page: 1, kind: 'photo' }); box.innerHTML = '';
         items.slice(0, 9).forEach(it => {
           const b = document.createElement('button'); b.className = 'photo-card'; b.innerHTML = '<img alt="">'; $('img', b).src = it.thumb;
           b.onclick = async () => { try { M.scene = await loadImg(it.full); } catch { try { M.scene = await loadImg(it.thumb); } catch { return toast('That photo could not be loaded', '⚠️'); } } drawMockup(); };
@@ -448,5 +426,5 @@
   function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = C.guide === 'mug' ? 'mug' : 'shirt'; $('#mockup').hidden = false; drawMockup(); }
   $('#mockupBtn').onclick = openMockup;
 
-  Object.assign(C, { openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, SOURCES });
+  Object.assign(C, { openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
 })();

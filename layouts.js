@@ -38,11 +38,17 @@
   function makeSlot({ label, kind = 'plain', w, h, x, y }, dpi = C.dpi, lock = $('#slotLock')?.checked !== false) {
     const k = Math.min(C.W, C.H);
     const r = new fabric.Rect({
-      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(124,58,237,.07)', stroke: '#7c3aed', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true,
+      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(255,122,26,.08)', stroke: '#ff7a1a', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true,
       strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false,
     });
     r.slot = { id: C.uid(), label, kind, w, h };
     applyLock(r, lock); return r;
+  }
+  function makeSlotPx({ label, kind = 'mock', left, top, width, height, rx = 0 }) { // pixel-space slot (mockups)
+    const k = Math.min(C.W, C.H), dpi = C.dpi;
+    const r = new fabric.Rect({ left, top, width, height, rx, ry: rx, fill: 'rgba(255,122,26,.08)', stroke: '#ff7a1a', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true, strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false });
+    r.slot = { id: C.uid(), label, kind, w: +(width / dpi).toFixed(2), h: +(height / dpi).toFixed(2), rx };
+    applyLock(r, true); return r;
   }
   function applyLock(r, v) { r.set({ lockMovementX: v, lockMovementY: v, lockScalingX: v, lockScalingY: v, lockRotation: true, hasControls: false, hoverCursor: v ? 'pointer' : 'move' }); }
   function addSlot(def) { // def in inches; if x/y missing the area lands in the middle of the page
@@ -54,11 +60,11 @@
   $('#slotPreset').onchange = e => { const p = SLOT_PRESETS[e.target.value]; $('#slotW').value = p[1]; $('#slotH').value = p[2]; };
   $('#slotAdd').onclick = () => {
     const p = SLOT_PRESETS[$('#slotPreset').value], w = +$('#slotW').value, h = +$('#slotH').value;
-    if (!(w > 0 && h > 0)) return toast('Enter a width and height', '☝️');
-    addSlot({ label: p[0] === 'Custom size' ? `${w}×${h} in area` : p[0], kind: p[3], w, h }); toast('Print area added — drop a photo in', '🖨️');
+    if (!(w > 0 && h > 0)) return toast('Enter a width and height', 'info');
+    addSlot({ label: p[0] === 'Custom size' ? `${w}×${h} in area` : p[0], kind: p[3], w, h }); toast('Print area added — drop a photo in', 'printer');
   };
   function arrange() { // shelf-pack all print areas (and move the photos inside them)
-    const ss = slots(); if (!ss.length) return toast('Add a print area first', '☝️');
+    const ss = slots(); if (!ss.length) return toast('Add a print area first', 'info');
     const gap = 0.25 * C.dpi, Wd = C.W; let x = gap, y = gap, rowH = 0;
     ss.slice().sort((a, b) => b.height - a.height).forEach(s => {
       const w = s.width * s.scaleX, h = s.height * s.scaleY;
@@ -80,7 +86,7 @@
   function fitInto(img, s, mode = 'cover') {
     const w = s.width * s.scaleX, h = s.height * s.scaleY, k = (mode === 'cover' ? Math.max : Math.min)(w / img.width, h / img.height);
     img.set({ originX: 'center', originY: 'center', left: s.left + w / 2, top: s.top + h / 2, scaleX: k, scaleY: k, angle: 0, flipX: false, flipY: false, inSlot: s.slot.id });
-    img.clipPath = new fabric.Rect({ left: s.left, top: s.top, width: w, height: h, absolutePositioned: true }); img.dirty = true; img.setCoords(); img.fitMode = mode;
+    img.clipPath = new fabric.Rect({ left: s.left, top: s.top, width: w, height: h, rx: s.rx || 0, ry: s.rx || 0, absolutePositioned: true }); img.dirty = true; img.setCoords(); img.fitMode = mode;
   }
   C.beforePlace = o => { // photos land in the selected print area, or the first empty one
     if (o.type !== 'image' || !slots().length) return false;
@@ -100,7 +106,7 @@
   }
   function clearSlot() { const s = selSlot(); if (!s) return; const l = linked(s); l.forEach(i => canvas.remove(i)); canvas.setActiveObject(s); canvas.requestRenderAll(); C.commit(); toast(l.length ? 'Area cleared' : 'Area is already empty', '🧹'); }
   async function fillAll() {
-    const a = C.active(); if (!a?.inSlot) return toast('Select a photo inside a print area first', '☝️');
+    const a = C.active(); if (!a?.inSlot) return toast('Select a photo inside a print area first', 'info');
     const others = slots().filter(s => s.slot.id !== a.inSlot); if (!others.length) return toast('Only one print area on this page', 'ℹ️');
     C.history.busy = true;
     for (const s of others) { linked(s).forEach(i => canvas.remove(i)); await new Promise(res => a.clone(c => { fitInto(c, s, a.fitMode || 'cover'); canvas.add(c); res(); }, C.EXTRA)); }
@@ -132,8 +138,8 @@
       if (empty || sel) {
         const t = `${s.slot.label} · ${s.slot.w}×${s.slot.h} in`; ctx.font = '600 11px "Space Grotesk",system-ui,sans-serif';
         const tw = ctx.measureText(t).width + 14, ph = 20, px = x + Math.max(4, Math.min(8, w * 0.02)), py = y + 6;
-        if (w > tw + 12 && h > ph + 12) { ctx.fillStyle = '#7c3aed'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, tw, ph, 10) : ctx.rect(px, py, tw, ph); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(t, px + 7, py + ph / 2 + 0.5); }
-        if (empty && w > 140 && h > 60) { ctx.fillStyle = 'rgba(124,58,237,.9)'; ctx.font = '700 13px "Space Grotesk",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('＋ drop a photo here', x + w / 2, y + h / 2); }
+        if (w > tw + 12 && h > ph + 12) { ctx.fillStyle = '#ff7a1a'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, tw, ph, 10) : ctx.rect(px, py, tw, ph); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(t, px + 7, py + ph / 2 + 0.5); }
+        if (empty && w > 140 && h > 60) { ctx.fillStyle = 'rgba(230,90,0,.95)'; ctx.font = '700 13px "Space Grotesk",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+ drop a photo here', x + w / 2, y + h / 2); }
       }
       ctx.restore();
     });
@@ -154,7 +160,7 @@
     sc.setZoom(k);
     def.slots.forEach(s => {
       const r = new fabric.Rect({ left: s.x * 300, top: s.y * 300, width: s.w * 300, height: s.h * 300, fill: 'rgba(124,58,237,.14)', stroke: '#7c3aed', strokeWidth: 8, strokeDashArray: [30, 20] }); sc.add(r);
-      sc.add(new fabric.Text(s.label.replace(/ \d+ in$/, ''), { left: (s.x + s.w / 2) * 300, top: (s.y + s.h / 2) * 300, originX: 'center', originY: 'center', fontSize: Math.min(s.w, s.h) * 300 * 0.16, fill: '#6d28d9', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 'bold' }));
+      sc.add(new fabric.Text(s.label.replace(/ \d+ in$/, ''), { left: (s.x + s.w / 2) * 300, top: (s.y + s.h / 2) * 300, originX: 'center', originY: 'center', fontSize: Math.min(s.w, s.h) * 300 * 0.16, fill: '#e65a00', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 'bold' }));
     });
     sc.renderAll(); const url = sc.toDataURL({ format: 'png' }); sc.dispose?.(); return url;
   }
@@ -173,10 +179,10 @@
   }
   async function useMine(id, asNew) {
     const raw = await kv.get('layout:' + id), meta = (await listMine()).find(x => x.id === id); if (!raw || !meta) return toast('Could not open that layout', '⚠️');
-    if (asNew) { await C.newDocument({ w: meta.w, h: meta.h, dpi: meta.dpi, guide: 'paper', layoutJson: raw, name: meta.name }); toast('Layout loaded', '🖨️'); return; }
+    if (asNew) { await C.newDocument({ w: meta.w, h: meta.h, dpi: meta.dpi, guide: 'paper', layoutJson: raw, name: meta.name }); toast('Layout loaded', 'printer'); return; }
     if (canvas.getObjects().length && !confirm('Replace this page with your saved layout?')) return;
     const d = C.parseSnap(raw); C.history.busy = true; C.setSize(d.W, d.H, false, 'paper', d.dpi);
-    canvas.loadFromJSON(d.canvas, () => { C.history.busy = false; canvas.renderAll(); C.commit(); toast('Layout applied', '🖨️'); });
+    canvas.loadFromJSON(d.canvas, () => { C.history.busy = false; canvas.renderAll(); C.commit(); toast('Layout applied', 'printer'); });
   }
   async function deleteMine(id) { if (!confirm('Delete this saved layout?')) return; await kv.del('layout:' + id); await kv.set('layoutIndex', (await listMine()).filter(x => x.id !== id)); document.dispatchEvent(new CustomEvent('chitra:layouts')); renderMine(); }
   $('#layoutSave').onclick = () => { $('#layoutName').value = ''; $('#layoutModal').hidden = false; $('#layoutName').focus(); };
@@ -187,10 +193,10 @@
   function renderBuiltin() { $('#layGrid').innerHTML = LAYOUTS.map(layCard).join(''); $$('#layGrid [data-lay]').forEach(b => b.onclick = () => useBuiltin(LAYOUTS.find(l => l.id === b.dataset.lay), false)); }
   async function renderMine() {
     const l = await listMine(), g = $('#myLayGrid');
-    g.innerHTML = l.length ? l.map(m => `<div class="lay-card mine"><button data-mine="${m.id}"><img alt="" src="${m.thumb || ''}"><b>${m.name}</b></button><button class="del" data-del="${m.id}" title="Delete">🗑</button></div>`).join('') : '<p class="tip">Nothing saved yet. Set up a page with print areas, then save it here.</p>';
+    g.innerHTML = l.length ? l.map(m => `<div class="lay-card mine"><button data-mine="${m.id}"><img alt="" src="${m.thumb || ''}"><b>${m.name}</b></button><button class="del" data-del="${m.id}" title="Delete">${C.ico("trash-2",14)}</button></div>`).join('') : '<p class="tip">Nothing saved yet. Set up a page with print areas, then save it here.</p>';
     $$('#myLayGrid [data-mine]').forEach(b => b.onclick = () => useMine(b.dataset.mine, false)); $$('#myLayGrid [data-del]').forEach(b => b.onclick = () => deleteMine(b.dataset.del));
   }
   C.fontsReady.then(renderBuiltin); renderMine();
 
-  Object.assign(C, { LAYOUTS, SHEETS, layoutThumb, useBuiltin, useMine, deleteMine, listMine, addSlot, slots, saveLayout, SLOT_PRESETS, fitInto });
+  Object.assign(C, { LAYOUTS, SHEETS, layoutThumb, useBuiltin, useMine, deleteMine, listMine, addSlot, makeSlotPx, slots, saveLayout, SLOT_PRESETS, fitInto });
 })();

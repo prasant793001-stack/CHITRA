@@ -48,3 +48,16 @@ Online features need internet. Always check each photo's licence before selling 
 
 ## Creative features
 Punchy text styles, fun fonts, stickers, shapes, colour swatches, quick-start templates, filters, layers, undo/redo, save/open projects, PNG/JPG export.
+
+## Look, Elements & fonts (v3)
+- Bright white / yellow / orange / green theme with Lucide (ISC) line icons everywhere - no emoji icons.
+- **Elements** works like Canva: Shapes, Graphics (stock cut-outs), Photos, Mockups, Effects, Icons (1,500+ searchable), Stickers, Backdrops.
+- **One click** selects/moves/resizes; **double-click / double-tap** edits (text, colours, photo options).
+- **Fonts** open a full showcase: default styles, ready-made font combinations, and every font previewed in its own typeface.
+
+## Photo search & API keys
+Photo sources are merged into one list (no site picker); the source is stored on each placed image and written to a `*-credits.txt` "thank you" file when you export.
+**Keys can never be made truly uncrackable in a browser app** - anything the browser sends can be read in DevTools. Safest setup:
+1. Deploy `worker/photos-proxy.js` as a free Cloudflare Worker, add `PIXABAY_KEY` / `PEXELS_KEY` (and `ALLOWED_ORIGIN`) as secrets.
+2. Put the worker URL in `config.js` as `photoProxy`. The keys then never reach the browser.
+Never commit raw keys to this public repo (`tools/seal-key.js` only scrambles them - a deterrent, not security). Owner-only key screen: `Ctrl+Shift+K` or tap the logo 7 times (keys stay in your own browser only).

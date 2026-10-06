@@ -4,7 +4,7 @@
   const C = window.chitra, CFG = window.CHITRA_CONFIG || {};
   const { $, $$, toast, confetti } = C;
   const META = C.TEMPLATE_META;
-  const CATS = [['all', 'All'], ['mug', '☕ Mugs'], ['tshirt', '👕 T-shirts'], ['print', '🖨️ Print'], ['social', '📱 Social']];
+  const CATS = [['all', 'All'], ['mug', 'Mugs'], ['tshirt', 'T-shirts'], ['print', 'Print'], ['social', 'Social']];
   const plan = () => { try { return localStorage.getItem('chitra.plan') || 'free'; } catch { return 'free'; } };
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; };
@@ -42,10 +42,10 @@
     const m = META[name]; if (!guardPro(m)) return;
     await C.newDocument({ product: C.productByName(m.p), template: name, name: m.n }); confetti(innerWidth / 2, innerHeight / 3, 70);
   }
-  const QUICK = [['📄', 'A4 page', 'A4'], ['🖼️', 'A3 poster', 'A3'], ['☕', 'Mug wrap', '11 oz mug wrap'], ['👕', 'T-shirt', 'T-shirt front'], ['🥤', 'Tumbler', '20 oz tumbler'], ['📸', 'Instagram', 'Instagram post'], ['📱', 'Story', 'Story / Reel / TikTok'], ['💳', 'Business card', 'Business card'], ['🖥️', 'Presentation', 'Presentation 16:9']];
+  const QUICK = [['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['camera', 'Instagram', 'Instagram post'], ['smartphone', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
   function renderQuick() {
-    $('#hmQuick').innerHTML = QUICK.map(([i, n, p]) => `<button data-q="${esc(p)}"><i>${i}</i><span>${n}</span></button>`).join('') +
-      '<button data-q="@sheet"><i>🖨️</i><span>Print sheet</span></button><button data-q="@custom"><i>📐</i><span>Custom size</span></button>';
+    $('#hmQuick').innerHTML = QUICK.map(([i, n, p]) => `<button data-q="${esc(p)}"><i>${C.ico(i, 22)}</i><span>${n}</span></button>`).join('') +
+      `<button data-q="@sheet"><i>${C.ico('printer', 22)}</i><span>Print sheet</span></button><button data-q="@custom"><i>${C.ico('ruler', 22)}</i><span>Custom size</span></button>`;
     $$('#hmQuick [data-q]').forEach(b => b.onclick = async () => {
       const q = b.dataset.q;
       if (q === '@custom') { C.openPicker('create'); $('#customSize').click(); }
@@ -59,18 +59,18 @@
 
   /* ================= Home sections ================= */
   function projCard(m) {
-    const thumb = m.thumb ? `<img src="${m.thumb}" alt="">` : '<span class="ph">🎨</span>';
+    const thumb = m.thumb ? `<img src="${m.thumb}" alt="">` : `<span class="ph">${C.ico('palette', 28)}</span>`;
     return `<article class="pcard2" data-open="${m.id}"><div class="thumb chk">${thumb}</div><div class="meta"><b>${esc(m.name)}</b><small>${esc(m.product || '')}${m.pages > 1 ? ` · ${m.pages} pages` : ''} · ${ago(m.updated)}</small></div><button class="dots" data-menu="${m.id}" title="More">⋯</button></article>`;
   }
   async function renderRecent() {
     const l = await C.store.list(), row = $('#hmRecent');
-    row.innerHTML = l.length ? l.map(projCard).join('') : '<div class="empty-card"><span>🎨</span><b>No designs yet</b><small>Pick a template below or hit “Create a design”.</small></div>';
+    row.innerHTML = l.length ? l.map(projCard).join('') : `<div class="empty-card"><span>${C.ico('palette', 30)}</span><b>No designs yet</b><small>Pick a template below or hit “Create a design”.</small></div>`;
     $$('#hmRecent [data-open]').forEach(a => a.onclick = e => { if (e.target.closest('[data-menu]')) return; C.openProject(a.dataset.open); });
     $$('#hmRecent [data-menu]').forEach(b => b.onclick = e => { e.stopPropagation(); cardMenu(b, b.dataset.menu); });
   }
   function cardMenu(btn, id) {
     $('.cardmenu')?.remove(); const m = document.createElement('div'); m.className = 'cardmenu glass';
-    m.innerHTML = '<button data-a="open">📂 Open</button><button data-a="rename">✏️ Rename</button><button data-a="dup">⧉ Duplicate</button><button data-a="del" class="danger">🗑 Delete</button>';
+    m.innerHTML = `<button data-a="open">${C.ico('folder-open', 15)} Open</button><button data-a="rename">${C.ico('pencil', 15)} Rename</button><button data-a="dup">${C.ico('copy', 15)} Duplicate</button><button data-a="del" class="danger">${C.ico('trash-2', 15)} Delete</button>`;
     document.body.appendChild(m); const r = btn.getBoundingClientRect(); m.style.top = r.bottom + 4 + 'px'; m.style.left = Math.min(r.left, innerWidth - 170) + 'px';
     m.onclick = async e => {
       const a = e.target.dataset.a; if (!a) return; m.remove();
@@ -85,14 +85,14 @@
   async function renderLayoutRow() {
     const mine = await C.listMine();
     const b = C.LAYOUTS.map(l => `<article class="lcard" data-b="${l.id}"><div class="thumb"><img src="${C.layoutThumb(l, 240)}" alt=""></div><div class="meta"><b>${esc(l.name)}</b><small>${l.slots.length} print area${l.slots.length > 1 ? 's' : ''} · ${l.sheet}</small></div>${l.hot ? '<em class="tagc">Popular</em>' : ''}</article>`).join('');
-    const m = mine.map(x => `<article class="lcard mine" data-m="${x.id}"><div class="thumb">${x.thumb ? `<img src="${x.thumb}" alt="">` : '<span class="ph">🖨️</span>'}</div><div class="meta"><b>${esc(x.name)}</b><small>Saved by you · ${x.areas || 0} area${x.areas === 1 ? '' : 's'}</small></div><em class="tagc you">Mine</em></article>`).join('');
+    const m = mine.map(x => `<article class="lcard mine" data-m="${x.id}"><div class="thumb">${x.thumb ? `<img src="${x.thumb}" alt="">` : `<span class="ph">${C.ico('printer', 28)}</span>`}</div><div class="meta"><b>${esc(x.name)}</b><small>Saved by you · ${x.areas || 0} area${x.areas === 1 ? '' : 's'}</small></div><em class="tagc you">Mine</em></article>`).join('');
     $('#hmLayoutRow').innerHTML = m + b;
     $$('#hmLayoutRow [data-b]').forEach(a => a.onclick = () => C.useBuiltin(C.LAYOUTS.find(l => l.id === a.dataset.b), true));
     $$('#hmLayoutRow [data-m]').forEach(a => a.onclick = () => C.useMine(a.dataset.m, true));
   }
 
   let tplCat = 'all';
-  const tplCard = (name, big) => { const m = META[name]; return `<article class="tcard${big ? ' big' : ''}" data-t="${name}"><div class="thumb chk"><img data-tpl="${name}" alt="${esc(m.n)}"></div>${m.pro ? '<em class="crown">💎 Pro</em>' : ''}<div class="meta"><b>${esc(m.n)}</b><small>${esc(m.p)}</small></div></article>`; };
+  const tplCard = (name, big) => { const m = META[name]; return `<article class="tcard${big ? ' big' : ''}" data-t="${name}"><div class="thumb chk"><img data-tpl="${name}" alt="${esc(m.n)}"></div>${m.pro ? `<em class="crown">${C.ico('crown', 12)} Pro</em>` : ''}<div class="meta"><b>${esc(m.n)}</b><small>${esc(m.p)}</small></div></article>`; };
   function renderTemplates() {
     $('#hmTplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === tplCat ? ' on' : ''}" data-c="${k}">${n}</button>`).join('');
     $$('#hmTplTabs [data-c]').forEach(b => b.onclick = () => { tplCat = b.dataset.c; renderTemplates(); });
@@ -104,7 +104,7 @@
     let items = []; try { const r = await fetch(CFG.communityFeed || 'community.json', { cache: 'no-cache' }); items = (await r.json()).items || []; } catch { }
     if (!items.length) items = Object.keys(META).slice(0, 8).map(t => ({ template: t, title: META[t].n, by: 'Chitra team', tag: META[t].cat }));
     items = items.filter(i => META[i.template]);
-    $('#hmTrendRow').innerHTML = items.map(i => `<article class="tcard big" data-t="${i.template}"><div class="thumb chk"><img data-tpl="${i.template}" alt=""></div><em class="fire">🔥 Trending</em><div class="meta"><b>${esc(i.title || META[i.template].n)}</b><small>by ${esc(i.by || 'Chitra team')} · ${esc(i.tag || '')}</small></div></article>`).join('');
+    $('#hmTrendRow').innerHTML = items.map(i => `<article class="tcard big" data-t="${i.template}"><div class="thumb chk"><img data-tpl="${i.template}" alt=""></div><em class="fire">${C.ico('flame', 12)} Trending</em><div class="meta"><b>${esc(i.title || META[i.template].n)}</b><small>by ${esc(i.by || 'Chitra team')} · ${esc(i.tag || '')}</small></div></article>`).join('');
     bindTpl($('#hmTrendRow'));
   }
 
@@ -117,11 +117,11 @@
     const mine = (await C.store.list()).filter(m => m.name.toLowerCase().includes(q));
     const lays = C.LAYOUTS.filter(l => l.name.toLowerCase().includes(q));
     res.innerHTML = `<h2>Results for “${esc(q)}”</h2>
-      ${prods.length ? `<h4>Sizes & products</h4><div class="chips big">${prods.slice(0, 14).map((p, i) => `<button class="chip" data-p="${C.PRODUCTS.indexOf(p)}">${p.icon} ${esc(p.name)} <small>${esc(C.dim(p))}</small></button>`).join('')}</div>` : ''}
+      ${prods.length ? `<h4>Sizes & products</h4><div class="chips big">${prods.slice(0, 14).map((p, i) => `<button class="chip" data-p="${C.PRODUCTS.indexOf(p)}">${C.ico(C.prodIconName(p), 14)} ${esc(p.name)} <small>${esc(C.dim(p))}</small></button>`).join('')}</div>` : ''}
       ${lays.length ? `<h4>Print layouts</h4><div class="hrow">${lays.map(l => `<article class="lcard" data-b="${l.id}"><div class="thumb"><img src="${C.layoutThumb(l, 220)}" alt=""></div><div class="meta"><b>${esc(l.name)}</b></div></article>`).join('')}</div>` : ''}
       ${tpls.length ? `<h4>Templates</h4><div class="tpl-grid">${tpls.map(n => tplCard(n)).join('')}</div>` : ''}
       ${mine.length ? `<h4>Your designs</h4><div class="hrow">${mine.map(projCard).join('')}</div>` : ''}
-      ${!(prods.length || tpls.length || mine.length || lays.length) ? '<div class="empty-card"><span>🔍</span><b>Nothing found</b><small>Try “mug”, “A4”, “poster” or “Instagram”.</small></div>' : ''}`;
+      ${!(prods.length || tpls.length || mine.length || lays.length) ? `<div class="empty-card"><span>${C.ico('search', 30)}</span><b>Nothing found</b><small>Try “mug”, “A4”, “poster” or “Instagram”.</small></div>` : ''}`;
     res.hidden = false; sec.hidden = true; bindTpl(res);
     $$('#hmResults [data-p]').forEach(b => b.onclick = () => C.newDocument({ product: C.PRODUCTS[+b.dataset.p], template: 'blank' }));
     $$('#hmResults [data-b]').forEach(a => a.onclick = () => C.useBuiltin(C.LAYOUTS.find(l => l.id === a.dataset.b), true));
@@ -147,7 +147,7 @@
     $('#tplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === edCat ? ' on' : ''}" data-ec="${k}">${n}</button>`).join('');
     $$('#tplTabs [data-ec]').forEach(b => b.onclick = () => { edCat = b.dataset.ec; renderEditorTemplates(); });
     const names = Object.keys(META).filter(n => edCat === 'all' || META[n].cat === edCat);
-    $('#tplGrid').innerHTML = names.map(n => `<button class="tcard2" data-et="${n}"><div class="thumb chk"><img data-tpl="${n}" alt=""></div>${META[n].pro ? '<em class="crown">💎</em>' : ''}<b>${esc(META[n].n)}</b></button>`).join('');
+    $('#tplGrid').innerHTML = names.map(n => `<button class="tcard2" data-et="${n}"><div class="thumb chk"><img data-tpl="${n}" alt=""></div>${META[n].pro ? `<em class="crown">${C.ico('crown', 12)}</em>` : ''}<b>${esc(META[n].n)}</b></button>`).join('');
     fillThumbs($('#tplGrid'));
     $$('#tplGrid [data-et]').forEach(b => b.onclick = () => applyTemplate(b.dataset.et));
   }

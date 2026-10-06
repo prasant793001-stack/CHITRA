@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#ff2d95">
+<meta name="theme-color" content="#ff7a1a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chitra">
@@ -13,17 +13,17 @@
 <title>Chitra Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Bebas+Neue&family=Bricolage+Grotesque:wght@600;800&family=Chewy&family=Fredoka:wght@400;600&family=Lobster&family=Pacifico&family=Permanent+Marker&family=Righteous&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- UI fonts + the core design fonts (the full font library is loaded on demand from fonts.js) -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Anton&family=Bangers&family=Fredoka:wght@400;600&family=Pacifico&family=Righteous&family=Permanent+Marker&family=Lobster&family=Chewy&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
 <!-- ============ SPLASH ============ -->
 <div id="splash" aria-hidden="true">
-  <div class="sp-orbs"><i></i><i></i><i></i></div>
+  <div class="sp-orbs"><i></i><i></i><i></i><i></i></div>
   <div class="sp-center">
-    <div class="sp-logo"><span>✦</span></div>
+    <div class="sp-logo"><i data-ico="sparkles" data-s="46"></i></div>
     <h1>Chitra</h1>
     <p>Design it. Print it. Love it.</p>
     <div class="sp-count" id="spCount">3</div>
@@ -35,35 +35,38 @@
 <!-- ============ HOME ============ -->
 <div id="home" hidden>
   <header class="hm-top">
-    <div class="hm-logo"><span class="logo-mark">✦</span><b>Chitra</b></div>
-    <div class="hm-search"><span>🔎</span><input id="hmSearch" placeholder="Search templates, products, your designs…" autocomplete="off"></div>
+    <div class="hm-logo"><span class="logo-mark"><i data-ico="sparkles" data-s="18"></i></span><b>Chitra</b></div>
+    <div class="hm-search"><i data-ico="search" data-s="18"></i><input id="hmSearch" placeholder="Search templates, products, your designs…" autocomplete="off"></div>
     <span class="spacer"></span>
-    <button id="hmPricing" class="btn gold">💎 Go Pro</button>
-    <button id="hmCreate" class="cta">＋ Create a design</button>
+    <button id="hmPricing" class="btn gold"><i data-ico="crown" data-s="16"></i><span>Go Pro</span></button>
+    <button id="hmCreate" class="cta"><i data-ico="plus" data-s="18"></i><span>Create a design</span></button>
   </header>
   <div class="hm-body">
     <nav class="hm-nav" id="hmNav">
-      <button data-go="hmHero" class="on"><i>🏠</i><span>Home</span></button>
-      <button data-go="hmProjects"><i>📁</i><span>Projects</span></button>
-      <button data-go="hmLayouts"><i>🖨️</i><span>Print layouts</span></button>
-      <button data-go="hmTemplates"><i>🗂️</i><span>Templates</span></button>
-      <button data-go="hmTrending"><i>🔥</i><span>Trending</span></button>
-      <button id="hmNavPro"><i>💎</i><span>Go Pro</span></button>
+      <button data-go="hmHero" class="on"><i data-ico="house" data-s="22"></i><span>Home</span></button>
+      <button data-go="hmProjects"><i data-ico="folder" data-s="22"></i><span>Projects</span></button>
+      <button data-go="hmLayouts"><i data-ico="printer" data-s="22"></i><span>Layouts</span></button>
+      <button data-go="hmTemplates"><i data-ico="layout-template" data-s="22"></i><span>Templates</span></button>
+      <button data-go="hmTrending"><i data-ico="flame" data-s="22"></i><span>Trending</span></button>
+      <button id="hmNavPro"><i data-ico="crown" data-s="22"></i><span>Go Pro</span></button>
     </nav>
     <main class="hm-main" id="hmMain">
       <section class="hero" id="hmHero">
-        <h1>What will you <em>design</em> today?</h1>
-        <p>Posters, mugs, T-shirts, social posts — with print-ready sizes built in.</p>
-        <form class="hero-search" id="heroForm"><input id="heroInput" placeholder="Try “mug”, “A4 poster”, “Instagram”…" autocomplete="off"><button class="cta">Search</button></form>
+        <div class="hero-txt">
+          <h1>What will you <em>design</em> today?</h1>
+          <p>Posters, mugs, T-shirts, social posts — with print-ready sizes built in.</p>
+          <form class="hero-search" id="heroForm"><i data-ico="search" data-s="18"></i><input id="heroInput" placeholder="Try “mug”, “A4 poster”, “Instagram”…" autocomplete="off"><button class="cta">Search</button></form>
+        </div>
+        <div class="hero-art" aria-hidden="true"><i class="a1"></i><i class="a2"></i><i class="a3"></i></div>
       </section>
       <section class="quick" id="hmQuick"></section>
       <div id="hmResults" hidden></div>
       <div id="hmSections">
-        <section id="hmProjects"><div class="sec-head"><h2>Jump back in</h2><button class="link" id="hmSeeAll" hidden>See all</button></div><div class="hrow" id="hmRecent"></div></section>
-        <section id="hmLayouts"><div class="sec-head"><h2>Print layouts <small>Ready-made sheets sized for your product</small></h2><button class="link" id="hmMakeLayout">＋ Make your own</button></div><div class="hrow" id="hmLayoutRow"></div></section>
+        <section id="hmProjects"><div class="sec-head"><h2>Jump back in</h2></div><div class="hrow" id="hmRecent"></div></section>
+        <section id="hmLayouts"><div class="sec-head"><h2>Print layouts <small>Ready-made sheets sized for your product</small></h2><button class="link" id="hmMakeLayout">+ Make your own</button></div><div class="hrow" id="hmLayoutRow"></div></section>
         <section id="hmTemplates"><div class="sec-head"><h2>Templates for you</h2></div><div class="chips" id="hmTplTabs"></div><div class="tpl-grid" id="hmTplGrid"></div></section>
-        <section id="hmTrending"><div class="sec-head"><h2>Trending now 🔥 <small>Popular with the Chitra community</small></h2></div><div class="hrow" id="hmTrendRow"></div></section>
-        <section class="promo" id="hmPromo"><div><h2>Print more. Pay less. 💎</h2><p>Chitra Pro unlocks every template, unlimited saved layouts, AI background removal and watermark-free exports — at a fraction of the usual price.</p></div><button class="cta" id="hmPromoBtn">See plans</button></section>
+        <section id="hmTrending"><div class="sec-head"><h2>Trending now <small>Picked by the Chitra team</small></h2></div><div class="hrow" id="hmTrendRow"></div></section>
+        <section class="promo" id="hmPromo"><div><h2>Print more. Pay less.</h2><p>Chitra Pro unlocks every template, unlimited saved layouts, AI background removal and watermark-free exports — at a fraction of the usual price.</p></div><button class="cta" id="hmPromoBtn">See plans</button></section>
       </div>
     </main>
   </div>
@@ -71,49 +74,50 @@
 
 <div id="app" hidden>
   <!-- ============ TOP BAR ============ -->
-  <header class="topbar glass">
-    <button id="homeBtn" class="logo logo-btn" title="Back to Home"><span class="logo-mark">✦</span><b>Chitra</b><i>studio</i></button>
-    <button id="productBtn" class="product-btn" title="Choose what you're printing">
-      <span class="p-icon" id="productIcon">👕</span>
+  <header class="topbar">
+    <button id="homeBtn" class="logo-btn" title="Back to Home"><span class="logo-mark"><i data-ico="sparkles" data-s="18"></i></span><b>Chitra</b></button>
+    <button id="productBtn" class="product-btn" title="Choose size or product">
+      <span class="p-icon" id="productIcon"></span>
       <span class="p-text"><b id="productName">T-shirt front</b><small id="sizeInfo"></small></span>
-      <span class="chev">▾</span>
+      <i data-ico="chevron-down" data-s="16"></i>
     </button>
-    <button id="rotateDoc" class="ibtn" title="Swap portrait / landscape">⟳</button>
-    <input id="projectName" class="project-name" value="Untitled masterpiece" aria-label="Project name" spellcheck="false">
+    <button id="rotateDoc" class="ibtn" title="Swap portrait / landscape"><i data-ico="rotate-cw"></i></button>
+    <input id="projectName" class="project-name" value="Untitled design" aria-label="Design name" spellcheck="false">
     <span class="spacer"></span>
     <div class="group">
-      <button id="undo" class="ibtn" title="Undo (Ctrl+Z)">↶</button>
-      <button id="redo" class="ibtn" title="Redo (Ctrl+Y)">↷</button>
+      <button id="undo" class="ibtn" title="Undo (Ctrl+Z)"><i data-ico="undo-2"></i></button>
+      <button id="redo" class="ibtn" title="Redo (Ctrl+Y)"><i data-ico="redo-2"></i></button>
     </div>
-    <button id="moreBtn" class="ibtn only-mobile" title="More">⋯</button>
-    <button id="cmdk" class="btn ghost" title="Command palette"><span>🔎 Do anything…</span><kbd>Ctrl K</kbd></button>
-    <button id="saveProject" class="ibtn" title="Save project file">💾</button>
-    <label class="ibtn" for="openProject" title="Open project file">📂</label>
+    <button id="moreBtn" class="ibtn only-mobile" title="More"><i data-ico="ellipsis"></i></button>
+    <button id="cmdk" class="btn ghost" title="Search for any tool"><i data-ico="search" data-s="16"></i><span>Search tools</span><kbd>Ctrl K</kbd></button>
+    <button id="saveProject" class="ibtn" title="Download project file"><i data-ico="save"></i></button>
+    <label class="ibtn" for="openProject" title="Open project file"><i data-ico="folder-open"></i></label>
     <input type="file" id="openProject" accept=".json" hidden>
-    <button id="mockupBtn" class="btn">👀 Mockup</button>
-    <button id="proBtn" class="btn gold" title="Plans & pricing">💎 Pro</button>
-    <button id="exportBtn" class="cta">⬇ Export</button>
+    <button id="mockupBtn" class="btn"><i data-ico="shirt" data-s="18"></i><span>Mockup</span></button>
+    <button id="proBtn" class="btn gold" title="Plans & pricing"><i data-ico="crown" data-s="16"></i><span>Pro</span></button>
+    <button id="exportBtn" class="cta"><i data-ico="download" data-s="18"></i><span>Export</span></button>
   </header>
 
   <div class="workspace">
     <!-- ============ TOOL RAIL ============ -->
-    <nav class="rail glass" id="rail">
-      <button data-tab="templates" class="on"><i>🗂️</i><span>Design</span></button>
-      <button data-tab="layouts"><i>🖨️</i><span>Layouts</span></button>
-      <button data-tab="shapes"><i>🔷</i><span>Elements</span></button>
-      <button data-tab="text"><i>🔤</i><span>Text</span></button>
-      <button data-tab="photos"><i>🌄</i><span>Photos</span></button>
-      <button data-tab="upload"><i>⬆️</i><span>Uploads</span></button>
-      <button data-tab="ai"><i>🤖</i><span>AI Art</span></button>
-      <button data-tab="magic"><i>🪄</i><span>Magic</span></button>
-      <button data-tab="print"><i>📐</i><span>Page</span></button>
+    <nav class="rail" id="rail">
+      <button data-tab="templates" class="on"><i data-ico="layout-template" data-s="24"></i><span>Design</span></button>
+      <button data-tab="layouts"><i data-ico="printer" data-s="24"></i><span>Layouts</span></button>
+      <button data-tab="shapes"><i data-ico="shapes" data-s="24"></i><span>Elements</span></button>
+      <button data-tab="text"><i data-ico="type" data-s="24"></i><span>Text</span></button>
+      <button data-tab="upload"><i data-ico="upload" data-s="24"></i><span>Uploads</span></button>
+      <button data-tab="ai"><i data-ico="sparkles" data-s="24"></i><span>AI Art</span></button>
+      <button data-tab="magic"><i data-ico="wand-sparkles" data-s="24"></i><span>Magic</span></button>
+      <button data-tab="print"><i data-ico="file" data-s="24"></i><span>Page</span></button>
     </nav>
 
     <!-- ============ FLYOUT PANELS ============ -->
-    <section class="flyout glass" id="flyout">
+    <section class="flyout" id="flyout">
+      <div class="grabber" aria-hidden="true"></div>
+
       <div class="panel" data-panel="templates">
         <h2>Design</h2>
-        <button id="surprise" class="hero-btn"><span>🎲</span><b>Surprise me</b><small>A random look in one tap</small></button>
+        <button id="surprise" class="hero-btn"><span class="hb-i"><i data-ico="dice-5" data-s="26"></i></span><span class="hb-t"><b>Surprise me</b><small>A random look in one tap</small></span></button>
         <div class="chips" id="tplTabs"></div>
         <div class="tiles tpl" id="tplGrid"></div>
         <p class="tip">Templates adapt to the size you picked — A4, A3, a mug or an Instagram post.</p>
@@ -127,91 +131,70 @@
         <h4>Add a print area</h4>
         <select id="slotPreset"></select>
         <div class="row2"><label class="slider-row" style="margin:0">W <input type="number" id="slotW" step="0.05" min="0.2" value="8.25"></label><label class="slider-row" style="margin:0">H <input type="number" id="slotH" step="0.05" min="0.2" value="3.5"></label></div>
-        <div class="row2" style="margin-top:8px"><button id="slotAdd" class="btn">＋ Add area</button><button id="slotArrange" class="btn">🧩 Arrange</button></div>
+        <div class="row2" style="margin-top:8px"><button id="slotAdd" class="btn"><i data-ico="plus" data-s="16"></i>Add area</button><button id="slotArrange" class="btn"><i data-ico="grid-2x2" data-s="16"></i>Arrange</button></div>
         <label class="switch"><input type="checkbox" id="slotLock" checked><i></i><span>Lock print areas</span></label>
         <h4>My layouts</h4>
-        <button id="layoutSave" class="btn wide">💾 Save this page as a layout</button>
+        <button id="layoutSave" class="btn wide"><i data-ico="save" data-s="16"></i>Save this page as a layout</button>
         <div class="lay-grid" id="myLayGrid"></div>
       </div>
 
-      <div class="panel" data-panel="text" hidden>
-        <h2>Text</h2>
-        <button data-text="heading" class="btn wide big">Add a heading</button>
-        <div class="row2">
-          <button data-text="sub" class="btn">Subheading</button>
-          <button data-text="body" class="btn">Body</button>
+      <!-- ELEMENTS: Canva-style browser (shapes, graphics, icons, photos, mockups, effects, stickers) built by elements.js -->
+      <div class="panel" data-panel="shapes" hidden>
+        <div class="el-top"><button id="elBack" class="ibtn" hidden title="Back"><i data-ico="arrow-left"></i></button><h2 id="elTitle">Elements</h2></div>
+        <div class="searchbar"><i data-ico="search" data-s="18"></i><input id="elSearch" placeholder="Search shapes, icons, photos…" autocomplete="off"></div>
+        <div id="elHome">
+          <h4>Browse categories</h4>
+          <div class="cat-grid" id="catGrid"></div>
+          <h4>Popular shapes <button class="link" data-el="shapes">See all</button></h4>
+          <div class="shape-grid" id="popShapes"></div>
         </div>
-        <h4>Punchy styles</h4>
-        <div class="tiles">
-          <button data-tstyle="pop" class="tile ts-pop">POP!</button>
-          <button data-tstyle="retro" class="tile ts-retro">Retro</button>
-          <button data-tstyle="neon" class="tile ts-neon">NEON</button>
-          <button data-tstyle="stamp" class="tile ts-stamp">STAMP</button>
-          <button data-tstyle="grad" class="tile ts-grad">Gradient</button>
-          <button id="addArch" class="tile ts-arch">⌒ Arch</button>
-        </div>
-        <p class="tip">Tip: double-click any text on the canvas to edit it.</p>
+        <div id="elView" hidden></div>
       </div>
 
-      <div class="panel" data-panel="shapes" hidden>
-        <h2>Elements</h2>
-        <div class="tiles">
-          <button data-add="rect" class="tile sh">▭<small>Box</small></button>
-          <button data-add="circle" class="tile sh">●<small>Circle</small></button>
-          <button data-add="triangle" class="tile sh">▲<small>Triangle</small></button>
-          <button data-add="star" class="tile sh">★<small>Star</small></button>
-          <button data-add="heart" class="tile sh">♥<small>Heart</small></button>
-          <button data-add="line" class="tile sh">／<small>Line</small></button>
-          <button data-add="hexagon" class="tile sh">⬢<small>Hexagon</small></button>
-          <button data-add="burst" class="tile sh">✹<small>Burst</small></button>
-          <button data-add="diamond" class="tile sh">◆<small>Diamond</small></button>
-          <button data-add="arrow" class="tile sh">➜<small>Arrow</small></button>
-          <button data-add="bubble" class="tile sh">💬<small>Bubble</small></button>
-          <button data-add="plus" class="tile sh">✚<small>Plus</small></button>
+      <!-- TEXT: default styles, font combinations, effects and the full font showcase built by fonts.js -->
+      <div class="panel" data-panel="text" hidden>
+        <h2>Text</h2>
+        <div class="searchbar"><i data-ico="search" data-s="18"></i><input id="fontSearch" placeholder="Search fonts…" autocomplete="off"></div>
+        <div id="textHome">
+          <h4>Default text styles</h4>
+          <div class="txt-defaults">
+            <button data-text="heading" class="td td-h">Add a heading</button>
+            <button data-text="sub" class="td td-s">Add a subheading</button>
+            <button data-text="body" class="td td-b">Add a little bit of body text</button>
+          </div>
+          <h4>Font combinations</h4>
+          <div class="combo-grid" id="comboGrid"></div>
+          <h4>Text effects</h4>
+          <div class="fx-tiles">
+            <button data-tstyle="pop" class="fxt ts-pop">POP!</button>
+            <button data-tstyle="retro" class="fxt ts-retro">Retro</button>
+            <button data-tstyle="neon" class="fxt ts-neon">NEON</button>
+            <button data-tstyle="stamp" class="fxt ts-stamp">STAMP</button>
+            <button data-tstyle="grad" class="fxt ts-grad">Gradient</button>
+            <button id="addArch" class="fxt ts-arch">Arch</button>
+          </div>
         </div>
-        <h4>Backdrops</h4>
-        <div class="backdrops" id="backdrops"></div>
-        <h4>Stickers</h4>
-        <div class="emoji-grid" id="emojiGrid"></div>
-        <p class="tip">Emoji look different on each device. For production use your own artwork.</p>
+        <div class="chips" id="fontCats"></div>
+        <div class="font-list" id="fontList"></div>
       </div>
 
       <div class="panel" data-panel="upload" hidden>
         <h2>Your art</h2>
         <label class="dropzone" for="imgUpload" id="dropzone">
-          <span>🖼️</span><b>Drop images here</b><small>or click to browse · paste works too</small>
+          <i data-ico="upload" data-s="34"></i><b>Drop images here</b><small>or tap to browse · paste works too</small>
         </label>
         <input type="file" id="imgUpload" accept="image/*" multiple hidden>
         <p class="tip">Images show their print DPI once selected. Aim for 200+ at final size.</p>
       </div>
 
-      <div class="panel" data-panel="photos" hidden>
-        <h2>Photos <span class="spark">🌄</span></h2>
-        <select id="photoSource">
-          <option value="openverse">Openverse · free, no key</option>
-          <option value="pixabay">Pixabay · free key</option>
-          <option value="pexels">Pexels · free key</option>
-          <option value="unsplash">Unsplash · free key</option>
-        </select>
-        <div class="keybox" id="keyBox" hidden>
-          <input type="password" id="keyInput" class="text-in" placeholder="Paste your free API key" autocomplete="off">
-          <div class="row2"><button id="keySave" class="btn">Save key</button><a id="keyLink" class="btn" target="_blank" rel="noopener">Get free key ↗</a></div>
-        </div>
-        <form id="photoForm" class="searchbar"><input id="photoQ" class="text-in" placeholder="Search photos…" autocomplete="off"><button class="btn">🔎</button></form>
-        <div class="chips" id="photoChips"></div>
-        <div class="photo-grid" id="photoGrid"></div>
-        <button id="photoMore" class="btn wide" hidden>Load more</button>
-        <p class="tip" id="photoNote">Always check each photo's licence before selling products with it.</p>
-      </div>
-
       <div class="panel" data-panel="ai" hidden>
-        <h2>AI Art <span class="spark">🤖</span></h2>
-        <textarea id="aiPrompt" class="text-in" rows="3" placeholder="Describe what you want… e.g. a fox wearing sunglasses, neon sunset"></textarea>
+        <h2>AI Art</h2>
+        <textarea id="aiPrompt" class="text-in" rows="3" placeholder="Describe what you want… e.g. a fox wearing sunglasses, sunset colours"></textarea>
         <h4>Style</h4>
         <div class="chips" id="aiStyles"></div>
         <div class="row2">
           <select id="aiShape"><option value="1024x1024">Square</option><option value="832x1216">Portrait</option><option value="1216x832">Landscape</option></select>
-          <button id="aiGo" class="cta">✨ Generate</button>
+          <button id="aiGo" class="cta"><i data-ico="sparkles" data-s="16"></i>Generate</button>
         </div>
         <label class="switch"><input type="checkbox" id="aiCut" checked><i></i><span>Auto remove background</span></label>
         <div class="photo-grid" id="aiGrid"></div>
@@ -219,18 +202,18 @@
       </div>
 
       <div class="panel" data-panel="magic" hidden>
-        <h2>Magic <span class="spark">✨</span></h2>
+        <h2>Magic</h2>
         <div class="magic-list">
-          <button id="shuffleColors" class="magic-card"><i>🎨</i><span><b>Shuffle colours</b><small>Re-colour your whole design</small></span></button>
-          <button id="sparkle" class="magic-card"><i>✨</i><span><b>Sparkle burst</b><small>Sprinkle stars everywhere</small></span></button>
-          <button id="stickerOutline" class="magic-card"><i>🏷️</i><span><b>Sticker outline</b><small>White border on selected</small></span></button>
+          <button id="shuffleColors" class="magic-card"><i class="mi c1"><i data-ico="palette" data-s="20"></i></i><span><b>Shuffle colours</b><small>Re-colour your whole design</small></span></button>
+          <button id="sparkle" class="magic-card"><i class="mi c2"><i data-ico="sparkles" data-s="20"></i></i><span><b>Sparkle burst</b><small>Sprinkle stars everywhere</small></span></button>
+          <button id="stickerOutline" class="magic-card"><i class="mi c3"><i data-ico="tag" data-s="20"></i></i><span><b>Sticker outline</b><small>White border on selected</small></span></button>
         </div>
         <h4>Photo magic <small>(select a photo)</small></h4>
         <div class="magic-list">
-          <button id="removeBg" class="magic-card"><i>✂️</i><span><b>Remove background</b><small>AI cut-out, runs in your browser</small></span></button>
-          <button id="magicFix" class="magic-card"><i>🪄</i><span><b>Magic fix</b><small>Auto colour, light &amp; contrast</small></span></button>
-          <button id="enhance" class="magic-card"><i>🔍</i><span><b>Enhance quality 2×</b><small>Upscale + sharpen for print</small></span></button>
-          <button id="refine" class="magic-card"><i>🖌️</i><span><b>Refine edges</b><small>Erase / restore brush</small></span></button>
+          <button id="removeBg" class="magic-card"><i class="mi c4"><i data-ico="scissors" data-s="20"></i></i><span><b>Remove background</b><small>AI cut-out, runs in your browser</small></span></button>
+          <button id="magicFix" class="magic-card"><i class="mi c1"><i data-ico="wand-sparkles" data-s="20"></i></i><span><b>Magic fix</b><small>Auto colour, light &amp; contrast</small></span></button>
+          <button id="enhance" class="magic-card"><i class="mi c2"><i data-ico="zoom-in" data-s="20"></i></i><span><b>Enhance quality 2×</b><small>Upscale + sharpen for print</small></span></button>
+          <button id="refine" class="magic-card"><i class="mi c3"><i data-ico="brush" data-s="20"></i></i><span><b>Refine edges</b><small>Erase / restore brush</small></span></button>
         </div>
         <h4>Palettes</h4>
         <div class="palettes" id="palettes"></div>
@@ -238,17 +221,17 @@
 
       <div class="panel" data-panel="print" hidden>
         <h2>Page</h2>
-        <button id="changeProduct" class="btn wide">📐 Change size / product</button>
-        <button id="newDesign" class="btn wide">🆕 New design</button>
+        <button id="changeProduct" class="btn wide"><i data-ico="scaling" data-s="16"></i>Change size / product</button>
+        <button id="newDesign" class="btn wide"><i data-ico="file-plus" data-s="16"></i>New design</button>
         <label class="switch"><input type="checkbox" id="transparent" checked><i></i><span>Transparent background</span></label>
         <label class="slider-row">Background <input type="color" id="bgColor" value="#ffffff" disabled></label>
         <label class="switch"><input type="checkbox" id="showGuides" checked><i></i><span>Print guides</span></label>
         <h4>Gang sheet</h4>
         <div class="row2">
-          <button id="pack" class="btn">🧩 Pack</button>
-          <button id="copies" class="btn">📑 Copies…</button>
+          <button id="pack" class="btn"><i data-ico="grid-2x2" data-s="16"></i>Pack</button>
+          <button id="copies" class="btn"><i data-ico="copy" data-s="16"></i>Copies…</button>
         </div>
-        <button id="fillSheet" class="btn wide">🪄 Fill sheet with selected</button>
+        <button id="fillSheet" class="btn wide"><i data-ico="wand-sparkles" data-s="16"></i>Fill sheet with selected</button>
         <div class="meter"><div id="usageBar"></div></div>
         <small class="tip" id="usageText">Sheet usage: 0%</small>
       </div>
@@ -261,20 +244,20 @@
         <div class="canvas-wrap" id="canvasWrap">
           <canvas id="c"></canvas>
           <div class="guides" id="guides"></div>
-          <div class="float-tb glass" id="floatTb" hidden>
+          <div class="float-tb" id="floatTb" hidden>
             <input type="color" id="ftColor" title="Colour">
-            <button data-ft="up" title="Bring forward">⬆</button>
-            <button data-ft="down" title="Send backward">⬇</button>
-            <button data-ft="dup" title="Duplicate">⧉</button>
-            <button data-ft="lock" title="Lock / unlock">🔒</button>
-            <button data-ft="del" title="Delete" class="danger">🗑</button>
+            <button data-ft="up" title="Bring forward"><i data-ico="arrow-up" data-s="16"></i></button>
+            <button data-ft="down" title="Send backward"><i data-ico="arrow-down" data-s="16"></i></button>
+            <button data-ft="dup" title="Duplicate"><i data-ico="copy" data-s="16"></i></button>
+            <button data-ft="lock" title="Lock / unlock"><i data-ico="lock" data-s="16"></i></button>
+            <button data-ft="del" title="Delete" class="danger"><i data-ico="trash-2" data-s="16"></i></button>
           </div>
         </div>
       </main>
-      <div class="dock glass">
-        <button id="zoomOut" class="ibtn" title="Zoom out">−</button>
+      <div class="dock">
+        <button id="zoomOut" class="ibtn" title="Zoom out"><i data-ico="minus" data-s="16"></i></button>
         <input type="range" id="zoomSlider" min="2" max="400" value="100" title="Zoom">
-        <button id="zoomIn" class="ibtn" title="Zoom in">+</button>
+        <button id="zoomIn" class="ibtn" title="Zoom in"><i data-ico="plus" data-s="16"></i></button>
         <span class="zoom-label" id="zoomLabel">100%</span>
         <button id="zoomFit" class="btn small">Fit</button>
         <span class="sep"></span>
@@ -282,35 +265,35 @@
         <div class="bgswatches" id="bgSwatches"></div>
       </div>
       </div>
-      <div class="pagebar glass">
+      <div class="pagebar">
         <div class="pages-list" id="pageList"></div>
         <div class="pg-actions"><span id="pageCount">Page 1 / 1</span>
-          <button id="pgAdd" class="btn small">＋ Add page</button><button id="pgDup" class="btn small" title="Duplicate page">⧉</button><button id="pgDel" class="btn small danger" title="Delete page">🗑</button></div>
+          <button id="pgAdd" class="btn small"><i data-ico="plus" data-s="14"></i>Add page</button><button id="pgDup" class="ibtn sm" title="Duplicate page"><i data-ico="copy" data-s="16"></i></button><button id="pgDel" class="ibtn sm danger" title="Delete page"><i data-ico="trash-2" data-s="16"></i></button></div>
       </div>
     </div>
 
     <!-- ============ INSPECTOR ============ -->
-    <aside class="inspector glass" id="inspector">
-      <div class="sheet-head"><b id="sheetTitle">Edit</b><button id="sheetClose" class="btn small">✓ Done</button></div>
+    <aside class="inspector" id="inspector">
+      <div class="sheet-head"><b id="sheetTitle">Edit</b><button id="sheetClose" class="btn small"><i data-ico="check" data-s="16"></i>Done</button></div>
       <div class="tabs"><button data-itab="design" class="on">Design</button><button data-itab="layers">Layers</button></div>
 
       <div id="tab-design">
         <div id="emptyProps" class="empty">
-          <div class="mascot">🎨</div>
+          <div class="mascot"><i data-ico="mouse-pointer-click" data-s="40"></i></div>
           <b>Click anything on the canvas</b>
-          <p>to colour it, resize it, bend it, break it.</p>
-          <div class="keys"><kbd>Del</kbd> delete <kbd>Ctrl D</kbd> copy <kbd>Ctrl K</kbd> search <kbd>←↑↓→</kbd> nudge</div>
+          <p>One click to select & move. Double-click to edit its text, colours or photo.</p>
+          <div class="keys"><kbd>Del</kbd> delete <kbd>Ctrl D</kbd> copy <kbd>Ctrl K</kbd> search <kbd>Enter</kbd> edit text</div>
         </div>
         <div id="propsBody" hidden>
           <section id="slotSec" data-s="slotops" hidden>
             <h4>Print area</h4>
             <div class="row2">
-              <button class="btn hot" data-slotop="add">🖼️ Add photo</button>
-              <button class="btn" data-slotop="fit">⛶ Fit / Fill</button>
-              <button class="btn" data-slotop="all">📑 Copy to all</button>
-              <button class="btn" data-slotop="clear">🧹 Clear</button>
+              <button class="btn hot" data-slotop="add"><i data-ico="image" data-s="16"></i>Add photo</button>
+              <button class="btn" data-slotop="fit"><i data-ico="maximize-2" data-s="16"></i>Fit / Fill</button>
+              <button class="btn" data-slotop="all"><i data-ico="copy" data-s="16"></i>Copy to all</button>
+              <button class="btn" data-slotop="clear"><i data-ico="eraser" data-s="16"></i>Clear</button>
             </div>
-            <button class="btn wide" data-slotop="lock">🔓 Lock / unlock this area</button>
+            <button class="btn wide" data-slotop="lock"><i data-ico="lock-open" data-s="16"></i>Lock / unlock this area</button>
             <p class="tip">Photos fit the physical size of the area automatically. Drag the photo to reposition it inside.</p>
           </section>
 
@@ -319,8 +302,8 @@
               <h4>Colour</h4>
               <div class="swatches" id="swatches"></div>
               <div class="grads" id="grads"></div>
-              <div class="brand-row"><span>Brand</span><div class="brandkit" id="brandKit"></div><button class="mini" id="addBrand" title="Save current colour to brand kit">＋</button></div>
-              <label class="slider-row">Fill <span class="inline"><button class="mini" id="eyedrop" title="Pick colour from screen" hidden>💧</button><input type="color" id="fill"></span></label>
+              <div class="brand-row"><span>Brand</span><div class="brandkit" id="brandKit"></div><button class="mini" id="addBrand" title="Save current colour to brand kit"><i data-ico="plus" data-s="14"></i></button></div>
+              <label class="slider-row">Fill <span class="inline"><button class="mini" id="eyedrop" title="Pick colour from screen" hidden><i data-ico="pipette" data-s="14"></i></button><input type="color" id="fill"></span></label>
             </div>
             <div data-s="outline">
               <h4>Outline</h4>
@@ -337,15 +320,15 @@
           <section id="textSec" data-s="font spacing" hidden>
             <div data-s="font">
               <h4>Font</h4>
-              <select id="fontFamily"></select>
+              <button id="fontBtn" class="font-btn" title="Choose a font"><span id="fontBtnName">Fredoka</span><i data-ico="chevron-down" data-s="16"></i></button>
               <label class="slider-row">Size <input type="number" id="fontSize" min="6" max="2000" value="48"></label>
               <div class="row3">
-                <button id="bold" class="btn"><b>B</b></button>
-                <button id="italic" class="btn"><i>I</i></button>
-                <button id="underline" class="btn"><u>U</u></button>
-                <button data-talign="left" class="btn">⯇</button>
-                <button data-talign="center" class="btn">≡</button>
-                <button data-talign="right" class="btn">⯈</button>
+                <button id="bold" class="btn" title="Bold"><i data-ico="bold" data-s="16"></i></button>
+                <button id="italic" class="btn" title="Italic"><i data-ico="italic" data-s="16"></i></button>
+                <button id="underline" class="btn" title="Underline"><i data-ico="underline" data-s="16"></i></button>
+                <button data-talign="left" class="btn" title="Align left"><i data-ico="align-left" data-s="16"></i></button>
+                <button data-talign="center" class="btn" title="Centre"><i data-ico="align-center" data-s="16"></i></button>
+                <button data-talign="right" class="btn" title="Align right"><i data-ico="align-right" data-s="16"></i></button>
               </div>
             </div>
             <div data-s="spacing">
@@ -366,10 +349,10 @@
               <h4>Photo magic</h4>
               <div class="dpi" id="dpiInfo"></div>
               <div class="row2 magic-row">
-                <button class="btn hot" data-pm="removeBg">✂️ Remove BG</button>
-                <button class="btn hot" data-pm="magicFix">🪄 Magic fix</button>
-                <button class="btn hot" data-pm="enhance">🔍 Enhance 2×</button>
-                <button class="btn hot" data-pm="refine">🖌️ Refine</button>
+                <button class="btn hot" data-pm="removeBg"><i data-ico="scissors" data-s="16"></i>Remove BG</button>
+                <button class="btn hot" data-pm="magicFix"><i data-ico="wand-sparkles" data-s="16"></i>Magic fix</button>
+                <button class="btn hot" data-pm="enhance"><i data-ico="zoom-in" data-s="16"></i>Enhance 2×</button>
+                <button class="btn hot" data-pm="refine"><i data-ico="brush" data-s="16"></i>Refine</button>
               </div>
             </div>
             <div data-s="adjust">
@@ -383,7 +366,7 @@
               <label class="slider-row">Hue <input type="range" data-filter="hue" min="-100" max="100" value="0"></label>
               <label class="slider-row">Sharpness <input type="range" data-filter="sharpen" min="0" max="100" value="0"></label>
               <label class="slider-row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
-              <button data-preset="reset" class="btn wide">↺ Reset adjustments</button>
+              <button data-preset="reset" class="btn wide"><i data-ico="rotate-ccw" data-s="16"></i>Reset adjustments</button>
             </div>
             <div data-s="filters">
               <h4>Filters</h4>
@@ -413,11 +396,11 @@
                 <button data-crop="free" class="btn">Full</button>
               </div>
               <div class="row3">
-                <button data-mask="none" class="btn">▭ None</button>
-                <button data-mask="circle" class="btn">● Circle</button>
-                <button data-mask="rounded" class="btn">▢ Round</button>
-                <button data-mask="heart" class="btn">♥ Heart</button>
-                <button data-mask="star" class="btn">★ Star</button>
+                <button data-mask="none" class="btn">Square</button>
+                <button data-mask="circle" class="btn">Circle</button>
+                <button data-mask="rounded" class="btn">Round</button>
+                <button data-mask="heart" class="btn">Heart</button>
+                <button data-mask="star" class="btn">Star</button>
                 <button id="cropToCanvas" class="btn">Fill</button>
               </div>
             </div>
@@ -425,7 +408,7 @@
               <h4>Die-cut sticker outline</h4>
               <label class="slider-row">Thickness <input type="range" id="outlineSize" min="1" max="12" value="4"></label>
               <label class="slider-row">Colour <input type="color" id="outlineColor" value="#ffffff"></label>
-              <button id="imgOutline" class="btn wide">🏷️ Add outline</button>
+              <button id="imgOutline" class="btn wide"><i data-ico="tag" data-s="16"></i>Add outline</button>
             </div>
           </section>
 
@@ -433,25 +416,25 @@
             <h4>Position</h4>
             <label class="slider-row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
             <div class="row3">
-              <button id="forward" class="btn">Up</button>
-              <button id="backward" class="btn">Down</button>
-              <button id="toFront" class="btn">Front</button>
-              <button id="toBack" class="btn">Back</button>
-              <button id="flipH" class="btn">Flip ↔</button>
-              <button id="flipV" class="btn">Flip ↕</button>
-              <button data-align="left" class="btn">⇤</button>
-              <button data-align="center" class="btn">↔</button>
-              <button data-align="right" class="btn">⇥</button>
-              <button data-align="top" class="btn">⇡</button>
-              <button data-align="middle" class="btn">↕</button>
-              <button data-align="bottom" class="btn">⇣</button>
+              <button id="forward" class="btn" title="Bring forward"><i data-ico="arrow-up" data-s="16"></i>Up</button>
+              <button id="backward" class="btn" title="Send backward"><i data-ico="arrow-down" data-s="16"></i>Down</button>
+              <button id="toFront" class="btn" title="Bring to front"><i data-ico="chevrons-up" data-s="16"></i>Front</button>
+              <button id="toBack" class="btn" title="Send to back"><i data-ico="chevrons-down" data-s="16"></i>Back</button>
+              <button id="flipH" class="btn" title="Flip horizontally"><i data-ico="flip-horizontal" data-s="16"></i></button>
+              <button id="flipV" class="btn" title="Flip vertically"><i data-ico="flip-vertical" data-s="16"></i></button>
+              <button data-align="left" class="btn" title="Align left"><i data-ico="align-start-vertical" data-s="16"></i></button>
+              <button data-align="center" class="btn" title="Centre horizontally"><i data-ico="align-center-vertical" data-s="16"></i></button>
+              <button data-align="right" class="btn" title="Align right"><i data-ico="align-end-vertical" data-s="16"></i></button>
+              <button data-align="top" class="btn" title="Align top"><i data-ico="align-start-horizontal" data-s="16"></i></button>
+              <button data-align="middle" class="btn" title="Centre vertically"><i data-ico="align-center-horizontal" data-s="16"></i></button>
+              <button data-align="bottom" class="btn" title="Align bottom"><i data-ico="align-end-horizontal" data-s="16"></i></button>
             </div>
             <div class="row3">
-              <button id="duplicate" class="btn">Copy</button>
-              <button id="lock" class="btn">Lock</button>
-              <button id="delete" class="btn danger">Delete</button>
-              <button id="group" class="btn">Group</button>
-              <button id="ungroup" class="btn">Ungroup</button>
+              <button id="duplicate" class="btn"><i data-ico="copy" data-s="16"></i>Copy</button>
+              <button id="lock" class="btn"><i data-ico="lock" data-s="16"></i>Lock</button>
+              <button id="delete" class="btn danger"><i data-ico="trash-2" data-s="16"></i>Delete</button>
+              <button id="group" class="btn"><i data-ico="group" data-s="16"></i>Group</button>
+              <button id="ungroup" class="btn"><i data-ico="ungroup" data-s="16"></i>Ungroup</button>
             </div>
           </section>
         </div>
@@ -467,30 +450,86 @@
 
 <!-- ============ OVERLAYS ============ -->
 <div class="modal" id="picker" hidden>
-  <div class="sheet glass">
-    <button class="x" data-close>✕</button>
+  <div class="sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
     <h1 id="pickerTitle">What are we designing today?</h1>
     <p class="sub">Pick a paper size, product or social format — it's set up at the right resolution for you.</p>
-    <div class="picker-top"><input id="pickerSearch" class="text-in" placeholder="Search A4, A3, poster, mug, Instagram…" autocomplete="off"><button id="customSize" class="btn">📐 Custom size</button></div>
+    <div class="picker-top"><div class="searchbar"><i data-ico="search" data-s="18"></i><input id="pickerSearch" placeholder="Search A4, A3, poster, mug, Instagram…" autocomplete="off"></div><button id="customSize" class="btn"><i data-ico="scaling" data-s="16"></i>Custom size</button></div>
     <div class="chips" id="pickerTabs"></div>
     <div id="pickerGrid"></div>
   </div>
 </div>
 
+<div class="menu" id="exportMenu" hidden>
+  <button data-export="dtf"><i class="mi c1"><i data-ico="shirt" data-s="20"></i></i><span><b>DTF transfer</b><small>Transparent PNG · 300 DPI</small></span></button>
+  <button data-export="sub"><i class="mi c2"><i data-ico="coffee" data-s="20"></i></i><span><b>Sublimation</b><small>Mirrored PNG · 300 DPI</small></span></button>
+  <button data-export="jpg"><i class="mi c3"><i data-ico="image" data-s="20"></i></i><span><b>JPG</b><small>White background</small></span></button>
+  <button data-export="pdf"><i class="mi c4"><i data-ico="file-text" data-s="20"></i></i><span><b>PDF · all pages</b><small>Print-ready, true paper size</small></span></button>
+  <button data-export="png"><i class="mi c1"><i data-ico="image" data-s="20"></i></i><span><b>PNG</b><small>Transparent, current page</small></span></button>
+  <button data-export="credits"><i class="mi c2"><i data-ico="heart-handshake" data-s="20"></i></i><span><b>Thank-you credits</b><small>Photo &amp; graphic credits (.txt)</small></span></button>
+</div>
+
+<div class="modal" id="mockup" hidden>
+  <div class="sheet wide-sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
+    <h1>Photoreal mockup</h1>
+    <div class="mock-body">
+      <canvas id="mockCanvas" width="900" height="900"></canvas>
+      <div class="mock-side">
+        <h4>Product</h4>
+        <div class="row3"><button class="btn on" data-mock="shirt"><i data-ico="shirt" data-s="16"></i>Tee</button><button class="btn" data-mock="mug"><i data-ico="coffee" data-s="16"></i>Mug</button><button class="btn" data-mock="photo"><i data-ico="camera" data-s="16"></i>My photo</button></div>
+        <div id="mockColorBox"><h4>Colour</h4><div class="swatches" id="mockColors"></div></div>
+        <div id="mockPhotoBox" hidden>
+          <h4>Your blank product photo</h4>
+          <label class="btn wide" for="mockPhotoIn"><i data-ico="upload" data-s="16"></i>Upload photo</label>
+          <input type="file" id="mockPhotoIn" accept="image/*" hidden>
+          <label class="slider-row">Size <input type="range" id="mpScale" min="5" max="150" value="40"></label>
+          <label class="slider-row">Rotate <input type="range" id="mpRot" min="-45" max="45" value="0"></label>
+          <label class="switch"><input type="checkbox" id="mpMultiply" checked><i></i><span>Blend into fabric</span></label>
+          <p class="tip">Drag the design on the preview to position it.</p>
+        </div>
+        <h4>Scene</h4>
+        <div class="scenes" id="mockScenes"></div>
+        <form id="sceneForm" class="searchbar"><i data-ico="search" data-s="16"></i><input id="sceneQ" placeholder="Photo backdrop… (e.g. wood table)"></form>
+        <div class="scene-results" id="sceneResults"></div>
+        <button id="mockDownload" class="cta wide"><i data-ico="download" data-s="18"></i>Save mockup image</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="refineModal" hidden>
+  <div class="sheet wide-sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
+    <h1>Refine edges</h1>
+    <div class="mock-body">
+      <div class="refine-stage"><canvas id="refineCanvas"></canvas></div>
+      <div class="mock-side">
+        <div class="row2"><button class="btn on" data-rmode="erase"><i data-ico="eraser" data-s="16"></i>Erase</button><button class="btn" data-rmode="restore"><i data-ico="brush" data-s="16"></i>Restore</button></div>
+        <label class="slider-row">Brush <input type="range" id="rSize" min="5" max="200" value="40"></label>
+        <label class="slider-row">Softness <input type="range" id="rSoft" min="0" max="100" value="40"></label>
+        <button id="rReset" class="btn wide"><i data-ico="rotate-ccw" data-s="16"></i>Start over</button>
+        <button id="rApply" class="cta wide"><i data-ico="check" data-s="18"></i>Apply</button>
+        <p class="tip">Paint to erase leftover background, or restore parts that were cut by mistake.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="layoutModal" hidden>
-  <div class="sheet glass">
-    <button class="x" data-close>✕</button>
+  <div class="sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
     <h1>Save as layout</h1>
     <p class="sub">Save this page so you can start from it again — print areas, text and graphics included.</p>
-    <label class="cs-grid" style="display:block"><span style="color:var(--muted);font-size:12px;font-weight:600">Layout name</span><input id="layoutName" class="text-in" style="width:100%;margin-top:6px" placeholder="e.g. 11oz mug – 3 up on A4"></label>
+    <label style="display:block"><span class="lbl">Layout name</span><input id="layoutName" class="text-in" style="width:100%;margin-top:6px" placeholder="e.g. 11oz mug – 3 up on A4"></label>
     <label class="switch"><input type="checkbox" id="layoutKeepImg"><i></i><span>Keep photos that are not in a print area</span></label>
     <button id="layoutGo" class="cta wide">Save layout</button>
   </div>
 </div>
 
 <div class="modal" id="pricing" hidden>
-  <div class="sheet glass wide-sheet">
-    <button class="x" data-close>✕</button>
+  <div class="sheet wide-sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
     <h1>Pick your plan</h1>
     <p class="sub">Print-ready design for a fraction of the usual price. Cancel any time.</p>
     <div class="plans" id="planGrid"></div>
@@ -499,8 +538,8 @@
 </div>
 
 <div class="modal" id="customModal" hidden>
-  <div class="sheet glass">
-    <button class="x" data-close>✕</button>
+  <div class="sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
     <h1>Custom size</h1>
     <div class="cs-grid">
       <label>Width<input id="csW" type="number" step="any" min="0" value="8.27"></label>
@@ -513,86 +552,57 @@
   </div>
 </div>
 
-<div class="menu glass" id="exportMenu" hidden>
-  <button data-export="dtf"><i>👕</i><span><b>DTF transfer</b><small>Transparent PNG · 300 DPI</small></span></button>
-  <button data-export="sub"><i>☕</i><span><b>Sublimation</b><small>Mirrored PNG · 300 DPI</small></span></button>
-  <button data-export="jpg"><i>🖼️</i><span><b>JPG</b><small>White background</small></span></button>
-  <button data-export="pdf"><i>📄</i><span><b>PDF · all pages</b><small>Print-ready, true paper size</small></span></button>
-  <button data-export="png"><i>🖼️</i><span><b>PNG</b><small>Transparent, current page</small></span></button>
-</div>
-
-<div class="modal" id="mockup" hidden>
-  <div class="sheet glass wide-sheet">
-    <button class="x" data-close>✕</button>
-    <h1>Photoreal mockup</h1>
-    <div class="mock-body">
-      <canvas id="mockCanvas" width="900" height="900"></canvas>
-      <div class="mock-side">
-        <h4>Product</h4>
-        <div class="row3"><button class="btn on" data-mock="shirt">👕 Tee</button><button class="btn" data-mock="mug">☕ Mug</button><button class="btn" data-mock="photo">📷 My photo</button></div>
-        <div id="mockColorBox"><h4>Colour</h4><div class="swatches" id="mockColors"></div></div>
-        <div id="mockPhotoBox" hidden>
-          <h4>Your blank product photo</h4>
-          <label class="btn wide" for="mockPhotoIn">＋ Upload photo</label>
-          <input type="file" id="mockPhotoIn" accept="image/*" hidden>
-          <label class="slider-row">Size <input type="range" id="mpScale" min="5" max="150" value="40"></label>
-          <label class="slider-row">Rotate <input type="range" id="mpRot" min="-45" max="45" value="0"></label>
-          <label class="switch"><input type="checkbox" id="mpMultiply" checked><i></i><span>Blend into fabric</span></label>
-          <p class="tip">Drag the design on the preview to position it.</p>
-        </div>
-        <h4>Scene</h4>
-        <div class="scenes" id="mockScenes"></div>
-        <form id="sceneForm" class="searchbar"><input id="sceneQ" class="text-in" placeholder="Photo backdrop… (e.g. wood table)"><button class="btn">🔎</button></form>
-        <div class="scene-results" id="sceneResults"></div>
-        <button id="mockDownload" class="cta wide">⬇ Save mockup image</button>
-      </div>
-    </div>
+<!-- hidden owner setup (Ctrl+Shift+K, or tap the logo 7×) — never shown to customers -->
+<div class="modal" id="adminModal" hidden>
+  <div class="sheet">
+    <button class="x" data-close><i data-ico="x" data-s="18"></i></button>
+    <h1>Owner setup</h1>
+    <p class="sub">Keys pasted here are kept only in <b>this browser</b> (never in the code or on GitHub). To serve all your customers without exposing keys, deploy the free proxy in <code>worker/</code> and paste its URL below.</p>
+    <label style="display:block"><span class="lbl">Photo proxy URL (recommended)</span><input id="admProxy" class="text-in" style="width:100%;margin:6px 0 10px" placeholder="https://chitra-photos.yourname.workers.dev"></label>
+    <label style="display:block"><span class="lbl">Pixabay key (this device only)</span><input id="admPixabay" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
+    <label style="display:block"><span class="lbl">Pexels key (this device only)</span><input id="admPexels" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
+    <button id="admSave" class="cta wide">Save</button>
+    <p class="tip" id="admStatus"></p>
   </div>
 </div>
 
-<div class="modal" id="refineModal" hidden>
-  <div class="sheet glass wide-sheet">
-    <button class="x" data-close>✕</button>
-    <h1>Refine edges</h1>
-    <div class="mock-body">
-      <div class="refine-stage"><canvas id="refineCanvas"></canvas></div>
-      <div class="mock-side">
-        <div class="row2"><button class="btn on" data-rmode="erase">🧽 Erase</button><button class="btn" data-rmode="restore">🖌️ Restore</button></div>
-        <label class="slider-row">Brush <input type="range" id="rSize" min="5" max="200" value="40"></label>
-        <label class="slider-row">Softness <input type="range" id="rSoft" min="0" max="100" value="40"></label>
-        <button id="rReset" class="btn wide">↺ Start over</button>
-        <button id="rApply" class="cta wide">✔ Apply</button>
-        <p class="tip">Paint to erase leftover background, or restore parts that were cut by mistake.</p>
-      </div>
-    </div>
+<div class="modal" id="fontPicker" hidden>
+  <div class="fp">
+    <div class="fp-head"><b>Fonts</b><button class="x" data-close><i data-ico="x" data-s="18"></i></button></div>
+    <div class="searchbar"><i data-ico="search" data-s="18"></i><input id="fpSearch" placeholder="Search fonts…" autocomplete="off"></div>
+    <div class="chips" id="fpCats"></div>
+    <div class="font-list" id="fpList"></div>
   </div>
 </div>
 
 <div class="modal" id="cmd" hidden>
-  <div class="cmd-box glass">
+  <div class="cmd-box">
     <input id="cmdInput" placeholder="Type a command… (try “mug”, “shuffle”, “export”)" autocomplete="off">
     <ul id="cmdList"></ul>
   </div>
 </div>
 
-<div class="menu glass" id="moreMenu" hidden>
-  <button data-more="new"><i>🆕</i><span><b>New design</b><small>Start fresh</small></span></button>
-  <button data-more="layers"><i>🗂️</i><span><b>Layers</b><small>Select, hide, lock items</small></span></button>
-  <button data-more="mock"><i>👀</i><span><b>Mockup</b><small>See it on a tee or mug</small></span></button>
-  <button data-more="save"><i>💾</i><span><b>Save project</b><small>Download a .json file</small></span></button>
-  <button data-more="open"><i>📂</i><span><b>Open project</b><small>From a saved file</small></span></button>
-  <button data-more="cmd"><i>🔎</i><span><b>Search actions</b><small>Find any tool</small></span></button>
+<div class="menu" id="moreMenu" hidden>
+  <button data-more="new"><i class="mi c1"><i data-ico="file-plus" data-s="20"></i></i><span><b>New design</b><small>Start fresh</small></span></button>
+  <button data-more="layers"><i class="mi c2"><i data-ico="layers" data-s="20"></i></i><span><b>Layers</b><small>Select, hide, lock items</small></span></button>
+  <button data-more="mock"><i class="mi c3"><i data-ico="shirt" data-s="20"></i></i><span><b>Mockup</b><small>See it on a tee or mug</small></span></button>
+  <button data-more="save"><i class="mi c4"><i data-ico="save" data-s="20"></i></i><span><b>Save project</b><small>Download a .json file</small></span></button>
+  <button data-more="open"><i class="mi c1"><i data-ico="folder-open" data-s="20"></i></i><span><b>Open project</b><small>From a saved file</small></span></button>
+  <button data-more="cmd"><i class="mi c2"><i data-ico="search" data-s="20"></i></i><span><b>Search tools</b><small>Find any tool</small></span></button>
 </div>
-<nav class="ctxbar glass" id="ctxBar" hidden></nav>
+<nav class="ctxbar" id="ctxBar" hidden></nav>
 <div id="toasts"></div>
 <canvas id="confetti"></canvas>
 
 <script src="vendor/fabric.min.js"></script>
 <script src="vendor/jspdf.umd.min.js"></script>
+<script src="icons.js"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script src="layouts.js"></script>
 <script src="photo.js"></script>
+<script src="fonts.js"></script>
+<script src="elements.js"></script>
 <script src="home.js"></script>
 <script>
 if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) {

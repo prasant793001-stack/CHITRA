@@ -4,7 +4,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData', 'slot', 'inSlot'];
+  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData', 'slot', 'inSlot', 'credit', 'isIcon'];
   let DPI = 300;
   const FONTS = ['Fredoka', 'Bangers', 'Anton', 'Bebas Neue', 'Chewy', 'Lobster', 'Pacifico', 'Permanent Marker', 'Righteous',
     'Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New'];
@@ -24,74 +24,78 @@
   const mmP = (cat, g, icon, name, wmm, hmm, dpi = 300, guide = 'paper') => P(cat, g, icon, name, Math.round((wmm / 25.4) * dpi), Math.round((hmm / 25.4) * dpi), guide, dpi);
   const PRODUCTS = [
     // ---- paper ----
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A4', 210, 297),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A3', 297, 420),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A5', 148, 210),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A6', 105, 148),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A2', 420, 594, 200),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A1', 594, 841, 150),
-    mmP('paper', '📄 Paper · ISO sizes', '📄', 'A0', 841, 1189, 100),
-    inP('paper', '📄 Paper · US sizes', '📃', 'Letter', 8.5, 11),
-    inP('paper', '📄 Paper · US sizes', '📃', 'Legal', 8.5, 14),
-    inP('paper', '📄 Paper · US sizes', '📃', 'Tabloid', 11, 17),
-    inP('paper', '📄 Paper · US sizes', '📃', 'Half letter', 5.5, 8.5),
-    inP('paper', '🖼️ Posters & photos', '🖼️', 'Poster 18×24 in', 18, 24, 150),
-    inP('paper', '🖼️ Posters & photos', '🖼️', 'Poster 24×36 in', 24, 36, 100),
-    inP('paper', '🖼️ Posters & photos', '📷', 'Photo 4×6 in', 4, 6),
-    inP('paper', '🖼️ Posters & photos', '📷', 'Photo 5×7 in', 5, 7),
-    inP('paper', '🖼️ Posters & photos', '📷', 'Photo 8×10 in', 8, 10),
-    inP('paper', '🖼️ Posters & photos', '📷', 'Photo 11×14 in', 11, 14),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A4', 210, 297),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A3', 297, 420),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A5', 148, 210),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A6', 105, 148),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A2', 420, 594, 200),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A1', 594, 841, 150),
+    mmP('paper', 'Paper · ISO sizes', '📄', 'A0', 841, 1189, 100),
+    inP('paper', 'Paper · US sizes', '📃', 'Letter', 8.5, 11),
+    inP('paper', 'Paper · US sizes', '📃', 'Legal', 8.5, 14),
+    inP('paper', 'Paper · US sizes', '📃', 'Tabloid', 11, 17),
+    inP('paper', 'Paper · US sizes', '📃', 'Half letter', 5.5, 8.5),
+    inP('paper', 'Posters & photos', '🖼️', 'Poster 18×24 in', 18, 24, 150),
+    inP('paper', 'Posters & photos', '🖼️', 'Poster 24×36 in', 24, 36, 100),
+    inP('paper', 'Posters & photos', '📷', 'Photo 4×6 in', 4, 6),
+    inP('paper', 'Posters & photos', '📷', 'Photo 5×7 in', 5, 7),
+    inP('paper', 'Posters & photos', '📷', 'Photo 8×10 in', 8, 10),
+    inP('paper', 'Posters & photos', '📷', 'Photo 11×14 in', 11, 14),
     // ---- marketing print ----
-    inP('marketing', '🖨️ Print & marketing', '💳', 'Business card', 3.5, 2),
-    inP('marketing', '🖨️ Print & marketing', '📣', 'Flyer', 5.5, 8.5),
-    inP('marketing', '🖨️ Print & marketing', '✉️', 'Postcard', 6, 4),
-    inP('marketing', '🖨️ Print & marketing', '💌', 'Invitation', 5, 7),
-    inP('marketing', '🖨️ Print & marketing', '🎓', 'Certificate', 11, 8.5),
-    inP('marketing', '🖨️ Print & marketing', '🍽️', 'Menu', 4.25, 11),
-    inP('marketing', '🖨️ Print & marketing', '📖', 'Brochure (open)', 11, 8.5),
-    inP('marketing', '🖨️ Print & marketing', '🎟️', 'Ticket', 5.5, 2),
-    inP('marketing', '🖨️ Print & marketing', '🔖', 'Bookmark', 2, 6),
-    inP('marketing', '🖨️ Print & marketing', '🏷️', 'Label / sticker 3×3 in', 3, 3),
-    inP('marketing', '🖨️ Print & marketing', '🚪', 'Door hanger', 3.5, 8.5),
-    inP('marketing', '🖨️ Print & marketing', '🚩', 'Banner 6×2 ft', 72, 24, 50, 'none'),
+    inP('marketing', 'Print & marketing', '💳', 'Business card', 3.5, 2),
+    inP('marketing', 'Print & marketing', '📣', 'Flyer', 5.5, 8.5),
+    inP('marketing', 'Print & marketing', '✉️', 'Postcard', 6, 4),
+    inP('marketing', 'Print & marketing', '💌', 'Invitation', 5, 7),
+    inP('marketing', 'Print & marketing', '🎓', 'Certificate', 11, 8.5),
+    inP('marketing', 'Print & marketing', '🍽️', 'Menu', 4.25, 11),
+    inP('marketing', 'Print & marketing', '📖', 'Brochure (open)', 11, 8.5),
+    inP('marketing', 'Print & marketing', '🎟️', 'Ticket', 5.5, 2),
+    inP('marketing', 'Print & marketing', '🔖', 'Bookmark', 2, 6),
+    inP('marketing', 'Print & marketing', '🏷️', 'Label / sticker 3×3 in', 3, 3),
+    inP('marketing', 'Print & marketing', '🚪', 'Door hanger', 3.5, 8.5),
+    inP('marketing', 'Print & marketing', '🚩', 'Banner 6×2 ft', 72, 24, 50, 'none'),
     // ---- DTF / sublimation ----
-    P('print', '👕 DTF transfers', '👕', 'T-shirt front', 3300, 3900, 'shirt'),
-    P('print', '👕 DTF transfers', '🔙', 'T-shirt back', 3600, 4800, 'shirt'),
-    P('print', '👕 DTF transfers', '🧥', 'Hoodie front', 3600, 4200, 'shirt'),
-    P('print', '👕 DTF transfers', '🧒', 'Kids tee', 2400, 3000, 'shirt'),
-    P('print', '👕 DTF transfers', '📍', 'Left chest', 1200, 1200),
-    P('print', '👕 DTF transfers', '💪', 'Sleeve 3×10 in', 900, 3000),
-    P('print', '👕 DTF transfers', '🧢', 'Cap front 4×2 in', 1200, 600),
-    P('print', '👕 DTF transfers', '👜', 'Tote bag', 3600, 4200),
-    P('print', '🧻 DTF gang sheets · 22 in roll', '🧻', 'Gang sheet 22×12', 6600, 3600),
-    P('print', '🧻 DTF gang sheets · 22 in roll', '📜', 'Gang sheet 22×24', 6600, 7200),
-    P('print', '☕ Sublimation', '☕', '11 oz mug wrap', 2475, 1050, 'mug'),
-    P('print', '☕ Sublimation', '🍵', '15 oz mug wrap', 2700, 1125, 'mug'),
-    P('print', '☕ Sublimation', '🥤', '20 oz tumbler', 2790, 2460),
-    P('print', '☕ Sublimation', '🟫', 'Coaster', 1200, 1200),
-    P('print', '☕ Sublimation', '🖱️', 'Mouse pad', 2850, 2370),
-    P('print', '☕ Sublimation', '📱', 'Phone case', 900, 1800),
-    P('print', '☕ Sublimation', '🛋️', 'Pillow 16×16 in', 4800, 4800),
-    P('print', '☕ Sublimation', '🎄', 'Round ornament', 1050, 1050),
+    P('print', 'DTF transfers', '👕', 'T-shirt front', 3300, 3900, 'shirt'),
+    P('print', 'DTF transfers', '🔙', 'T-shirt back', 3600, 4800, 'shirt'),
+    P('print', 'DTF transfers', '🧥', 'Hoodie front', 3600, 4200, 'shirt'),
+    P('print', 'DTF transfers', '🧒', 'Kids tee', 2400, 3000, 'shirt'),
+    P('print', 'DTF transfers', '📍', 'Left chest', 1200, 1200),
+    P('print', 'DTF transfers', '💪', 'Sleeve 3×10 in', 900, 3000),
+    P('print', 'DTF transfers', '🧢', 'Cap front 4×2 in', 1200, 600),
+    P('print', 'DTF transfers', '👜', 'Tote bag', 3600, 4200),
+    P('print', 'DTF gang sheets · 22 in roll', '🧻', 'Gang sheet 22×12', 6600, 3600),
+    P('print', 'DTF gang sheets · 22 in roll', '📜', 'Gang sheet 22×24', 6600, 7200),
+    P('print', 'Sublimation', '☕', '11 oz mug wrap', 2475, 1050, 'mug'),
+    P('print', 'Sublimation', '🍵', '15 oz mug wrap', 2700, 1125, 'mug'),
+    P('print', 'Sublimation', '🥤', '20 oz tumbler', 2790, 2460),
+    P('print', 'Sublimation', '🟫', 'Coaster', 1200, 1200),
+    P('print', 'Sublimation', '🖱️', 'Mouse pad', 2850, 2370),
+    P('print', 'Sublimation', '📱', 'Phone case', 900, 1800),
+    P('print', 'Sublimation', '🛋️', 'Pillow 16×16 in', 4800, 4800),
+    P('print', 'Sublimation', '🎄', 'Round ornament', 1050, 1050),
     // ---- social ----
-    P('social', '📱 Social media', '📸', 'Instagram post', 1080, 1080, 'none', 96),
-    P('social', '📱 Social media', '🖼️', 'Instagram portrait', 1080, 1350, 'none', 96),
-    P('social', '📱 Social media', '📱', 'Story / Reel / TikTok', 1080, 1920, 'none', 96),
-    P('social', '📱 Social media', '👍', 'Facebook post', 1200, 630, 'none', 96),
-    P('social', '📱 Social media', '🏞️', 'Facebook cover', 1640, 924, 'none', 96),
-    P('social', '📱 Social media', '▶️', 'YouTube thumbnail', 1280, 720, 'none', 96),
-    P('social', '📱 Social media', '🎬', 'YouTube banner', 2560, 1440, 'none', 96),
-    P('social', '📱 Social media', '💼', 'LinkedIn banner', 1584, 396, 'none', 96),
-    P('social', '📱 Social media', '🐦', 'X / Twitter post', 1600, 900, 'none', 96),
-    P('social', '📱 Social media', '📌', 'Pinterest pin', 1000, 1500, 'none', 96),
-    P('social', '📱 Social media', '🛍️', 'Etsy listing', 2000, 2000, 'none', 96),
+    P('social', 'Social media', '📸', 'Instagram post', 1080, 1080, 'none', 96),
+    P('social', 'Social media', '🖼️', 'Instagram portrait', 1080, 1350, 'none', 96),
+    P('social', 'Social media', '📱', 'Story / Reel / TikTok', 1080, 1920, 'none', 96),
+    P('social', 'Social media', '👍', 'Facebook post', 1200, 630, 'none', 96),
+    P('social', 'Social media', '🏞️', 'Facebook cover', 1640, 924, 'none', 96),
+    P('social', 'Social media', '▶️', 'YouTube thumbnail', 1280, 720, 'none', 96),
+    P('social', 'Social media', '🎬', 'YouTube banner', 2560, 1440, 'none', 96),
+    P('social', 'Social media', '💼', 'LinkedIn banner', 1584, 396, 'none', 96),
+    P('social', 'Social media', '🐦', 'X / Twitter post', 1600, 900, 'none', 96),
+    P('social', 'Social media', '📌', 'Pinterest pin', 1000, 1500, 'none', 96),
+    P('social', 'Social media', '🛍️', 'Etsy listing', 2000, 2000, 'none', 96),
     // ---- screens ----
-    P('present', '🖥️ Presentation & screens', '🖥️', 'Presentation 16:9', 1920, 1080, 'none', 96),
-    P('present', '🖥️ Presentation & screens', '📺', 'Presentation 4:3', 1024, 768, 'none', 96),
-    P('present', '🖥️ Presentation & screens', '🎞️', 'Video 4K', 3840, 2160, 'none', 96),
-    P('present', '🖥️ Presentation & screens', '🌆', 'Desktop wallpaper', 2560, 1440, 'none', 96),
+    P('present', 'Presentation & screens', '🖥️', 'Presentation 16:9', 1920, 1080, 'none', 96),
+    P('present', 'Presentation & screens', '📺', 'Presentation 4:3', 1024, 768, 'none', 96),
+    P('present', 'Presentation & screens', '🎞️', 'Video 4K', 3840, 2160, 'none', 96),
+    P('present', 'Presentation & screens', '🌆', 'Desktop wallpaper', 2560, 1440, 'none', 96),
   ];
-  const PICKER_TABS = [['all', 'All'], ['paper', '📄 Paper'], ['marketing', '🖨️ Marketing'], ['print', '👕 DTF & Sublimation'], ['social', '📱 Social'], ['present', '🖥️ Screens']];
+  const PROD_ICONS = [[/mug|ornament/i, 'coffee'], [/tumbler/i, 'cup-soda'], [/hoodie|tee|t-shirt|sleeve|chest/i, 'shirt'], [/tote/i, 'shopping-bag'], [/cap /i, 'hard-hat'], [/gang/i, 'layout-grid'], [/coaster/i, 'square'], [/mouse/i, 'mouse'], [/phone/i, 'smartphone'], [/pillow/i, 'box'],
+    [/business card/i, 'credit-card'], [/flyer/i, 'newspaper'], [/postcard/i, 'mail'], [/invitation/i, 'gift'], [/certificate/i, 'award'], [/menu/i, 'utensils'], [/brochure/i, 'book-open'], [/ticket/i, 'ticket'], [/bookmark/i, 'bookmark'], [/label|sticker/i, 'tag'], [/door/i, 'door-open'], [/banner/i, 'flag'],
+    [/poster|photo/i, 'image'], [/instagram/i, 'camera'], [/story|reel|tiktok/i, 'smartphone'], [/facebook/i, 'users'], [/youtube/i, 'video'], [/linkedin/i, 'briefcase'], [/twitter/i, 'message-circle'], [/pinterest/i, 'pin'], [/etsy/i, 'store'], [/presentation/i, 'presentation'], [/video/i, 'video'], [/wallpaper/i, 'monitor'], [/\bA\d\b|letter|legal|tabloid|half/i, 'file-text']];
+  const prodIconName = p => (PROD_ICONS.find(([re]) => re.test(p.name)) || [0, 'file'])[1];
+  const PICKER_TABS = [['all', 'All'], ['paper', 'Paper'], ['marketing', 'Marketing'], ['print', 'DTF & Sublimation'], ['social', 'Social'], ['present', 'Screens']];
   const inches = (px, d = DPI) => (px / d).toFixed(2).replace(/\.?0+$/, '');
   const dim = p => p.dpi >= 100 ? (p.cat === 'paper' ? `${Math.round((p.w / p.dpi) * 25.4)}×${Math.round((p.h / p.dpi) * 25.4)} mm` : `${inches(p.w, p.dpi)}×${inches(p.h, p.dpi)} in`) : `${p.w}×${p.h} px`;
 
@@ -99,10 +103,17 @@
   const pages = [{ json: null, thumb: null, hist: null }]; let cur = 0;
   const canvas = new fabric.Canvas('c', { preserveObjectStacking: true, backgroundColor: '' });
   fabric.Object.prototype.set({
-    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#7c3aed', borderColor: '#7c3aed',
+    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#ff7a1a', borderColor: '#ff7a1a',
     cornerStyle: 'circle', cornerSize: 13, padding: 3, borderScaleFactor: 2.5,
   });
   const u = () => Math.min(W, H);
+  // Canva-style: ONE click/tap selects & moves; DOUBLE click/tap edits (handled in editObject below).
+  fabric.IText.prototype.mouseUpHandler = function (o) {
+    this.__isMousedown = false;
+    if (!this.editable || this.group || (o.transform && o.transform.actionPerformed) || (o.e.button && o.e.button !== 1)) return;
+    if (this.canvas && this.canvas._activeObject && this.canvas._activeObject !== this) return;
+    this.selected = true;
+  };
   const active = () => canvas.getActiveObject();
   const isText = o => o && /text/.test(o.type);
   const isImage = o => o && o.type === 'image';
@@ -111,13 +122,15 @@
   const targets = () => { const o = active(); return !o ? [] : o.type === 'activeSelection' ? o.getObjects() : [o]; };
 
   /* ================= toasts & confetti ================= */
-  function toast(msg, emoji = '✨') {
-    const t = document.createElement('div'); t.className = 'toast'; t.textContent = `${emoji}  ${msg}`;
-    $('#toasts').appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 2200);
+  const WARN = new Set(['⚠️', '☝️', '👆', 'ℹ️']);
+  function toast(msg, tag = '') {
+    const t = document.createElement('div'), warn = WARN.has(tag); t.className = 'toast' + (warn ? ' warn' : '');
+    t.innerHTML = `<span class="ti">${ico(warn ? 'triangle-alert' : 'check', 14)}</span><span></span>`; $('span:last-child', t).textContent = msg;
+    $('#toasts').appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 2400);
   }
   function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 150) {
     const c = $('#confetti'); c.width = innerWidth; c.height = innerHeight; const g = c.getContext('2d');
-    const cols = ['#ff2d95', '#ff8a1f', '#ffd23f', '#c6ff3d', '#22d3ee', '#8b5cf6'];
+    const cols = ['#ff7a1a', '#ffc42e', '#1fb26b', '#b5dd2f', '#ff9a2e', '#14b8a6'];
     const ps = Array.from({ length: n }, () => ({ x, y, vx: (Math.random() - .5) * 18, vy: -Math.random() * 15 - 4, r: Math.random() * 6 + 3, c: pick(cols), rot: Math.random() * 6, vr: (Math.random() - .5) * .5 }));
     let t = 0;
     (function step() {
@@ -197,7 +210,7 @@
     }
   }
   function setProduct(p) {
-    product = p; $('#productIcon').textContent = p.icon; $('#productName').textContent = p.name;
+    product = p; $('#productIcon').innerHTML = ico(prodIconName(p), 20); $('#productName').textContent = p.name;
     $('#sizeInfo').textContent = DPI >= 100 ? `${dim({ ...p, w: W, h: H, dpi: DPI })} · ${W}×${H}px @ ${DPI} DPI` : `${W}×${H} px`;
   }
   function setSize(w, h, record = true, g, d, prod) {
@@ -240,7 +253,7 @@
     PRODUCTS.filter(p => (pickTab === 'all' || p.cat === pickTab) && (!q || `${p.name} ${p.g} ${dim(p)}`.toLowerCase().includes(q))).forEach(p => {
       if (p.g !== last) { const h = document.createElement('h4'); h.textContent = p.g; grid.appendChild(h); last = p.g; }
       const b = document.createElement('button'); b.className = 'pcard' + (p.name === product.name && p.w === W ? ' on' : '');
-      b.innerHTML = `<i>${p.icon}</i><b>${p.name}</b><small>${dim(p)}</small>`;
+      b.innerHTML = `<span class="pi">${ico(prodIconName(p), 22)}</span><b>${p.name}</b><small>${dim(p)}</small>`;
       b.onclick = () => chooseProduct(p); grid.appendChild(b); n++;
     });
     if (!n) grid.innerHTML = '<p class="tip">Nothing matches. Try “A4”, “poster” or “mug” — or make a custom size.</p>';
@@ -371,10 +384,6 @@
     const r = new fabric.Rect({ left: 0, top: 0, width: W, height: H, selectable: true, fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: W, y2: H }, colorStops: [{ offset: 0, color: a }, { offset: 1, color: b }] }) });
     canvas.add(r); canvas.sendToBack(r); canvas.setActiveObject(r); canvas.requestRenderAll(); toast('Backdrop added (sent to back)', '🌈');
   }
-  $$('[data-add]').forEach(b => b.onclick = () => place(SHAPES[b.dataset.add]()));
-  $('#backdrops').innerHTML = BACKDROPS.map((g, i) => `<button data-bd="${i}" style="background:linear-gradient(135deg,${g[0]},${g[1]})" title="Add gradient backdrop"></button>`).join('');
-  $$('[data-bd]').forEach(b => b.onclick = () => addBackdrop(BACKDROPS[b.dataset.bd]));
-
   const TEXT = { heading: ['Add a heading', 0.1, 'bold'], sub: ['Add a subheading', 0.06, 'normal'], body: ['Add a little bit of body text', 0.035, 'normal'] };
   function addText(kind, extra = {}) {
     const [t, k, weight] = TEXT[kind];
@@ -394,10 +403,6 @@
     const o = new fabric.Textbox(text, { width: W * 0.8, textAlign: 'center', fontWeight: 'normal', ...rest });
     place(o); if (b.dataset.tstyle === 'grad') { gradFill(o, pick(GRADS)); canvas.requestRenderAll(); }
   });
-  $('#emojiGrid').innerHTML = EMOJI.map(e => `<button data-emoji="${e}" title="Add sticker">${e}</button>`).join('');
-  $$('[data-emoji]').forEach(b => b.onclick = () => place(new fabric.Text(b.dataset.emoji, {
-    fontSize: u() * 0.2, fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif',
-  })));
 
   const DEFAULT_ADJ = () => ({ brightness: 0, contrast: 0, saturation: 0, vibrance: 0, temperature: 0, hue: 0, sharpen: 0, blur: 0, whiteDist: 0, preset: '' });
   function addImageFromURL(url) {
@@ -743,7 +748,7 @@
     tb.style.top = (above ? r.top - 12 : r.top + r.height + 12) + 'px';
     tb.style.transform = `translate(-50%,${above ? '-100%' : '0'})`;
     tb.style.setProperty('--ft-t', tb.style.transform);
-    $('[data-ft=lock]').textContent = o.locked ? '🔓' : '🔒';
+    $('[data-ft=lock]').innerHTML = ico(o.locked ? 'lock-open' : 'lock', 18);
   }
   ['object:moving', 'object:scaling', 'object:rotating', 'object:modified', 'selection:created', 'selection:updated', 'selection:cleared'].forEach(e => canvas.on(e, placeFloat));
   $$('[data-ft]').forEach(b => b.onclick = () => ({ up: () => $('#forward').click(), down: () => $('#backward').click(), dup: duplicate, lock: toggleLock, del: remove })[b.dataset.ft]());
@@ -752,18 +757,18 @@
   /* ---- layers ---- */
   const LAYER_NAMES = { rect: 'Box', circle: 'Circle', triangle: 'Triangle', polygon: 'Star', path: 'Heart', line: 'Line', group: 'Group', image: 'Image' };
   const layerName = o => isArch(o) ? o.archData.text : isText(o) ? (o.text || '').replace(/\n/g, ' ').slice(0, 26) : LAYER_NAMES[o.type] || o.type;
-  const layerIcon = o => isArch(o) ? '⌒' : isText(o) ? '🔤' : isImage(o) ? '🖼️' : '◆';
+  const layerIcon = o => ico(o.slot ? 'printer' : isArch(o) ? 'spline' : isText(o) ? 'type' : isImage(o) ? 'image' : o.isIcon ? 'sparkle' : 'shapes', 16);
   let dragIdx = null;
   function renderLayers() {
     const ul = $('#layers'); if (!ul || $('#tab-layers').hidden) return;
     const objs = canvas.getObjects(); ul.innerHTML = ''; $('#layersEmpty').hidden = objs.length > 0;
     [...objs].reverse().forEach((o, li) => {
       const row = document.createElement('li'); row.draggable = true; row.className = o === active() ? 'sel' : '';
-      row.innerHTML = `<span class="ico">${layerIcon(o)}</span><span class="nm"></span><button data-eye title="Show / hide">${o.visible === false ? '🙈' : '👁'}</button><button data-lk title="Lock">${o.locked ? '🔒' : '🔓'}</button>`;
+      row.innerHTML = `<span class="ico">${layerIcon(o)}</span><span class="nm"></span><button data-eye title="Show / hide">${ico(o.visible === false ? 'eye-off' : 'eye', 16)}</button><button data-lk title="Lock">${ico(o.locked ? 'lock' : 'lock-open', 16)}</button>`;
       $('.nm', row).textContent = layerName(o);
       row.onclick = e => {
-        if (e.target.dataset.eye !== undefined) { o.visible = o.visible === false; if (!o.visible) canvas.discardActiveObject(); canvas.requestRenderAll(); commit(); return; }
-        if (e.target.dataset.lk !== undefined) { canvas.setActiveObject(o); toggleLock(); return; }
+        if (e.target.closest('[data-eye]')) { o.visible = o.visible === false; if (!o.visible) canvas.discardActiveObject(); canvas.requestRenderAll(); commit(); return; }
+        if (e.target.closest('[data-lk]')) { canvas.setActiveObject(o); toggleLock(); return; }
         if (o.visible !== false) { canvas.setActiveObject(o); canvas.requestRenderAll(); refreshProps(); }
       };
       row.ondragstart = () => { dragIdx = objs.length - 1 - li; };
@@ -814,7 +819,6 @@
   renderBrand();
 
   /* ================= properties ================= */
-  $('#fontFamily').innerHTML = FONTS.map(f => `<option style="font-family:'${f}'">${f}</option>`).join('');
   $('#swatches').innerHTML = COLORS.map(c => `<button data-color="${c}" style="background:${c}" title="${c}"></button>`).join('');
   $('#grads').innerHTML = GRADS.map((g, i) => `<button data-grad="${i}" style="background:linear-gradient(135deg,${g[0]},${g[1]})" title="Gradient"></button>`).join('');
   function setFill(c) {
@@ -840,10 +844,10 @@
     $('#shadow').checked = !!o.shadow;
     $('#lock').textContent = o.locked ? 'Unlock' : 'Lock';
     if (arch) {
-      $('#fontFamily').value = o.archData.fontFamily; $('#fontSize').value = Math.round(o.archData.fontSize);
+      chitra.fontUI?.sync(o.archData.fontFamily); $('#fontSize').value = Math.round(o.archData.fontSize);
       $('#archText').value = o.archData.text; $('#archCurve').value = o.archData.curve; $('#charSpacing').value = o.archData.charSpacing || 0;
     } else if (isText(o)) {
-      $('#fontFamily').value = o.fontFamily; $('#fontSize').value = Math.round(o.fontSize * (o.scaleY || 1));
+      chitra.fontUI?.sync(o.fontFamily); $('#fontSize').value = Math.round(o.fontSize * (o.scaleY || 1));
       $('#lineHeight').value = Math.round((o.lineHeight || 1.16) * 100); $('#charSpacing').value = o.charSpacing || 0;
     }
     if (isImage(o)) {
@@ -851,8 +855,8 @@
       $$('[data-filter]').forEach(i => i.value = a[i.dataset.filter] || 0);
       const dpi = Math.round(DPI * o.width / o.getScaledWidth()), el = $('#dpiInfo');
       const ratio = o.width / o.getScaledWidth();
-      if (DPI >= 150) { el.textContent = dpi >= 200 ? `✔ ${dpi} DPI at this size — print ready` : `⚠ Only ${dpi} DPI at this size — may print soft`; el.classList.toggle('warn', dpi < 200); }
-      else { el.textContent = ratio >= 1 ? `✔ Crisp — ${Math.round(ratio * 100)}% of original resolution` : `⚠ Enlarged ${Math.round(100 / ratio)}% — may look soft`; el.classList.toggle('warn', ratio < 1); }
+      if (DPI >= 150) { el.textContent = dpi >= 200 ? `${dpi} DPI at this size — print ready` : `Only ${dpi} DPI at this size — may print soft`; el.classList.toggle('warn', dpi < 200); }
+      else { el.textContent = ratio >= 1 ? `Crisp — ${Math.round(ratio * 100)}% of original resolution` : `Enlarged ${Math.round(100 / ratio)}% — may look soft`; el.classList.toggle('warn', ratio < 1); }
     }
   }
   let rafP = 0; const refreshSoon = () => { if (!rafP) rafP = requestAnimationFrame(() => { rafP = 0; refreshProps(); }); };
@@ -869,7 +873,6 @@
     if (!+$('#strokeWidth').value) { const w = Math.round(u() * 0.008); $('#strokeWidth').value = w; targets().forEach(o => setProp(o, 'strokeWidth', w)); canvas.requestRenderAll(); }
   });
   bind('#strokeWidth', 'strokeWidth', Number); bind('#opacity', 'opacity', v => v / 100);
-  bind('#fontFamily', 'fontFamily', v => v, 'change');
   bind('#lineHeight', 'lineHeight', v => v / 100); bind('#charSpacing', 'charSpacing', Number);
   $('#angle').addEventListener('input', e => { targets().forEach(o => o.rotate(+e.target.value)); canvas.requestRenderAll(); placeFloat(); });
   $('#angle').addEventListener('change', commit);
@@ -997,10 +1000,11 @@
       if (!doc) doc = new window.jspdf.jsPDF({ orientation: o, unit: 'mm', format: [wmm, hmm], compress: true }); else doc.addPage([wmm, hmm], o);
       doc.addImage(el.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, wmm, hmm, undefined, 'FAST');
     }
-    doc.save(`${slug()}.pdf`); await new Promise(res => loadPage(keep, res)); confetti(); toast('PDF ready — sized for print', '📄');
+    doc.save(`${slug()}.pdf`); downloadCredits(true); await new Promise(res => loadPage(keep, res)); confetti(); toast('PDF ready — sized for print', '📄');
   }
   function exportFile(kind) {
     if (kind === 'pdf') return exportPDF();
+    if (kind === 'credits') return downloadCredits(false);
     const fmt = kind === 'jpg' ? 'jpeg' : 'png', mime = `image/${fmt}`;
     let el; try { el = renderDesign(kind === 'jpg'); } catch (err) { console.warn(err); return toast('An image on this page blocks exporting — upload it from your device instead', '⚠️'); }
     const sc = renderDesign.scale || 1, outDpi = Math.round(DPI * sc);
@@ -1014,8 +1018,24 @@
       download(url, `${slug()}-${kind}-${W}x${H}.${fmt === 'jpeg' ? 'jpg' : 'png'}`);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
       if (sc < 1) toast(`Phone limit: saved at ${el.width}×${el.height}px (${outDpi} DPI). Use a computer for full size.`, 'ℹ️');
+      downloadCredits(true);
       confetti(); toast(kind === 'sub' ? 'Mirrored file ready for sublimation' : kind === 'dtf' ? 'Transparent DTF file ready' : kind === 'png' ? 'PNG saved' : 'JPG saved', '🎉');
     }, mime, 0.95);
+  }
+  /* ---- thank-you credits for photos & graphics that came from stock sites ---- */
+  function collectCredits() {
+    const seen = new Map(); flushCommit();
+    pages.forEach((p, i) => { const d = JSON.parse(i === cur ? snapshot() : p.json); walkObjs(d.canvas.objects, o => { if (o.credit) seen.set(`${o.credit.site}|${o.credit.by}|${o.credit.link}`, o.credit); }); });
+    return [...seen.values()];
+  }
+  function creditsText() {
+    const l = collectCredits();
+    return `THANK YOU\n=========\nDesign: ${$('#projectName').value}\nMade with Chitra Studio\n\n` + (l.length ? 'Photos & graphics used in this design:\n\n' + l.map(c => `• ${c.title ? '“' + c.title + '” — ' : ''}${c.by ? 'by ' + c.by + ' · ' : ''}${c.site}${c.link ? '\n  ' + c.link : ''}`).join('\n') + '\n\nThank you to these creators and to Pixabay, Pexels and Unsplash for sharing their work.\n' : 'No stock photos were used.\n');
+  }
+  function downloadCredits(auto) {
+    if (auto && !collectCredits().length) return;
+    const url = URL.createObjectURL(new Blob([creditsText()], { type: 'text/plain' })); download(url, `${slug()}-thank-you-credits.txt`); setTimeout(() => URL.revokeObjectURL(url), 2000);
+    if (!auto) toast('Thank-you credits saved', '');
   }
   const menu = $('#exportMenu');
   $('#exportBtn').onclick = e => { e.stopPropagation(); menu.hidden = !menu.hidden; };
@@ -1027,39 +1047,39 @@
 
   /* ================= command palette ================= */
   const CMDS = () => [
-    { n: 'Surprise me', i: '🎲', k: 'random fun', run: surprise },
-    { n: 'Shuffle colours', i: '🎨', k: 'recolor palette', run: () => applyPalette(pick(PALETTES)) },
-    { n: 'Sparkle burst', i: '✨', k: 'stars', run: sparkle },
-    { n: 'Add heading', i: '🔤', k: 'text', run: () => addText('heading') },
+    { n: 'Surprise me', i: 'dice-5', k: 'random fun', run: surprise },
+    { n: 'Shuffle colours', i: 'palette', k: 'recolor palette', run: () => applyPalette(pick(PALETTES)) },
+    { n: 'Sparkle burst', i: 'sparkles', k: 'stars', run: sparkle },
+    { n: 'Add heading', i: 'type', k: 'text', run: () => addText('heading') },
     { n: 'Add arch text', i: '⌒', k: 'curve text', run: newArch },
-    { n: 'Export DTF transfer (transparent PNG)', i: '👕', k: 'download', run: () => exportFile('dtf') },
-    { n: 'Export sublimation (mirrored PNG)', i: '☕', k: 'download mirror', run: () => exportFile('sub') },
-    { n: 'Export JPG', i: '🖼️', k: 'download', run: () => exportFile('jpg') },
-    { n: 'Export PDF (all pages)', i: '📄', k: 'download print a4 a3', run: () => exportFile('pdf') },
-    { n: 'Export PNG', i: '🖼️', k: 'download', run: () => exportFile('png') },
-    { n: 'Add page', i: '➕', k: 'new page', run: () => addPage(false) },
+    { n: 'Export DTF transfer (transparent PNG)', i: 'shirt', k: 'download', run: () => exportFile('dtf') },
+    { n: 'Export sublimation (mirrored PNG)', i: 'coffee', k: 'download mirror', run: () => exportFile('sub') },
+    { n: 'Export JPG', i: 'image', k: 'download', run: () => exportFile('jpg') },
+    { n: 'Export PDF (all pages)', i: 'file-text', k: 'download print a4 a3', run: () => exportFile('pdf') },
+    { n: 'Export PNG', i: 'image', k: 'download', run: () => exportFile('png') },
+    { n: 'Add page', i: 'plus', k: 'new page', run: () => addPage(false) },
     { n: 'New design', i: '🆕', k: 'start over blank', run: newDesign },
     { n: 'Swap portrait / landscape', i: '⟳', k: 'rotate orientation', run: () => $('#rotateDoc').click() },
-    { n: 'Show mockup preview', i: '👀', k: 'shirt mug preview', run: () => chitra.openMockup() },
-    { n: 'Remove background (AI)', i: '✂️', k: 'cutout photo', run: () => chitra.removeBg() },
-    { n: 'Magic fix photo', i: '🪄', k: 'enhance auto improve', run: () => chitra.magicFix() },
-    { n: 'Enhance / upscale photo 2×', i: '🔍', k: 'quality sharpen', run: () => chitra.enhance() },
-    { n: 'Group selected', i: '🧱', k: 'ctrl g', run: groupSel },
-    { n: 'Ungroup', i: '🧩', k: 'ctrl shift g', run: ungroupSel },
-    { n: 'Pack designs onto sheet', i: '🧩', k: 'gang sheet', run: pack },
-    { n: 'Toggle print guides', i: '📏', k: 'margin', run: () => { $('#showGuides').click(); } },
-    { n: 'Toggle transparent background', i: '🧊', k: 'bg', run: () => { $('#transparent').click(); } },
-    { n: 'Save project', i: '💾', k: 'file', run: () => $('#saveProject').click() },
+    { n: 'Show mockup preview', i: 'eye', k: 'shirt mug preview', run: () => chitra.openMockup() },
+    { n: 'Remove background (AI)', i: 'scissors', k: 'cutout photo', run: () => chitra.removeBg() },
+    { n: 'Magic fix photo', i: 'wand-sparkles', k: 'enhance auto improve', run: () => chitra.magicFix() },
+    { n: 'Enhance / upscale photo 2×', i: 'search', k: 'quality sharpen', run: () => chitra.enhance() },
+    { n: 'Group selected', i: 'group', k: 'ctrl g', run: groupSel },
+    { n: 'Ungroup', i: 'ungroup', k: 'ctrl shift g', run: ungroupSel },
+    { n: 'Pack designs onto sheet', i: 'ungroup', k: 'gang sheet', run: pack },
+    { n: 'Toggle print guides', i: 'ruler', k: 'margin', run: () => { $('#showGuides').click(); } },
+    { n: 'Toggle transparent background', i: 'blend', k: 'bg', run: () => { $('#transparent').click(); } },
+    { n: 'Save project', i: 'save', k: 'file', run: () => $('#saveProject').click() },
     { n: 'Undo', i: '↶', k: '', run: undo }, { n: 'Redo', i: '↷', k: '', run: redo },
-    { n: 'Fit canvas to screen', i: '🔍', k: 'zoom', run: fit },
+    { n: 'Fit canvas to screen', i: 'search', k: 'zoom', run: fit },
     ...PRODUCTS.map(p => ({ n: `Product: ${p.name}`, i: p.icon, k: `size ${p.g}`, run: () => chooseProduct(p) })),
-    ...PALETTES.map(p => ({ n: `Palette: ${p.n}`, i: '🎨', k: 'colours', run: () => applyPalette(p) })),
+    ...PALETTES.map(p => ({ n: `Palette: ${p.n}`, i: 'palette', k: 'colours', run: () => applyPalette(p) })),
   ];
   let cmdItems = [], cmdSel = 0;
   function renderCmd() {
     const q = $('#cmdInput').value.toLowerCase().split(/\s+/).filter(Boolean);
     cmdItems = CMDS().filter(c => q.every(t => (c.n + ' ' + c.k).toLowerCase().includes(t))).slice(0, 30); cmdSel = Math.min(cmdSel, Math.max(cmdItems.length - 1, 0));
-    $('#cmdList').innerHTML = cmdItems.map((c, i) => `<li class="${i === cmdSel ? 'on' : ''}" data-i="${i}"><i>${c.i}</i>${c.n}</li>`).join('') || '<li>Nothing found</li>';
+    $('#cmdList').innerHTML = cmdItems.map((c, i) => `<li class="${i === cmdSel ? 'on' : ''}" data-i="${i}"><i>${ico(c.i, 16)}</i>${c.n}</li>`).join('') || '<li>Nothing found</li>';
     $$('#cmdList li[data-i]').forEach(li => li.onclick = () => runCmd(+li.dataset.i));
   }
   function runCmd(i) { const c = cmdItems[i]; $('#cmd').hidden = true; if (c) c.run(); }
@@ -1169,15 +1189,15 @@
 
   /* ================= phone: Canva-style contextual bottom bar ================= */
   const CTX = {
-    text: [['✏️', 'Edit', 'act', 'edit'], ['🔤', 'Font', 'focus', 'font'], ['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['↔️', 'Spacing', 'focus', 'spacing'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
-    arch: [['🔤', 'Font', 'focus', 'font'], ['⌒', 'Curve', 'focus', 'arch'], ['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
-    shape: [['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
-    image: [['✂️', 'Remove BG', 'act', 'removeBg'], ['🪄', 'Magic fix', 'act', 'magicFix'], ['🔍', 'Enhance', 'act', 'enhance'], ['🎚️', 'Adjust', 'focus', 'adjust'], ['🎞️', 'Filters', 'focus', 'filters'], ['⬚', 'Crop', 'focus', 'crop'], ['🖌️', 'Refine', 'act', 'refine'], ['🏷️', 'Sticker', 'focus', 'sticker'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
-    group: [['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+    text: [['pencil', 'Edit', 'act', 'edit'], ['type', 'Font', 'focus', 'font'], ['palette', 'Colour', 'focus', 'colour'], ['circle', 'Outline', 'focus', 'outline'], ['sparkles', 'Effects', 'focus', 'effects'], ['a-large-small', 'Spacing', 'focus', 'spacing'], ['move', 'Position', 'focus', 'position'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']],
+    arch: [['type', 'Font', 'focus', 'font'], ['spline', 'Curve', 'focus', 'arch'], ['palette', 'Colour', 'focus', 'colour'], ['circle', 'Outline', 'focus', 'outline'], ['sparkles', 'Effects', 'focus', 'effects'], ['move', 'Position', 'focus', 'position'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']],
+    shape: [['palette', 'Colour', 'focus', 'colour'], ['circle', 'Outline', 'focus', 'outline'], ['sparkles', 'Effects', 'focus', 'effects'], ['move', 'Position', 'focus', 'position'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']],
+    image: [['scissors', 'Remove BG', 'act', 'removeBg'], ['wand-sparkles', 'Magic fix', 'act', 'magicFix'], ['zoom-in', 'Enhance', 'act', 'enhance'], ['sliders-horizontal', 'Adjust', 'focus', 'adjust'], ['contrast', 'Filters', 'focus', 'filters'], ['crop', 'Crop', 'focus', 'crop'], ['brush', 'Refine', 'act', 'refine'], ['tag', 'Sticker', 'focus', 'sticker'], ['sparkles', 'Effects', 'focus', 'effects'], ['move', 'Position', 'focus', 'position'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']],
+    group: [['sparkles', 'Effects', 'focus', 'effects'], ['move', 'Position', 'focus', 'position'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']],
   };
   CTX.multi = CTX.group;
-  CTX.slot = [['🖼️', 'Add photo', 'act', 'addToSlot'], ['⛶', 'Fit', 'act', 'fitSlot'], ['🧹', 'Clear', 'act', 'clearSlot'], ['🔓', 'Lock', 'act', 'toggleSlotLock'], ['📑', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']];
-  CTX.imageSlot = [['⛶', 'Fit', 'act', 'fitSlot'], ['📑', 'All areas', 'act', 'fillAll'], ...CTX.image];
+  CTX.slot = [['image', 'Add photo', 'act', 'addToSlot'], ['maximize-2', 'Fit', 'act', 'fitSlot'], ['eraser', 'Clear', 'act', 'clearSlot'], ['lock-open', 'Lock', 'act', 'toggleSlotLock'], ['copy', 'Copy', 'act', 'dup'], ['trash-2', 'Delete', 'act', 'del']];
+  CTX.imageSlot = [['maximize-2', 'Fit', 'act', 'fitSlot'], ['copy', 'All areas', 'act', 'fillAll'], ...CTX.image];
   const FOCUS_TITLES = { font: 'Font', colour: 'Colour', outline: 'Outline', effects: 'Effects', spacing: 'Spacing', arch: 'Curve text', position: 'Position', adjust: 'Adjust photo', filters: 'Filters', crop: 'Crop & frame', sticker: 'Sticker outline' };
   const ctxType = o => !o ? null : o.type === 'activeSelection' ? 'multi' : o.slot ? 'slot' : isArch(o) ? 'arch' : isText(o) ? 'text' : isImage(o) ? (o.inSlot ? 'imageSlot' : 'image') : o.type === 'group' ? 'group' : 'shape';
   const ACTS = {
@@ -1209,12 +1229,28 @@
     const bar = $('#ctxBar'), t = ctxType(active());
     if (!t || !isMobile()) { bar.hidden = true; ctxKey = null; if (!t && document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); sheetLayout(false); } return; }
     if (ctxKey !== t) {
-      ctxKey = t; bar.innerHTML = CTX[t].map(([i, n, kind, key]) => `<button data-kind="${kind}" data-key="${key}" class="${key === 'del' ? 'danger' : ''}"><i>${i}</i>${n}</button>`).join('');
+      ctxKey = t; bar.innerHTML = CTX[t].map(([i, n, kind, key]) => `<button data-kind="${kind}" data-key="${key}" class="${key === 'del' ? 'danger' : ''}"><span class="cx">${ico(i, 22)}</span>${n}</button>`).join('');
       $$('#ctxBar button').forEach(b => b.onclick = () => b.dataset.kind === 'focus' ? openFocus(b.dataset.key) : (ACTS[b.dataset.key] || chitra.extraActs?.[b.dataset.key])?.());
       bar.scrollLeft = 0; $('#inspector').removeAttribute('data-focus'); if (document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); sheetLayout(false); }
     }
     bar.hidden = false;
   }
+  /* ---- double click / double tap = edit; single click = select & move ---- */
+  function editObject(o) {
+    if (!o || o.locked) return;
+    if (o.slot) return chitra.extraActs?.addToSlot?.();
+    canvas.setActiveObject(o); refreshProps();
+    if (isArch(o)) { if (isMobile()) openFocus('arch'); else { $('#inspector').scrollTop = 0; $('#archText').focus(); $('#archText').select(); } return; }
+    if (isText(o)) { if (o.isEditing) return; closeSheets(); o.enterEditing(); o.selectAll(); o.hiddenTextarea?.focus(); canvas.requestRenderAll(); return; }
+    if (isImage(o)) { if (isMobile()) openFocus('adjust'); else { $('#inspector').scrollTop = 0; const t = $('#tab-design'); t.hidden = false; $('#tab-layers').hidden = true; $('#imageSec').scrollIntoView({ block: 'start', behavior: 'smooth' }); } return; }
+    if (isMobile()) openFocus('colour'); else { $('#inspector').scrollTop = 0; }
+  }
+  let lastTap = { t: 0, o: null, x: 0, y: 0 };
+  canvas.on('mouse:down', e => {
+    const o = e.target, now = Date.now(), p = e.pointer || { x: 0, y: 0 };
+    if (o && lastTap.o === o && now - lastTap.t < 380 && Math.hypot(p.x - lastTap.x, p.y - lastTap.y) < 24) { lastTap = { t: 0, o: null, x: 0, y: 0 }; setTimeout(() => editObject(o), 0); }
+    else lastTap = { t: now, o, x: p.x, y: p.y };
+  });
   $('#sheetClose').onclick = () => { $('#tab-design').hidden = false; $('#tab-layers').hidden = true; document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); setCtxActive(null); sheetLayout(false); };
   mobileQ.addEventListener?.('change', () => { updateCtx(); fit(); });
 
@@ -1307,6 +1343,7 @@
     if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
     else if (mod && k === 'y') { e.preventDefault(); redo(); }
     else if (mod && k === 'd') { e.preventDefault(); duplicate(); }
+    else if (k === 'enter' && o && !o.isEditing) { e.preventDefault(); editObject(o); }
     else if (mod && k === 'g') { e.preventDefault(); e.shiftKey ? ungroupSel() : groupSel(); }
     else if (k === 'delete' || k === 'backspace') { if (o) { e.preventDefault(); remove(); } }
     else if (o && k.startsWith('arrow')) {
@@ -1346,7 +1383,7 @@
   }) : Promise.resolve();
   const api = {
     canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
-    flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
+    ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },
     $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
     history, get dpi() { return DPI; }, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
