@@ -38,7 +38,7 @@
   function makeSlot({ label, kind = 'plain', w, h, x, y }, dpi = C.dpi, lock = $('#slotLock')?.checked !== false) {
     const k = Math.min(C.W, C.H);
     const r = new fabric.Rect({
-      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(255,122,26,.08)', stroke: '#ff7a1a', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true,
+      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(109,74,255,.08)', stroke: '#6d4aff', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true,
       strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false,
     });
     r.slot = { id: C.uid(), label, kind, w, h };
@@ -46,7 +46,7 @@
   }
   function makeSlotPx({ label, kind = 'mock', left, top, width, height, rx = 0 }) { // pixel-space slot (mockups)
     const k = Math.min(C.W, C.H), dpi = C.dpi;
-    const r = new fabric.Rect({ left, top, width, height, rx, ry: rx, fill: 'rgba(255,122,26,.08)', stroke: '#ff7a1a', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true, strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false });
+    const r = new fabric.Rect({ left, top, width, height, rx, ry: rx, fill: 'rgba(109,74,255,.08)', stroke: '#6d4aff', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true, strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false });
     r.slot = { id: C.uid(), label, kind, w: +(width / dpi).toFixed(2), h: +(height / dpi).toFixed(2), rx };
     applyLock(r, true); return r;
   }
@@ -138,8 +138,8 @@
       if (empty || sel) {
         const t = `${s.slot.label} · ${s.slot.w}×${s.slot.h} in`; ctx.font = '600 11px "Space Grotesk",system-ui,sans-serif';
         const tw = ctx.measureText(t).width + 14, ph = 20, px = x + Math.max(4, Math.min(8, w * 0.02)), py = y + 6;
-        if (w > tw + 12 && h > ph + 12) { ctx.fillStyle = '#ff7a1a'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, tw, ph, 10) : ctx.rect(px, py, tw, ph); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(t, px + 7, py + ph / 2 + 0.5); }
-        if (empty && w > 140 && h > 60) { ctx.fillStyle = 'rgba(230,90,0,.95)'; ctx.font = '700 13px "Space Grotesk",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+ drop a photo here', x + w / 2, y + h / 2); }
+        if (w > tw + 12 && h > ph + 12) { ctx.fillStyle = '#6d4aff'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, tw, ph, 10) : ctx.rect(px, py, tw, ph); ctx.fill(); ctx.fillStyle = '#fff'; ctx.textBaseline = 'middle'; ctx.fillText(t, px + 7, py + ph / 2 + 0.5); }
+        if (empty && w > 140 && h > 60) { ctx.fillStyle = 'rgba(82,51,224,.95)'; ctx.font = '700 13px "Space Grotesk",system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('+ drop a photo here', x + w / 2, y + h / 2); }
       }
       ctx.restore();
     });

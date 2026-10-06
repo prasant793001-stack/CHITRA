@@ -84,7 +84,7 @@
   /* ---------- default styles + combinations ---------- */
   const DEFAULT_FONT = 'Fredoka';
   const COMBOS = [
-    { h: 'Playfair Display', s: 'Lato', bg: '#fff4cc', fg: '#3a2800', t: ['Elegant Day', 'save the date'] }, { h: 'Anton', s: 'Open Sans', bg: '#ff7a1a', fg: '#fff', t: ['BOLD MOVE', 'make some noise'] },
+    { h: 'Playfair Display', s: 'Lato', bg: '#fff4cc', fg: '#3a2800', t: ['Elegant Day', 'save the date'] }, { h: 'Anton', s: 'Open Sans', bg: '#6d4aff', fg: '#fff', t: ['BOLD MOVE', 'make some noise'] },
     { h: 'Pacifico', s: 'Quicksand', bg: '#dff7ea', fg: '#0f5c38', t: ['Hello Summer', 'sunny days ahead'] }, { h: 'Bebas Neue', s: 'Montserrat', bg: '#1d2433', fg: '#ffc42e', t: ['FRESH & NEW', 'now in store'] },
     { h: 'DM Serif Display', s: 'DM Sans', bg: '#fff', fg: '#1d2433', t: ['Modern Classic', 'timeless style'] }, { h: 'Lobster', s: 'Poppins', bg: '#fff0e0', fg: '#b34700', t: ['Coffee Time', 'fresh every morning'] },
     { h: 'Abril Fatface', s: 'Nunito', bg: '#f1ffe0', fg: '#3f6b00', t: ['Grand Sale', 'up to 50% off'] }, { h: 'Amatic SC', s: 'Raleway', bg: '#fffaf0', fg: '#1d2433', t: ['handmade', 'with love & care'] },
@@ -95,7 +95,7 @@
   COMBOS.forEach(c => { loadCss(c.h); loadCss(c.s); });
   $$('#comboGrid [data-combo]').forEach(b => b.onclick = async () => {
     const c = COMBOS[b.dataset.combo]; await Promise.all([loadFont(c.h), loadFont(c.s)]);
-    const k = C.u(), mk = (t, size, fam, y, extra = {}) => { const o = new fabric.Textbox(t, { width: C.W * 0.78, fontSize: size, fontFamily: fam, fill: c.bg === '#fff' || c.bg === '#fffaf0' || c.bg === '#fff4cc' ? '#1d2433' : c.bg === '#ff7a1a' ? '#1d2433' : c.fg, textAlign: 'center', originX: 'center', originY: 'center', left: C.W / 2, top: C.H * y, ...extra }); canvas.add(o); return o; };
+    const k = C.u(), mk = (t, size, fam, y, extra = {}) => { const o = new fabric.Textbox(t, { width: C.W * 0.78, fontSize: size, fontFamily: fam, fill: c.bg === '#fff' || c.bg === '#fffaf0' || c.bg === '#fff4cc' ? '#1d2433' : c.bg === '#6d4aff' ? '#1d2433' : c.fg, textAlign: 'center', originX: 'center', originY: 'center', left: C.W / 2, top: C.H * y, ...extra }); canvas.add(o); return o; };
     C.history.busy = true; const h = mk(c.t[0], k * 0.12, c.h, 0.42, { fontWeight: 'normal' }); const s2 = mk(c.t[1], k * 0.05, c.s, 0.56); C.history.busy = false;
     canvas.setActiveObject(h); canvas.requestRenderAll(); C.commit(); C.refreshProps(); if (window.matchMedia('(max-width:800px)').matches) $('#flyout').classList.add('collapsed'); void s2;
   });
@@ -113,6 +113,6 @@
   const fontUI = {
     sync(name) { currentFont = name; const el = $('#fontBtnName'); if (el) { el.textContent = name; el.style.fontFamily = `'${name}',sans-serif`; } loadCss(name); },
   };
-  C.fontUI = fontUI; Object.assign(C, { pickFont, FONT_LIB: LIB });
+  C.fontUI = fontUI; Object.assign(C, { loadFont, pickFont, FONT_LIB: LIB });
   drawPanel();
 })();

@@ -4,7 +4,10 @@
   const C = window.chitra, CFG = window.CHITRA_CONFIG || {};
   const { $, $$, toast, confetti } = C;
   const META = C.TEMPLATE_META;
-  const CATS = [['all', 'All'], ['mug', 'Mugs'], ['tshirt', 'T-shirts'], ['print', 'Print'], ['social', 'Social']];
+  const CATS = [['all', 'All'], ...Object.entries(C.CAT_LABEL || {})];
+  const TINT = ['#efe7ff', '#dff6ff', '#fff0d9', '#e4f9e8', '#ffe6f0', '#fff6c8', '#e8ecff'];
+  const CAT_ICON = { mug: 'coffee', tshirt: 'shirt', social: 'camera', story: 'smartphone', pinterest: 'pin', poster: 'image', flyer: 'newspaper', invite: 'gift', card: 'credit-card', cert: 'award', menu: 'utensils', youtube: 'video', slides: 'presentation', wallpaper: 'monitor', merch: 'shopping-bag', sticker: 'sticker' };
+  const esc0 = 0;
   const plan = () => { try { return localStorage.getItem('chitra.plan') || 'free'; } catch { return 'free'; } };
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; };
@@ -13,10 +16,19 @@
   const cache = {}; let chain = C.fontsReady;
   function thumbFor(name) {
     if (cache[name]) return Promise.resolve(cache[name]);
-    chain = chain.then(() => new Promise(r => setTimeout(r, 0))).then(() => (cache[name] ||= C.renderTemplateThumb(name, C.productByName(META[name].p), 320)));
+    chain = chain.then(async () => { if (cache[name]) return; await C.ensureTplFonts(META[name].f); await new Promise(r => setTimeout(r, 0)); cache[name] = C.renderTemplateThumb(name, C.productByName(META[name].p), 340); });
     return chain.then(() => cache[name]);
   }
-  function fillThumbs(root) { $$('img[data-tpl]', root).forEach(im => thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } })); }
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); const im = e.target; thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } }); } }), { rootMargin: '400px' }) : null;
+  function fillThumbs(root) { $$('img[data-tpl]:not(.ready)', root).forEach(im => io ? io.observe(im) : thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } })); }
+  const ratio = n => { const p = C.productByName(META[n].p); return (p.w / p.h).toFixed(3); };
+  /* paged grid: renders 48 cards, "Show more" adds the next batch (keeps 2,000 templates fast) */
+  function pagedGrid(el, names, card, bind, step = 48) {
+    let shown = 0; el.innerHTML = '';
+    const more = document.createElement('button'); more.className = 'btn show-more';
+    const next = () => { const slice = names.slice(shown, shown + step); shown += slice.length; const tmp = document.createElement('div'); tmp.innerHTML = slice.map(card).join(''); const frag = document.createDocumentFragment(); [...tmp.children].forEach(c => frag.appendChild(c)); el.insertBefore(frag, more); bind(el); more.hidden = shown >= names.length; more.textContent = `Show more (${names.length - shown} left)`; };
+    more.onclick = next; el.appendChild(more); if (!names.length) el.insertBefore(Object.assign(document.createElement('p'), { className: 'tip', textContent: 'No templates match — try another word.' }), more); next();
+  }
 
   /* ================= pro gating + pricing ================= */
   function guardPro(meta) { if (CFG.gating && meta?.pro && plan() === 'free') { openPricing(); return false; } return true; }
@@ -40,6 +52,7 @@
   /* ================= creating designs ================= */
   async function fromTemplate(name) {
     const m = META[name]; if (!guardPro(m)) return;
+    await C.ensureTplFonts(m.f);
     await C.newDocument({ product: C.productByName(m.p), template: name, name: m.n }); confetti(innerWidth / 2, innerHeight / 3, 70);
   }
   const QUICK = [['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['camera', 'Instagram', 'Instagram post'], ['smartphone', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
@@ -92,12 +105,15 @@
   }
 
   let tplCat = 'all';
-  const tplCard = (name, big) => { const m = META[name]; return `<article class="tcard${big ? ' big' : ''}" data-t="${name}"><div class="thumb chk"><img data-tpl="${name}" alt="${esc(m.n)}"></div>${m.pro ? `<em class="crown">${C.ico('crown', 12)} Pro</em>` : ''}<div class="meta"><b>${esc(m.n)}</b><small>${esc(m.p)}</small></div></article>`; };
+  const tplCard = (name, big) => { const m = META[name]; return `<article class="tcard${big ? ' big' : ''}" data-t="${name}"><div class="thumb chk" style="aspect-ratio:${ratio(name)}"><img data-tpl="${name}" alt="${esc(m.n)}"></div>${m.pro ? `<em class="crown">${C.ico('crown', 12)} Pro</em>` : ''}<div class="meta"><b>${esc(m.n)}</b><small>${esc(m.p)}</small></div></article>`; };
   function renderTemplates() {
     $('#hmTplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === tplCat ? ' on' : ''}" data-c="${k}">${n}</button>`).join('');
     $$('#hmTplTabs [data-c]').forEach(b => b.onclick = () => { tplCat = b.dataset.c; renderTemplates(); });
+    const counts = {}; Object.values(META).forEach(m => { counts[m.cat] = (counts[m.cat] || 0) + 1; });
+    $('#hmCatTiles').innerHTML = Object.entries(C.CAT_LABEL).map(([k, n], i) => `<button class="cat-tile" data-ct="${k}" style="--tint:${TINT[i % TINT.length]}"><b>${n}</b><small>${counts[k] || 0} designs</small><span>${C.ico(CAT_ICON[k] || 'layout-template', 34)}</span></button>`).join('');
+    $$('#hmCatTiles [data-ct]').forEach(b => b.onclick = () => { tplCat = b.dataset.ct; renderTemplates(); $('#hmTemplates').scrollIntoView({ behavior: 'smooth' }); });
     const names = Object.keys(META).filter(n => tplCat === 'all' || META[n].cat === tplCat);
-    $('#hmTplGrid').innerHTML = names.map(n => tplCard(n)).join(''); bindTpl($('#hmTplGrid'));
+    pagedGrid($('#hmTplGrid'), names, n => tplCard(n), bindTpl);
   }
   function bindTpl(root) { fillThumbs(root); $$('[data-t]', root).forEach(a => a.onclick = () => fromTemplate(a.dataset.t)); }
   async function renderTrending() {
@@ -113,16 +129,16 @@
     q = q.trim().toLowerCase(); const res = $('#hmResults'), sec = $('#hmSections');
     if (!q) { res.hidden = true; sec.hidden = false; return; }
     const prods = C.PRODUCTS.filter(p => `${p.name} ${p.g} ${C.dim(p)}`.toLowerCase().includes(q));
-    const tpls = Object.keys(META).filter(n => `${META[n].n} ${META[n].cat} ${META[n].p}`.toLowerCase().includes(q));
+    const tpls = Object.keys(META).filter(n => q.split(/\s+/).every(w => `${META[n].n} ${META[n].cat} ${META[n].p} ${META[n].t || ''}`.toLowerCase().includes(w)));
     const mine = (await C.store.list()).filter(m => m.name.toLowerCase().includes(q));
     const lays = C.LAYOUTS.filter(l => l.name.toLowerCase().includes(q));
     res.innerHTML = `<h2>Results for “${esc(q)}”</h2>
       ${prods.length ? `<h4>Sizes & products</h4><div class="chips big">${prods.slice(0, 14).map((p, i) => `<button class="chip" data-p="${C.PRODUCTS.indexOf(p)}">${C.ico(C.prodIconName(p), 14)} ${esc(p.name)} <small>${esc(C.dim(p))}</small></button>`).join('')}</div>` : ''}
       ${lays.length ? `<h4>Print layouts</h4><div class="hrow">${lays.map(l => `<article class="lcard" data-b="${l.id}"><div class="thumb"><img src="${C.layoutThumb(l, 220)}" alt=""></div><div class="meta"><b>${esc(l.name)}</b></div></article>`).join('')}</div>` : ''}
-      ${tpls.length ? `<h4>Templates</h4><div class="tpl-grid">${tpls.map(n => tplCard(n)).join('')}</div>` : ''}
+      ${tpls.length ? `<h4>Templates <small>${tpls.length} found</small></h4><div class="tpl-grid" id="hmResTpl"></div>` : ''}
       ${mine.length ? `<h4>Your designs</h4><div class="hrow">${mine.map(projCard).join('')}</div>` : ''}
       ${!(prods.length || tpls.length || mine.length || lays.length) ? `<div class="empty-card"><span>${C.ico('search', 30)}</span><b>Nothing found</b><small>Try “mug”, “A4”, “poster” or “Instagram”.</small></div>` : ''}`;
-    res.hidden = false; sec.hidden = true; bindTpl(res);
+    res.hidden = false; sec.hidden = true; if (tpls.length) pagedGrid($('#hmResTpl'), tpls, n => tplCard(n), bindTpl); bindTpl(res);
     $$('#hmResults [data-p]').forEach(b => b.onclick = () => C.newDocument({ product: C.PRODUCTS[+b.dataset.p], template: 'blank' }));
     $$('#hmResults [data-b]').forEach(a => a.onclick = () => C.useBuiltin(C.LAYOUTS.find(l => l.id === a.dataset.b), true));
     $$('#hmResults [data-open]').forEach(a => a.onclick = () => C.openProject(a.dataset.open));
@@ -143,16 +159,17 @@
 
   /* ================= editor "Design" panel ================= */
   let edCat = 'all';
+  let edQ = '';
   function renderEditorTemplates() {
+    if (!$('#tplSearch')) { const i = document.createElement('input'); i.id = 'tplSearch'; i.type = 'search'; i.placeholder = 'Search templates…'; i.className = 'panel-search'; $('#tplTabs').before(i); i.oninput = () => { edQ = i.value.trim().toLowerCase(); renderEditorTemplates(); }; }
     $('#tplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === edCat ? ' on' : ''}" data-ec="${k}">${n}</button>`).join('');
     $$('#tplTabs [data-ec]').forEach(b => b.onclick = () => { edCat = b.dataset.ec; renderEditorTemplates(); });
-    const names = Object.keys(META).filter(n => edCat === 'all' || META[n].cat === edCat);
-    $('#tplGrid').innerHTML = names.map(n => `<button class="tcard2" data-et="${n}"><div class="thumb chk"><img data-tpl="${n}" alt=""></div>${META[n].pro ? `<em class="crown">${C.ico('crown', 12)}</em>` : ''}<b>${esc(META[n].n)}</b></button>`).join('');
-    fillThumbs($('#tplGrid'));
-    $$('#tplGrid [data-et]').forEach(b => b.onclick = () => applyTemplate(b.dataset.et));
+    const names = Object.keys(META).filter(n => (edCat === 'all' || META[n].cat === edCat) && (!edQ || edQ.split(/\s+/).every(w => `${META[n].n} ${META[n].cat} ${META[n].t || ''}`.toLowerCase().includes(w))));
+    pagedGrid($('#tplGrid'), names, n => `<button class="tcard2" data-et="${n}"><div class="thumb chk" style="aspect-ratio:${ratio(n)}"><img data-tpl="${n}" alt=""></div>${META[n].pro ? `<em class="crown">${C.ico('crown', 12)}</em>` : ''}<b>${esc(META[n].n)}</b></button>`, el => { fillThumbs(el); $$('[data-et]', el).forEach(b => b.onclick = () => applyTemplate(b.dataset.et)); }, 30);
   }
-  function applyTemplate(name) {
+  async function applyTemplate(name) {
     const m = META[name]; if (!guardPro(m)) return;
+    await C.ensureTplFonts(m.f);
     const p = C.productByName(m.p);
     if (C.canvas.getObjects().filter(o => !o.slot).length && !confirm('Replace your current design with this template?')) return;
     if ((p.w !== C.W || p.h !== C.H) && confirm(`“${m.n}” is made for ${p.name} (${C.dim(p)}). Resize this page to match?`)) { C.canvas.discardActiveObject(); C.setSize(p.w, p.h, false, p.guide, p.dpi, p); }

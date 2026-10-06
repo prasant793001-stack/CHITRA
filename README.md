@@ -61,3 +61,6 @@ Photo sources are merged into one list (no site picker); the source is stored on
 1. Deploy `worker/photos-proxy.js` as a free Cloudflare Worker, add `PIXABAY_KEY` / `PEXELS_KEY` (and `ALLOWED_ORIGIN`) as secrets.
 2. Put the worker URL in `config.js` as `photoProxy`. The keys then never reach the browser.
 Never commit raw keys to this public repo (`tools/seal-key.js` only scrambles them - a deterrent, not security). Owner-only key screen: `Ctrl+Shift+K` or tap the logo 7 times (keys stay in your own browser only).
+
+## Template library (v4)
+`templates.js` generates ~2,000 designs (mugs, tees, social posts, stories, posters, flyers, invitations, cards, certificates, menus, YouTube, slides, Pinterest, wallpapers, merch, stickers) from hand-built layouts x palettes x font pairs x copy. Nothing is stored - each one is a tiny recipe that draws itself, and thumbnails render lazily. Add copy to the lists at the top of `templates.js`, or a new layout in `LAY`, to grow the library.

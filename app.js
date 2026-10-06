@@ -103,7 +103,7 @@
   const pages = [{ json: null, thumb: null, hist: null }]; let cur = 0;
   const canvas = new fabric.Canvas('c', { preserveObjectStacking: true, backgroundColor: '' });
   fabric.Object.prototype.set({
-    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#ff7a1a', borderColor: '#ff7a1a',
+    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#6d4aff', borderColor: '#6d4aff',
     cornerStyle: 'circle', cornerSize: 13, padding: 3, borderScaleFactor: 2.5,
   });
   const u = () => Math.min(W, H);
@@ -130,7 +130,7 @@
   }
   function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 150) {
     const c = $('#confetti'); c.width = innerWidth; c.height = innerHeight; const g = c.getContext('2d');
-    const cols = ['#ff7a1a', '#ffc42e', '#1fb26b', '#b5dd2f', '#ff9a2e', '#14b8a6'];
+    const cols = ['#6d4aff', '#ffc42e', '#1fb26b', '#b5dd2f', '#8a6bff', '#14b8a6'];
     const ps = Array.from({ length: n }, () => ({ x, y, vx: (Math.random() - .5) * 18, vy: -Math.random() * 15 - 4, r: Math.random() * 6 + 3, c: pick(cols), rot: Math.random() * 6, vr: (Math.random() - .5) * .5 }));
     let t = 0;
     (function step() {
@@ -379,7 +379,7 @@
       { fill: '#ffffff', stroke: '#14110f', strokeWidth: 4, scaleX: u() * 0.002, scaleY: u() * 0.002 }),
     plus: () => new fabric.Polygon([[1, 0], [2, 0], [2, 1], [3, 1], [3, 2], [2, 2], [2, 3], [1, 3], [1, 2], [0, 2], [0, 1], [1, 1]].map(([x, y]) => ({ x: x * u() * 0.07, y: y * u() * 0.07 })), { fill: '#ef476f', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
   };
-  const BACKDROPS = [['#ff2d95', '#ff8a1f'], ['#8b5cf6', '#22d3ee'], ['#0f172a', '#334155'], ['#ffd23f', '#ff7a1a'], ['#06d6a0', '#3a86ff'], ['#fdf2f8', '#fce7f3']];
+  const BACKDROPS = [['#ff2d95', '#ff8a1f'], ['#8b5cf6', '#22d3ee'], ['#0f172a', '#334155'], ['#ffd23f', '#6d4aff'], ['#06d6a0', '#3a86ff'], ['#fdf2f8', '#fce7f3']];
   function addBackdrop([a, b]) {
     const r = new fabric.Rect({ left: 0, top: 0, width: W, height: H, selectable: true, fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: W, y2: H }, colorStops: [{ offset: 0, color: a }, { offset: 1, color: b }] }) });
     canvas.add(r); canvas.sendToBack(r); canvas.setActiveObject(r); canvas.requestRenderAll(); toast('Backdrop added (sent to back)', '🌈');
@@ -521,10 +521,10 @@
       clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#2b1810'));
       B.add(tx('BUT FIRST,', 0.5, 0.26, 0.5, k * 0.15, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 250 })); B.add(tx('Coffee', 0.5, 0.62, 0.5, k * 0.4, { fontFamily: 'Pacifico', fill: '#ffffff' }));
       [0.14, 0.86].forEach(x => B.add(tx('☕', x, 0.5, 0.12, k * 0.3, { fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' })));
-      [[0.3, 0.12], [0.72, 0.86], [0.64, 0.14], [0.36, 0.9]].forEach(([x, y]) => B.add(tx('✦', x, y, 0.05, k * 0.09, { fill: '#ff7a1a', fontFamily: 'Arial' })));
+      [[0.3, 0.12], [0.72, 0.86], [0.64, 0.14], [0.36, 0.9]].forEach(([x, y]) => B.add(tx('✦', x, y, 0.05, k * 0.09, { fill: '#6d4aff', fontFamily: 'Arial' })));
     },
     'mug-dad': () => {
-      clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#1e3a8a')); B.add(rect(0, 0.82, 1, 0.18, '#ffd23f')); B.add(rect(0, 0, 1, 0.1, '#ff7a1a'));
+      clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#1e3a8a')); B.add(rect(0, 0.82, 1, 0.18, '#ffd23f')); B.add(rect(0, 0, 1, 0.1, '#6d4aff'));
       B.add(tx('BEST', 0.5, 0.3, 0.5, k * 0.3, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#0b1b4a'), shadow: shadow('#0b1b4a', 0.02) })); B.add(tx('DAD EVER', 0.5, 0.62, 0.6, k * 0.3, { fontFamily: 'Bangers', fill: '#ffffff', ...outline('#0b1b4a'), shadow: shadow('#0b1b4a', 0.02) }));
       B.add(tx('★  ★  ★', 0.5, 0.91, 0.4, k * 0.09, { fill: '#1e3a8a', fontFamily: 'Arial' }));
     },
@@ -534,44 +534,44 @@
       B.add(tx('Hello', 0.5, 0.36, 0.5, k * 0.28, { fontFamily: 'Pacifico', fill: '#be185d' })); B.add(tx('Sunshine', 0.5, 0.68, 0.5, k * 0.28, { fontFamily: 'Pacifico', fill: '#ea580c' }));
     },
     'mug-name': () => {
-      clearAll(''); const k = H; B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#ff7a1a'));
+      clearAll(''); const k = H; B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#6d4aff'));
       B.add(tx('Sarah', 0.5, 0.5, 0.6, k * 0.62, { fontFamily: 'Pacifico', fill: '#ffffff', shadow: shadow('#4c1d95', 0.02) }));
       [[0.12, 0.25], [0.88, 0.7], [0.2, 0.8], [0.8, 0.2]].forEach(([x, y]) => B.add(tx('✦', x, y, 0.06, k * 0.16, { fill: '#ffd23f', fontFamily: 'Arial' })));
     },
     'tee-retro': () => {
       clearAll(''); const k = u(); B.add(new fabric.Circle({ left: W / 2, top: H * 0.38, radius: k * 0.32, originX: 'center', originY: 'center', fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: -k * 0.32, x2: 0, y2: k * 0.32 }, colorStops: [{ offset: 0, color: '#ffd23f' }, { offset: 1, color: '#ff4d8d' }] }) }));
       for (let i = 0; i < 5; i++) B.add(rect(0.2, 0.42 + i * 0.035, 0.6, 0.012 + i * 0.006, '#7c3aed'));
-      B.add(tx('SUMMER', 0.5, 0.73, 0.9, k * 0.17, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#ffffff'), charSpacing: 80 })); B.add(tx('VIBES ONLY', 0.5, 0.84, 0.9, k * 0.075, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 400 }));
+      B.add(tx('SUMMER', 0.5, 0.73, 0.9, k * 0.17, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#ffffff'), charSpacing: 80 })); B.add(tx('VIBES ONLY', 0.5, 0.84, 0.9, k * 0.075, { fontFamily: 'Anton', fill: '#6d4aff', charSpacing: 400 }));
     },
     'tee-mono': () => {
       clearAll(''); const k = u();
-      B.add(tx('STAY', 0.5, 0.3, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#ff7a1a', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) })); B.add(tx('WILD', 0.5, 0.58, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#ffd23f', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) }));
+      B.add(tx('STAY', 0.5, 0.3, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#6d4aff', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) })); B.add(tx('WILD', 0.5, 0.58, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#ffd23f', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) }));
       B.add(tx('— BORN TO EXPLORE —', 0.5, 0.78, 0.9, k * 0.05, { fontFamily: 'Anton', fill: '#7c3aed', charSpacing: 300 }));
     },
     'tee-badge': () => {
       clearAll(''); const r = u() * 0.36; B.add(bubble(0.5, 0.5, r, '#7c3aed')); B.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r * 0.88, originX: 'center', originY: 'center', fill: 'transparent', stroke: '#ffd23f', strokeWidth: u() * 0.008 }));
-      B.add(tx('ADVENTURE', 0.5, 0.38, 0.6, r * 0.34, { fontFamily: 'Anton', fill: '#ffffff', charSpacing: 300 })); B.add(tx('CLUB', 0.5, 0.52, 0.6, r * 0.55, { fontFamily: 'Bangers', fill: '#ff7a1a', ...outline('#ffffff') })); B.add(tx('EST. 1999', 0.5, 0.66, 0.6, r * 0.16, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 400 }));
+      B.add(tx('ADVENTURE', 0.5, 0.38, 0.6, r * 0.34, { fontFamily: 'Anton', fill: '#ffffff', charSpacing: 300 })); B.add(tx('CLUB', 0.5, 0.52, 0.6, r * 0.55, { fontFamily: 'Bangers', fill: '#6d4aff', ...outline('#ffffff') })); B.add(tx('EST. 1999', 0.5, 0.66, 0.6, r * 0.16, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 400 }));
     },
     'tee-bold': () => {
       clearAll(''); const k = u(); B.add(tx('HUSTLE', 0.5, 0.42, 1, k * 0.3, { fontFamily: 'Anton', fill: '#ffd23f', ...outline('#7c3aed'), shadow: shadow('#7c3aed', 0.02), charSpacing: 20 }));
-      B.add(tx('DREAM BIG · WORK HARD · REPEAT', 0.5, 0.6, 0.9, k * 0.045, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 250 }));
+      B.add(tx('DREAM BIG · WORK HARD · REPEAT', 0.5, 0.6, 0.9, k * 0.045, { fontFamily: 'Anton', fill: '#6d4aff', charSpacing: 250 }));
     },
     'ig-sale': () => {
-      clearAll('#4c1d95'); const k = u(); B.add(bubble(0.5, 0.5, k * 0.4, '#ff7a1a')); B.add(bubble(0.5, 0.5, k * 0.34, '#ffd23f'));
-      B.add(tx('50%', 0.5, 0.46, 0.7, k * 0.26, { fontFamily: 'Anton', fill: '#4c1d95' })); B.add(tx('OFF', 0.5, 0.64, 0.5, k * 0.11, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 400 })); B.add(tx('THIS WEEKEND ONLY', 0.5, 0.92, 0.8, k * 0.04, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 300 }));
+      clearAll('#4c1d95'); const k = u(); B.add(bubble(0.5, 0.5, k * 0.4, '#6d4aff')); B.add(bubble(0.5, 0.5, k * 0.34, '#ffd23f'));
+      B.add(tx('50%', 0.5, 0.46, 0.7, k * 0.26, { fontFamily: 'Anton', fill: '#4c1d95' })); B.add(tx('OFF', 0.5, 0.64, 0.5, k * 0.11, { fontFamily: 'Anton', fill: '#6d4aff', charSpacing: 400 })); B.add(tx('THIS WEEKEND ONLY', 0.5, 0.92, 0.8, k * 0.04, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 300 }));
     },
     'ig-announce': () => {
       clearAll('#fff7e6'); const k = u(); B.add(rect(0, 0.62, 1, 0.38, '#7c3aed')); B.add(rect(0, 0.58, 1, 0.05, '#ffd23f'));
-      B.add(tx('NEW', 0.5, 0.2, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#ff7a1a', ...outline('#14110f') })); B.add(tx('ARRIVAL', 0.5, 0.4, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#14110f') }));
+      B.add(tx('NEW', 0.5, 0.2, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#6d4aff', ...outline('#14110f') })); B.add(tx('ARRIVAL', 0.5, 0.4, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#14110f') }));
       B.add(tx('Fresh designs, just for you.\nShop the collection today.', 0.5, 0.78, 0.8, k * 0.05, { fill: '#ffffff' }));
     },
     'story-promo': () => {
-      clearAll('#ffffff'); B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#ff7a1a')); const k = W;
+      clearAll('#ffffff'); B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#6d4aff')); const k = W;
       B.add(tx('WEEKEND', 0.5, 0.28, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) })); B.add(tx('SPECIAL', 0.5, 0.38, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffffff', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) }));
       B.add(tx('Up to 40% off everything', 0.5, 0.55, 0.8, k * 0.065, { fill: '#ffffff' })); B.add(rect(0.2, 0.72, 0.6, 0.07, '#ffd23f', { rx: k * 0.04, ry: k * 0.04 })); B.add(tx('SHOP NOW', 0.5, 0.755, 0.6, k * 0.05, { fontFamily: 'Anton', fill: '#4c1d95', charSpacing: 200 }));
     },
     'ig-quote2': () => {
-      clearAll('#ff7a1a'); const k = u(); B.add(tx('“', 0.5, 0.22, 0.4, k * 0.3, { fill: '#ffd23f', fontFamily: 'Georgia' }));
+      clearAll('#6d4aff'); const k = u(); B.add(tx('“', 0.5, 0.22, 0.4, k * 0.3, { fill: '#ffd23f', fontFamily: 'Georgia' }));
       B.add(tx('Create something\nyou would love\nto print.', 0.5, 0.52, 0.8, k * 0.09, { fontFamily: 'Pacifico', fill: '#ffffff', lineHeight: 1.1 })); B.add(tx('@yourbrand', 0.5, 0.86, 0.5, k * 0.04, { fontFamily: 'Anton', fill: '#4c1d95', charSpacing: 300 }));
     },
   });
@@ -1407,7 +1407,7 @@
   }) : Promise.resolve();
   const api = {
     canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
-    ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
+    kit: { get W() { return W; }, get H() { return H; }, get B() { return B; }, u, clearAll, shadow }, ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },
     $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
     history, get dpi() { return DPI; }, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
