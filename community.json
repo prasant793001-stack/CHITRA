@@ -1,0 +1,13 @@
+{
+  "note": "Replace this file (or set communityFeed in config.js) with a URL from your server to show real community designs. Each item uses a built-in template id until you host your own previews.",
+  "items": [
+    { "template": "mug-name", "title": "Personalised name mug", "by": "Chitra team", "tag": "Mugs" },
+    { "template": "tee-retro", "title": "Retro summer sun tee", "by": "Chitra team", "tag": "T-shirts" },
+    { "template": "mug-coffee", "title": "But first, coffee", "by": "Chitra team", "tag": "Mugs" },
+    { "template": "tee-bold", "title": "Hustle bold type", "by": "Chitra team", "tag": "T-shirts" },
+    { "template": "ig-sale", "title": "Weekend sale post", "by": "Chitra team", "tag": "Social" },
+    { "template": "poster", "title": "Event poster", "by": "Chitra team", "tag": "Print" },
+    { "template": "mug-dad", "title": "Best dad ever", "by": "Chitra team", "tag": "Mugs" },
+    { "template": "story-promo", "title": "Story promo", "by": "Chitra team", "tag": "Social" }
+  ]
+}

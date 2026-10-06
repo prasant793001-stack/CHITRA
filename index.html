@@ -19,10 +19,60 @@
 <body>
 <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 
-<div id="app">
+<!-- ============ SPLASH ============ -->
+<div id="splash" aria-hidden="true">
+  <div class="sp-orbs"><i></i><i></i><i></i></div>
+  <div class="sp-center">
+    <div class="sp-logo"><span>✦</span></div>
+    <h1>Chitra</h1>
+    <p>Design it. Print it. Love it.</p>
+    <div class="sp-count" id="spCount">3</div>
+    <div class="sp-bar"><i id="spBar"></i></div>
+  </div>
+  <button id="spSkip" class="sp-skip">Tap to skip</button>
+</div>
+
+<!-- ============ HOME ============ -->
+<div id="home" hidden>
+  <header class="hm-top">
+    <div class="hm-logo"><span class="logo-mark">✦</span><b>Chitra</b></div>
+    <div class="hm-search"><span>🔎</span><input id="hmSearch" placeholder="Search templates, products, your designs…" autocomplete="off"></div>
+    <span class="spacer"></span>
+    <button id="hmPricing" class="btn gold">💎 Go Pro</button>
+    <button id="hmCreate" class="cta">＋ Create a design</button>
+  </header>
+  <div class="hm-body">
+    <nav class="hm-nav" id="hmNav">
+      <button data-go="hmHero" class="on"><i>🏠</i><span>Home</span></button>
+      <button data-go="hmProjects"><i>📁</i><span>Projects</span></button>
+      <button data-go="hmLayouts"><i>🖨️</i><span>Print layouts</span></button>
+      <button data-go="hmTemplates"><i>🗂️</i><span>Templates</span></button>
+      <button data-go="hmTrending"><i>🔥</i><span>Trending</span></button>
+      <button id="hmNavPro"><i>💎</i><span>Go Pro</span></button>
+    </nav>
+    <main class="hm-main" id="hmMain">
+      <section class="hero" id="hmHero">
+        <h1>What will you <em>design</em> today?</h1>
+        <p>Posters, mugs, T-shirts, social posts — with print-ready sizes built in.</p>
+        <form class="hero-search" id="heroForm"><input id="heroInput" placeholder="Try “mug”, “A4 poster”, “Instagram”…" autocomplete="off"><button class="cta">Search</button></form>
+      </section>
+      <section class="quick" id="hmQuick"></section>
+      <div id="hmResults" hidden></div>
+      <div id="hmSections">
+        <section id="hmProjects"><div class="sec-head"><h2>Jump back in</h2><button class="link" id="hmSeeAll" hidden>See all</button></div><div class="hrow" id="hmRecent"></div></section>
+        <section id="hmLayouts"><div class="sec-head"><h2>Print layouts <small>Ready-made sheets sized for your product</small></h2><button class="link" id="hmMakeLayout">＋ Make your own</button></div><div class="hrow" id="hmLayoutRow"></div></section>
+        <section id="hmTemplates"><div class="sec-head"><h2>Templates for you</h2></div><div class="chips" id="hmTplTabs"></div><div class="tpl-grid" id="hmTplGrid"></div></section>
+        <section id="hmTrending"><div class="sec-head"><h2>Trending now 🔥 <small>Popular with the Chitra community</small></h2></div><div class="hrow" id="hmTrendRow"></div></section>
+        <section class="promo" id="hmPromo"><div><h2>Print more. Pay less. 💎</h2><p>Chitra Pro unlocks every template, unlimited saved layouts, AI background removal and watermark-free exports — at a fraction of the usual price.</p></div><button class="cta" id="hmPromoBtn">See plans</button></section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="app" hidden>
   <!-- ============ TOP BAR ============ -->
   <header class="topbar glass">
-    <div class="logo"><span class="logo-mark">✦</span><b>Chitra</b><i>studio</i></div>
+    <button id="homeBtn" class="logo logo-btn" title="Back to Home"><span class="logo-mark">✦</span><b>Chitra</b><i>studio</i></button>
     <button id="productBtn" class="product-btn" title="Choose what you're printing">
       <span class="p-icon" id="productIcon">👕</span>
       <span class="p-text"><b id="productName">T-shirt front</b><small id="sizeInfo"></small></span>
@@ -41,57 +91,47 @@
     <label class="ibtn" for="openProject" title="Open project file">📂</label>
     <input type="file" id="openProject" accept=".json" hidden>
     <button id="mockupBtn" class="btn">👀 Mockup</button>
+    <button id="proBtn" class="btn gold" title="Plans & pricing">💎 Pro</button>
     <button id="exportBtn" class="cta">⬇ Export</button>
   </header>
 
   <div class="workspace">
     <!-- ============ TOOL RAIL ============ -->
     <nav class="rail glass" id="rail">
-      <button data-tab="start" class="on"><i>🚀</i><span>Start</span></button>
+      <button data-tab="templates" class="on"><i>🗂️</i><span>Design</span></button>
+      <button data-tab="layouts"><i>🖨️</i><span>Layouts</span></button>
+      <button data-tab="shapes"><i>🔷</i><span>Elements</span></button>
       <button data-tab="text"><i>🔤</i><span>Text</span></button>
-      <button data-tab="shapes"><i>🔷</i><span>Shapes</span></button>
-      <button data-tab="stickers"><i>😎</i><span>Stickers</span></button>
-      <button data-tab="templates"><i>🗂️</i><span>Templates</span></button>
-      <button data-tab="upload"><i>🖼️</i><span>Upload</span></button>
       <button data-tab="photos"><i>🌄</i><span>Photos</span></button>
+      <button data-tab="upload"><i>⬆️</i><span>Uploads</span></button>
       <button data-tab="ai"><i>🤖</i><span>AI Art</span></button>
       <button data-tab="magic"><i>🪄</i><span>Magic</span></button>
-      <button data-tab="print"><i>🖨️</i><span>Print</span></button>
+      <button data-tab="print"><i>📐</i><span>Page</span></button>
     </nav>
 
     <!-- ============ FLYOUT PANELS ============ -->
     <section class="flyout glass" id="flyout">
-      <div class="panel" data-panel="start">
-        <h2>Let's make something <em>loud</em></h2>
-        <button id="surprise" class="hero-btn"><span>🎲</span><b>Surprise me</b><small>Random look, instant fun</small></button>
-        <h4>Quick starts</h4>
-        <div class="tiles">
-          <button data-template="slogan" class="tile t1"><b>GOOD<br>VIBES</b></button>
-          <button data-template="badge" class="tile t2"><b>★ Badge</b></button>
-          <button data-template="mug" class="tile t3"><b>Mug<br>quote</b></button>
-          <button data-template="blank" class="tile t4"><b>Blank<br>canvas</b></button>
-        </div>
-        <button id="changeProduct" class="btn wide">📐 Change size / product</button>
-        <button id="newDesign" class="btn wide">🆕 New design</button>
+      <div class="panel" data-panel="templates">
+        <h2>Design</h2>
+        <button id="surprise" class="hero-btn"><span>🎲</span><b>Surprise me</b><small>A random look in one tap</small></button>
+        <div class="chips" id="tplTabs"></div>
+        <div class="tiles tpl" id="tplGrid"></div>
+        <p class="tip">Templates adapt to the size you picked — A4, A3, a mug or an Instagram post.</p>
       </div>
 
-      <div class="panel" data-panel="templates" hidden>
-        <h2>Templates</h2>
-        <div class="tiles tpl">
-          <button data-template="poster" class="tile tp1"><b>Poster</b></button>
-          <button data-template="flyer" class="tile tp2"><b>Flyer</b></button>
-          <button data-template="bizcard" class="tile tp3"><b>Business<br>card</b></button>
-          <button data-template="invite" class="tile tp4"><b>Invitation</b></button>
-          <button data-template="certificate" class="tile tp5"><b>Certificate</b></button>
-          <button data-template="menu" class="tile tp6"><b>Menu</b></button>
-          <button data-template="quote" class="tile tp7"><b>Quote</b></button>
-          <button data-template="sale" class="tile tp8"><b>Sale</b></button>
-          <button data-template="slogan" class="tile t1"><b>GOOD<br>VIBES</b></button>
-          <button data-template="badge" class="tile t2"><b>★ Badge</b></button>
-          <button data-template="mug" class="tile t3"><b>Mug<br>quote</b></button>
-          <button data-template="blank" class="tile t4"><b>Blank</b></button>
-        </div>
-        <p class="tip">Templates scale to whatever size you picked — A4, A3, a mug or an Instagram post.</p>
+      <div class="panel" data-panel="layouts" hidden>
+        <h2>Print layouts</h2>
+        <p class="tip" style="margin-top:-6px">Virtual print areas sized exactly for your product — drop a photo in and it fits. No maths.</p>
+        <h4>Ready-made sheets</h4>
+        <div class="lay-grid" id="layGrid"></div>
+        <h4>Add a print area</h4>
+        <select id="slotPreset"></select>
+        <div class="row2"><label class="slider-row" style="margin:0">W <input type="number" id="slotW" step="0.05" min="0.2" value="8.25"></label><label class="slider-row" style="margin:0">H <input type="number" id="slotH" step="0.05" min="0.2" value="3.5"></label></div>
+        <div class="row2" style="margin-top:8px"><button id="slotAdd" class="btn">＋ Add area</button><button id="slotArrange" class="btn">🧩 Arrange</button></div>
+        <label class="switch"><input type="checkbox" id="slotLock" checked><i></i><span>Lock print areas</span></label>
+        <h4>My layouts</h4>
+        <button id="layoutSave" class="btn wide">💾 Save this page as a layout</button>
+        <div class="lay-grid" id="myLayGrid"></div>
       </div>
 
       <div class="panel" data-panel="text" hidden>
@@ -114,7 +154,7 @@
       </div>
 
       <div class="panel" data-panel="shapes" hidden>
-        <h2>Shapes</h2>
+        <h2>Elements</h2>
         <div class="tiles">
           <button data-add="rect" class="tile sh">▭<small>Box</small></button>
           <button data-add="circle" class="tile sh">●<small>Circle</small></button>
@@ -131,10 +171,7 @@
         </div>
         <h4>Backdrops</h4>
         <div class="backdrops" id="backdrops"></div>
-      </div>
-
-      <div class="panel" data-panel="stickers" hidden>
-        <h2>Stickers</h2>
+        <h4>Stickers</h4>
         <div class="emoji-grid" id="emojiGrid"></div>
         <p class="tip">Emoji look different on each device. For production use your own artwork.</p>
       </div>
@@ -200,7 +237,9 @@
       </div>
 
       <div class="panel" data-panel="print" hidden>
-        <h2>Print</h2>
+        <h2>Page</h2>
+        <button id="changeProduct" class="btn wide">📐 Change size / product</button>
+        <button id="newDesign" class="btn wide">🆕 New design</button>
         <label class="switch"><input type="checkbox" id="transparent" checked><i></i><span>Transparent background</span></label>
         <label class="slider-row">Background <input type="color" id="bgColor" value="#ffffff" disabled></label>
         <label class="switch"><input type="checkbox" id="showGuides" checked><i></i><span>Print guides</span></label>
@@ -263,6 +302,18 @@
           <div class="keys"><kbd>Del</kbd> delete <kbd>Ctrl D</kbd> copy <kbd>Ctrl K</kbd> search <kbd>←↑↓→</kbd> nudge</div>
         </div>
         <div id="propsBody" hidden>
+          <section id="slotSec" data-s="slotops" hidden>
+            <h4>Print area</h4>
+            <div class="row2">
+              <button class="btn hot" data-slotop="add">🖼️ Add photo</button>
+              <button class="btn" data-slotop="fit">⛶ Fit / Fill</button>
+              <button class="btn" data-slotop="all">📑 Copy to all</button>
+              <button class="btn" data-slotop="clear">🧹 Clear</button>
+            </div>
+            <button class="btn wide" data-slotop="lock">🔓 Lock / unlock this area</button>
+            <p class="tip">Photos fit the physical size of the area automatically. Drag the photo to reposition it inside.</p>
+          </section>
+
           <section data-s="colour outline effects">
             <div data-s="colour">
               <h4>Colour</h4>
@@ -426,6 +477,27 @@
   </div>
 </div>
 
+<div class="modal" id="layoutModal" hidden>
+  <div class="sheet glass">
+    <button class="x" data-close>✕</button>
+    <h1>Save as layout</h1>
+    <p class="sub">Save this page so you can start from it again — print areas, text and graphics included.</p>
+    <label class="cs-grid" style="display:block"><span style="color:var(--muted);font-size:12px;font-weight:600">Layout name</span><input id="layoutName" class="text-in" style="width:100%;margin-top:6px" placeholder="e.g. 11oz mug – 3 up on A4"></label>
+    <label class="switch"><input type="checkbox" id="layoutKeepImg"><i></i><span>Keep photos that are not in a print area</span></label>
+    <button id="layoutGo" class="cta wide">Save layout</button>
+  </div>
+</div>
+
+<div class="modal" id="pricing" hidden>
+  <div class="sheet glass wide-sheet">
+    <button class="x" data-close>✕</button>
+    <h1>Pick your plan</h1>
+    <p class="sub">Print-ready design for a fraction of the usual price. Cancel any time.</p>
+    <div class="plans" id="planGrid"></div>
+    <p class="tip" id="planNote"></p>
+  </div>
+</div>
+
 <div class="modal" id="customModal" hidden>
   <div class="sheet glass">
     <button class="x" data-close>✕</button>
@@ -517,8 +589,11 @@
 
 <script src="vendor/fabric.min.js"></script>
 <script src="vendor/jspdf.umd.min.js"></script>
+<script src="config.js"></script>
 <script src="app.js"></script>
+<script src="layouts.js"></script>
 <script src="photo.js"></script>
+<script src="home.js"></script>
 <script>
 if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) {
   const had = !!navigator.serviceWorker.controller;

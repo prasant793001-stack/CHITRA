@@ -37,7 +37,7 @@
           opacity: o.opacity, shadow: o.shadow, adj: C.DEFAULT_ADJ(),
           scaleX: sameScale ? o.scaleX : sw / n.width, scaleY: sameScale ? o.scaleY : sh / n.height,
         });
-        n._pristine = pristine || o._pristine || null;
+        n._pristine = pristine || o._pristine || null; n.inSlot = o.inSlot; n.fitMode = o.fitMode; n.clipPath = o.clipPath || null; // keep print-area membership
         const idx = canvas.getObjects().indexOf(o);
         C.history.busy = true; canvas.remove(o); canvas.insertAt(n, idx); C.history.busy = false;
         canvas.setActiveObject(n); canvas.requestRenderAll(); commit(); refreshProps(); resolve(n);

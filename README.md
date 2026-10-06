@@ -16,6 +16,12 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 ## New in the Studio redesign
 Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
+## Home, projects & print layouts (new)
+- **Splash (3-2-1)** then a **Canva-style Home**: search, quick-create shortcuts, *Jump back in* (all your saved designs with thumbnails — rename / duplicate / delete), **Print layouts**, **Templates** (23, by category) and **Trending** (reads `community.json`; point `communityFeed` in `config.js` at your server for real community content).
+- **Print layouts**: A4/A3 sheets with *virtual print areas* sized exactly for the product (11 oz & 15 oz mugs, tumbler, coaster, T-shirt, pocket/left-chest, phone case, mouse pad, stickers). Drop a photo in and it auto-fits (cover/contain); *Copy to all areas*; guides are hidden on export. Add your own areas (any size) and **save any page as a reusable layout**.
+- **Plans / subscriptions**: `config.js` holds plans, prices and a `checkoutUrl`. Real billing needs a backend (accounts + Stripe/Razorpay + licence check) — the UI is ready, `gating` is off by default.
+- Theme: orange · purple · yellow.
+
 ## Phone editing (Canva-style)
 - **Pinch / twist with two fingers on a selected item** scales and rotates *that item* (with magnetic 45° snapping); with nothing selected, pinch zooms the page and one finger on empty space pans it.
 - Pick a tool from the bottom bar → the panel **closes as soon as you add something**, and a compact **context bar** (Font, Colour, Outline, Effects, Position, Copy, Delete — or photo tools for images) takes its place. Tap a tool to open just that control in a small sheet; tap the canvas to close it.

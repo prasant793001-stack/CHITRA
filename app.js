@@ -4,7 +4,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData'];
+  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData', 'slot', 'inSlot'];
   let DPI = 300;
   const FONTS = ['Fredoka', 'Bangers', 'Anton', 'Bebas Neue', 'Chewy', 'Lobster', 'Pacifico', 'Permanent Marker', 'Righteous',
     'Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New'];
@@ -95,11 +95,11 @@
   const inches = (px, d = DPI) => (px / d).toFixed(2).replace(/\.?0+$/, '');
   const dim = p => p.dpi >= 100 ? (p.cat === 'paper' ? `${Math.round((p.w / p.dpi) * 25.4)}×${Math.round((p.h / p.dpi) * 25.4)} mm` : `${inches(p.w, p.dpi)}×${inches(p.h, p.dpi)} in`) : `${p.w}×${p.h} px`;
 
-  let W = 3300, H = 3900, zoom = 1, guide = 'shirt', product = PRODUCTS.find(x => x.name === 'T-shirt front'), welcome = true;
+  let W = 3300, H = 3900, zoom = 1, guide = 'shirt', product = PRODUCTS.find(x => x.name === 'T-shirt front'), creating = false, projectId = null;
   const pages = [{ json: null, thumb: null, hist: null }]; let cur = 0;
   const canvas = new fabric.Canvas('c', { preserveObjectStacking: true, backgroundColor: '' });
   fabric.Object.prototype.set({
-    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#ff2d95', borderColor: '#ff2d95',
+    transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#7c3aed', borderColor: '#7c3aed',
     cornerStyle: 'circle', cornerSize: 13, padding: 3, borderScaleFactor: 2.5,
   });
   const u = () => Math.min(W, H);
@@ -171,7 +171,7 @@
     canvas.setDimensions({ width: W * zoom, height: H * zoom });
     $('#zoomLabel').textContent = Math.round(zoom * 100) + '%';
     $('#zoomSlider').value = Math.round(zoom * 100);
-    placeFloat();
+    canvas.requestRenderAll(); placeFloat();
   }
   const fitZoom = () => { const s = $('#stage'); return Math.min((s.clientWidth - 40) / W, (s.clientHeight - (isMobile() ? 70 : 150)) / H, 1); };
   function fit() { lastW = $('#stage').clientWidth; zoom = fitZoom(); applyZoom(); }
@@ -245,19 +245,20 @@
     });
     if (!n) grid.innerHTML = '<p class="tip">Nothing matches. Try “A4”, “poster” or “mug” — or make a custom size.</p>';
   }
-  function openPicker() {
-    $('#pickerTitle').textContent = welcome ? 'What are we designing today?' : 'Change size or product';
+  function openPicker(mode) {
+    creating = mode === 'create';
+    $('#pickerTitle').textContent = creating ? 'What are we designing today?' : 'Change size or product';
     $('#pickerSearch').value = ''; buildPicker(); $('#picker').hidden = false; $('#pickerSearch').focus();
   }
   $('#pickerSearch').addEventListener('input', buildPicker);
   const welcomeTemplate = p => p.guide === 'mug' ? 'mug' : p.guide === 'shirt' ? 'slogan' : (p.cat === 'paper' || p.cat === 'marketing') ? (p.w > p.h ? (p.h / p.dpi < 3 ? 'bizcard' : 'certificate') : 'poster') : p.cat === 'social' || p.cat === 'present' ? 'quote' : 'badge';
   function chooseProduct(p) {
     $('#picker').hidden = true;
-    if (welcome) { welcome = false; try { localStorage.setItem('chitra.seen', '1'); } catch { } setSize(p.w, p.h, false, p.guide, p.dpi, p); loadTemplate(welcomeTemplate(p)); confetti(innerWidth / 2, innerHeight / 2, 90); }
+    if (creating) { creating = false; newDocument({ product: p, template: welcomeTemplate(p) }); confetti(innerWidth / 2, innerHeight / 2, 90); }
     else { rescale(p.w, p.h); setSize(p.w, p.h, true, p.guide, p.dpi, p); }
     toast(`${p.name} · ${dim(p)}${p.dpi >= 100 ? ` @ ${p.dpi} DPI` : ''}`, p.icon);
   }
-  $('#productBtn').onclick = openPicker; $('#changeProduct').onclick = openPicker;
+  $('#productBtn').onclick = () => openPicker(); const chg = $('#changeProduct'); if (chg) chg.onclick = () => openPicker();
   $('#rotateDoc').onclick = () => { rescale(H, W); setSize(H, W, true, guide, DPI); toast(W > H ? 'Landscape' : 'Portrait', '⟳'); };
 
   /* ---- custom size dialog (px / in / mm / cm) ---- */
@@ -272,7 +273,7 @@
   $('#csUnit').addEventListener('change', () => { const w = +$('#csW').value, h = +$('#csH').value, old = $('#csUnit').dataset.u || 'in', d = +$('#csDpi').value, nu = $('#csUnit').value; const px = [toPx(w, old, d), toPx(h, old, d)], f = v => nu === 'in' ? v / d : nu === 'mm' ? (v / d) * 25.4 : nu === 'cm' ? (v / d) * 2.54 : v; $('#csW').value = +f(px[0]).toFixed(2); $('#csH').value = +f(px[1]).toFixed(2); $('#csUnit').dataset.u = nu; csUpdate(); });
   $('#csGo').onclick = () => {
     const [w, h, d] = csUpdate(); $('#customModal').hidden = true;
-    if (welcome) { welcome = false; try { localStorage.setItem('chitra.seen', '1'); } catch { } setSize(w, h, false, 'none', d); loadTemplate('blank'); } else { rescale(w, h); setSize(w, h, true, 'none', d); }
+    if (creating) { creating = false; newDocument({ w, h, dpi: d, guide: 'none', template: 'blank', name: 'Custom design' }); } else { rescale(w, h); setSize(w, h, true, 'none', d); }
     toast(`Custom ${w}×${h}px`, '📐');
   };
 
@@ -297,7 +298,8 @@
 
   /* ================= helpers ================= */
   function place(o) {
-    o.set({ left: W / 2, top: H / 2, originX: 'center', originY: 'center' });
+    const handled = typeof chitra !== 'undefined' && chitra.beforePlace && chitra.beforePlace(o); // print-layout slots can claim photos
+    if (!handled) o.set({ left: W / 2, top: H / 2, originX: 'center', originY: 'center' });
     canvas.add(o); canvas.setActiveObject(o); canvas.requestRenderAll();
     if (isMobile()) closeSheets(); // Canva-style: panel tucks away so you can edit what you just added
   }
@@ -414,7 +416,9 @@
   document.addEventListener('paste', e => readFiles(e.clipboardData?.files || []));
 
   /* ================= templates ================= */
+  let B = canvas; // template target: the live canvas, or an off-screen canvas while rendering thumbnails
   function clearAll(bg = '') {
+    if (B !== canvas) { B.clear(); B.backgroundColor = bg; return; }
     history.busy = true; canvas.clear(); history.busy = false;
     canvas.setBackgroundColor(bg, () => { syncBg(); canvas.renderAll(); });
   }
@@ -424,26 +428,26 @@
     blank: () => clearAll(''),
     slogan: () => {
       clearAll('');
-      canvas.add(T('GOOD', { left: W / 2, top: H * 0.3, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.014) }));
-      canvas.add(T('VIBES', { left: W / 2, top: H * 0.5, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ff2d95', ...outline(), shadow: shadow('#14110f', 0.014) }));
-      canvas.add(T('ONLY ✦ GOOD ✦ ONLY', { left: W / 2, top: H * 0.68, fontFamily: 'Anton', fontSize: u() * 0.05, fill: '#22d3ee', charSpacing: 300, ...outline('#14110f') }));
+      B.add(T('GOOD', { left: W / 2, top: H * 0.3, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.014) }));
+      B.add(T('VIBES', { left: W / 2, top: H * 0.5, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ff2d95', ...outline(), shadow: shadow('#14110f', 0.014) }));
+      B.add(T('ONLY ✦ GOOD ✦ ONLY', { left: W / 2, top: H * 0.68, fontFamily: 'Anton', fontSize: u() * 0.05, fill: '#22d3ee', charSpacing: 300, ...outline('#14110f') }));
     },
     badge: () => {
       clearAll('');
       const r = u() * 0.38;
-      canvas.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r, originX: 'center', originY: 'center', fill: '#3a86ff', stroke: '#14110f', strokeWidth: u() * 0.014 }));
-      canvas.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r * 0.86, originX: 'center', originY: 'center', fill: 'transparent', stroke: '#ffd23f', strokeWidth: u() * 0.008, strokeDashArray: [u() * 0.02, u() * 0.02] }));
-      canvas.add(T('★', { left: W / 2, top: H / 2 - r * 0.55, width: r, fontSize: r * 0.35, fill: '#ffd23f' }));
-      canvas.add(T('MADE WITH', { left: W / 2, top: H / 2 - r * 0.18, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.2, fill: '#fff', charSpacing: 300 }));
-      canvas.add(T('LOVE', { left: W / 2, top: H / 2 + r * 0.2, width: r * 1.5, fontFamily: 'Bangers', fontSize: r * 0.5, fill: '#ff2d95', ...outline('#ffffff') }));
-      canvas.add(T('EST. 2025', { left: W / 2, top: H / 2 + r * 0.6, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.14, fill: '#fff', charSpacing: 400 }));
+      B.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r, originX: 'center', originY: 'center', fill: '#3a86ff', stroke: '#14110f', strokeWidth: u() * 0.014 }));
+      B.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r * 0.86, originX: 'center', originY: 'center', fill: 'transparent', stroke: '#ffd23f', strokeWidth: u() * 0.008, strokeDashArray: [u() * 0.02, u() * 0.02] }));
+      B.add(T('★', { left: W / 2, top: H / 2 - r * 0.55, width: r, fontSize: r * 0.35, fill: '#ffd23f' }));
+      B.add(T('MADE WITH', { left: W / 2, top: H / 2 - r * 0.18, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.2, fill: '#fff', charSpacing: 300 }));
+      B.add(T('LOVE', { left: W / 2, top: H / 2 + r * 0.2, width: r * 1.5, fontFamily: 'Bangers', fontSize: r * 0.5, fill: '#ff2d95', ...outline('#ffffff') }));
+      B.add(T('EST. 2025', { left: W / 2, top: H / 2 + r * 0.6, width: r * 1.5, fontFamily: 'Anton', fontSize: r * 0.14, fill: '#fff', charSpacing: 400 }));
     },
     mug: () => {
       clearAll('');
-      canvas.add(T('Best Mom Ever', { left: W / 2, top: H * 0.42, width: W * 0.36, fontFamily: 'Pacifico', fontSize: H * 0.2, fill: '#ff2d95', shadow: new fabric.Shadow({ color: '#14110f', offsetX: H * 0.012, offsetY: H * 0.012, blur: 0 }) }));
-      canvas.add(T('♥  ♥  ♥', { left: W / 2, top: H * 0.78, width: W * 0.3, fontSize: H * 0.1, fill: '#ff2d95' }));
-      canvas.add(T('✦', { left: W * 0.25, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#ffd23f' }));
-      canvas.add(T('✦', { left: W * 0.75, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#22d3ee' }));
+      B.add(T('Best Mom Ever', { left: W / 2, top: H * 0.42, width: W * 0.36, fontFamily: 'Pacifico', fontSize: H * 0.2, fill: '#ff2d95', shadow: new fabric.Shadow({ color: '#14110f', offsetX: H * 0.012, offsetY: H * 0.012, blur: 0 }) }));
+      B.add(T('♥  ♥  ♥', { left: W / 2, top: H * 0.78, width: W * 0.3, fontSize: H * 0.1, fill: '#ff2d95' }));
+      B.add(T('✦', { left: W * 0.25, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#ffd23f' }));
+      B.add(T('✦', { left: W * 0.75, top: H * 0.5, width: 200, fontSize: H * 0.2, fill: '#22d3ee' }));
     },
   };
   const rect = (l, t, w, h, fill, o = {}) => new fabric.Rect({ left: l * W, top: t * H, width: w * W, height: h * H, fill, ...o });
@@ -452,60 +456,140 @@
   Object.assign(TEMPLATES, {
     poster: () => {
       clearAll('#fff7e6'); const k = u();
-      canvas.add(rect(0, 0, 1, 0.4, '#ff2d95')); canvas.add(bubble(0.84, 0.07, k * 0.2, '#ffd23f')); canvas.add(bubble(0.1, 0.4, k * 0.09, '#22d3ee'));
-      canvas.add(tx('BIG', 0.5, 0.12, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#fff', ...outline(), shadow: shadow('#14110f', 0.012) }));
-      canvas.add(tx('EVENT', 0.5, 0.27, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.012) }));
-      canvas.add(tx('SATURDAY · 7 PM', 0.5, 0.5, 0.85, k * 0.055, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 200 }));
-      canvas.add(tx('Live music, great food and good company.\nBring your friends and your dancing shoes!', 0.5, 0.6, 0.78, k * 0.036, { fill: '#14110f' }));
-      canvas.add(rect(0, 0.86, 1, 0.14, '#14110f')); canvas.add(tx('www.yourwebsite.com', 0.5, 0.93, 0.8, k * 0.04, { fill: '#fff', fontFamily: 'Anton', charSpacing: 200 }));
+      B.add(rect(0, 0, 1, 0.4, '#ff2d95')); B.add(bubble(0.84, 0.07, k * 0.2, '#ffd23f')); B.add(bubble(0.1, 0.4, k * 0.09, '#22d3ee'));
+      B.add(tx('BIG', 0.5, 0.12, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#fff', ...outline(), shadow: shadow('#14110f', 0.012) }));
+      B.add(tx('EVENT', 0.5, 0.27, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.012) }));
+      B.add(tx('SATURDAY · 7 PM', 0.5, 0.5, 0.85, k * 0.055, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 200 }));
+      B.add(tx('Live music, great food and good company.\nBring your friends and your dancing shoes!', 0.5, 0.6, 0.78, k * 0.036, { fill: '#14110f' }));
+      B.add(rect(0, 0.86, 1, 0.14, '#14110f')); B.add(tx('www.yourwebsite.com', 0.5, 0.93, 0.8, k * 0.04, { fill: '#fff', fontFamily: 'Anton', charSpacing: 200 }));
     },
     flyer: () => {
       clearAll('#3a86ff'); const k = u();
-      canvas.add(rect(0.07, 0.06, 0.86, 0.88, '#ffffff', { rx: k * 0.04, ry: k * 0.04 }));
-      canvas.add(bubble(0.5, 0.2, k * 0.17, '#ffd23f'));
-      canvas.add(tx('GRAND\nOPENING', 0.5, 0.2, 0.7, k * 0.1, { fontFamily: 'Bangers', fill: '#ff2d95', ...outline('#14110f'), lineHeight: 0.9 }));
-      canvas.add(tx('Free coffee · Live DJ · Giveaways', 0.5, 0.45, 0.76, k * 0.048, { fontFamily: 'Anton', fill: '#14110f' }));
-      canvas.add(tx('Join us for a day full of surprises.\n12 Main Street, Your City', 0.5, 0.58, 0.72, k * 0.04, { fill: '#334155' }));
-      canvas.add(rect(0.2, 0.74, 0.6, 0.1, '#ff2d95', { rx: k * 0.05, ry: k * 0.05 })); canvas.add(tx('VISIT US TODAY', 0.5, 0.79, 0.6, k * 0.045, { fontFamily: 'Anton', fill: '#fff', charSpacing: 150 }));
+      B.add(rect(0.07, 0.06, 0.86, 0.88, '#ffffff', { rx: k * 0.04, ry: k * 0.04 }));
+      B.add(bubble(0.5, 0.2, k * 0.17, '#ffd23f'));
+      B.add(tx('GRAND\nOPENING', 0.5, 0.2, 0.7, k * 0.1, { fontFamily: 'Bangers', fill: '#ff2d95', ...outline('#14110f'), lineHeight: 0.9 }));
+      B.add(tx('Free coffee · Live DJ · Giveaways', 0.5, 0.45, 0.76, k * 0.048, { fontFamily: 'Anton', fill: '#14110f' }));
+      B.add(tx('Join us for a day full of surprises.\n12 Main Street, Your City', 0.5, 0.58, 0.72, k * 0.04, { fill: '#334155' }));
+      B.add(rect(0.2, 0.74, 0.6, 0.1, '#ff2d95', { rx: k * 0.05, ry: k * 0.05 })); B.add(tx('VISIT US TODAY', 0.5, 0.79, 0.6, k * 0.045, { fontFamily: 'Anton', fill: '#fff', charSpacing: 150 }));
     },
     bizcard: () => {
       clearAll('#ffffff'); const k = H;
-      canvas.add(rect(0, 0, 0.36, 1, '#8b5cf6')); canvas.add(tx('✦', 0.18, 0.5, 0.3, k * 0.5, { fill: '#ffd23f', fontFamily: 'Arial' }));
-      canvas.add(tx('Your Name', 0.68, 0.3, 0.58, k * 0.16, { fontWeight: 'bold', fill: '#14110f' }));
-      canvas.add(tx('CREATIVE DIRECTOR', 0.68, 0.46, 0.58, k * 0.065, { fontFamily: 'Anton', fill: '#8b5cf6', charSpacing: 200 }));
-      canvas.add(tx('+1 234 567 890\nhello@yourname.com\nwww.yourname.com', 0.68, 0.74, 0.58, k * 0.07, { fill: '#475569', lineHeight: 1.3 }));
+      B.add(rect(0, 0, 0.36, 1, '#8b5cf6')); B.add(tx('✦', 0.18, 0.5, 0.3, k * 0.5, { fill: '#ffd23f', fontFamily: 'Arial' }));
+      B.add(tx('Your Name', 0.68, 0.3, 0.58, k * 0.16, { fontWeight: 'bold', fill: '#14110f' }));
+      B.add(tx('CREATIVE DIRECTOR', 0.68, 0.46, 0.58, k * 0.065, { fontFamily: 'Anton', fill: '#8b5cf6', charSpacing: 200 }));
+      B.add(tx('+1 234 567 890\nhello@yourname.com\nwww.yourname.com', 0.68, 0.74, 0.58, k * 0.07, { fill: '#475569', lineHeight: 1.3 }));
     },
     invite: () => {
       clearAll('#fff0f6'); const k = u();
-      canvas.add(rect(0.05, 0.04, 0.9, 0.92, 'transparent', { stroke: '#ff2d95', strokeWidth: k * 0.01 })); canvas.add(rect(0.07, 0.055, 0.86, 0.89, 'transparent', { stroke: '#ff2d95', strokeWidth: k * 0.004 }));
-      canvas.add(tx('You are invited to', 0.5, 0.2, 0.7, k * 0.05, { fontFamily: 'Pacifico', fill: '#be185d' }));
-      canvas.add(tx('Sarah’s\nBirthday', 0.5, 0.4, 0.8, k * 0.15, { fontFamily: 'Pacifico', fill: '#ff2d95', lineHeight: 1 , shadow: shadow('#ffd23f', 0.006) }));
-      canvas.add(tx('SATURDAY · JUNE 14 · 4 PM', 0.5, 0.66, 0.8, k * 0.04, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 200 }));
-      canvas.add(tx('Garden Party · 12 Rose Lane\nRSVP: hello@email.com', 0.5, 0.78, 0.8, k * 0.036, { fill: '#475569' })); canvas.add(tx('♥', 0.5, 0.9, 0.2, k * 0.07, { fill: '#ff2d95' }));
+      B.add(rect(0.05, 0.04, 0.9, 0.92, 'transparent', { stroke: '#ff2d95', strokeWidth: k * 0.01 })); B.add(rect(0.07, 0.055, 0.86, 0.89, 'transparent', { stroke: '#ff2d95', strokeWidth: k * 0.004 }));
+      B.add(tx('You are invited to', 0.5, 0.2, 0.7, k * 0.05, { fontFamily: 'Pacifico', fill: '#be185d' }));
+      B.add(tx('Sarah’s\nBirthday', 0.5, 0.4, 0.8, k * 0.15, { fontFamily: 'Pacifico', fill: '#ff2d95', lineHeight: 1 , shadow: shadow('#ffd23f', 0.006) }));
+      B.add(tx('SATURDAY · JUNE 14 · 4 PM', 0.5, 0.66, 0.8, k * 0.04, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 200 }));
+      B.add(tx('Garden Party · 12 Rose Lane\nRSVP: hello@email.com', 0.5, 0.78, 0.8, k * 0.036, { fill: '#475569' })); B.add(tx('♥', 0.5, 0.9, 0.2, k * 0.07, { fill: '#ff2d95' }));
     },
     certificate: () => {
       clearAll('#fffdf5'); const k = H;
-      canvas.add(rect(0.03, 0.05, 0.94, 0.9, 'transparent', { stroke: '#c9a227', strokeWidth: k * 0.02 })); canvas.add(rect(0.045, 0.085, 0.91, 0.83, 'transparent', { stroke: '#c9a227', strokeWidth: k * 0.006 }));
-      canvas.add(tx('CERTIFICATE', 0.5, 0.25, 0.8, k * 0.13, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 250 })); canvas.add(tx('OF ACHIEVEMENT', 0.5, 0.38, 0.8, k * 0.05, { fontFamily: 'Anton', fill: '#c9a227', charSpacing: 400 }));
-      canvas.add(tx('This certificate is proudly presented to', 0.5, 0.5, 0.8, k * 0.045, { fill: '#475569' })); canvas.add(tx('Your Name Here', 0.5, 0.62, 0.8, k * 0.12, { fontFamily: 'Pacifico', fill: '#be185d' }));
-      canvas.add(rect(0.3, 0.74, 0.4, 0.003, '#14110f')); canvas.add(tx('for outstanding effort and dedication', 0.5, 0.8, 0.8, k * 0.04, { fill: '#475569' })); canvas.add(tx('★', 0.5, 0.9, 0.2, k * 0.08, { fill: '#c9a227', fontFamily: 'Arial' }));
+      B.add(rect(0.03, 0.05, 0.94, 0.9, 'transparent', { stroke: '#c9a227', strokeWidth: k * 0.02 })); B.add(rect(0.045, 0.085, 0.91, 0.83, 'transparent', { stroke: '#c9a227', strokeWidth: k * 0.006 }));
+      B.add(tx('CERTIFICATE', 0.5, 0.25, 0.8, k * 0.13, { fontFamily: 'Anton', fill: '#14110f', charSpacing: 250 })); B.add(tx('OF ACHIEVEMENT', 0.5, 0.38, 0.8, k * 0.05, { fontFamily: 'Anton', fill: '#c9a227', charSpacing: 400 }));
+      B.add(tx('This certificate is proudly presented to', 0.5, 0.5, 0.8, k * 0.045, { fill: '#475569' })); B.add(tx('Your Name Here', 0.5, 0.62, 0.8, k * 0.12, { fontFamily: 'Pacifico', fill: '#be185d' }));
+      B.add(rect(0.3, 0.74, 0.4, 0.003, '#14110f')); B.add(tx('for outstanding effort and dedication', 0.5, 0.8, 0.8, k * 0.04, { fill: '#475569' })); B.add(tx('★', 0.5, 0.9, 0.2, k * 0.08, { fill: '#c9a227', fontFamily: 'Arial' }));
     },
     menu: () => {
       clearAll('#1b1035'); const k = u(), item = (n, p, y) => [tx(n, 0.37, y, 0.5, k * 0.042, { textAlign: 'left', fill: '#fff' }), tx(p, 0.83, y, 0.2, k * 0.042, { fill: '#ffd23f', fontFamily: 'Anton' })];
-      canvas.add(tx('MENU', 0.5, 0.12, 0.8, k * 0.18, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#ff2d95'), shadow: shadow('#ff2d95', 0.01) }));
-      [['Margherita', '$9', 0.3], ['Pepperoni', '$11', 0.38], ['Veggie Supreme', '$12', 0.46], ['Garlic Bread', '$5', 0.54], ['Iced Tea', '$3', 0.62], ['Brownie', '$6', 0.7]].forEach(([n, p, y]) => canvas.add(...item(n, p, y)));
-      canvas.add(tx('✦ ✦ ✦', 0.5, 0.88, 0.5, k * 0.05, { fill: '#22d3ee', fontFamily: 'Arial' }));
+      B.add(tx('MENU', 0.5, 0.12, 0.8, k * 0.18, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#ff2d95'), shadow: shadow('#ff2d95', 0.01) }));
+      [['Margherita', '$9', 0.3], ['Pepperoni', '$11', 0.38], ['Veggie Supreme', '$12', 0.46], ['Garlic Bread', '$5', 0.54], ['Iced Tea', '$3', 0.62], ['Brownie', '$6', 0.7]].forEach(([n, p, y]) => B.add(...item(n, p, y)));
+      B.add(tx('✦ ✦ ✦', 0.5, 0.88, 0.5, k * 0.05, { fill: '#22d3ee', fontFamily: 'Arial' }));
     },
     quote: () => {
       clearAll('#1e1b4b'); const k = u();
-      canvas.add(rect(0.06, 0.08, 0.88, 0.84, 'transparent', { stroke: '#a78bfa', strokeWidth: k * 0.006 })); canvas.add(tx('“', 0.5, 0.26, 0.4, k * 0.3, { fill: '#a78bfa', fontFamily: 'Georgia' }));
-      canvas.add(tx('Design is thinking made visual.', 0.5, 0.5, 0.7, k * 0.07, { fill: '#fff', fontFamily: 'Georgia', fontStyle: 'italic' })); canvas.add(tx('— Saul Bass', 0.5, 0.74, 0.5, k * 0.036, { fill: '#c4b5fd' }));
+      B.add(rect(0.06, 0.08, 0.88, 0.84, 'transparent', { stroke: '#a78bfa', strokeWidth: k * 0.006 })); B.add(tx('“', 0.5, 0.26, 0.4, k * 0.3, { fill: '#a78bfa', fontFamily: 'Georgia' }));
+      B.add(tx('Design is thinking made visual.', 0.5, 0.5, 0.7, k * 0.07, { fill: '#fff', fontFamily: 'Georgia', fontStyle: 'italic' })); B.add(tx('— Saul Bass', 0.5, 0.74, 0.5, k * 0.036, { fill: '#c4b5fd' }));
     },
     sale: () => {
       clearAll('#fde047'); const k = u();
-      canvas.add(bubble(0.5, 0.5, k * 0.38, '#dc2626')); canvas.add(tx('MEGA SALE', 0.5, 0.38, 0.7, k * 0.09, { fill: '#fff', fontFamily: 'Impact' })); canvas.add(tx('50% OFF', 0.5, 0.55, 0.7, k * 0.14, { fill: '#fde047', fontFamily: 'Impact' })); canvas.add(tx('This weekend only', 0.5, 0.72, 0.7, k * 0.035, { fill: '#fff' }));
+      B.add(bubble(0.5, 0.5, k * 0.38, '#dc2626')); B.add(tx('MEGA SALE', 0.5, 0.38, 0.7, k * 0.09, { fill: '#fff', fontFamily: 'Impact' })); B.add(tx('50% OFF', 0.5, 0.55, 0.7, k * 0.14, { fill: '#fde047', fontFamily: 'Impact' })); B.add(tx('This weekend only', 0.5, 0.72, 0.7, k * 0.035, { fill: '#fff' }));
     },
   });
+  const gradRect = (l, t, w, h, c1, c2, o = {}) => new fabric.Rect({ left: l * W, top: t * H, width: w * W, height: h * H, fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: w * W, y2: h * H }, colorStops: [{ offset: 0, color: c1 }, { offset: 1, color: c2 }] }), ...o });
+  Object.assign(TEMPLATES, {
+    'mug-coffee': () => {
+      clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#2b1810'));
+      B.add(tx('BUT FIRST,', 0.5, 0.26, 0.5, k * 0.15, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 250 })); B.add(tx('Coffee', 0.5, 0.62, 0.5, k * 0.4, { fontFamily: 'Pacifico', fill: '#ffffff' }));
+      [0.14, 0.86].forEach(x => B.add(tx('☕', x, 0.5, 0.12, k * 0.3, { fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif' })));
+      [[0.3, 0.12], [0.72, 0.86], [0.64, 0.14], [0.36, 0.9]].forEach(([x, y]) => B.add(tx('✦', x, y, 0.05, k * 0.09, { fill: '#ff7a1a', fontFamily: 'Arial' })));
+    },
+    'mug-dad': () => {
+      clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#1e3a8a')); B.add(rect(0, 0.82, 1, 0.18, '#ffd23f')); B.add(rect(0, 0, 1, 0.1, '#ff7a1a'));
+      B.add(tx('BEST', 0.5, 0.3, 0.5, k * 0.3, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#0b1b4a'), shadow: shadow('#0b1b4a', 0.02) })); B.add(tx('DAD EVER', 0.5, 0.62, 0.6, k * 0.3, { fontFamily: 'Bangers', fill: '#ffffff', ...outline('#0b1b4a'), shadow: shadow('#0b1b4a', 0.02) }));
+      B.add(tx('★  ★  ★', 0.5, 0.91, 0.4, k * 0.09, { fill: '#1e3a8a', fontFamily: 'Arial' }));
+    },
+    'mug-floral': () => {
+      clearAll(''); const k = H; B.add(rect(0, 0, 1, 1, '#fff1f6'));
+      [[0.08, 0.2, '#fbcfe8'], [0.2, 0.8, '#fde68a'], [0.9, 0.25, '#c4b5fd'], [0.78, 0.85, '#fbcfe8'], [0.35, 0.1, '#a7f3d0'], [0.62, 0.9, '#fde68a'], [0.5, 0.5, '#fce7f3']].forEach(([x, y, c], i) => B.add(bubble(x, y, k * (0.14 + (i % 3) * 0.05), c)));
+      B.add(tx('Hello', 0.5, 0.36, 0.5, k * 0.28, { fontFamily: 'Pacifico', fill: '#be185d' })); B.add(tx('Sunshine', 0.5, 0.68, 0.5, k * 0.28, { fontFamily: 'Pacifico', fill: '#ea580c' }));
+    },
+    'mug-name': () => {
+      clearAll(''); const k = H; B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#ff7a1a'));
+      B.add(tx('Sarah', 0.5, 0.5, 0.6, k * 0.62, { fontFamily: 'Pacifico', fill: '#ffffff', shadow: shadow('#4c1d95', 0.02) }));
+      [[0.12, 0.25], [0.88, 0.7], [0.2, 0.8], [0.8, 0.2]].forEach(([x, y]) => B.add(tx('✦', x, y, 0.06, k * 0.16, { fill: '#ffd23f', fontFamily: 'Arial' })));
+    },
+    'tee-retro': () => {
+      clearAll(''); const k = u(); B.add(new fabric.Circle({ left: W / 2, top: H * 0.38, radius: k * 0.32, originX: 'center', originY: 'center', fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: -k * 0.32, x2: 0, y2: k * 0.32 }, colorStops: [{ offset: 0, color: '#ffd23f' }, { offset: 1, color: '#ff4d8d' }] }) }));
+      for (let i = 0; i < 5; i++) B.add(rect(0.2, 0.42 + i * 0.035, 0.6, 0.012 + i * 0.006, '#7c3aed'));
+      B.add(tx('SUMMER', 0.5, 0.73, 0.9, k * 0.17, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#ffffff'), charSpacing: 80 })); B.add(tx('VIBES ONLY', 0.5, 0.84, 0.9, k * 0.075, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 400 }));
+    },
+    'tee-mono': () => {
+      clearAll(''); const k = u();
+      B.add(tx('STAY', 0.5, 0.3, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#ff7a1a', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) })); B.add(tx('WILD', 0.5, 0.58, 0.9, k * 0.34, { fontFamily: 'Anton', fill: '#ffd23f', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) }));
+      B.add(tx('— BORN TO EXPLORE —', 0.5, 0.78, 0.9, k * 0.05, { fontFamily: 'Anton', fill: '#7c3aed', charSpacing: 300 }));
+    },
+    'tee-badge': () => {
+      clearAll(''); const r = u() * 0.36; B.add(bubble(0.5, 0.5, r, '#7c3aed')); B.add(new fabric.Circle({ left: W / 2, top: H / 2, radius: r * 0.88, originX: 'center', originY: 'center', fill: 'transparent', stroke: '#ffd23f', strokeWidth: u() * 0.008 }));
+      B.add(tx('ADVENTURE', 0.5, 0.38, 0.6, r * 0.34, { fontFamily: 'Anton', fill: '#ffffff', charSpacing: 300 })); B.add(tx('CLUB', 0.5, 0.52, 0.6, r * 0.55, { fontFamily: 'Bangers', fill: '#ff7a1a', ...outline('#ffffff') })); B.add(tx('EST. 1999', 0.5, 0.66, 0.6, r * 0.16, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 400 }));
+    },
+    'tee-bold': () => {
+      clearAll(''); const k = u(); B.add(tx('HUSTLE', 0.5, 0.42, 1, k * 0.3, { fontFamily: 'Anton', fill: '#ffd23f', ...outline('#7c3aed'), shadow: shadow('#7c3aed', 0.02), charSpacing: 20 }));
+      B.add(tx('DREAM BIG · WORK HARD · REPEAT', 0.5, 0.6, 0.9, k * 0.045, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 250 }));
+    },
+    'ig-sale': () => {
+      clearAll('#4c1d95'); const k = u(); B.add(bubble(0.5, 0.5, k * 0.4, '#ff7a1a')); B.add(bubble(0.5, 0.5, k * 0.34, '#ffd23f'));
+      B.add(tx('50%', 0.5, 0.46, 0.7, k * 0.26, { fontFamily: 'Anton', fill: '#4c1d95' })); B.add(tx('OFF', 0.5, 0.64, 0.5, k * 0.11, { fontFamily: 'Anton', fill: '#ff7a1a', charSpacing: 400 })); B.add(tx('THIS WEEKEND ONLY', 0.5, 0.92, 0.8, k * 0.04, { fontFamily: 'Anton', fill: '#ffd23f', charSpacing: 300 }));
+    },
+    'ig-announce': () => {
+      clearAll('#fff7e6'); const k = u(); B.add(rect(0, 0.62, 1, 0.38, '#7c3aed')); B.add(rect(0, 0.58, 1, 0.05, '#ffd23f'));
+      B.add(tx('NEW', 0.5, 0.2, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#ff7a1a', ...outline('#14110f') })); B.add(tx('ARRIVAL', 0.5, 0.4, 0.8, k * 0.2, { fontFamily: 'Bangers', fill: '#7c3aed', ...outline('#14110f') }));
+      B.add(tx('Fresh designs, just for you.\nShop the collection today.', 0.5, 0.78, 0.8, k * 0.05, { fill: '#ffffff' }));
+    },
+    'story-promo': () => {
+      clearAll('#ffffff'); B.add(gradRect(0, 0, 1, 1, '#7c3aed', '#ff7a1a')); const k = W;
+      B.add(tx('WEEKEND', 0.5, 0.28, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffd23f', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) })); B.add(tx('SPECIAL', 0.5, 0.38, 0.9, k * 0.2, { fontFamily: 'Bangers', fill: '#ffffff', ...outline('#4c1d95'), shadow: shadow('#4c1d95', 0.012) }));
+      B.add(tx('Up to 40% off everything', 0.5, 0.55, 0.8, k * 0.065, { fill: '#ffffff' })); B.add(rect(0.2, 0.72, 0.6, 0.07, '#ffd23f', { rx: k * 0.04, ry: k * 0.04 })); B.add(tx('SHOP NOW', 0.5, 0.755, 0.6, k * 0.05, { fontFamily: 'Anton', fill: '#4c1d95', charSpacing: 200 }));
+    },
+    'ig-quote2': () => {
+      clearAll('#ff7a1a'); const k = u(); B.add(tx('“', 0.5, 0.22, 0.4, k * 0.3, { fill: '#ffd23f', fontFamily: 'Georgia' }));
+      B.add(tx('Create something\nyou would love\nto print.', 0.5, 0.52, 0.8, k * 0.09, { fontFamily: 'Pacifico', fill: '#ffffff', lineHeight: 1.1 })); B.add(tx('@yourbrand', 0.5, 0.86, 0.5, k * 0.04, { fontFamily: 'Anton', fill: '#4c1d95', charSpacing: 300 }));
+    },
+  });
+  const TEMPLATE_META = {
+    poster: { n: 'Event poster', cat: 'print', p: 'A4' }, flyer: { n: 'Grand opening flyer', cat: 'print', p: 'Flyer' }, bizcard: { n: 'Creative business card', cat: 'print', p: 'Business card' },
+    invite: { n: 'Birthday invitation', cat: 'print', p: 'Invitation' }, certificate: { n: 'Gold certificate', cat: 'print', p: 'Certificate' }, menu: { n: 'Pizza menu', cat: 'print', p: 'Menu', pro: true },
+    mug: { n: 'Best mom mug', cat: 'mug', p: '11 oz mug wrap' }, 'mug-coffee': { n: 'But first, coffee', cat: 'mug', p: '11 oz mug wrap' }, 'mug-dad': { n: 'Best dad ever', cat: 'mug', p: '11 oz mug wrap' },
+    'mug-floral': { n: 'Hello sunshine', cat: 'mug', p: '11 oz mug wrap', pro: true }, 'mug-name': { n: 'Personalised name mug', cat: 'mug', p: '11 oz mug wrap' },
+    slogan: { n: 'Good vibes tee', cat: 'tshirt', p: 'T-shirt front' }, badge: { n: 'Made with love badge', cat: 'tshirt', p: 'T-shirt front' }, 'tee-retro': { n: 'Retro summer sun', cat: 'tshirt', p: 'T-shirt front' },
+    'tee-mono': { n: 'Stay wild', cat: 'tshirt', p: 'T-shirt front' }, 'tee-badge': { n: 'Adventure club badge', cat: 'tshirt', p: 'T-shirt front', pro: true }, 'tee-bold': { n: 'Hustle bold type', cat: 'tshirt', p: 'T-shirt front' },
+    quote: { n: 'Quote card', cat: 'social', p: 'Instagram post' }, sale: { n: 'Mega sale', cat: 'social', p: 'Instagram post' }, 'ig-sale': { n: 'Weekend sale', cat: 'social', p: 'Instagram post' },
+    'ig-announce': { n: 'New arrival', cat: 'social', p: 'Instagram post', pro: true }, 'ig-quote2': { n: 'Orange quote', cat: 'social', p: 'Instagram post' }, 'story-promo': { n: 'Story promo', cat: 'social', p: 'Story / Reel / TikTok' },
+  };
+  const productByName = n => PRODUCTS.find(x => x.name === n) || PRODUCTS[0];
+  // Render a template into an off-screen canvas (used for Home-screen thumbnails) without touching the open design.
+  function renderTemplateThumb(name, p, width = 300) {
+    const sv = { W, H, DPI, B }; let sc2;
+    try {
+      W = p.w; H = p.h; DPI = p.dpi || 300; const k = width / W;
+      sc2 = new fabric.StaticCanvas(null, { width: Math.round(W * k), height: Math.round(H * k), renderOnAddRemove: false }); sc2.setZoom(k); B = sc2;
+      TEMPLATES[name](); sc2.renderAll(); return sc2.toDataURL({ format: 'png' });
+    } catch (e) { console.warn('thumb failed', name, e); return null; } finally { ({ W, H, DPI, B } = sv); sc2?.dispose?.(); }
+  }
   function loadTemplate(name) {
     history.busy = true; TEMPLATES[name](); history.busy = false;
     canvas.discardActiveObject(); canvas.renderAll(); commit(); refreshProps();
@@ -869,7 +953,7 @@
     const r = new FileReader();
     r.onload = () => {
       try {
-        welcome = false; const d = JSON.parse(r.result);
+        const d = JSON.parse(r.result);
         if (d.chitra === 2) loadProject(d);
         else { restore(r.result); setTimeout(commit, 80); }
         toast('Project opened', '📂');
@@ -899,7 +983,8 @@
     if (white && !prevBg) canvas.backgroundColor = '#ffffff';
     // Phones can't make canvases bigger than ~16 megapixels (iOS silently returns a blank image), so cap there.
     const cap = isCoarse ? 16e6 : 120e6, scale = Math.min(1, Math.sqrt(cap / (W * H)));
-    let el; try { el = canvas.toCanvasElement(scale / zoom); } finally { canvas.backgroundColor = prevBg; canvas.renderAll(); }
+    canvas.__exporting = true; canvas.fire('export:start');
+    let el; try { el = canvas.toCanvasElement(scale / zoom); } finally { canvas.__exporting = false; canvas.fire('export:end'); canvas.backgroundColor = prevBg; canvas.renderAll(); }
     renderDesign.scale = scale; return el;
   }
   async function exportPDF() {
@@ -1091,8 +1176,10 @@
     group: [['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
   };
   CTX.multi = CTX.group;
+  CTX.slot = [['🖼️', 'Add photo', 'act', 'addToSlot'], ['⛶', 'Fit', 'act', 'fitSlot'], ['🧹', 'Clear', 'act', 'clearSlot'], ['🔓', 'Lock', 'act', 'toggleSlotLock'], ['📑', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']];
+  CTX.imageSlot = [['⛶', 'Fit', 'act', 'fitSlot'], ['📑', 'All areas', 'act', 'fillAll'], ...CTX.image];
   const FOCUS_TITLES = { font: 'Font', colour: 'Colour', outline: 'Outline', effects: 'Effects', spacing: 'Spacing', arch: 'Curve text', position: 'Position', adjust: 'Adjust photo', filters: 'Filters', crop: 'Crop & frame', sticker: 'Sticker outline' };
-  const ctxType = o => !o ? null : o.type === 'activeSelection' ? 'multi' : isArch(o) ? 'arch' : isText(o) ? 'text' : isImage(o) ? 'image' : o.type === 'group' ? 'group' : 'shape';
+  const ctxType = o => !o ? null : o.type === 'activeSelection' ? 'multi' : o.slot ? 'slot' : isArch(o) ? 'arch' : isText(o) ? 'text' : isImage(o) ? (o.inSlot ? 'imageSlot' : 'image') : o.type === 'group' ? 'group' : 'shape';
   const ACTS = {
     edit: () => { const o = active(); if (o && isText(o) && !isArch(o)) { closeSheets(); o.enterEditing(); o.selectAll(); o.hiddenTextarea?.focus(); canvas.requestRenderAll(); } },
     dup: () => duplicate(), del: () => remove(),
@@ -1110,7 +1197,7 @@
   function closeSheets() {
     const was = document.body.classList.contains('sheet-open');
     document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); setCtxActive(null);
-    $('#flyout').classList.add('collapsed'); if (was) sheetLayout(false);
+    if (isMobile()) $('#flyout').classList.add('collapsed'); if (was) sheetLayout(false);
   }
   function openFocus(k) {
     const ins = $('#inspector'), same = ins.dataset.focus === k && document.body.classList.contains('sheet-open');
@@ -1123,7 +1210,7 @@
     if (!t || !isMobile()) { bar.hidden = true; ctxKey = null; if (!t && document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); sheetLayout(false); } return; }
     if (ctxKey !== t) {
       ctxKey = t; bar.innerHTML = CTX[t].map(([i, n, kind, key]) => `<button data-kind="${kind}" data-key="${key}" class="${key === 'del' ? 'danger' : ''}"><i>${i}</i>${n}</button>`).join('');
-      $$('#ctxBar button').forEach(b => b.onclick = () => b.dataset.kind === 'focus' ? openFocus(b.dataset.key) : ACTS[b.dataset.key]());
+      $$('#ctxBar button').forEach(b => b.onclick = () => b.dataset.kind === 'focus' ? openFocus(b.dataset.key) : (ACTS[b.dataset.key] || chitra.extraActs?.[b.dataset.key])?.());
       bar.scrollLeft = 0; $('#inspector').removeAttribute('data-focus'); if (document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); sheetLayout(false); }
     }
     bar.hidden = false;
@@ -1137,23 +1224,61 @@
     async set(k, v) { try { const db = await kv.db(); await new Promise(res => { const t = db.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = t.onerror = () => res(); }); } catch { } },
     async get(k) { try { const db = await kv.db(); return await new Promise(res => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => res(null); }); } catch { return null; } },
   };
-  let saveT = null;
-  function schedSave() {
-    clearTimeout(saveT);
-    saveT = setTimeout(() => { try { const data = { chitra: 2, cur, name: $('#projectName').value, pages: pages.map((p, i) => i === cur ? snapshot() : p.json) }; kv.set('autosave', expand(JSON.stringify(data))); } catch { } }, 1800);
+  const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+  kv.del = async k => { try { const db = await kv.db(); await new Promise(res => { const t = db.transaction('kv', 'readwrite'); t.objectStore('kv').delete(k); t.oncomplete = t.onerror = () => res(); }); } catch { } };
+  const store = {
+    list: async () => (await kv.get('projIndex')) || [],
+    async saveMeta(m) { const l = await store.list(), i = l.findIndex(x => x.id === m.id); if (i >= 0) l[i] = m; else l.unshift(m); l.sort((a, b) => b.updated - a.updated); await kv.set('projIndex', l.slice(0, 80)); },
+    async remove(id) { await kv.set('projIndex', (await store.list()).filter(x => x.id !== id)); await kv.del('proj:' + id); },
+    async rename(id, name) { const d = await kv.get('proj:' + id); if (d) { const o = JSON.parse(d); o.name = name; await kv.set('proj:' + id, JSON.stringify(o)); } const l = await store.list(), m = l.find(x => x.id === id); if (m) { m.name = name; await kv.set('projIndex', l); } if (id === projectId) $('#projectName').value = name; },
+    async duplicate(id) { const d = await kv.get('proj:' + id), m = (await store.list()).find(x => x.id === id); if (!d || !m) return; const nid = uid(), o = JSON.parse(d); o.id = nid; o.name = m.name + ' (copy)'; await kv.set('proj:' + nid, JSON.stringify(o)); await store.saveMeta({ ...m, id: nid, name: o.name, updated: Date.now() }); return nid; },
+  };
+  const cardThumb = () => { try { return canvas.toDataURL({ format: 'png', multiplier: 360 / (W * zoom) }); } catch { return null; } };
+  let lastCard = { id: null, url: null }, saveT = null;
+  async function saveNow() {
+    clearTimeout(saveT); if (!projectId) return; flushCommit();
+    try {
+      if (cur === 0 || lastCard.id !== projectId) lastCard = { id: projectId, url: cardThumb() };
+      const first = pages[0]; void first;
+      const name = $('#projectName').value || 'Untitled design', jsons = pages.map((p, i) => i === cur ? snapshot() : p.json);
+      await kv.set('proj:' + projectId, expand(JSON.stringify({ chitra: 2, id: projectId, cur, name, pages: jsons })));
+      await store.saveMeta({ id: projectId, name, updated: Date.now(), thumb: lastCard.url, w: W, h: H, dpi: DPI, product: product.name, pages: pages.length });
+    } catch (e) { console.warn('save failed', e); }
   }
+  const schedSave = () => { clearTimeout(saveT); if (projectId) saveT = setTimeout(saveNow, 1800); };
   function loadProject(d) {
-    welcome = false; pages.length = 0;
+    pages.length = 0;
     d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); if (d.name) $('#projectName').value = d.name;
     loadPage(Math.min(d.cur || 0, pages.length - 1));
   }
-  function newDesign() {
-    if (!confirm('Start a new design? Your current one stays saved in this browser until you begin editing the new one.')) return;
-    flushCommit(); pages.length = 0; pages.push({ json: null, thumb: null, hist: null }); cur = 0; welcome = true;
-    history.busy = true; canvas.clear(); history.busy = false; canvas.setBackgroundColor('', () => { syncBg(); canvas.renderAll(); });
-    history.stack = []; history.idx = -1; closeSheets(); refreshProps(); renderPages(); openPicker();
+  /* ---- Home <-> editor ---- */
+  function showEditor() {
+    $('#home').hidden = true; $('#app').hidden = false; document.body.classList.remove('on-home');
+    requestAnimationFrame(() => { fit(); renderPages(); });
   }
-  $('#newDesign').onclick = newDesign;
+  async function showHome() {
+    await saveNow(); canvas.discardActiveObject(); closeSheets();
+    $('#app').hidden = true; $('#home').hidden = false; document.body.classList.add('on-home'); document.dispatchEvent(new CustomEvent('chitra:home'));
+  }
+  async function openProject(id) {
+    const raw = await kv.get('proj:' + id); if (!raw) return toast('Could not open that design', '⚠️');
+    await saveNow(); projectId = id; showEditor(); loadProject(typeof raw === 'string' ? JSON.parse(raw) : raw);
+  }
+  // Start a brand-new design (blank, from a template, or from a saved print layout)
+  async function newDocument({ product: p, w, h, dpi, guide: g, template, layoutJson, name } = {}) {
+    await saveNow(); flushCommit(); projectId = uid(); lastCard = { id: null, url: null };
+    pages.length = 0; pages.push({ json: null, thumb: null, hist: null }); cur = 0;
+    $('#projectName').value = name || (p ? `${p.name} design` : 'Untitled design');
+    history.busy = true; canvas.clear(); history.busy = false; canvas.backgroundColor = '';
+    setSize(p?.w ?? w, p?.h ?? h, false, g ?? p?.guide ?? 'none', p?.dpi ?? dpi ?? 300, p);
+    showEditor();
+    if (layoutJson) await new Promise(res => { const d = parseSnap(layoutJson); history.busy = true; canvas.loadFromJSON(d.canvas, () => { history.busy = false; res(); }); });
+    else { history.busy = true; if (template && TEMPLATES[template]) TEMPLATES[template](); history.busy = false; }
+    syncBg(); canvas.discardActiveObject(); canvas.renderAll(); history.stack = []; history.idx = -1; doCommit();
+    pages[0] = { json: snapshot(), thumb: null, hist: { stack: history.stack.slice(), idx: history.idx } }; renderPages(); refreshProps(); closeSheets(); saveNow();
+  }
+  const newDesign = () => openPicker('create');
+  const nd = $('#newDesign'); if (nd) nd.onclick = newDesign;
 
   /* ================= rail tabs & inspector tabs ================= */
   $$('#rail [data-tab]').forEach(b => b.onclick = () => {
@@ -1174,7 +1299,7 @@
   document.addEventListener('keydown', e => {
     const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
     if (mod && k === 'k') { e.preventDefault(); $('#cmd').hidden ? openCmd() : ($('#cmd').hidden = true); return; }
-    if (k === 'escape') { $$('.modal').forEach(m => { if (m.id !== 'picker' || !welcome) m.hidden = true; }); menu.hidden = true; return; }
+    if (k === 'escape') { $$('.modal').forEach(m => { m.hidden = true; }); menu.hidden = true; return; }
     const el = document.activeElement;
     if (/INPUT|SELECT|TEXTAREA/.test(el?.tagName) && !/range|color|checkbox/.test(el.type || '')) return;
     if ($$('.modal').some(m => !m.hidden)) return;
@@ -1201,25 +1326,28 @@
   $$('[data-more]').forEach(b => b.onclick = () => { more.hidden = true; MORE[b.dataset.more](); });
 
   /* ================= boot ================= */
-  setSize(3300, 3900, false, 'shirt');
-  history.busy = true; TEMPLATES.slogan(); history.busy = false; canvas.renderAll(); doCommit(); pages[0] = { json: snapshot(), thumb: null, hist: null }; renderPages();
+  setSize(3300, 3900, false, 'shirt'); doCommit(); // placeholder document; real ones are created from Home
   if (matchMedia('(max-width:800px)').matches) $('#flyout').classList.add('collapsed'); // phones: tools open as a bottom sheet on tap
-  let seen = false; try { seen = !!localStorage.getItem('chitra.seen'); } catch { }
-  if (seen) welcome = false; else openPicker();
-  kv.get('autosave').then(saved => { // returning visitors get their last design back
+  kv.get('autosave').then(async saved => { // bring the old single autosave into the new project list
     if (!saved) return;
-    try { const d = JSON.parse(saved); if (d.chitra === 2 && d.pages?.length) { $('#picker').hidden = true; loadProject(d); toast('Welcome back — your last design is restored', '👋'); } } catch { }
+    try {
+      if (!(await store.list()).length) {
+        const d = JSON.parse(saved);
+        if (d.chitra === 2 && d.pages?.length) { const id = uid(), first = JSON.parse(d.pages[0]); d.id = id; d.name = d.name || 'Recovered design'; await kv.set('proj:' + id, JSON.stringify(d)); await store.saveMeta({ id, name: d.name, updated: Date.now(), thumb: null, w: first.W, h: first.H, dpi: first.dpi, product: 'Recovered', pages: d.pages.length }); }
+      }
+      await kv.del('autosave'); document.dispatchEvent(new CustomEvent('chitra:home'));
+    } catch { }
   });
   // Re-measure text once web fonts have arrived so layout/export match what you see.
-  if (document.fonts) {
-    Promise.all(FONTS.map(f => document.fonts.load(`40px "${f}"`).catch(() => { }))).then(() => {
-      fabric.util.clearFabricFontCache();
-      canvas.getObjects().forEach(o => { if (isText(o)) { o.dirty = true; o.initDimensions(); } });
-      canvas.requestRenderAll();
-    });
-  }
+  const fontsReady = document.fonts ? Promise.race([Promise.all(FONTS.map(f => document.fonts.load(`40px "${f}"`).catch(() => { }))), new Promise(r => setTimeout(r, 6000))]).then(() => {
+    fabric.util.clearFabricFontCache();
+    canvas.getObjects().forEach(o => { if (isText(o)) { o.dirty = true; o.initDimensions(); } });
+    canvas.requestRenderAll();
+  }) : Promise.resolve();
   const api = {
     canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
+    flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
+    get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },
     $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
     history, get dpi() { return DPI; }, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
   };
