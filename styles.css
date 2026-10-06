@@ -492,3 +492,5 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500;margin-left:6px}
   .inspector[data-focus="slotops"] [data-s]:not([data-s~="slotops"]){display:none}
 }
 @media (hover:none){.btn:hover,.pcard:hover,.tcard2:hover{transform:none}}
+
+.marquee{position:fixed;z-index:60;border:1.5px solid var(--orange);background:rgba(255,122,26,.12);border-radius:3px;pointer-events:none}

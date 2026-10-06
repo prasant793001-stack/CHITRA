@@ -50,35 +50,85 @@
   /* ================= AI background removal (+ flood-fill fallback) ================= */
   let imglyP = null;
   const loadImgly = () => imglyP ||= import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm');
-  function floodCut(src, tol = 30) {
-    const w = src.width, h = src.height, c = document.createElement('canvas'); c.width = w; c.height = h;
-    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(src, 0, 0);
-    const id = x.getImageData(0, 0, w, h), d = id.data;
-    const corners = [0, w - 1, (h - 1) * w, h * w - 1].map(i => i * 4);
-    const bg = [0, 1, 2].map(k => corners.reduce((s, i) => s + d[i + k], 0) / 4), lim2 = ((tol / 100) * 441) ** 2;
-    const near = i => { const a = d[i] - bg[0], b = d[i + 1] - bg[1], cc = d[i + 2] - bg[2]; return a * a + b * b + cc * cc <= lim2; };
-    const seen = new Uint8Array(w * h), stack = new Int32Array(w * h); let sp = 0;
-    const push = p => { if (!seen[p] && (d[p * 4 + 3] < 8 || near(p * 4))) { seen[p] = 1; stack[sp++] = p; } };
-    for (let i = 0; i < w; i++) { push(i); push((h - 1) * w + i); }
-    for (let j = 0; j < h; j++) { push(j * w); push(j * w + w - 1); }
-    while (sp) { const p = stack[--sp], px = p % w, py = (p / w) | 0; if (px > 0) push(p - 1); if (px < w - 1) push(p + 1); if (py > 0) push(p - w); if (py < h - 1) push(p + w); }
-    for (let p = 0; p < w * h; p++) if (seen[p]) d[p * 4 + 3] = 0;
-    for (let p = 0; p < w * h; p++) { if (seen[p]) continue; const px = p % w; if ((px > 0 && seen[p - 1]) || (px < w - 1 && seen[p + 1]) || (p >= w && seen[p - w]) || (p < w * (h - 1) && seen[p + w])) d[p * 4 + 3] = Math.min(d[p * 4 + 3], 150); }
-    x.putImageData(id, 0, 0); return c;
+  /* Offline cut-out ("pro" classical pipeline): learns the background palette from the picture's border and the subject palette from its
+     centre (k-means in Lab), refines both a few rounds (GrabCut-style), keeps only background connected to the border, drops specks,
+     fills holes and feathers the edge. Used when the AI model cannot be downloaded. */
+  function smartCut(src) {
+    const W0 = src.width, H0 = src.height, k = Math.min(1, 480 / Math.max(W0, H0)), w = Math.max(8, Math.round(W0 * k)), h = Math.max(8, Math.round(H0 * k));
+    const sm = document.createElement('canvas'); sm.width = w; sm.height = h; const sx = sm.getContext('2d', { willReadFrequently: true }); sx.drawImage(src, 0, 0, w, h);
+    const px = sx.getImageData(0, 0, w, h).data, N = w * h, L = new Float32Array(N * 3), A = new Uint8Array(N);
+    const f = v => (v /= 255) > 0.04045 ? ((v + 0.055) / 1.055) ** 2.4 : v / 12.92, g = t => t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116;
+    for (let i = 0; i < N; i++) {
+      const r = f(px[i * 4]), gg = f(px[i * 4 + 1]), b = f(px[i * 4 + 2]); A[i] = px[i * 4 + 3];
+      const X = g((r * .4124 + gg * .3576 + b * .1805) / .95047), Y = g(r * .2126 + gg * .7152 + b * .0722), Z = g((r * .0193 + gg * .1192 + b * .9505) / 1.08883);
+      L[i * 3] = 116 * Y - 16; L[i * 3 + 1] = 500 * (X - Y); L[i * 3 + 2] = 200 * (Y - Z);
+    }
+    const d2 = (i, c) => { const a = L[i * 3] - c[0], b = L[i * 3 + 1] - c[1], e = L[i * 3 + 2] - c[2]; return a * a + b * b + e * e; };
+    const kmeans = (idx, K) => { // returns centroids of the given pixel indices
+      if (!idx.length) return []; const cs = []; for (let j = 0; j < K; j++) { const i = idx[Math.floor((j + 0.5) * idx.length / K)]; cs.push([L[i * 3], L[i * 3 + 1], L[i * 3 + 2]]); }
+      for (let it = 0; it < 6; it++) {
+        const sum = cs.map(() => [0, 0, 0, 0]);
+        for (const i of idx) { let bj = 0, bd = 1e12; cs.forEach((c, j) => { const d = d2(i, c); if (d < bd) { bd = d; bj = j; } }); const s = sum[bj]; s[0] += L[i * 3]; s[1] += L[i * 3 + 1]; s[2] += L[i * 3 + 2]; s[3]++; }
+        sum.forEach((s, j) => { if (s[3]) cs[j] = [s[0] / s[3], s[1] / s[3], s[2] / s[3]]; });
+      } return cs;
+    };
+    const dist = (i, cs) => { let m = 1e12; for (const c of cs) { const d = d2(i, c); if (d < m) m = d; } return m; };
+    const band = Math.max(2, Math.round(Math.min(w, h) * 0.04)), border = [], centre = [];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = y * w + x; if (A[i] < 10) continue;
+      if (x < band || y < band || x >= w - band || y >= h - band) border.push(i);
+      else if (x > w * 0.3 && x < w * 0.7 && y > h * 0.3 && y < h * 0.7) centre.push(i);
+    }
+    let bg = kmeans(border, 5), fg = [], lab = new Uint8Array(N); // lab: 1 = foreground
+    const T = 14 * 14; // colours this close to a background centroid count as background
+    for (let round = 0; round < 4; round++) {
+      if (round === 0) { const seeds = centre.filter(i => dist(i, bg) > T * 2); fg = seeds.length > 40 ? kmeans(seeds, 5) : []; }
+      for (let i = 0; i < N; i++) {
+        if (A[i] < 10) { lab[i] = 0; continue; }
+        const db = dist(i, bg), df = fg.length ? dist(i, fg) : 1e12;
+        lab[i] = fg.length ? (db > df * 1.15 || db > T * 6 ? 1 : 0) : (db > T ? 1 : 0);
+      }
+      for (let it = 0; it < 2; it++) { // 3x3 majority smoothing
+        const nx = new Uint8Array(lab);
+        for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) { const i = y * w + x; let s = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) s += lab[i + dy * w + dx]; nx[i] = s >= 5 ? 1 : 0; }
+        lab = nx;
+      }
+      if (round < 3) { const fi = [], bi = []; for (let i = 0; i < N; i++) (lab[i] ? fi : bi).push(i); const sub = a => a.length > 6000 ? a.filter((_, j) => j % Math.ceil(a.length / 6000) === 0) : a; if (fi.length > 40) fg = kmeans(sub(fi), 5); const bb = sub(bi.filter(i => { const x = i % w, y = (i / w) | 0; return x < band * 3 || y < band * 3 || x >= w - band * 3 || y >= h - band * 3; })); if (bb.length > 40) bg = kmeans(bb, 5); }
+    }
+    // keep real background only where it touches the border (so subject areas that resemble the background stay)
+    const isBg = new Uint8Array(N), stack = []; const seed = i => { if (!lab[i] && !isBg[i]) { isBg[i] = 1; stack.push(i); } };
+    for (let x = 0; x < w; x++) { seed(x); seed((h - 1) * w + x); } for (let y = 0; y < h; y++) { seed(y * w); seed(y * w + w - 1); }
+    while (stack.length) { const p = stack.pop(), x = p % w; if (x > 0) seed(p - 1); if (x < w - 1) seed(p + 1); if (p >= w) seed(p - w); if (p < N - w) seed(p + w); }
+    // drop small foreground islands (keep components bigger than 3% of the largest)
+    const comp = new Int32Array(N).fill(-1), sizes = []; let nc = 0;
+    for (let s0 = 0; s0 < N; s0++) { if (isBg[s0] || comp[s0] >= 0) continue; let sz = 0; const st = [s0]; comp[s0] = nc; while (st.length) { const p = st.pop(); sz++; const x = p % w; for (const q of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, p >= w ? p - w : -1, p < N - w ? p + w : -1]) if (q >= 0 && !isBg[q] && comp[q] < 0) { comp[q] = nc; st.push(q); } } sizes.push(sz); nc++; }
+    const big = Math.max(0, ...sizes); const mask = new Uint8Array(N); for (let i = 0; i < N; i++) mask[i] = !isBg[i] && sizes[comp[i]] >= big * 0.03 ? 255 : 0;
+    // soft full-resolution alpha: blur the low-res mask, then sharpen with a smoothstep so edges are ~1-2px soft
+    const mc = document.createElement('canvas'); mc.width = w; mc.height = h; const mx = mc.getContext('2d'), mi = mx.createImageData(w, h);
+    for (let i = 0; i < N; i++) { mi.data[i * 4] = mi.data[i * 4 + 1] = mi.data[i * 4 + 2] = 0; mi.data[i * 4 + 3] = mask[i]; } mx.putImageData(mi, 0, 0);
+    const out = document.createElement('canvas'); out.width = W0; out.height = H0; const ox = out.getContext('2d', { willReadFrequently: true });
+    const up = document.createElement('canvas'); up.width = W0; up.height = H0; const ux = up.getContext('2d', { willReadFrequently: true }); ux.imageSmoothingQuality = 'high'; ux.filter = `blur(${Math.max(0.6, 0.7 / k)}px)`; ux.drawImage(mc, 0, 0, W0, H0); ux.filter = 'none';
+    ox.drawImage(src, 0, 0); const od = ox.getImageData(0, 0, W0, H0), ud = ux.getImageData(0, 0, W0, H0).data;
+    for (let i = 0; i < W0 * H0; i++) { const t = Math.min(1, Math.max(0, (ud[i * 4 + 3] / 255 - 0.3) / 0.4)), s = t * t * (3 - 2 * t); od.data[i * 4 + 3] = Math.round(od.data[i * 4 + 3] * s); }
+    ox.putImageData(od, 0, 0); return out;
   }
   async function removeBg(o = needImage()) {
     if (!o) return;
     const src = natCanvas(o, 3000), job = busy('Removing background…');
     try {
       const mod = await loadImgly();
-      const out = await mod.removeBackground(await canvasToBlob(src), { progress: (key, cur, total) => job.set(`AI cut-out… ${total ? Math.round((cur / total) * 100) : 0}%`) });
+      const blob = await canvasToBlob(src); let out;
+      for (const model of ['isnet_fp16', 'isnet_quint8']) { // best quality first, lighter model if the device/network can't manage it
+        try { out = await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 1 }, progress: (key, cur, total) => job.set(`AI cut-out… ${total ? Math.round((cur / total) * 100) : 0}%`) }); break; } catch (e) { console.warn('model', model, e); }
+      }
+      if (!out) throw new Error('no model');
       job.done(); await replaceImage(o, await blobToDataURL(out), { pristine: src });
       confetti(innerWidth / 2, innerHeight / 2, 80); toast('Background removed', '✂️');
     } catch (e) {
       console.warn('AI cut-out unavailable', e); job.done();
       const j2 = busy('AI model offline — using quick cut-out…'); await tick();
-      await replaceImage(o, floodCut(src, 30), { pristine: src }); j2.done();
-      toast('Quick cut-out used (works best on plain backgrounds)', '✂️');
+      await replaceImage(o, smartCut(src), { pristine: src }); j2.done();
+      toast('Offline cut-out used — for the best result connect to the internet (AI model); use Refine to touch up', '✂️');
     }
   }
   $('#removeBg').onclick = () => removeBg();

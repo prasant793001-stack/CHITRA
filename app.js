@@ -1180,6 +1180,30 @@
     if (e.touches.length === 0) touchBlock = false;
     e.preventDefault(); e.stopPropagation();
   }
+  /* desktop: drag a selection box from anywhere on the workspace (also from the grey area outside the page) */
+  if (!isCoarse) {
+    let mq = null, box = null;
+    stageEl.addEventListener('mousedown', e => {
+      if (e.button !== 0 || e.target.closest('canvas, .zoombar, .floatbar, button, input, select, .pagebar, .float-tb')) return;
+      mq = { x: e.clientX, y: e.clientY, add: e.shiftKey }; box = document.createElement('div'); box.className = 'marquee'; document.body.appendChild(box);
+      if (!e.shiftKey) { canvas.discardActiveObject(); canvas.requestRenderAll(); } e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!mq) return; const x = Math.min(mq.x, e.clientX), y = Math.min(mq.y, e.clientY);
+      Object.assign(box.style, { left: x + 'px', top: y + 'px', width: Math.abs(e.clientX - mq.x) + 'px', height: Math.abs(e.clientY - mq.y) + 'px' });
+    });
+    window.addEventListener('mouseup', e => {
+      if (!mq) return; const m = mq; mq = null; box.remove(); box = null;
+      if (Math.abs(e.clientX - m.x) < 4 && Math.abs(e.clientY - m.y) < 4) return;
+      const r = canvas.upperCanvasEl.getBoundingClientRect(), z = canvas.getZoom(), cx = v => (v - r.left) / z, cy = v => (v - r.top) / z;
+      const x0 = cx(Math.min(m.x, e.clientX)), x1 = cx(Math.max(m.x, e.clientX)), y0 = cy(Math.min(m.y, e.clientY)), y1 = cy(Math.max(m.y, e.clientY));
+      let hit = canvas.getObjects().filter(o => o.visible && o.selectable !== false && !o.slot && (b => b.left < x1 && b.left + b.width > x0 && b.top < y1 && b.top + b.height > y0)(o.getBoundingRect(true, true)));
+      if (m.add) hit = [...new Set([...canvas.getActiveObjects(), ...hit])];
+      canvas.discardActiveObject();
+      if (hit.length === 1) canvas.setActiveObject(hit[0]); else if (hit.length > 1) canvas.setActiveObject(new fabric.ActiveSelection(hit, { canvas }));
+      canvas.requestRenderAll(); if (hit.length) toast(`${hit.length} item${hit.length > 1 ? 's' : ''} selected`, '');
+    });
+  }
   ['touchend', 'touchcancel'].forEach(ev => stageEl.addEventListener(ev, endGesture, { capture: true, passive: false }));
   // one finger on empty space pans the page (Canva-style)
   let pan = null; const cxy = ev => ev.touches?.[0] || ev.changedTouches?.[0] || ev;
