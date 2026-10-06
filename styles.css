@@ -514,3 +514,30 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500;margin-left:6px}
 .tcard2 .thumb img:not([src]){min-height:60px}
 .panel-search{width:100%;margin:0 0 10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff}
 @media (max-width:800px){.tpl-grid{column-width:150px;column-gap:12px}.cat-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---- accessibility & polish ---- */
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px;border-radius:8px}
+button:focus:not(:focus-visible){outline:none}
+.skip-link{position:fixed;left:12px;top:-60px;z-index:300;background:var(--orange);color:#fff;padding:10px 16px;border-radius:12px;font-weight:800;transition:top .15s}
+.skip-link:focus{top:12px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.save-chip{display:inline-flex;align-items:center;gap:5px;font:700 11.5px "Plus Jakarta Sans",system-ui,sans-serif;color:var(--muted);padding:5px 9px;border-radius:99px;background:var(--f1);white-space:nowrap}
+.save-chip em{font-style:normal}.save-chip[data-s=ok]{color:var(--green-d);background:var(--green-l)}.save-chip[data-s=err]{color:#b42318;background:#fee4e2}.save-chip[data-s=saving] svg{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (max-width:800px){.save-chip em{display:none}.save-chip{padding:6px}}
+.offline-bar{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:8px;max-width:min(560px,calc(100vw - 24px));padding:10px 14px;border-radius:14px;background:#1c1840;color:#fff;font:600 12.5px/1.35 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:var(--shadow-lg)}
+.kbd-list{display:grid;gap:2px;margin:12px 0}.kbd-list div{display:flex;justify-content:space-between;gap:12px;padding:8px 4px;border-bottom:1px solid var(--line2)}.kbd-list kbd{font:700 11.5px "Plus Jakarta Sans",system-ui;background:var(--f2);padding:3px 8px;border-radius:7px;white-space:nowrap}
+.sheet.small{max-width:460px}
+/* tour */
+.tour{position:fixed;inset:0;z-index:400}.tour-hole{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(20,12,60,.6);transition:.25s;pointer-events:none}
+.tour-card{position:fixed;background:#fff;border-radius:18px;padding:16px;box-shadow:var(--shadow-lg);animation:pop .25s}
+.tour-card b{font:800 16px "Bricolage Grotesque",system-ui,sans-serif}.tour-card p{margin:6px 0 12px;color:var(--muted);font-size:13px;line-height:1.45}
+.tour-actions{display:flex;align-items:center;justify-content:space-between;gap:8px}.tour-dots{display:flex;gap:5px}.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}.tour-dots i.on{background:var(--orange)}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}}
+/* motion */
+.modal:not([hidden]) .sheet,.modal:not([hidden])>div{animation:pop .22s cubic-bezier(.2,.8,.2,1)}
+.toast{animation:pop .25s cubic-bezier(.2,.8,.2,1)}
+.btn:active,.cta:active,.ibtn:active,.chip:active,.cat-tile:active{transform:scale(.96)}
+.thumb img[data-tpl]:not(.ready){opacity:0}
+.thumb.chk:has(img[data-tpl]:not(.ready)){background:linear-gradient(100deg,#eeeafc 30%,#f8f6ff 50%,#eeeafc 70%) 0 0/300% 100%;animation:shimmer 1.2s linear infinite}
+@keyframes shimmer{to{background-position:-300% 0}}

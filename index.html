@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <meta name="theme-color" content="#6d4aff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Chitra">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <title>Chitra Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -591,7 +592,7 @@
   <button data-more="cmd"><i class="mi c2"><i data-ico="search" data-s="20"></i></i><span><b>Search tools</b><small>Find any tool</small></span></button>
 </div>
 <nav class="ctxbar" id="ctxBar" hidden></nav>
-<div id="toasts"></div>
+<div id="toasts" role="status" aria-live="polite"></div>
 <canvas id="confetti"></canvas>
 
 <script src="vendor/fabric.min.js"></script>
@@ -605,6 +606,7 @@
 <script src="elements.js"></script>
 <script src="templates.js"></script>
 <script src="home.js"></script>
+<script src="polish.js"></script>
 <script>
 if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) {
   const had = !!navigator.serviceWorker.controller;

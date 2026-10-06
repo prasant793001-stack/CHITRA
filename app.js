@@ -1046,7 +1046,8 @@
   $$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m && m.id !== 'picker') m.hidden = true; }));
 
   /* ================= command palette ================= */
-  const CMDS = () => [
+  const extraCmds = []; const CMDS = () => [
+    ...extraCmds.map(([n, run]) => ({ n, i: 'info', k: 'help shortcuts tour', run })),
     { n: 'Surprise me', i: 'dice-5', k: 'random fun', run: surprise },
     { n: 'Shuffle colours', i: 'palette', k: 'recolor palette', run: () => applyPalette(pick(PALETTES)) },
     { n: 'Sparkle burst', i: 'sparkles', k: 'stars', run: sparkle },
@@ -1296,16 +1297,17 @@
   const cardThumb = () => { try { return canvas.toDataURL({ format: 'png', multiplier: 360 / (W * zoom) }); } catch { return null; } };
   let lastCard = { id: null, url: null }, saveT = null;
   async function saveNow() {
-    clearTimeout(saveT); if (!projectId) return; flushCommit();
+    clearTimeout(saveT); if (!projectId) return; flushCommit(); document.dispatchEvent(new Event('chitra:saving'));
     try {
       if (cur === 0 || lastCard.id !== projectId) lastCard = { id: projectId, url: cardThumb() };
       const first = pages[0]; void first;
       const name = $('#projectName').value || 'Untitled design', jsons = pages.map((p, i) => i === cur ? snapshot() : p.json);
       await kv.set('proj:' + projectId, expand(JSON.stringify({ chitra: 2, id: projectId, cur, name, pages: jsons })));
       await store.saveMeta({ id: projectId, name, updated: Date.now(), thumb: lastCard.url, w: W, h: H, dpi: DPI, product: product.name, pages: pages.length });
-    } catch (e) { console.warn('save failed', e); }
+      document.dispatchEvent(new Event('chitra:saved'));
+    } catch (e) { console.warn('save failed', e); document.dispatchEvent(new Event('chitra:savefail')); }
   }
-  const schedSave = () => { clearTimeout(saveT); if (projectId) saveT = setTimeout(saveNow, 1800); };
+  const schedSave = () => { clearTimeout(saveT); if (projectId) { document.dispatchEvent(new Event('chitra:dirty')); saveT = setTimeout(saveNow, 1800); } };
   function loadProject(d) {
     pages.length = 0;
     d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); if (d.name) $('#projectName').value = d.name;
@@ -1314,7 +1316,7 @@
   /* ---- Home <-> editor ---- */
   function showEditor() {
     $('#home').hidden = true; $('#app').hidden = false; document.body.classList.remove('on-home');
-    requestAnimationFrame(() => { fit(); renderPages(); });
+    requestAnimationFrame(() => { fit(); renderPages(); }); document.dispatchEvent(new Event('chitra:editor'));
   }
   async function showHome() {
     await saveNow(); canvas.discardActiveObject(); closeSheets();
@@ -1407,6 +1409,7 @@
   }) : Promise.resolve();
   const api = {
     canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
+    addCommand: (n, run) => extraCmds.push([n, run]),
     kit: { get W() { return W; }, get H() { return H; }, get B() { return B; }, u, clearAll, shadow }, ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },
     $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,

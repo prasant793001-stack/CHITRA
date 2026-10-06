@@ -29,4 +29,14 @@ module.exports = [
   { name: 'mobile home + editor', only: 'mobile', run: async (p, ok) => { ok('no horizontal overflow on home', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('A4'), template: 'blank' })); await p.waitForTimeout(800);
     ok('no horizontal overflow in editor', await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)); } },
+  { name: 'polish: a11y, save chip, shortcuts, tour', only: 'desktop', run: async (p, ok) => {
+    ok('icon buttons have accessible names', await p.evaluate(() => [...document.querySelectorAll('#app button')].filter(b => !b.textContent.trim() && !b.getAttribute('aria-label')).length) === 0);
+    ok('dialogs have role', await p.evaluate(() => [...document.querySelectorAll('.modal')].every(m => m.getAttribute('role') === 'dialog')));
+    await p.evaluate(() => { localStorage.removeItem('chitra.tour'); chitra.newDocument({ product: chitra.productByName('A4'), template: 'blank' }); }); await p.waitForTimeout(2200);
+    ok('first-run tour appears', await p.isVisible('.tour')); await p.keyboard.press('Escape'); await p.waitForTimeout(200); ok('tour closes with Escape', !(await p.isVisible('.tour')));
+    await p.evaluate(() => { chitra.canvas.clear(); chitra.addText('heading'); chitra.addText('body'); }); await p.waitForTimeout(2600);
+    ok('save chip shows Saved', await p.evaluate(() => document.querySelector('#saveChip').dataset.s) === 'ok');
+    await p.mouse.click(5, 400); await p.keyboard.press('Control+a'); ok('Ctrl+A selects all', await p.evaluate(() => chitra.canvas.getActiveObjects().length) === 2);
+    await p.keyboard.press('Control+c'); await p.keyboard.press('Control+v'); await p.waitForTimeout(300); ok('Ctrl+C/V pastes', await p.evaluate(() => chitra.canvas.getObjects().length) === 4);
+    await p.keyboard.press('Shift+?'); await p.waitForTimeout(200); ok('help sheet opens on ?', await p.isVisible('#helpModal')); await p.keyboard.press('Escape'); } },
 ];
