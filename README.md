@@ -16,5 +16,14 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 ## New in the Studio redesign
 Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
+## Pro photo tools (new)
+- **Photos tab** – search free stock photos: Openverse (no key) or Pixabay / Pexels / Unsplash (free API key, pasted once and stored only in your browser).
+- **AI Art tab** – text-to-image via the free Pollinations service, optional auto background removal.
+- **Remove background** (in-browser AI model, quick fallback), **Magic fix**, **Enhance 2×** (upscale + sharpen), **Refine edges** brush, **die-cut sticker outline**, crop ratios, shape frames, 9 adjust sliders (incl. vibrance, temperature, hue, sharpness), 12 filters.
+- **Photoreal mockups** – lit & wrinkled tee, cylinder-wrapped mug, scene backdrops (even stock photos), or drop the design onto your own blank-product photo.
+- Smart snapping guides, group / ungroup, eyedropper, brand colours, gradient backdrops, 6 more shapes.
+
+Online features need internet. Always check each photo's licence before selling products with it.
+
 ## Creative features
 Punchy text styles, fun fonts, stickers, shapes, colour swatches, quick-start templates, filters, layers, undo/redo, save/open projects, PNG/JPG export.

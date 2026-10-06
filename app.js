@@ -249,8 +249,8 @@
   $('#addArch').onclick = newArch;
 
   /* ================= add elements ================= */
-  const starPoints = (r, n = 5) => Array.from({ length: n * 2 }, (_, i) => {
-    const rad = i % 2 ? r * 0.42 : r, a = (Math.PI / n) * i - Math.PI / 2;
+  const starPoints = (r, n = 5, inner = 0.42) => Array.from({ length: n * 2 }, (_, i) => {
+    const rad = i % 2 ? r * inner : r, a = (Math.PI / n) * i - Math.PI / 2;
     return { x: r + rad * Math.cos(a), y: r + rad * Math.sin(a) };
   });
   const SHAPES = {
@@ -261,8 +261,22 @@
     star: () => new fabric.Polygon(starPoints(u() * 0.2), { fill: '#ff8a1f', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
     heart: () => new fabric.Path('M 0 -60 C -100 -140 -190 -20 0 110 C 190 -20 100 -140 0 -60 z',
       { fill: '#ff2d95', stroke: '#14110f', strokeWidth: 5, scaleX: u() * 0.0016, scaleY: u() * 0.0016 }),
+    hexagon: () => new fabric.Polygon(starPoints(u() * 0.2, 3, 1), { fill: '#8b5cf6', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
+    burst: () => new fabric.Polygon(starPoints(u() * 0.22, 12, 0.72), { fill: '#ffd23f', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
+    diamond: () => new fabric.Polygon([{ x: 0, y: 1 }, { x: 0.7, y: 0 }, { x: 1.4, y: 1 }, { x: 0.7, y: 2 }].map(p => ({ x: p.x * u() * 0.16, y: p.y * u() * 0.16 })), { fill: '#06d6a0', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
+    arrow: () => new fabric.Polygon([[0, 30], [120, 30], [120, 0], [200, 60], [120, 120], [120, 90], [0, 90]].map(([x, y]) => ({ x: x * u() * 0.002, y: y * u() * 0.002 })), { fill: '#3a86ff', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
+    bubble: () => new fabric.Path('M 20 0 H 180 Q 200 0 200 20 V 100 Q 200 120 180 120 H 90 L 50 160 L 60 120 H 20 Q 0 120 0 100 V 20 Q 0 0 20 0 z',
+      { fill: '#ffffff', stroke: '#14110f', strokeWidth: 4, scaleX: u() * 0.002, scaleY: u() * 0.002 }),
+    plus: () => new fabric.Polygon([[1, 0], [2, 0], [2, 1], [3, 1], [3, 2], [2, 2], [2, 3], [1, 3], [1, 2], [0, 2], [0, 1], [1, 1]].map(([x, y]) => ({ x: x * u() * 0.07, y: y * u() * 0.07 })), { fill: '#ef476f', stroke: '#14110f', strokeWidth: u() * 0.006, strokeLineJoin: 'round' }),
   };
+  const BACKDROPS = [['#ff2d95', '#ff8a1f'], ['#8b5cf6', '#22d3ee'], ['#0f172a', '#334155'], ['#ffd23f', '#ff7a1a'], ['#06d6a0', '#3a86ff'], ['#fdf2f8', '#fce7f3']];
+  function addBackdrop([a, b]) {
+    const r = new fabric.Rect({ left: 0, top: 0, width: W, height: H, selectable: true, fill: new fabric.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: W, y2: H }, colorStops: [{ offset: 0, color: a }, { offset: 1, color: b }] }) });
+    canvas.add(r); canvas.sendToBack(r); canvas.setActiveObject(r); canvas.requestRenderAll(); toast('Backdrop added (sent to back)', '🌈');
+  }
   $$('[data-add]').forEach(b => b.onclick = () => place(SHAPES[b.dataset.add]()));
+  $('#backdrops').innerHTML = BACKDROPS.map((g, i) => `<button data-bd="${i}" style="background:linear-gradient(135deg,${g[0]},${g[1]})" title="Add gradient backdrop"></button>`).join('');
+  $$('[data-bd]').forEach(b => b.onclick = () => addBackdrop(BACKDROPS[b.dataset.bd]));
 
   const TEXT = { heading: ['Add a heading', 0.1, 'bold'], sub: ['Add a subheading', 0.06, 'normal'], body: ['Add a little bit of body text', 0.035, 'normal'] };
   function addText(kind, extra = {}) {
@@ -288,7 +302,7 @@
     fontSize: u() * 0.2, fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif',
   })));
 
-  const DEFAULT_ADJ = () => ({ brightness: 0, contrast: 0, saturation: 0, blur: 0, whiteDist: 0, preset: '' });
+  const DEFAULT_ADJ = () => ({ brightness: 0, contrast: 0, saturation: 0, vibrance: 0, temperature: 0, hue: 0, sharpen: 0, blur: 0, whiteDist: 0, preset: '' });
   function addImageFromURL(url) {
     fabric.Image.fromURL(url, img => {
       const s = Math.min((W * 0.8) / img.width, (H * 0.8) / img.height, 1);
@@ -398,40 +412,6 @@
     ts.forEach(o => { setProp(o, 'stroke', '#ffffff'); const t = ts.length === 1 ? active() : o; setProp(t, 'strokeWidth', u() * 0.02); if (!isArch(t)) t.set({ paintFirst: 'stroke', strokeLineJoin: 'round' }); });
     canvas.requestRenderAll(); commit(); refreshProps(); toast('Sticker outline added', '🏷️');
   };
-
-  /* ---- magic cut-out: flood-fill the background from the edges ---- */
-  function magicCut(o, tol) {
-    const el = o._originalElement || o.getElement(), w = el.naturalWidth || el.width, h = el.naturalHeight || el.height;
-    const c = document.createElement('canvas'); c.width = w; c.height = h;
-    const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(el, 0, 0, w, h);
-    const id = x.getImageData(0, 0, w, h), d = id.data;
-    const corners = [0, w - 1, (h - 1) * w, h * w - 1].map(i => i * 4);
-    const bg = [0, 1, 2].map(k => corners.reduce((s, i) => s + d[i + k], 0) / 4);
-    const lim = (tol / 100) * 441, lim2 = lim * lim;
-    const near = i => { const a = d[i] - bg[0], b = d[i + 1] - bg[1], cc = d[i + 2] - bg[2]; return a * a + b * b + cc * cc <= lim2; };
-    const seen = new Uint8Array(w * h), stack = new Int32Array(w * h); let sp = 0;
-    const push = p => { if (!seen[p] && (d[p * 4 + 3] < 8 || near(p * 4))) { seen[p] = 1; stack[sp++] = p; } };
-    for (let i = 0; i < w; i++) { push(i); push((h - 1) * w + i); }
-    for (let j = 0; j < h; j++) { push(j * w); push(j * w + w - 1); }
-    while (sp) {
-      const p = stack[--sp], px = p % w, py = (p / w) | 0;
-      if (px > 0) push(p - 1); if (px < w - 1) push(p + 1); if (py > 0) push(p - w); if (py < h - 1) push(p + w);
-    }
-    for (let p = 0; p < w * h; p++) if (seen[p]) d[p * 4 + 3] = 0;
-    // soften the cut edge by one pixel so it doesn't look jagged
-    for (let p = 0; p < w * h; p++) {
-      if (seen[p]) continue; const px = p % w;
-      if ((px > 0 && seen[p - 1]) || (px < w - 1 && seen[p + 1]) || (p >= w && seen[p - w]) || (p < w * (h - 1) && seen[p + w])) d[p * 4 + 3] = Math.min(d[p * 4 + 3], 150);
-    }
-    x.putImageData(id, 0, 0);
-    fabric.Image.fromURL(c.toDataURL('image/png'), n => {
-      n.set({ left: o.left, top: o.top, originX: o.originX, originY: o.originY, scaleX: o.scaleX * (o.width / w), scaleY: o.scaleY * (o.height / h), angle: o.angle, flipX: o.flipX, flipY: o.flipY, opacity: o.opacity, adj: DEFAULT_ADJ() });
-      const idx = canvas.getObjects().indexOf(o);
-      history.busy = true; canvas.remove(o); canvas.insertAt(n, idx); history.busy = false;
-      canvas.setActiveObject(n); canvas.requestRenderAll(); commit(); refreshProps(); confetti(innerWidth / 2, innerHeight / 2, 70); toast('Background removed', '✂️');
-    });
-  }
-  $('#magicCut').onclick = () => { const o = active(); if (!isImage(o)) return toast('Select a photo first', '👆'); magicCut(o, +$('#cutTol').value); };
 
   /* ================= print tools ================= */
   function pack() {
@@ -557,6 +537,41 @@
     });
   }
 
+  /* ================= group / ungroup ================= */
+  function groupSel() { const o = active(); if (o?.type !== 'activeSelection') return toast('Select 2+ things first (Shift-click)', '👆'); o.toGroup(); canvas.requestRenderAll(); commit(); refreshProps(); }
+  function ungroupSel() { const o = active(); if (o?.type !== 'group' || isArch(o)) return toast('Select a group first', '👆'); o.toActiveSelection(); canvas.requestRenderAll(); commit(); refreshProps(); }
+  $('#group').onclick = groupSel; $('#ungroup').onclick = ungroupSel;
+
+  /* ================= smart snapping guides ================= */
+  const snapV = document.createElement('div'), snapH = document.createElement('div');
+  snapV.className = 'snap v'; snapH.className = 'snap h'; $('#canvasWrap').append(snapV, snapH); snapV.hidden = snapH.hidden = true;
+  canvas.on('object:moving', e => {
+    const o = e.target, T = 10 / zoom, r = o.getBoundingRect(true, true);
+    const others = canvas.getObjects().filter(x => x !== o && x.visible && !(o.type === 'activeSelection' && o.contains?.(x)));
+    const xs = [0, W / 2, W], ys = [0, H / 2, H];
+    others.forEach(x => { const b = x.getBoundingRect(true, true); xs.push(b.left, b.left + b.width / 2, b.left + b.width); ys.push(b.top, b.top + b.height / 2, b.top + b.height); });
+    const best = (mine, cands) => { let res = null; mine.forEach(m => cands.forEach(c => { const d = c - m; if (Math.abs(d) <= T && (!res || Math.abs(d) < Math.abs(res.d))) res = { d, at: c }; })); return res; };
+    const sx = best([r.left, r.left + r.width / 2, r.left + r.width], xs), sy = best([r.top, r.top + r.height / 2, r.top + r.height], ys);
+    if (sx) o.left += sx.d; if (sy) o.top += sy.d;
+    snapV.hidden = !sx; snapH.hidden = !sy;
+    if (sx) snapV.style.left = sx.at * zoom + 'px'; if (sy) snapH.style.top = sy.at * zoom + 'px';
+  });
+  canvas.on('mouse:up', () => { snapV.hidden = snapH.hidden = true; });
+
+  /* ================= eyedropper & brand kit ================= */
+  if (window.EyeDropper) {
+    $('#eyedrop').hidden = false;
+    $('#eyedrop').onclick = async () => { try { const { sRGBHex } = await new EyeDropper().open(); setFill(sRGBHex); commit(); refreshProps(); } catch { } };
+  }
+  let brand = []; try { brand = JSON.parse(localStorage.getItem('chitra.brand') || '[]'); } catch { }
+  function renderBrand() {
+    $('#brandKit').innerHTML = brand.map(c => `<button data-brand="${c}" style="background:${c}" title="Brand colour ${c}"></button>`).join('');
+    $$('[data-brand]').forEach(b => { b.onclick = () => { setFill(b.dataset.brand); commit(); }; b.oncontextmenu = e => { e.preventDefault(); brand = brand.filter(x => x !== b.dataset.brand); saveBrand(); }; });
+  }
+  function saveBrand() { try { localStorage.setItem('chitra.brand', JSON.stringify(brand)); } catch { } renderBrand(); }
+  $('#addBrand').onclick = () => { const c = $('#fill').value; if (!brand.includes(c)) { brand.push(c); brand = brand.slice(-14); saveBrand(); toast('Saved to brand colours (right-click to remove)', '🎨'); } };
+  renderBrand();
+
   /* ================= properties ================= */
   $('#fontFamily').innerHTML = FONTS.map(f => `<option style="font-family:'${f}'">${f}</option>`).join('');
   $('#swatches').innerHTML = COLORS.map(c => `<button data-color="${c}" style="background:${c}" title="${c}"></button>`).join('');
@@ -637,13 +652,30 @@
   const PRESETS = {
     grayscale: () => [new F.Grayscale()], sepia: () => [new F.Sepia()], invert: () => [new F.Invert()],
     vintage: () => [new F.Sepia(), new F.Contrast({ contrast: 0.1 }), new F.Brightness({ brightness: -0.05 })],
+    warm: () => [new F.ColorMatrix({ matrix: [1.08, 0, 0, 0, 0.04, 0, 1.0, 0, 0, 0.01, 0, 0, 0.88, 0, -0.03, 0, 0, 0, 1, 0] })],
+    cool: () => [new F.ColorMatrix({ matrix: [0.9, 0, 0, 0, -0.02, 0, 1.0, 0, 0, 0.01, 0, 0, 1.1, 0, 0.05, 0, 0, 0, 1, 0] })],
+    fade: () => [new F.Contrast({ contrast: -0.2 }), new F.Brightness({ brightness: 0.08 }), new F.Saturation({ saturation: -0.2 })],
+    noir: () => [new F.Grayscale(), new F.Contrast({ contrast: 0.35 })],
+    pop: () => [new F.Saturation({ saturation: 0.4 }), new F.Contrast({ contrast: 0.15 })],
+    duo1: () => [duotone('#2b1055', '#ff6ec7')],
+    duo2: () => [duotone('#0b1b3a', '#22d3ee')],
+    pixelate: () => [new F.Pixelate({ blocksize: 8 })],
   };
+  function duotone(dark, light) {
+    const d = new fabric.Color(dark).getSource().map(v => v / 255), l = new fabric.Color(light).getSource().map(v => v / 255), w = [0.299, 0.587, 0.114], m = [];
+    for (let c = 0; c < 3; c++) m.push(...w.map(k => k * (l[c] - d[c])), 0, d[c]);
+    m.push(0, 0, 0, 1, 0); return new F.ColorMatrix({ matrix: m });
+  }
   function applyFilters(o) {
     const a = o.adj || (o.adj = DEFAULT_ADJ()), f = [];
     if (a.whiteDist) f.push(new F.RemoveColor({ color: '#ffffff', distance: a.whiteDist / 200 }));
     if (a.brightness) f.push(new F.Brightness({ brightness: a.brightness / 100 }));
     if (a.contrast) f.push(new F.Contrast({ contrast: a.contrast / 100 }));
     if (a.saturation) f.push(new F.Saturation({ saturation: a.saturation / 100 }));
+    if (a.vibrance) f.push(new F.Vibrance({ vibrance: a.vibrance / 100 }));
+    if (a.temperature) { const t = (a.temperature / 100) * 0.12; f.push(new F.ColorMatrix({ matrix: [1, 0, 0, 0, t, 0, 1, 0, 0, 0, 0, 0, 1, 0, -t, 0, 0, 0, 1, 0] })); }
+    if (a.hue) f.push(new F.HueRotation({ rotation: a.hue / 100 }));
+    if (a.sharpen) { const k = a.sharpen / 100; f.push(new F.Convolute({ matrix: [0, -k, 0, -k, 1 + 4 * k, -k, 0, -k, 0] })); }
     if (a.blur) f.push(new F.Blur({ blur: a.blur / 100 }));
     if (a.preset && PRESETS[a.preset]) f.push(...PRESETS[a.preset]());
     o.filters = f; o.applyFilters(); canvas.requestRenderAll();
@@ -720,51 +752,6 @@
   $$('[data-export]').forEach(b => b.onclick = () => { menu.hidden = true; exportFile(b.dataset.export); });
   document.addEventListener('click', e => { if (!menu.hidden && !menu.contains(e.target)) menu.hidden = true; });
 
-  /* ================= mockup preview ================= */
-  const MOCK_COLORS = ['#ffffff', '#14110f', '#1e3a8a', '#ff2d95', '#ffd23f', '#2ec4b6', '#9ca3af', '#dc2626'];
-  let mockKind = 'shirt', mockColor = '#ffffff';
-  $('#mockColors').innerHTML = MOCK_COLORS.map(c => `<button data-mc="${c}" style="background:${c}"></button>`).join('');
-  $$('[data-mc]').forEach(b => b.onclick = () => { mockColor = b.dataset.mc; drawMockup(); });
-  $$('[data-mock]').forEach(b => b.onclick = () => { mockKind = b.dataset.mock; drawMockup(); });
-  function drawMockup() {
-    $$('[data-mock]').forEach(b => b.classList.toggle('on', b.dataset.mock === mockKind));
-    const c = $('#mockCanvas'), g = c.getContext('2d'); g.clearRect(0, 0, 700, 700);
-    const bgG = g.createRadialGradient(350, 320, 40, 350, 350, 480); bgG.addColorStop(0, '#3a3a58'); bgG.addColorStop(1, '#14141f');
-    g.fillStyle = bgG; g.fillRect(0, 0, 700, 700);
-    const art = renderDesign(false), k = art.width / W;
-    g.save();
-    if (mockKind === 'shirt') {
-      g.scale(700 / 600, 700 / 600);
-      const body = new Path2D('M200 60 L120 90 L40 190 L100 230 L140 190 L140 540 L460 540 L460 190 L500 230 L560 190 L480 90 L400 60 Q300 130 200 60 Z');
-      g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 40; g.shadowOffsetY = 20; g.fillStyle = mockColor; g.fill(body); g.shadowColor = 'transparent';
-      g.clip(body);
-      const sh = g.createLinearGradient(0, 0, 600, 0); sh.addColorStop(0, 'rgba(0,0,0,.28)'); sh.addColorStop(.3, 'rgba(255,255,255,.1)'); sh.addColorStop(.7, 'rgba(0,0,0,.04)'); sh.addColorStop(1, 'rgba(0,0,0,.3)');
-      g.fillStyle = sh; g.fillRect(0, 0, 600, 600);
-      g.strokeStyle = 'rgba(0,0,0,.18)'; g.lineWidth = 3;
-      g.beginPath(); g.moveTo(140, 190); g.lineTo(100, 230); g.moveTo(460, 190); g.lineTo(500, 230); g.stroke();
-      g.fillStyle = 'rgba(0,0,0,.28)'; g.fill(new Path2D('M200 60 Q300 130 400 60 Q300 98 200 60 Z'));
-      g.restore(); g.save();
-      const bw = 250, bh = 310, s = Math.min(bw / art.width, bh / art.height), dw = art.width * s, dh = art.height * s;
-      g.drawImage(art, 350 - dw / 2, 205, dw, dh);
-    } else {
-      g.shadowColor = 'rgba(0,0,0,.55)'; g.shadowBlur = 40; g.shadowOffsetY = 24;
-      g.strokeStyle = mockColor; g.lineWidth = 36; g.beginPath(); g.arc(480, 360, 82, -Math.PI / 2, Math.PI / 2); g.stroke();
-      g.fillStyle = mockColor; g.beginPath(); g.roundRect(200, 190, 280, 330, 24); g.fill(); g.shadowColor = 'transparent';
-      g.save(); g.beginPath(); g.roundRect(200, 190, 280, 330, 24); g.clip();
-      const sx = W * 0.225, sw = W * 0.55; let dw = 240, dh = dw * H / sw; if (dh > 290) { dh = 290; dw = dh * sw / H; }
-      g.drawImage(art, sx * k, 0, sw * k, H * k, 340 - dw / 2, 355 - dh / 2, dw, dh);
-      const hl = g.createLinearGradient(200, 0, 480, 0);
-      [[0, .4], [.12, 0], [.28, -.3], [.38, 0], [.82, 0], [1, .45]].forEach(([o, a]) => hl.addColorStop(o, a >= 0 ? `rgba(0,0,0,${a})` : `rgba(255,255,255,${-a})`));
-      g.fillStyle = hl; g.fillRect(200, 190, 280, 330); g.restore();
-      g.fillStyle = 'rgba(255,255,255,.25)'; g.beginPath(); g.ellipse(340, 192, 140, 14, 0, 0, Math.PI * 2); g.fill();
-    }
-    g.restore();
-  }
-  function openMockup() {
-    mockKind = guide === 'mug' ? 'mug' : 'shirt'; $('#mockup').hidden = false; drawMockup();
-  }
-  $('#mockupBtn').onclick = openMockup;
-  $('#mockDownload').onclick = () => { $('#mockCanvas').toBlob(b => { const url = URL.createObjectURL(b); download(url, `${slug()}-mockup.png`); setTimeout(() => URL.revokeObjectURL(url), 2000); confetti(); toast('Mockup saved', '👀'); }); };
   $$('[data-close]').forEach(b => b.onclick = () => b.closest('.modal').hidden = true);
   $$('.modal').forEach(m => m.addEventListener('mousedown', e => { if (e.target === m && m.id !== 'picker') m.hidden = true; }));
 
@@ -778,7 +765,12 @@
     { n: 'Export DTF transfer (transparent PNG)', i: '👕', k: 'download', run: () => exportFile('dtf') },
     { n: 'Export sublimation (mirrored PNG)', i: '☕', k: 'download mirror', run: () => exportFile('sub') },
     { n: 'Export JPG', i: '🖼️', k: 'download', run: () => exportFile('jpg') },
-    { n: 'Show mockup preview', i: '👀', k: 'shirt mug preview', run: openMockup },
+    { n: 'Show mockup preview', i: '👀', k: 'shirt mug preview', run: () => chitra.openMockup() },
+    { n: 'Remove background (AI)', i: '✂️', k: 'cutout photo', run: () => chitra.removeBg() },
+    { n: 'Magic fix photo', i: '🪄', k: 'enhance auto improve', run: () => chitra.magicFix() },
+    { n: 'Enhance / upscale photo 2×', i: '🔍', k: 'quality sharpen', run: () => chitra.enhance() },
+    { n: 'Group selected', i: '🧱', k: 'ctrl g', run: groupSel },
+    { n: 'Ungroup', i: '🧩', k: 'ctrl shift g', run: ungroupSel },
     { n: 'Pack designs onto sheet', i: '🧩', k: 'gang sheet', run: pack },
     { n: 'Toggle print guides', i: '📏', k: 'margin', run: () => { $('#showGuides').click(); } },
     { n: 'Toggle transparent background', i: '🧊', k: 'bg', run: () => { $('#transparent').click(); } },
@@ -831,6 +823,7 @@
     if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
     else if (mod && k === 'y') { e.preventDefault(); redo(); }
     else if (mod && k === 'd') { e.preventDefault(); duplicate(); }
+    else if (mod && k === 'g') { e.preventDefault(); e.shiftKey ? ungroupSel() : groupSel(); }
     else if (k === 'delete' || k === 'backspace') { if (o) { e.preventDefault(); remove(); } }
     else if (o && k.startsWith('arrow')) {
       e.preventDefault(); const d = e.shiftKey ? 10 : 1;
@@ -853,5 +846,10 @@
       canvas.requestRenderAll();
     });
   }
-  window.chitra = { canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, openMockup, applyPalette, PALETTES };
+  const api = {
+    canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
+    $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
+    history, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
+  };
+  window.chitra = api; document.dispatchEvent(new CustomEvent('chitra:ready'));
 })();

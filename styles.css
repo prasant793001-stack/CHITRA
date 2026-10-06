@@ -258,3 +258,44 @@ h4{margin:16px 0 8px;font:700 11px "Space Grotesk";letter-spacing:.14em;text-tra
   .inspector{position:static;width:auto}
   .project-name,.btn.ghost{display:none}
 }
+
+/* ================= photo tools, stock photos, AI ================= */
+textarea.text-in{width:100%;resize:vertical;font:500 13px "Space Grotesk";min-height:70px}
+.searchbar{display:flex;gap:6px;margin-bottom:8px}.searchbar .text-in{margin:0;flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{border:1px solid var(--stroke);background:rgba(255,255,255,.07);color:var(--text);border-radius:99px;padding:4px 11px;font:600 12px "Space Grotesk";cursor:pointer;transition:.12s}
+.chip:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.chip.on{background:var(--grad);border-color:transparent}
+.keybox{padding:10px;border:1px dashed var(--stroke);border-radius:14px;margin-bottom:10px;background:rgba(255,255,255,.04)}
+.keybox a.btn{text-decoration:none;text-align:center;font-size:13px}
+.photo-grid{columns:2;column-gap:8px}
+.photo-card{position:relative;display:block;width:100%;margin:0 0 8px;padding:0;border:1px solid var(--stroke);border-radius:12px;overflow:hidden;cursor:pointer;background:rgba(255,255,255,.06);break-inside:avoid;transition:.15s}
+.photo-card:hover{transform:scale(1.03);box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:2}
+.photo-card img{display:block;width:100%;height:auto;min-height:54px}
+.photo-card span{position:absolute;left:0;right:0;bottom:0;padding:14px 6px 4px;font:600 9px "Space Grotesk";color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75));opacity:0;transition:.15s}
+.photo-card:hover span{opacity:1}
+.backdrops{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.backdrops button{height:34px;border-radius:10px;border:2px solid rgba(255,255,255,.4);cursor:pointer;padding:0;transition:.12s}
+.backdrops button:hover{transform:scale(1.12);border-color:#fff}
+.brand-row{display:flex;align-items:center;gap:8px;margin:2px 0 6px;color:var(--muted);font-size:13px}
+.brandkit{display:flex;flex-wrap:wrap;gap:5px;flex:1}
+.brandkit button{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.5);padding:0;cursor:pointer}
+.mini{width:26px;height:26px;border-radius:50%;border:1px solid var(--stroke);background:rgba(255,255,255,.1);color:var(--text);cursor:pointer;padding:0}
+.mini:hover{background:rgba(255,255,255,.25)}
+.inline{display:inline-flex;align-items:center;gap:6px}
+.magic-row .hot{background:linear-gradient(135deg,rgba(255,45,149,.28),rgba(255,138,31,.28));border-color:rgba(255,138,31,.5);font-weight:700}
+.magic-row .hot:hover{background:var(--grad)}
+h4 small{text-transform:none;letter-spacing:0;font-weight:500}
+.snap{position:absolute;z-index:15;pointer-events:none;background:#22d3ee;box-shadow:0 0 8px #22d3ee}
+.snap.v{top:0;bottom:0;width:1.5px}.snap.h{left:0;right:0;height:1.5px}
+.toast.busy{display:flex;align-items:center;gap:10px}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.3);border-top-color:var(--pink);animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+#mockCanvas{cursor:default}
+.scenes{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.scene-results{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.scene-results .photo-card{margin:0}
+.refine-stage{display:grid;place-items:center;border-radius:18px;overflow:hidden;max-height:70vh;padding:10px;
+  background:linear-gradient(45deg,#2a2a3a 25%,transparent 25%,transparent 75%,#2a2a3a 75%),linear-gradient(45deg,#2a2a3a 25%,#3a3a4c 25%,#3a3a4c 75%,#2a2a3a 75%);background-size:20px 20px;background-position:0 0,10px 10px}
+#refineCanvas{max-width:100%;max-height:66vh;cursor:crosshair;touch-action:none}
+.row3 .btn.on{background:var(--grad2);border-color:transparent}
