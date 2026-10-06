@@ -1,0 +1,14 @@
+name = "chitra-api"
+main = "worker/api.js"
+compatibility_date = "2024-11-01"
+
+# 1) npx wrangler kv namespace create DATA   -> paste the id below
+[[kv_namespaces]]
+binding = "DATA"
+id = "REPLACE_WITH_KV_ID"
+
+[vars]
+ALLOWED_ORIGIN = "https://prasant793001-stack.github.io"
+APP_URL = "https://prasant793001-stack.github.io/CHITRA/"
+MAIL_FROM = "Chitra <login@yourdomain.com>"
+# 2) secrets (never commit): npx wrangler secret put SESSION_SECRET | RESEND_KEY | STRIPE_KEY | STRIPE_WEBHOOK_SECRET | PRICE_PRO | PRICE_BIZ

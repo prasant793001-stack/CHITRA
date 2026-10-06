@@ -9,6 +9,8 @@ window.CHITRA_CONFIG = {
   // Optional: a URL that returns the "Trending" list as JSON (see community.json for the format).
   communityFeed: 'community.json',
   // Photo search. SAFEST: deploy worker/photos-proxy.js (free Cloudflare Worker) and paste its URL here - the keys then never reach the browser.
+  // URL of your deployed worker/api.js (accounts, cloud sync, subscriptions). Leave blank to run fully offline/local.
+  apiUrl: '',
   photoProxy: '',
   // Where "Send to print" delivers orders (WhatsApp number with country code, email). Leave blank to just share the file.
   shop: { name: '', whatsapp: '', email: '' },

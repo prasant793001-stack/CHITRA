@@ -42,6 +42,7 @@
     $('#planNote').textContent = CFG.checkoutUrl ? 'Secure checkout opens in a new tab.' : 'Payments are not connected yet — "Choose" saves a local preview of the plan so you can see how it will feel.';
     $$('#planGrid [data-plan]').forEach(b => b.onclick = () => {
       const id = b.dataset.plan;
+      if (C.cloud?.enabled && id !== 'free') { C.cloud.checkout(id); return; }
       if (CFG.checkoutUrl && id !== 'free') { window.open(`${CFG.checkoutUrl}${CFG.checkoutUrl.includes('?') ? '&' : '?'}plan=${id}`, '_blank', 'noopener'); return; }
       try { localStorage.setItem('chitra.plan', id); } catch { } toast(`${id === 'free' ? 'Free' : id === 'pro' ? 'Pro' : 'Business'} plan preview on`, '💎'); confetti(); openPricing();
     });
