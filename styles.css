@@ -145,6 +145,8 @@ h4{margin:16px 0 8px;font:700 11px "Space Grotesk";letter-spacing:.14em;text-tra
 
 /* ---------- stage ---------- */
 .stage-wrap{position:relative;min-width:0;min-height:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--stroke);background:rgba(8,8,15,.55)}
+.stage-wrap{display:flex;flex-direction:column}
+.stage-area{position:relative;flex:1;min-height:0}
 .stage{position:absolute;inset:0;overflow:auto;display:grid;place-items:center;padding:34px 34px 90px;
   background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.4px);background-size:24px 24px}
 .canvas-wrap{
@@ -299,3 +301,30 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500}
   background:linear-gradient(45deg,#2a2a3a 25%,transparent 25%,transparent 75%,#2a2a3a 75%),linear-gradient(45deg,#2a2a3a 25%,#3a3a4c 25%,#3a3a4c 75%,#2a2a3a 75%);background-size:20px 20px;background-position:0 0,10px 10px}
 #refineCanvas{max-width:100%;max-height:66vh;cursor:crosshair;touch-action:none}
 .row3 .btn.on{background:var(--grad2);border-color:transparent}
+
+/* ================= pages, picker tabs, custom size, templates ================= */
+.pagebar{display:flex;align-items:center;gap:12px;padding:8px 12px;margin:0 10px 10px;border-radius:16px;flex:none}
+.pages-list{display:flex;gap:8px;overflow-x:auto;flex:1;padding:2px}
+.pg{position:relative;flex:none;height:62px;min-width:46px;padding:0;border:2px solid var(--stroke);border-radius:10px;overflow:hidden;cursor:pointer;background:
+  linear-gradient(45deg,#cfcfdc 25%,transparent 25%,transparent 75%,#cfcfdc 75%),linear-gradient(45deg,#cfcfdc 25%,#f4f4fa 25%,#f4f4fa 75%,#cfcfdc 75%);background-size:10px 10px;background-position:0 0,5px 5px;transition:.15s}
+.pg:hover{transform:translateY(-2px)}
+.pg.on{border-color:var(--pink);box-shadow:0 0 0 2px rgba(255,45,149,.4)}
+.pg img{display:block;height:100%;width:auto}
+.pg .blank{display:block;width:46px;height:100%;background:#fff}
+.pg em{position:absolute;left:3px;bottom:2px;font:700 10px "Space Grotesk";font-style:normal;background:rgba(0,0,0,.65);color:#fff;border-radius:6px;padding:0 5px}
+.pg-actions{display:flex;align-items:center;gap:6px;flex:none;color:var(--muted);font-size:12px}
+.picker-top{display:flex;gap:8px;margin-bottom:10px}.picker-top .text-in{margin:0;flex:1;width:auto}
+.cs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0 6px}
+.cs-grid label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:12px;font-weight:600}
+.cs-grid input,.cs-grid select{width:100%;margin:0;font-size:15px;padding:9px 12px}
+.menu button:nth-child(4) i{background:linear-gradient(135deg,#ef476f,#ffd23f)}
+.menu button:nth-child(5) i{background:linear-gradient(135deg,var(--cyan),var(--violet))}
+.tpl .tile{min-height:92px}
+.tp1{background:linear-gradient(180deg,#ff2d95 40%,#fff7e6 40%);color:#14110f}
+.tp2{background:linear-gradient(135deg,#3a86ff,#22d3ee)}
+.tp3{background:linear-gradient(90deg,#8b5cf6 36%,#fff 36%);color:#14110f}
+.tp4{background:#fff0f6;color:#be185d;font-family:"Pacifico";font-weight:400;border:2px solid #ff2d95}
+.tp5{background:#fffdf5;color:#14110f;border:3px double #c9a227}
+.tp6{background:#1b1035;color:#ffd23f;font-family:"Bangers";font-weight:400;letter-spacing:.05em;font-size:22px}
+.tp7{background:#1e1b4b;font-family:Georgia,serif;font-style:italic}
+.tp8{background:radial-gradient(circle,#dc2626 55%,#fde047 56%)}

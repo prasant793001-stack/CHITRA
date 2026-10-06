@@ -16,7 +16,13 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 ## New in the Studio redesign
 Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
-## Pro photo tools (new)
+## Canva-style documents (new)
+- **60+ sizes**: A0–A6, Letter/Legal/Tabloid, posters & photo sizes, business card, flyer, invitation, certificate, menu, social posts/stories/covers, YouTube, presentations, plus DTF/sublimation products. Search or browse by category.
+- **Custom size** in inches / mm / cm / px at 72–300 DPI, **portrait ⇄ landscape** swap, artwork rescales when you change size.
+- **Multi-page designs** with a page strip (add / duplicate / delete) and **PDF export at true paper size** (all pages).
+- 8 new templates (poster, flyer, business card, invitation, certificate, menu, quote, sale) that adapt to any size; 10 mm safe-area guide on paper.
+
+## Pro photo tools
 - **Photos tab** – search free stock photos: Openverse (no key) or Pixabay / Pexels / Unsplash (free API key, pasted once and stored only in your browser).
 - **AI Art tab** – text-to-image via the free Pollinations service, optional auto background removal.
 - **Remove background** (in-browser AI model, quick fallback), **Magic fix**, **Enhance 2×** (upscale + sharpen), **Refine edges** brush, **die-cut sticker outline**, crop ratios, shape frames, 9 adjust sliders (incl. vibrance, temperature, hue, sharpness), 12 filters.

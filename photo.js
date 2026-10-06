@@ -45,7 +45,7 @@
     });
   }
   const needImage = () => { const o = active(); if (!isImage(o)) { toast('Select a photo first', '👆'); return null; } return o; };
-  const dpiOf = o => Math.round(300 * o.width / o.getScaledWidth());
+  const dpiOf = o => Math.round(C.dpi * o.width / o.getScaledWidth());
 
   /* ================= AI background removal (+ flood-fill fallback) ================= */
   let imglyP = null;

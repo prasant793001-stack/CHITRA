@@ -21,6 +21,7 @@
       <span class="p-text"><b id="productName">T-shirt front</b><small id="sizeInfo"></small></span>
       <span class="chev">▾</span>
     </button>
+    <button id="rotateDoc" class="ibtn" title="Swap portrait / landscape">⟳</button>
     <input id="projectName" class="project-name" value="Untitled masterpiece" aria-label="Project name" spellcheck="false">
     <span class="spacer"></span>
     <div class="group">
@@ -42,6 +43,7 @@
       <button data-tab="text"><i>🔤</i><span>Text</span></button>
       <button data-tab="shapes"><i>🔷</i><span>Shapes</span></button>
       <button data-tab="stickers"><i>😎</i><span>Stickers</span></button>
+      <button data-tab="templates"><i>🗂️</i><span>Templates</span></button>
       <button data-tab="upload"><i>🖼️</i><span>Upload</span></button>
       <button data-tab="photos"><i>🌄</i><span>Photos</span></button>
       <button data-tab="ai"><i>🤖</i><span>AI Art</span></button>
@@ -62,6 +64,25 @@
           <button data-template="blank" class="tile t4"><b>Blank<br>canvas</b></button>
         </div>
         <button id="changeProduct" class="btn wide">👕 Change product / size</button>
+      </div>
+
+      <div class="panel" data-panel="templates" hidden>
+        <h2>Templates</h2>
+        <div class="tiles tpl">
+          <button data-template="poster" class="tile tp1"><b>Poster</b></button>
+          <button data-template="flyer" class="tile tp2"><b>Flyer</b></button>
+          <button data-template="bizcard" class="tile tp3"><b>Business<br>card</b></button>
+          <button data-template="invite" class="tile tp4"><b>Invitation</b></button>
+          <button data-template="certificate" class="tile tp5"><b>Certificate</b></button>
+          <button data-template="menu" class="tile tp6"><b>Menu</b></button>
+          <button data-template="quote" class="tile tp7"><b>Quote</b></button>
+          <button data-template="sale" class="tile tp8"><b>Sale</b></button>
+          <button data-template="slogan" class="tile t1"><b>GOOD<br>VIBES</b></button>
+          <button data-template="badge" class="tile t2"><b>★ Badge</b></button>
+          <button data-template="mug" class="tile t3"><b>Mug<br>quote</b></button>
+          <button data-template="blank" class="tile t4"><b>Blank</b></button>
+        </div>
+        <p class="tip">Templates scale to whatever size you picked — A4, A3, a mug or an Instagram post.</p>
       </div>
 
       <div class="panel" data-panel="text" hidden>
@@ -187,6 +208,7 @@
 
     <!-- ============ STAGE ============ -->
     <div class="stage-wrap">
+      <div class="stage-area">
       <main class="stage" id="stage">
         <div class="canvas-wrap" id="canvasWrap">
           <canvas id="c"></canvas>
@@ -210,6 +232,12 @@
         <span class="sep"></span>
         <span class="dock-label">Preview on</span>
         <div class="bgswatches" id="bgSwatches"></div>
+      </div>
+      </div>
+      <div class="pagebar glass">
+        <div class="pages-list" id="pageList"></div>
+        <div class="pg-actions"><span id="pageCount">Page 1 / 1</span>
+          <button id="pgAdd" class="btn small">＋ Add page</button><button id="pgDup" class="btn small" title="Duplicate page">⧉</button><button id="pgDel" class="btn small danger" title="Delete page">🗑</button></div>
       </div>
     </div>
 
@@ -357,10 +385,26 @@
 <div class="modal" id="picker" hidden>
   <div class="sheet glass">
     <button class="x" data-close>✕</button>
-    <h1 id="pickerTitle">What are we printing?</h1>
-    <p class="sub">Pick a product — your canvas is set to the right size at 300 DPI.</p>
+    <h1 id="pickerTitle">What are we designing today?</h1>
+    <p class="sub">Pick a paper size, product or social format — it's set up at the right resolution for you.</p>
+    <div class="picker-top"><input id="pickerSearch" class="text-in" placeholder="Search A4, A3, poster, mug, Instagram…" autocomplete="off"><button id="customSize" class="btn">📐 Custom size</button></div>
+    <div class="chips" id="pickerTabs"></div>
     <div id="pickerGrid"></div>
-    <button id="customSize" class="btn">📐 Custom size (inches)…</button>
+  </div>
+</div>
+
+<div class="modal" id="customModal" hidden>
+  <div class="sheet glass">
+    <button class="x" data-close>✕</button>
+    <h1>Custom size</h1>
+    <div class="cs-grid">
+      <label>Width<input id="csW" type="number" step="any" min="0" value="8.27"></label>
+      <label>Height<input id="csH" type="number" step="any" min="0" value="11.69"></label>
+      <label>Unit<select id="csUnit" data-u="in"><option value="in">inches</option><option value="mm">millimetres</option><option value="cm">centimetres</option><option value="px">pixels</option></select></label>
+      <label>Resolution<select id="csDpi"><option value="300">300 DPI · print</option><option value="200">200 DPI</option><option value="150">150 DPI · large format</option><option value="96">96 DPI · screen</option><option value="72">72 DPI · web</option></select></label>
+    </div>
+    <p class="tip" id="csInfo"></p>
+    <button id="csGo" class="cta wide">Create design</button>
   </div>
 </div>
 
@@ -368,6 +412,8 @@
   <button data-export="dtf"><i>👕</i><span><b>DTF transfer</b><small>Transparent PNG · 300 DPI</small></span></button>
   <button data-export="sub"><i>☕</i><span><b>Sublimation</b><small>Mirrored PNG · 300 DPI</small></span></button>
   <button data-export="jpg"><i>🖼️</i><span><b>JPG</b><small>White background</small></span></button>
+  <button data-export="pdf"><i>📄</i><span><b>PDF · all pages</b><small>Print-ready, true paper size</small></span></button>
+  <button data-export="png"><i>🖼️</i><span><b>PNG</b><small>Transparent, current page</small></span></button>
 </div>
 
 <div class="modal" id="mockup" hidden>
@@ -428,6 +474,7 @@
 <canvas id="confetti"></canvas>
 
 <script src="vendor/fabric.min.js"></script>
+<script src="vendor/jspdf.umd.min.js"></script>
 <script src="app.js"></script>
 <script src="photo.js"></script>
 </body>
