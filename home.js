@@ -7,7 +7,6 @@
   const CATS = [['all', 'All'], ...Object.entries(C.CAT_LABEL || {})];
   const TINT = ['#efe7ff', '#dff6ff', '#fff0d9', '#e4f9e8', '#ffe6f0', '#fff6c8', '#e8ecff'];
   const CAT_ICON = { mug: 'coffee', tshirt: 'shirt', social: 'camera', story: 'smartphone', pinterest: 'pin', poster: 'image', flyer: 'newspaper', invite: 'gift', card: 'credit-card', cert: 'award', menu: 'utensils', youtube: 'video', slides: 'presentation', wallpaper: 'monitor', merch: 'shopping-bag', sticker: 'sticker' };
-  const esc0 = 0;
   const plan = () => { try { return localStorage.getItem('chitra.plan') || 'free'; } catch { return 'free'; } };
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; };
@@ -16,7 +15,13 @@
   const cache = {}; let chain = C.fontsReady;
   function thumbFor(name) {
     if (cache[name]) return Promise.resolve(cache[name]);
-    chain = chain.then(async () => { if (cache[name]) return; await C.ensureTplFonts(META[name].f); await new Promise(r => setTimeout(r, 0)); cache[name] = C.renderTemplateThumb(name, C.productByName(META[name].p), 340); });
+    chain = chain.then(async () => {
+      if (cache[name]) return; const key = `tpl:${C.TPL_VERSION}:${name}`;
+      if (META[name].gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return; } } catch { } }
+      const fontsOk = await C.ensureTplFonts(META[name].f); await new Promise(r => setTimeout(r, 0)); cache[name] = C.renderTemplateThumb(name, C.productByName(META[name].p), 340);
+      if (!fontsOk) { const u = cache[name]; setTimeout(() => { if (cache[name] === u) delete cache[name]; }, 0); return; } // never cache a fallback-font render
+      if (META[name].gen && cache[name]) C.kv.set(key, cache[name]).catch(() => { });
+    });
     return chain.then(() => cache[name]);
   }
   const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); const im = e.target; thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } }); } }), { rootMargin: '400px' }) : null;

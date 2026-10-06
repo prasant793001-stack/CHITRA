@@ -10,6 +10,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - run: npm run check
+      - run: npm run lint -- --max-warnings 20
       - run: |
           npx http-server -p 8123 -c-1 . > /dev/null 2>&1 &
           sleep 3

@@ -312,6 +312,7 @@
     $('#adminModal').hidden = false;
   }
   $('#admSave').onclick = () => {
+    let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
     try { localStorage.setItem('chitra.keys', JSON.stringify({ ...own, pixabay: $('#admPixabay').value.trim(), pexels: $('#admPexels').value.trim() })); localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
     $('#adminModal').hidden = true; toast('Saved on this device', '');
   };

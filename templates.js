@@ -454,7 +454,7 @@ Wander|Find your adventure|travel`);
   const TAGS = { mug: 'mug cup sublimation', tshirt: 'tshirt tee dtf shirt', social: 'instagram facebook post', story: 'story reel tiktok', pinterest: 'pinterest pin', poster: 'poster print a4', flyer: 'flyer business', invite: 'invitation invite', card: 'card', youtube: 'youtube thumbnail', slides: 'presentation slides deck', wallpaper: 'wallpaper desktop', merch: 'merch gift', sticker: 'sticker label' };
   const CAT_LABEL = { mug: 'Mugs', tshirt: 'T-shirts', social: 'Social posts', story: 'Stories', pinterest: 'Pinterest', poster: 'Posters', flyer: 'Flyers', invite: 'Invitations', card: 'Cards', cert: 'Certificates', menu: 'Menus', youtube: 'YouTube', slides: 'Presentations', wallpaper: 'Wallpapers', merch: 'Merch', sticker: 'Stickers' };
 
-  const TEMPLATES = C.TEMPLATES, META = C.TEMPLATE_META, FONTSOF = {};
+  const TEMPLATES = C.TEMPLATES, META = C.TEMPLATE_META;
   function register(id, name, cat, prod, spec, tags, pro) {
     META[id] = { n: name, cat, p: prod, t: tags, f: [spec.f.d, spec.f.b], pro, gen: 1 };
     TEMPLATES[id] = () => { K.clearAll(spec.free ? '' : ''); draw(spec); };
@@ -498,8 +498,14 @@ Wander|Find your adventure|travel`);
 
   /* ================= fonts must be ready before a template is drawn ================= */
   const fontOk = {};
-  C.ensureTplFonts = async (names = []) => { await Promise.all(names.filter(n => n && !fontOk[n]).map(async n => { await C.loadFont(n); try { await Promise.race([document.fonts.load(`700 40px "${n}"`), new Promise(r => setTimeout(r, 2500))]); } catch { } fontOk[n] = 1; })); };
-  const OLD = { poster: 'poster', flyer: 'flyer', bizcard: 'card', invite: 'invite', certificate: 'cert', menu: 'menu', 'story-promo': 'story' }; Object.entries(OLD).forEach(([k, v]) => { if (META[k]) META[k].cat = v; });
-  C.CAT_LABEL = CAT_LABEL; C.GEN_COUNT = total;
+  C.ensureTplFonts = async (names = []) => {
+    let all = true;
+    await Promise.all(names.filter(Boolean).map(async n => {
+      if (fontOk[n]) return; await C.loadFont(n);
+      try { const r = await Promise.race([document.fonts.load(`700 40px "${n}"`), new Promise(r => setTimeout(() => r(null), 2500))]); const r2 = await document.fonts.load(`40px "${n}"`); if ((r && r.length) || r2.length) fontOk[n] = 1; else all = false; } catch { all = false; }
+    }));
+    return all;
+  };
+  C.TPL_VERSION = '4.2'; C.CAT_LABEL = CAT_LABEL; C.GEN_COUNT = total;
   console.info('[chitra] templates ready:', Object.keys(META).length);
 })();

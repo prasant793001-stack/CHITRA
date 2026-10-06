@@ -993,6 +993,7 @@
     renderDesign.scale = scale; return el;
   }
   async function exportPDF() {
+    if (!window.jspdf) await new Promise(res => { const sc = document.createElement('script'); sc.src = 'vendor/jspdf.umd.min.js'; sc.onload = sc.onerror = res; document.head.appendChild(sc); }); // loaded on first use
     if (!window.jspdf) return toast('PDF engine failed to load', '⚠️');
     toast(`Building PDF · ${pages.length} page${pages.length > 1 ? 's' : ''}…`, '📄'); await new Promise(r => setTimeout(r, 50));
     savePage(); const keep = cur; let doc = null;
