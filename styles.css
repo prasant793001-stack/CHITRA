@@ -346,7 +346,6 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500}
   .flyout{position:fixed;left:6px;right:6px;bottom:calc(76px + env(safe-area-inset-bottom));max-height:46vh;z-index:60;width:auto;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
   .flyout.collapsed{display:none}
   .inspector{display:none;position:fixed;left:6px;right:6px;top:auto;bottom:calc(76px + env(safe-area-inset-bottom));width:auto;max-height:46vh;z-index:61;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
-  body.has-sel .inspector{display:block}
   body.has-sel .flyout{display:none}
   .dock{bottom:8px;padding:4px 8px;gap:6px}.dock .sep,.dock-label,.bgswatches,.dock input[type=range]{display:none}
   .pagebar{margin:0 4px 4px;padding:4px 8px;gap:8px}.pg{height:42px;min-width:34px}.pg-actions span{display:none}
@@ -363,3 +362,61 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500}
   html,body{width:100%;max-width:100vw;overflow-x:hidden}
 }
 @media (max-width:800px){ .p-text b{max-width:78px}.cta{padding:8px 10px;font-size:13px}.topbar{gap:4px}.group .ibtn{width:32px}#rotateDoc{width:32px} }
+
+/* ================= phone: speed, Canva-style bottom bar & sheets ================= */
+html,body{overscroll-behavior:none;touch-action:manipulation}
+.ctxbar,.sheet-head{display:none}
+@media (max-width:800px),(hover:none){
+  /* big blurs & endless animations are what make phones lag — switch them off */
+  .glass{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(24,24,40,.96)}
+  .aurora{display:none}
+  body{background:radial-gradient(70vmax 70vmax at 0 0,rgba(255,45,149,.30),transparent 70%),radial-gradient(70vmax 70vmax at 100% 35%,rgba(139,92,246,.28),transparent 70%),#08080f}
+  *:not(.spin),*:not(.spin)::before,*:not(.spin)::after{animation:none!important}
+  .canvas-wrap{box-shadow:0 6px 20px rgba(0,0,0,.55)}
+  .stage-wrap{background:#0b0b14}
+  .toast{backdrop-filter:none}
+}
+@media (max-width:800px){
+  .float-tb{display:none!important}
+  .rail button[data-tab=start]{order:99}
+  body.has-sel .rail{visibility:hidden}
+  body.has-sel .flyout{display:none}
+  .ctxbar{position:fixed;left:6px;right:6px;bottom:calc(6px + env(safe-area-inset-bottom));height:70px;z-index:62;display:flex;gap:2px;overflow-x:auto;padding:5px;scrollbar-width:none;align-items:stretch}
+  .ctxbar::-webkit-scrollbar{display:none}
+  .ctxbar[hidden]{display:none}
+  .ctxbar button{flex:0 0 66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:0;color:var(--text);border-radius:14px;font:600 11px "Space Grotesk";padding:4px 0;cursor:pointer}
+  .ctxbar button i{font-style:normal;font-size:21px;line-height:1}
+  .ctxbar button.on{background:var(--grad)}
+  .ctxbar button.danger{color:#ff8a9a}
+  .inspector{display:none;left:6px;right:6px;bottom:calc(82px + env(safe-area-inset-bottom));height:34vh;max-height:34vh;width:auto;padding:0 14px 14px;overflow:auto;background:rgb(24,24,40)}
+  body.sheet-open .inspector{display:block}
+  body.sheet-open .workspace{padding-bottom:calc(34vh + 6px)} /* canvas shrinks so what you edit stays visible */
+  body.sheet-open .dock,body.sheet-open .pagebar{display:none}
+  .inspector .tabs,.inspector #emptyProps{display:none}
+  .sheet-head{display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:3;margin:0 -14px 6px;padding:10px 14px;background:rgb(24,24,40);border-radius:18px 18px 0 0}
+  .sheet-head b{font:800 16px "Bricolage Grotesque"}
+  .slider-row{margin:12px 0} input[type=range]{height:28px}
+  .swatches{grid-template-columns:repeat(8,1fr)}
+  .btn,.ibtn,select{min-height:40px}
+  .inspector[data-focus="font"] [data-s]:not([data-s~="font"]){display:none}
+  .inspector[data-focus="colour"] [data-s]:not([data-s~="colour"]){display:none}
+  .inspector[data-focus="outline"] [data-s]:not([data-s~="outline"]){display:none}
+  .inspector[data-focus="effects"] [data-s]:not([data-s~="effects"]){display:none}
+  .inspector[data-focus="spacing"] [data-s]:not([data-s~="spacing"]){display:none}
+  .inspector[data-focus="arch"] [data-s]:not([data-s~="arch"]){display:none}
+  .inspector[data-focus="position"] [data-s]:not([data-s~="position"]){display:none}
+  .inspector[data-focus="adjust"] [data-s]:not([data-s~="adjust"]){display:none}
+  .inspector[data-focus="filters"] [data-s]:not([data-s~="filters"]){display:none}
+  .inspector[data-focus="crop"] [data-s]:not([data-s~="crop"]){display:none}
+  .inspector[data-focus="sticker"] [data-s]:not([data-s~="sticker"]){display:none}
+}
+
+.only-mobile{display:none}
+#moreMenu{top:64px;z-index:95}
+@media (max-width:800px){
+  .only-mobile{display:inline-grid;flex:none}
+  html,body{touch-action:pan-x pan-y}
+  #moreMenu i{background:var(--grad2)}
+  #moreMenu button:nth-child(1) i{background:var(--grad)}
+  #moreMenu button{padding:8px}
+}

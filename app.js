@@ -3,6 +3,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const pick = a => a[Math.floor(Math.random() * a.length)];
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData'];
   let DPI = 300;
   const FONTS = ['Fredoka', 'Bangers', 'Anton', 'Bebas Neue', 'Chewy', 'Lobster', 'Pacifico', 'Permanent Marker', 'Righteous',
@@ -132,27 +133,36 @@
 
   /* ================= history ================= */
   const history = { stack: [], idx: -1, busy: false };
-  const snapshot = () => JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: canvas.toJSON(EXTRA) });
-  function commit() {
-    if (history.busy) return;
+  // Big image data URLs are stored once and referenced by id in every snapshot (keeps undo light on phones).
+  const imgStore = new Map(), imgIds = new Map(); let imgSeq = 0; const TOK = 'chitra-img:';
+  const walkObjs = (objs, fn) => (objs || []).forEach(o => { fn(o); if (o.objects) walkObjs(o.objects, fn); if (o.clipPath) fn(o.clipPath); });
+  const shrink = j => { walkObjs(j.objects, o => { if (typeof o.src === 'string' && o.src.length > 4000) { let id = imgIds.get(o.src); if (id === undefined) { id = ++imgSeq; imgIds.set(o.src, id); imgStore.set(id, o.src); } o.src = TOK + id; } }); return j; };
+  const expand = str => str.replace(/chitra-img:(\d+)/g, (m, id) => imgStore.get(+id) ?? m);
+  const parseSnap = json => { const d = JSON.parse(json); walkObjs(d.canvas.objects, o => { if (typeof o.src === 'string' && o.src.startsWith(TOK)) o.src = imgStore.get(+o.src.slice(TOK.length)) || o.src; }); return d; };
+  const snapshot = () => JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: shrink(canvas.toJSON(EXTRA)) });
+  let commitT = null;
+  function doCommit() {
+    commitT = null; if (history.busy) return;
     history.stack = history.stack.slice(0, history.idx + 1);
     history.stack.push(snapshot());
-    if (history.stack.length > 40) history.stack.shift();
+    if (history.stack.length > 30) history.stack.shift();
     history.idx = history.stack.length - 1;
-    renderLayers(); refreshUsage(); schedThumb();
+    renderLayers(); refreshUsage(); schedThumb(); schedSave();
   }
+  function commit() { if (history.busy) return; clearTimeout(commitT); commitT = setTimeout(doCommit, 140); }
+  const flushCommit = () => { if (commitT) { clearTimeout(commitT); doCommit(); } };
   function restore(json) {
     history.busy = true;
-    const d = JSON.parse(json);
+    const d = parseSnap(json);
     if (d.name) $('#projectName').value = d.name;
     setSize(d.W, d.H, false, undefined, d.dpi);
     canvas.loadFromJSON(d.canvas, () => {
       syncBg(); canvas.renderAll(); history.busy = false; refreshProps(); renderLayers(); refreshUsage();
     });
   }
-  const undo = () => { if (history.idx > 0) restore(history.stack[--history.idx]); };
-  const redo = () => { if (history.idx < history.stack.length - 1) restore(history.stack[++history.idx]); };
-  ['object:added', 'object:removed', 'object:modified'].forEach(e => canvas.on(e, commit));
+  const undo = () => { flushCommit(); if (history.idx > 0) restore(history.stack[--history.idx]); };
+  const redo = () => { flushCommit(); if (history.idx < history.stack.length - 1) restore(history.stack[++history.idx]); };
+  ['object:added', 'object:removed', 'object:modified', 'text:editing:exited'].forEach(e => canvas.on(e, commit));
 
   /* ================= size, zoom, guides ================= */
   function applyZoom() {
@@ -161,12 +171,10 @@
     canvas.setDimensions({ width: W * zoom, height: H * zoom });
     $('#zoomLabel').textContent = Math.round(zoom * 100) + '%';
     $('#zoomSlider').value = Math.round(zoom * 100);
-    drawGuides(); placeFloat();
+    placeFloat();
   }
-  function fit() {
-    const s = $('#stage');
-    zoom = Math.min((s.clientWidth - 70) / W, (s.clientHeight - 150) / H, 1); applyZoom();
-  }
+  const fitZoom = () => { const s = $('#stage'); return Math.min((s.clientWidth - 40) / W, (s.clientHeight - (isMobile() ? 70 : 150)) / H, 1); };
+  function fit() { lastW = $('#stage').clientWidth; zoom = fitZoom(); applyZoom(); }
   function drawGuides() {
     const g = $('#guides'); g.hidden = !$('#showGuides').checked; g.innerHTML = '';
     const pct = (px, total) => (px / total) * 100 + '%';
@@ -198,7 +206,7 @@
     let p = prod && prod.w === w && prod.h === h ? prod : (PRODUCTS.find(x => exact(x) && (g === undefined || x.guide === g)) || PRODUCTS.find(exact));
     if (!p) { const sw = PRODUCTS.find(x => swapped(x) && (g === undefined || x.guide === g)) || PRODUCTS.find(swapped); if (sw) p = { ...sw, w, h, name: `${sw.name} · ${w > h ? 'landscape' : 'portrait'}` }; }
     p ||= { cat: 'custom', icon: '📐', name: 'Custom size', w, h, guide: 'none', dpi: DPI };
-    guide = g ?? p.guide; setProduct(p); fit();
+    guide = g ?? p.guide; setProduct(p); fit(); drawGuides();
     if (record) commit();
   }
   // Changing size keeps your artwork, scaled to fit and centred.
@@ -212,7 +220,10 @@
   $('#zoomSlider').oninput = e => { zoom = e.target.value / 100; applyZoom(); };
   $('#zoomFit').onclick = fit;
   $('#showGuides').onchange = drawGuides;
-  window.addEventListener('resize', fit);
+  let rzT, lastW = 0;
+  window.addEventListener('resize', () => { // ignore height-only changes (phone keyboard / address bar) so your zoom isn't reset
+    clearTimeout(rzT); rzT = setTimeout(() => { const w = $('#stage').clientWidth; if (Math.abs(w - lastW) > 40) { lastW = w; fit(); } }, 200);
+  });
   // two-finger pinch to zoom (phones / tablets)
   let pinch = null; const tdist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
   $('#stage').addEventListener('touchstart', e => { if (e.touches.length === 2) pinch = { d: tdist(e.touches), z: zoom }; }, { passive: true });
@@ -288,6 +299,7 @@
   function place(o) {
     o.set({ left: W / 2, top: H / 2, originX: 'center', originY: 'center' });
     canvas.add(o); canvas.setActiveObject(o); canvas.requestRenderAll();
+    if (isMobile()) closeSheets(); // Canva-style: panel tucks away so you can edit what you just added
   }
   const shadow = (color, k, blur = 0) => new fabric.Shadow({ color, offsetX: u() * k, offsetY: u() * k, blur });
   function gradFill(o, [a, b]) {
@@ -497,6 +509,7 @@
   function loadTemplate(name) {
     history.busy = true; TEMPLATES[name](); history.busy = false;
     canvas.discardActiveObject(); canvas.renderAll(); commit(); refreshProps();
+    if (isMobile()) closeSheets();
   }
   $$('[data-template]').forEach(b => b.onclick = () => {
     if (canvas.getObjects().length && !confirm('Replace your current design with this quick start?')) return;
@@ -594,6 +607,7 @@
     await cloneN(o, n); pack(); confetti(innerWidth / 2, innerHeight / 2, 80); toast(`Filled the sheet with ${n}`, '🪄');
   };
   function refreshUsage() {
+    if ($('[data-panel=print]').hidden) return;
     const area = canvas.getObjects().filter(o => o.visible).reduce((s, o) => { const r = o.getBoundingRect(true, true); return s + r.width * r.height; }, 0);
     const pct = Math.min(100, Math.round((area / (W * H)) * 100));
     $('#usageBar').style.width = pct + '%'; $('#usageText').textContent = `Sheet usage: ${pct}%`;
@@ -657,7 +671,7 @@
   const layerIcon = o => isArch(o) ? '⌒' : isText(o) ? '🔤' : isImage(o) ? '🖼️' : '◆';
   let dragIdx = null;
   function renderLayers() {
-    const ul = $('#layers'); if (!ul) return;
+    const ul = $('#layers'); if (!ul || $('#tab-layers').hidden) return;
     const objs = canvas.getObjects(); ul.innerHTML = ''; $('#layersEmpty').hidden = objs.length > 0;
     [...objs].reverse().forEach((o, li) => {
       const row = document.createElement('li'); row.draggable = true; row.className = o === active() ? 'sel' : '';
@@ -730,7 +744,7 @@
   function refreshProps() {
     const o = active();
     $('#emptyProps').hidden = !!o; $('#propsBody').hidden = !o; document.body.classList.toggle('has-sel', !!o);
-    renderLayers();
+    renderLayers(); updateCtx();
     if (!o) return;
     const arch = isArch(o), fillV = arch ? o.archData.fill : o.fill, strokeV = arch ? o.archData.stroke : o.stroke;
     $('#textSec').hidden = !(isText(o) || arch); $('#imageSec').hidden = !isImage(o); $('#archSec').hidden = !arch;
@@ -757,7 +771,9 @@
       else { el.textContent = ratio >= 1 ? `✔ Crisp — ${Math.round(ratio * 100)}% of original resolution` : `⚠ Enlarged ${Math.round(100 / ratio)}% — may look soft`; el.classList.toggle('warn', ratio < 1); }
     }
   }
-  ['selection:created', 'selection:updated', 'selection:cleared', 'object:rotating', 'object:scaling'].forEach(e => canvas.on(e, refreshProps));
+  let rafP = 0; const refreshSoon = () => { if (!rafP) rafP = requestAnimationFrame(() => { rafP = 0; refreshProps(); }); };
+  ['selection:created', 'selection:updated', 'selection:cleared'].forEach(e => canvas.on(e, refreshProps));
+  ['object:rotating', 'object:scaling'].forEach(e => canvas.on(e, refreshSoon));
 
   const bind = (sel, prop, conv = v => v, evt = 'input') => {
     const el = $(sel);
@@ -845,7 +861,7 @@
   const slug = () => ($('#projectName').value || 'design').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'design';
   $('#saveProject').onclick = () => {
     savePage();
-    const url = URL.createObjectURL(new Blob([JSON.stringify({ chitra: 2, cur, name: $('#projectName').value, pages: pages.map(p => p.json) })], { type: 'application/json' }));
+    const url = URL.createObjectURL(new Blob([expand(JSON.stringify({ chitra: 2, cur, name: $('#projectName').value, pages: pages.map(p => p.json) }))], { type: 'application/json' }));
     download(url, `${slug()}.chitra.json`); setTimeout(() => URL.revokeObjectURL(url), 1000); toast('Project saved', '💾');
   };
   $('#openProject').onchange = e => {
@@ -854,7 +870,7 @@
     r.onload = () => {
       try {
         welcome = false; const d = JSON.parse(r.result);
-        if (d.chitra === 2) { pages.length = 0; d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); if (d.name) $('#projectName').value = d.name; loadPage(Math.min(d.cur || 0, pages.length - 1)); }
+        if (d.chitra === 2) loadProject(d);
         else { restore(r.result); setTimeout(commit, 80); }
         toast('Project opened', '📂');
       } catch { alert('That is not a Chitra project file.'); }
@@ -865,12 +881,12 @@
   // Write the print resolution (300 DPI) into the file so RIP/print software sizes it correctly.
   const CRC_T = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
   const crc32 = b => { let c = 0xFFFFFFFF; for (const x of b) c = CRC_T[(c ^ x) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
-  function stampDpi(bytes, fmt) {
+  function stampDpi(bytes, fmt, dpi = DPI) {
     if (fmt === 'jpeg') {
-      if (bytes[2] === 0xFF && bytes[3] === 0xE0) { bytes[13] = 1; bytes[14] = bytes[16] = DPI >> 8; bytes[15] = bytes[17] = DPI & 255; }
+      if (bytes[2] === 0xFF && bytes[3] === 0xE0) { bytes[13] = 1; bytes[14] = bytes[16] = dpi >> 8; bytes[15] = bytes[17] = dpi & 255; }
       return bytes;
     }
-    const ppm = Math.round(DPI / 0.0254), chunk = new Uint8Array(21), dv = new DataView(chunk.buffer);
+    const ppm = Math.round(dpi / 0.0254), chunk = new Uint8Array(21), dv = new DataView(chunk.buffer);
     dv.setUint32(0, 9); chunk.set([0x70, 0x48, 0x59, 0x73], 4); dv.setUint32(8, ppm); dv.setUint32(12, ppm); chunk[16] = 1;
     dv.setUint32(17, crc32(chunk.subarray(4, 17)));
     const out = new Uint8Array(bytes.length + 21);
@@ -881,8 +897,10 @@
     canvas.discardActiveObject(); canvas.renderAll();
     const prevBg = canvas.backgroundColor;
     if (white && !prevBg) canvas.backgroundColor = '#ffffff';
-    const el = canvas.toCanvasElement(1 / zoom);
-    canvas.backgroundColor = prevBg; canvas.renderAll(); return el;
+    // Phones can't make canvases bigger than ~16 megapixels (iOS silently returns a blank image), so cap there.
+    const cap = isCoarse ? 16e6 : 120e6, scale = Math.min(1, Math.sqrt(cap / (W * H)));
+    let el; try { el = canvas.toCanvasElement(scale / zoom); } finally { canvas.backgroundColor = prevBg; canvas.renderAll(); }
+    renderDesign.scale = scale; return el;
   }
   async function exportPDF() {
     if (!window.jspdf) return toast('PDF engine failed to load', '⚠️');
@@ -899,16 +917,18 @@
   function exportFile(kind) {
     if (kind === 'pdf') return exportPDF();
     const fmt = kind === 'jpg' ? 'jpeg' : 'png', mime = `image/${fmt}`;
-    let el = renderDesign(kind === 'jpg');
+    let el; try { el = renderDesign(kind === 'jpg'); } catch (err) { console.warn(err); return toast('An image on this page blocks exporting — upload it from your device instead', '⚠️'); }
+    const sc = renderDesign.scale || 1, outDpi = Math.round(DPI * sc);
     if (kind === 'sub') {
       const m = document.createElement('canvas'); m.width = el.width; m.height = el.height;
       const g = m.getContext('2d'); g.translate(m.width, 0); g.scale(-1, 1); g.drawImage(el, 0, 0); el = m;
     }
     el.toBlob(async blob => {
-      const bytes = stampDpi(new Uint8Array(await blob.arrayBuffer()), fmt);
+      const bytes = stampDpi(new Uint8Array(await blob.arrayBuffer()), fmt, outDpi);
       const url = URL.createObjectURL(new Blob([bytes], { type: mime }));
       download(url, `${slug()}-${kind}-${W}x${H}.${fmt === 'jpeg' ? 'jpg' : 'png'}`);
       setTimeout(() => URL.revokeObjectURL(url), 2000);
+      if (sc < 1) toast(`Phone limit: saved at ${el.width}×${el.height}px (${outDpi} DPI). Use a computer for full size.`, 'ℹ️');
       confetti(); toast(kind === 'sub' ? 'Mirrored file ready for sublimation' : kind === 'dtf' ? 'Transparent DTF file ready' : kind === 'png' ? 'PNG saved' : 'JPG saved', '🎉');
     }, mime, 0.95);
   }
@@ -933,6 +953,7 @@
     { n: 'Export PDF (all pages)', i: '📄', k: 'download print a4 a3', run: () => exportFile('pdf') },
     { n: 'Export PNG', i: '🖼️', k: 'download', run: () => exportFile('png') },
     { n: 'Add page', i: '➕', k: 'new page', run: () => addPage(false) },
+    { n: 'New design', i: '🆕', k: 'start over blank', run: newDesign },
     { n: 'Swap portrait / landscape', i: '⟳', k: 'rotate orientation', run: () => $('#rotateDoc').click() },
     { n: 'Show mockup preview', i: '👀', k: 'shirt mug preview', run: () => chitra.openMockup() },
     { n: 'Remove background (AI)', i: '✂️', k: 'cutout photo', run: () => chitra.removeBg() },
@@ -970,9 +991,9 @@
   const thumb = () => { try { return canvas.toDataURL({ format: 'png', multiplier: 150 / (W * zoom) }); } catch { return null; } };
   let thumbT = null;
   function schedThumb() { clearTimeout(thumbT); thumbT = setTimeout(() => { pages[cur].thumb = thumb(); const im = $('.pg.on img'); if (im && pages[cur].thumb) im.src = pages[cur].thumb; }, 450); }
-  function savePage() { pages[cur] = { json: snapshot(), thumb: thumb(), hist: { stack: history.stack.slice(), idx: history.idx } }; }
+  function savePage() { flushCommit(); pages[cur] = { json: snapshot(), thumb: thumb(), hist: { stack: history.stack.slice(), idx: history.idx } }; }
   function loadPage(i, cb) {
-    cur = i; const p = pages[i], d = JSON.parse(p.json); history.busy = true;
+    cur = i; const p = pages[i], d = parseSnap(p.json); history.busy = true;
     setSize(d.W, d.H, false, undefined, d.dpi);
     canvas.loadFromJSON(d.canvas, () => {
       syncBg(); canvas.renderAll(); history.busy = false;
@@ -1002,6 +1023,138 @@
   }
   $('#pgAdd').onclick = () => addPage(false); $('#pgDup').onclick = () => addPage(true); $('#pgDel').onclick = deletePage;
 
+  /* ================= phone / touch: gestures ================= */
+  const mobileQ = matchMedia('(max-width:800px)'), isCoarse = matchMedia('(pointer:coarse)').matches;
+  const isMobile = () => mobileQ.matches;
+  if (isCoarse) { // fat-finger friendly handles, no drag-selection box (empty-space drag pans instead)
+    fabric.Object.prototype.set({ cornerSize: 26, touchCornerSize: 52, padding: 8, borderScaleFactor: 3 });
+    canvas.selection = false; canvas.targetFindTolerance = 14;
+  }
+  const stageEl = $('#stage'), wrapEl = $('#canvasWrap');
+  let gest = null, touchBlock = false;
+  const two = e => { const a = e.touches[0], b = e.touches[1]; return { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) || 1, a: Math.atan2(b.clientY - a.clientY, b.clientX - a.clientX), mx: (a.clientX + b.clientX) / 2, my: (a.clientY + b.clientY) / 2 }; };
+  // Capture phase: when two fingers are down we own the gesture, so Fabric (and the browser) never see it.
+  stageEl.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      const o = active(), s0 = two(e);
+      canvas._currentTransform = null; canvas._groupSelector = null; // drop any one-finger drag Fabric had started
+      if (o && !o.locked && !o.isEditing) gest = { mode: 'obj', o, s0, sx: o.scaleX, sy: o.scaleY, ang: o.angle || 0, c: o.getCenterPoint() };
+      else { const r = wrapEl.getBoundingClientRect(); gest = { mode: 'page', s0, z0: zoom, k: 1, fx: s0.mx - r.left, fy: s0.my - r.top, s1: s0 }; wrapEl.style.transformOrigin = `${gest.fx}px ${gest.fy}px`; }
+      touchBlock = true; e.preventDefault(); e.stopPropagation();
+    } else if (touchBlock) { e.preventDefault(); e.stopPropagation(); }
+  }, { capture: true, passive: false });
+  stageEl.addEventListener('touchmove', e => {
+    if (!touchBlock) return;
+    if (gest && e.touches.length >= 2) {
+      const s1 = two(e), k = s1.d / gest.s0.d;
+      if (gest.mode === 'obj') {
+        const o = gest.o; let ang = gest.ang + ((s1.a - gest.s0.a) * 180) / Math.PI; const snap = Math.round(ang / 45) * 45; if (Math.abs(ang - snap) < 3) ang = snap; // magnetic 45° steps
+        const kk = clamp(k, 0.05, 40);
+        o.set({ scaleX: gest.sx * kk, scaleY: gest.sy * kk, angle: ang });
+        o.setPositionByOrigin(new fabric.Point(gest.c.x + (s1.mx - gest.s0.mx) / zoom, gest.c.y + (s1.my - gest.s0.my) / zoom), 'center', 'center');
+        o.setCoords(); canvas.requestRenderAll(); placeFloat();
+      } else {
+        gest.k = clamp(k, 0.02 / gest.z0, 4 / gest.z0); gest.s1 = s1; // smooth CSS pinch; real re-render happens once on release
+        wrapEl.style.transform = `translate(${s1.mx - gest.s0.mx}px,${s1.my - gest.s0.my}px) scale(${gest.k})`;
+      }
+    }
+    e.preventDefault(); e.stopPropagation();
+  }, { capture: true, passive: false });
+  function endGesture(e) {
+    if (!touchBlock) return;
+    if (gest && e.touches.length < 2) {
+      if (gest.mode === 'obj') { canvas.fire('object:modified', { target: gest.o }); refreshProps(); }
+      else {
+        wrapEl.style.transform = ''; wrapEl.style.transformOrigin = '';
+        zoom = gest.z0 * gest.k; applyZoom();
+        const r = wrapEl.getBoundingClientRect();
+        stageEl.scrollLeft += r.left + (gest.fx / gest.z0) * zoom - gest.s1.mx; stageEl.scrollTop += r.top + (gest.fy / gest.z0) * zoom - gest.s1.my;
+      }
+      gest = null;
+    }
+    if (e.touches.length === 0) touchBlock = false;
+    e.preventDefault(); e.stopPropagation();
+  }
+  ['touchend', 'touchcancel'].forEach(ev => stageEl.addEventListener(ev, endGesture, { capture: true, passive: false }));
+  // one finger on empty space pans the page (Canva-style)
+  let pan = null; const cxy = ev => ev.touches?.[0] || ev.changedTouches?.[0] || ev;
+  canvas.on('mouse:down', o => { if (isMobile()) closeSheets(); if (isCoarse && !o.target) { const p = cxy(o.e); pan = { x: p.clientX, y: p.clientY, l: stageEl.scrollLeft, t: stageEl.scrollTop }; } });
+  canvas.on('mouse:move', o => { if (pan) { const p = cxy(o.e); stageEl.scrollLeft = pan.l - (p.clientX - pan.x); stageEl.scrollTop = pan.t - (p.clientY - pan.y); } });
+  canvas.on('mouse:up', () => { pan = null; });
+
+  /* ================= phone: Canva-style contextual bottom bar ================= */
+  const CTX = {
+    text: [['✏️', 'Edit', 'act', 'edit'], ['🔤', 'Font', 'focus', 'font'], ['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['↔️', 'Spacing', 'focus', 'spacing'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+    arch: [['🔤', 'Font', 'focus', 'font'], ['⌒', 'Curve', 'focus', 'arch'], ['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+    shape: [['🎨', 'Colour', 'focus', 'colour'], ['🅾️', 'Outline', 'focus', 'outline'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+    image: [['✂️', 'Remove BG', 'act', 'removeBg'], ['🪄', 'Magic fix', 'act', 'magicFix'], ['🔍', 'Enhance', 'act', 'enhance'], ['🎚️', 'Adjust', 'focus', 'adjust'], ['🎞️', 'Filters', 'focus', 'filters'], ['⬚', 'Crop', 'focus', 'crop'], ['🖌️', 'Refine', 'act', 'refine'], ['🏷️', 'Sticker', 'focus', 'sticker'], ['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+    group: [['✨', 'Effects', 'focus', 'effects'], ['📐', 'Position', 'focus', 'position'], ['⧉', 'Copy', 'act', 'dup'], ['🗑', 'Delete', 'act', 'del']],
+  };
+  CTX.multi = CTX.group;
+  const FOCUS_TITLES = { font: 'Font', colour: 'Colour', outline: 'Outline', effects: 'Effects', spacing: 'Spacing', arch: 'Curve text', position: 'Position', adjust: 'Adjust photo', filters: 'Filters', crop: 'Crop & frame', sticker: 'Sticker outline' };
+  const ctxType = o => !o ? null : o.type === 'activeSelection' ? 'multi' : isArch(o) ? 'arch' : isText(o) ? 'text' : isImage(o) ? 'image' : o.type === 'group' ? 'group' : 'shape';
+  const ACTS = {
+    edit: () => { const o = active(); if (o && isText(o) && !isArch(o)) { closeSheets(); o.enterEditing(); o.selectAll(); o.hiddenTextarea?.focus(); canvas.requestRenderAll(); } },
+    dup: () => duplicate(), del: () => remove(),
+    removeBg: () => chitra.removeBg(), magicFix: () => chitra.magicFix(), enhance: () => chitra.enhance(), refine: () => chitra.refine(),
+  };
+  let ctxKey = null;
+  function setCtxActive(k) { $$('#ctxBar button').forEach(b => b.classList.toggle('on', !!k && b.dataset.key === k)); }
+  let zoomBeforeSheet = null; // the canvas tucks above the sheet while you edit, then returns to your zoom
+  function sheetLayout(open) {
+    requestAnimationFrame(() => {
+      if (open) { if (zoomBeforeSheet === null) zoomBeforeSheet = zoom; zoom = Math.min(zoom, fitZoom()); applyZoom(); }
+      else if (zoomBeforeSheet !== null) { zoom = zoomBeforeSheet; zoomBeforeSheet = null; applyZoom(); }
+    });
+  }
+  function closeSheets() {
+    const was = document.body.classList.contains('sheet-open');
+    document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); setCtxActive(null);
+    $('#flyout').classList.add('collapsed'); if (was) sheetLayout(false);
+  }
+  function openFocus(k) {
+    const ins = $('#inspector'), same = ins.dataset.focus === k && document.body.classList.contains('sheet-open');
+    if (same) { closeSheets(); return; }
+    ins.dataset.focus = k; $('#sheetTitle').textContent = FOCUS_TITLES[k] || 'Edit'; $('#tab-design').hidden = false; $('#tab-layers').hidden = true;
+    document.body.classList.add('sheet-open'); ins.scrollTop = 0; setCtxActive(k); sheetLayout(true);
+  }
+  function updateCtx() {
+    const bar = $('#ctxBar'), t = ctxType(active());
+    if (!t || !isMobile()) { bar.hidden = true; ctxKey = null; if (!t && document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); sheetLayout(false); } return; }
+    if (ctxKey !== t) {
+      ctxKey = t; bar.innerHTML = CTX[t].map(([i, n, kind, key]) => `<button data-kind="${kind}" data-key="${key}" class="${key === 'del' ? 'danger' : ''}"><i>${i}</i>${n}</button>`).join('');
+      $$('#ctxBar button').forEach(b => b.onclick = () => b.dataset.kind === 'focus' ? openFocus(b.dataset.key) : ACTS[b.dataset.key]());
+      bar.scrollLeft = 0; $('#inspector').removeAttribute('data-focus'); if (document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); sheetLayout(false); }
+    }
+    bar.hidden = false;
+  }
+  $('#sheetClose').onclick = () => { $('#tab-design').hidden = false; $('#tab-layers').hidden = true; document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); setCtxActive(null); sheetLayout(false); };
+  mobileQ.addEventListener?.('change', () => { updateCtx(); fit(); });
+
+  /* ================= autosave (IndexedDB) & new design ================= */
+  const kv = {
+    db: () => new Promise((res, rej) => { const r = indexedDB.open('chitra', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }),
+    async set(k, v) { try { const db = await kv.db(); await new Promise(res => { const t = db.transaction('kv', 'readwrite'); t.objectStore('kv').put(v, k); t.oncomplete = t.onerror = () => res(); }); } catch { } },
+    async get(k) { try { const db = await kv.db(); return await new Promise(res => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => res(null); }); } catch { return null; } },
+  };
+  let saveT = null;
+  function schedSave() {
+    clearTimeout(saveT);
+    saveT = setTimeout(() => { try { const data = { chitra: 2, cur, name: $('#projectName').value, pages: pages.map((p, i) => i === cur ? snapshot() : p.json) }; kv.set('autosave', expand(JSON.stringify(data))); } catch { } }, 1800);
+  }
+  function loadProject(d) {
+    welcome = false; pages.length = 0;
+    d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); if (d.name) $('#projectName').value = d.name;
+    loadPage(Math.min(d.cur || 0, pages.length - 1));
+  }
+  function newDesign() {
+    if (!confirm('Start a new design? Your current one stays saved in this browser until you begin editing the new one.')) return;
+    flushCommit(); pages.length = 0; pages.push({ json: null, thumb: null, hist: null }); cur = 0; welcome = true;
+    history.busy = true; canvas.clear(); history.busy = false; canvas.setBackgroundColor('', () => { syncBg(); canvas.renderAll(); });
+    history.stack = []; history.idx = -1; closeSheets(); refreshProps(); renderPages(); openPicker();
+  }
+  $('#newDesign').onclick = newDesign;
+
   /* ================= rail tabs & inspector tabs ================= */
   $$('#rail [data-tab]').forEach(b => b.onclick = () => {
     const fly = $('#flyout'), already = b.classList.contains('on');
@@ -1010,6 +1163,7 @@
     $$('#rail [data-tab]').forEach(x => x.classList.toggle('on', x === b));
     $$('.panel').forEach(p => p.hidden = p.dataset.panel !== b.dataset.tab);
     if (wasCollapsed) setTimeout(fit, 30);
+    refreshUsage();
   });
   $$('[data-itab]').forEach(b => b.onclick = () => {
     $$('[data-itab]').forEach(x => x.classList.toggle('on', x === b));
@@ -1037,13 +1191,25 @@
     }
   });
   $('#undo').onclick = undo; $('#redo').onclick = redo;
+  const more = $('#moreMenu');
+  $('#moreBtn').onclick = e => { e.stopPropagation(); more.hidden = !more.hidden; $('#exportMenu').hidden = true; };
+  document.addEventListener('click', e => { if (!more.hidden && !more.contains(e.target)) more.hidden = true; });
+  const MORE = {
+    new: newDesign, save: () => $('#saveProject').click(), open: () => $('#openProject').click(), mock: () => chitra.openMockup(), cmd: openCmd,
+    layers: () => { closeSheets(); const ins = $('#inspector'); ins.dataset.focus = 'layers'; $('#sheetTitle').textContent = 'Layers'; $('#tab-design').hidden = true; $('#tab-layers').hidden = false; document.body.classList.add('sheet-open'); renderLayers(); sheetLayout(true); },
+  };
+  $$('[data-more]').forEach(b => b.onclick = () => { more.hidden = true; MORE[b.dataset.more](); });
 
   /* ================= boot ================= */
   setSize(3300, 3900, false, 'shirt');
-  history.busy = true; TEMPLATES.slogan(); history.busy = false; canvas.renderAll(); commit(); pages[0] = { json: snapshot(), thumb: null, hist: null }; renderPages();
+  history.busy = true; TEMPLATES.slogan(); history.busy = false; canvas.renderAll(); doCommit(); pages[0] = { json: snapshot(), thumb: null, hist: null }; renderPages();
   if (matchMedia('(max-width:800px)').matches) $('#flyout').classList.add('collapsed'); // phones: tools open as a bottom sheet on tap
   let seen = false; try { seen = !!localStorage.getItem('chitra.seen'); } catch { }
   if (seen) welcome = false; else openPicker();
+  kv.get('autosave').then(saved => { // returning visitors get their last design back
+    if (!saved) return;
+    try { const d = JSON.parse(saved); if (d.chitra === 2 && d.pages?.length) { $('#picker').hidden = true; loadProject(d); toast('Welcome back — your last design is restored', '👋'); } } catch { }
+  });
   // Re-measure text once web fonts have arrived so layout/export match what you see.
   if (document.fonts) {
     Promise.all(FONTS.map(f => document.fonts.load(`40px "${f}"`).catch(() => { }))).then(() => {
@@ -1057,5 +1223,5 @@
     $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
     history, get dpi() { return DPI; }, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
   };
-  window.chitra = api; window.addEventListener('beforeunload', e => { if (history.idx > 0) { e.preventDefault(); e.returnValue = ''; } }); document.dispatchEvent(new CustomEvent('chitra:ready'));
+  window.chitra = api; document.dispatchEvent(new CustomEvent('chitra:ready'));
 })();

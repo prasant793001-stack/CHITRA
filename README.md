@@ -16,7 +16,13 @@ Run: `python3 -m http.server 8000` and open http://localhost:8000 (needs interne
 ## New in the Studio redesign
 Dark glass UI with animated gradients · welcome product picker · **Mockup preview** (shirt/mug, any colour, save as image) · **Magic cut-out** (remove photo background) · **Arch/curved text** · gradient fills · palettes, *Shuffle colours*, *Surprise me*, *Sparkle burst*, sticker outline · floating toolbar on selection · drag-to-reorder **Layers** · **Fill sheet** + sheet-usage meter · preview transparent designs on any shirt colour · **Ctrl/⌘+K command palette** · confetti.
 
-## Phone & install (new)
+## Phone editing (Canva-style)
+- **Pinch / twist with two fingers on a selected item** scales and rotates *that item* (with magnetic 45° snapping); with nothing selected, pinch zooms the page and one finger on empty space pans it.
+- Pick a tool from the bottom bar → the panel **closes as soon as you add something**, and a compact **context bar** (Font, Colour, Outline, Effects, Position, Copy, Delete — or photo tools for images) takes its place. Tap a tool to open just that control in a small sheet; tap the canvas to close it.
+- Autosaves to your browser (IndexedDB) and restores on return; ⋯ menu has New / Layers / Mockup / Save / Open.
+- Performance: heavy blur/animation effects are switched off on phones, undo history stores images once, exports are capped to what phones can render (16 MP).
+
+## Phone & install
 Works on phones/tablets: bottom tool bar, tool and property sheets that slide up, pinch-to-zoom. It is a **PWA** — host it on any HTTPS site (GitHub Pages, Netlify…), then "Add to Home Screen" (Android/iOS) or "Install" (desktop Chrome/Edge) and it opens like an app, with offline support for the editor itself.
 
 ## Canva-style documents

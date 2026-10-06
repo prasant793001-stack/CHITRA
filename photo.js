@@ -29,7 +29,7 @@
   }
   function replaceImage(o, src, { sameScale = false, pristine = null } = {}) {
     return new Promise(resolve => {
-      const url = typeof src === 'string' ? src : src.toDataURL('image/png');
+      const url = typeof src === 'string' ? src : src.toDataURL('image/png'); // always a data URL: blob: links die on reload
       fabric.Image.fromURL(url, n => {
         const sw = o.getScaledWidth(), sh = o.getScaledHeight();
         n.set({
@@ -72,7 +72,7 @@
     try {
       const mod = await loadImgly();
       const out = await mod.removeBackground(await canvasToBlob(src), { progress: (key, cur, total) => job.set(`AI cut-out… ${total ? Math.round((cur / total) * 100) : 0}%`) });
-      job.done(); await replaceImage(o, URL.createObjectURL(out), { pristine: src });
+      job.done(); await replaceImage(o, await blobToDataURL(out), { pristine: src });
       confetti(innerWidth / 2, innerHeight / 2, 80); toast('Background removed', '✂️');
     } catch (e) {
       console.warn('AI cut-out unavailable', e); job.done();
@@ -109,7 +109,7 @@
   async function enhance(o = needImage()) {
     if (!o) return;
     const job = busy('Enhancing quality…'); await tick();
-    const src = natCanvas(o, 8000), f = Math.max(src.width, src.height) <= 2400 ? 2 : 1;
+    const src = natCanvas(o, 8000), f = (src.width * src.height * 4 <= (matchMedia('(pointer:coarse)').matches ? 16e6 : 40e6) && Math.max(src.width, src.height) <= 3000) ? 2 : 1; // phones can't allocate huge canvases
     let cur = src;
     if (f === 2) {
       let w = src.width, h = src.height; cur = src;

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#ff2d95">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -35,6 +35,7 @@
       <button id="undo" class="ibtn" title="Undo (Ctrl+Z)">↶</button>
       <button id="redo" class="ibtn" title="Redo (Ctrl+Y)">↷</button>
     </div>
+    <button id="moreBtn" class="ibtn only-mobile" title="More">⋯</button>
     <button id="cmdk" class="btn ghost" title="Command palette"><span>🔎 Do anything…</span><kbd>Ctrl K</kbd></button>
     <button id="saveProject" class="ibtn" title="Save project file">💾</button>
     <label class="ibtn" for="openProject" title="Open project file">📂</label>
@@ -70,7 +71,8 @@
           <button data-template="mug" class="tile t3"><b>Mug<br>quote</b></button>
           <button data-template="blank" class="tile t4"><b>Blank<br>canvas</b></button>
         </div>
-        <button id="changeProduct" class="btn wide">👕 Change product / size</button>
+        <button id="changeProduct" class="btn wide">📐 Change size / product</button>
+        <button id="newDesign" class="btn wide">🆕 New design</button>
       </div>
 
       <div class="panel" data-panel="templates" hidden>
@@ -249,7 +251,8 @@
     </div>
 
     <!-- ============ INSPECTOR ============ -->
-    <aside class="inspector glass">
+    <aside class="inspector glass" id="inspector">
+      <div class="sheet-head"><b id="sheetTitle">Edit</b><button id="sheetClose" class="btn small">✓ Done</button></div>
       <div class="tabs"><button data-itab="design" class="on">Design</button><button data-itab="layers">Layers</button></div>
 
       <div id="tab-design">
@@ -260,101 +263,124 @@
           <div class="keys"><kbd>Del</kbd> delete <kbd>Ctrl D</kbd> copy <kbd>Ctrl K</kbd> search <kbd>←↑↓→</kbd> nudge</div>
         </div>
         <div id="propsBody" hidden>
-          <section>
-            <h4>Colour</h4>
-            <div class="swatches" id="swatches"></div>
-            <div class="grads" id="grads"></div>
-            <div class="brand-row"><span>Brand</span><div class="brandkit" id="brandKit"></div><button class="mini" id="addBrand" title="Save current colour to brand kit">＋</button></div>
-            <label class="slider-row">Fill <span class="inline"><button class="mini" id="eyedrop" title="Pick colour from screen" hidden>💧</button><input type="color" id="fill"></span></label>
-            <label class="slider-row">Outline <input type="color" id="stroke"></label>
-            <label class="slider-row">Outline size <input type="range" id="strokeWidth" min="0" max="80" value="0"></label>
-            <label class="slider-row">Opacity <input type="range" id="opacity" min="0" max="100" value="100"></label>
-            <label class="slider-row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
-            <label class="switch"><input type="checkbox" id="shadow"><i></i><span>Drop shadow</span></label>
-          </section>
-
-          <section id="textSec" hidden>
-            <h4>Text</h4>
-            <select id="fontFamily"></select>
-            <label class="slider-row">Size <input type="number" id="fontSize" min="6" max="2000" value="48"></label>
-            <div class="row3">
-              <button id="bold" class="btn"><b>B</b></button>
-              <button id="italic" class="btn"><i>I</i></button>
-              <button id="underline" class="btn"><u>U</u></button>
-              <button data-talign="left" class="btn">⯇</button>
-              <button data-talign="center" class="btn">≡</button>
-              <button data-talign="right" class="btn">⯈</button>
+          <section data-s="colour outline effects">
+            <div data-s="colour">
+              <h4>Colour</h4>
+              <div class="swatches" id="swatches"></div>
+              <div class="grads" id="grads"></div>
+              <div class="brand-row"><span>Brand</span><div class="brandkit" id="brandKit"></div><button class="mini" id="addBrand" title="Save current colour to brand kit">＋</button></div>
+              <label class="slider-row">Fill <span class="inline"><button class="mini" id="eyedrop" title="Pick colour from screen" hidden>💧</button><input type="color" id="fill"></span></label>
             </div>
-            <label class="slider-row">Line height <input type="range" id="lineHeight" min="70" max="250" value="116"></label>
-            <label class="slider-row">Spacing <input type="range" id="charSpacing" min="-100" max="800" value="0"></label>
+            <div data-s="outline">
+              <h4>Outline</h4>
+              <label class="slider-row">Colour <input type="color" id="stroke"></label>
+              <label class="slider-row">Thickness <input type="range" id="strokeWidth" min="0" max="80" value="0"></label>
+            </div>
+            <div data-s="effects">
+              <h4>Effects</h4>
+              <label class="slider-row">Opacity <input type="range" id="opacity" min="0" max="100" value="100"></label>
+              <label class="switch"><input type="checkbox" id="shadow"><i></i><span>Drop shadow</span></label>
+            </div>
           </section>
 
-          <section id="archSec" hidden>
+          <section id="textSec" data-s="font spacing" hidden>
+            <div data-s="font">
+              <h4>Font</h4>
+              <select id="fontFamily"></select>
+              <label class="slider-row">Size <input type="number" id="fontSize" min="6" max="2000" value="48"></label>
+              <div class="row3">
+                <button id="bold" class="btn"><b>B</b></button>
+                <button id="italic" class="btn"><i>I</i></button>
+                <button id="underline" class="btn"><u>U</u></button>
+                <button data-talign="left" class="btn">⯇</button>
+                <button data-talign="center" class="btn">≡</button>
+                <button data-talign="right" class="btn">⯈</button>
+              </div>
+            </div>
+            <div data-s="spacing">
+              <h4>Spacing</h4>
+              <label class="slider-row">Line height <input type="range" id="lineHeight" min="70" max="250" value="116"></label>
+              <label class="slider-row">Letters <input type="range" id="charSpacing" min="-100" max="800" value="0"></label>
+            </div>
+          </section>
+
+          <section id="archSec" data-s="arch" hidden>
             <h4>Arch text</h4>
             <input type="text" id="archText" class="text-in" placeholder="Your words">
             <label class="slider-row">Curve <input type="range" id="archCurve" min="-100" max="100" value="60"></label>
           </section>
 
-          <section id="imageSec" hidden>
-            <h4>Photo magic</h4>
-            <div class="dpi" id="dpiInfo"></div>
-            <div class="row2 magic-row">
-              <button class="btn hot" data-pm="removeBg">✂️ Remove BG</button>
-              <button class="btn hot" data-pm="magicFix">🪄 Magic fix</button>
-              <button class="btn hot" data-pm="enhance">🔍 Enhance 2×</button>
-              <button class="btn hot" data-pm="refine">🖌️ Refine</button>
+          <section id="imageSec" data-s="photo adjust filters crop sticker" hidden>
+            <div data-s="photo">
+              <h4>Photo magic</h4>
+              <div class="dpi" id="dpiInfo"></div>
+              <div class="row2 magic-row">
+                <button class="btn hot" data-pm="removeBg">✂️ Remove BG</button>
+                <button class="btn hot" data-pm="magicFix">🪄 Magic fix</button>
+                <button class="btn hot" data-pm="enhance">🔍 Enhance 2×</button>
+                <button class="btn hot" data-pm="refine">🖌️ Refine</button>
+              </div>
             </div>
-            <h4>Adjust</h4>
-            <label class="slider-row" title="Knock out white / near-white">Remove white <input type="range" data-filter="whiteDist" min="0" max="100" value="0"></label>
-            <label class="slider-row">Brightness <input type="range" data-filter="brightness" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Contrast <input type="range" data-filter="contrast" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Saturation <input type="range" data-filter="saturation" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Vibrance <input type="range" data-filter="vibrance" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Temperature <input type="range" data-filter="temperature" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Hue <input type="range" data-filter="hue" min="-100" max="100" value="0"></label>
-            <label class="slider-row">Sharpness <input type="range" data-filter="sharpen" min="0" max="100" value="0"></label>
-            <label class="slider-row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
-            <h4>Filters</h4>
-            <div class="row3">
-              <button data-preset="grayscale" class="btn">B&amp;W</button>
-              <button data-preset="sepia" class="btn">Sepia</button>
-              <button data-preset="vintage" class="btn">Vintage</button>
-              <button data-preset="warm" class="btn">Warm</button>
-              <button data-preset="cool" class="btn">Cool</button>
-              <button data-preset="fade" class="btn">Fade</button>
-              <button data-preset="noir" class="btn">Noir</button>
-              <button data-preset="pop" class="btn">Pop</button>
-              <button data-preset="invert" class="btn">Invert</button>
-              <button data-preset="duo1" class="btn">Duo 1</button>
-              <button data-preset="duo2" class="btn">Duo 2</button>
-              <button data-preset="pixelate" class="btn">Pixel</button>
+            <div data-s="adjust">
+              <h4>Adjust</h4>
+              <label class="slider-row" title="Knock out white / near-white">Remove white <input type="range" data-filter="whiteDist" min="0" max="100" value="0"></label>
+              <label class="slider-row">Brightness <input type="range" data-filter="brightness" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Contrast <input type="range" data-filter="contrast" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Saturation <input type="range" data-filter="saturation" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Vibrance <input type="range" data-filter="vibrance" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Temperature <input type="range" data-filter="temperature" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Hue <input type="range" data-filter="hue" min="-100" max="100" value="0"></label>
+              <label class="slider-row">Sharpness <input type="range" data-filter="sharpen" min="0" max="100" value="0"></label>
+              <label class="slider-row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
+              <button data-preset="reset" class="btn wide">↺ Reset adjustments</button>
             </div>
-            <button data-preset="reset" class="btn wide">↺ Reset adjustments</button>
-            <h4>Crop &amp; frame</h4>
-            <div class="row3">
-              <button data-crop="1" class="btn">1:1</button>
-              <button data-crop="1.3333" class="btn">4:3</button>
-              <button data-crop="0.75" class="btn">3:4</button>
-              <button data-crop="1.7778" class="btn">16:9</button>
-              <button data-crop="0.5625" class="btn">9:16</button>
-              <button data-crop="free" class="btn">Full</button>
+            <div data-s="filters">
+              <h4>Filters</h4>
+              <div class="row3">
+                <button data-preset="grayscale" class="btn">B&amp;W</button>
+                <button data-preset="sepia" class="btn">Sepia</button>
+                <button data-preset="vintage" class="btn">Vintage</button>
+                <button data-preset="warm" class="btn">Warm</button>
+                <button data-preset="cool" class="btn">Cool</button>
+                <button data-preset="fade" class="btn">Fade</button>
+                <button data-preset="noir" class="btn">Noir</button>
+                <button data-preset="pop" class="btn">Pop</button>
+                <button data-preset="invert" class="btn">Invert</button>
+                <button data-preset="duo1" class="btn">Duo 1</button>
+                <button data-preset="duo2" class="btn">Duo 2</button>
+                <button data-preset="pixelate" class="btn">Pixel</button>
+              </div>
             </div>
-            <div class="row3">
-              <button data-mask="none" class="btn">▭ None</button>
-              <button data-mask="circle" class="btn">● Circle</button>
-              <button data-mask="rounded" class="btn">▢ Round</button>
-              <button data-mask="heart" class="btn">♥ Heart</button>
-              <button data-mask="star" class="btn">★ Star</button>
-              <button id="cropToCanvas" class="btn">Fill</button>
+            <div data-s="crop">
+              <h4>Crop &amp; frame</h4>
+              <div class="row3">
+                <button data-crop="1" class="btn">1:1</button>
+                <button data-crop="1.3333" class="btn">4:3</button>
+                <button data-crop="0.75" class="btn">3:4</button>
+                <button data-crop="1.7778" class="btn">16:9</button>
+                <button data-crop="0.5625" class="btn">9:16</button>
+                <button data-crop="free" class="btn">Full</button>
+              </div>
+              <div class="row3">
+                <button data-mask="none" class="btn">▭ None</button>
+                <button data-mask="circle" class="btn">● Circle</button>
+                <button data-mask="rounded" class="btn">▢ Round</button>
+                <button data-mask="heart" class="btn">♥ Heart</button>
+                <button data-mask="star" class="btn">★ Star</button>
+                <button id="cropToCanvas" class="btn">Fill</button>
+              </div>
             </div>
-            <h4>Die-cut sticker outline</h4>
-            <label class="slider-row">Thickness <input type="range" id="outlineSize" min="1" max="12" value="4"></label>
-            <label class="slider-row">Colour <input type="color" id="outlineColor" value="#ffffff"></label>
-            <button id="imgOutline" class="btn wide">🏷️ Add outline</button>
+            <div data-s="sticker">
+              <h4>Die-cut sticker outline</h4>
+              <label class="slider-row">Thickness <input type="range" id="outlineSize" min="1" max="12" value="4"></label>
+              <label class="slider-row">Colour <input type="color" id="outlineColor" value="#ffffff"></label>
+              <button id="imgOutline" class="btn wide">🏷️ Add outline</button>
+            </div>
           </section>
 
-          <section>
-            <h4>Arrange</h4>
+          <section data-s="position">
+            <h4>Position</h4>
+            <label class="slider-row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
             <div class="row3">
               <button id="forward" class="btn">Up</button>
               <button id="backward" class="btn">Down</button>
@@ -477,6 +503,15 @@
   </div>
 </div>
 
+<div class="menu glass" id="moreMenu" hidden>
+  <button data-more="new"><i>🆕</i><span><b>New design</b><small>Start fresh</small></span></button>
+  <button data-more="layers"><i>🗂️</i><span><b>Layers</b><small>Select, hide, lock items</small></span></button>
+  <button data-more="mock"><i>👀</i><span><b>Mockup</b><small>See it on a tee or mug</small></span></button>
+  <button data-more="save"><i>💾</i><span><b>Save project</b><small>Download a .json file</small></span></button>
+  <button data-more="open"><i>📂</i><span><b>Open project</b><small>From a saved file</small></span></button>
+  <button data-more="cmd"><i>🔎</i><span><b>Search actions</b><small>Find any tool</small></span></button>
+</div>
+<nav class="ctxbar glass" id="ctxBar" hidden></nav>
 <div id="toasts"></div>
 <canvas id="confetti"></canvas>
 
@@ -484,6 +519,12 @@
 <script src="vendor/jspdf.umd.min.js"></script>
 <script src="app.js"></script>
 <script src="photo.js"></script>
-<script>if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) navigator.serviceWorker.register("sw.js").catch(() => {});</script>
+<script>
+if ("serviceWorker" in navigator && /^https?:/.test(location.protocol)) {
+  const had = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (had && !window.__rl) { window.__rl = 1; location.reload(); } }); // pick up new versions automatically
+}
+</script>
 </body>
 </html>
