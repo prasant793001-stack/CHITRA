@@ -58,4 +58,11 @@ module.exports = [
     await p.evaluate(() => { document.querySelector('#pdfMarks').checked = true; });
     const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 30000 }), p.evaluate(() => chitra.exportFile('pdf'))]);
     ok('PDF with crop marks downloads', /\.pdf$/.test(dl.suggestedFilename())); } },
+  { name: 'photo templates accept photos', only: 'desktop', run: async (p, ok) => {
+    const id = await p.evaluate(() => Object.keys(chitra.TEMPLATE_META).find(k => /^ig-/.test(k) && (chitra.TEMPLATE_META[k].t || '').includes('photocircle')));
+    await p.evaluate(id => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }), id); await p.waitForTimeout(1200);
+    const url = await p.evaluate(() => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const x = c.getContext('2d'); x.fillStyle = '#f00'; x.fillRect(0, 0, 400, 300); return c.toDataURL(); });
+    await p.evaluate(u => new Promise(r => fabric.Image.fromURL(u, i => { chitra.place(i); r(); })), url); await p.waitForTimeout(300);
+    const r = await p.evaluate(() => { const o = chitra.canvas.getObjects(), im = o.find(x => x.type === 'image'), sl = o.find(x => x.slot); return { inSlot: !!im.inSlot, above: o.indexOf(im) === o.indexOf(sl) + 1, textAbove: o.slice(o.indexOf(im) + 1).some(x => /textbox/.test(x.type)) }; });
+    ok('photo lands in the frame, above it, below the text', r.inSlot && r.above && r.textAbove, JSON.stringify(r)); } },
 ];

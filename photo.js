@@ -241,6 +241,9 @@
   });
   ['pointerup', 'pointercancel'].forEach(ev => rc.addEventListener(ev, () => { R.down = false; }));
   $$('[data-rmode]').forEach(b => b.onclick = () => { R.mode = b.dataset.rmode; $$('[data-rmode]').forEach(x => x.classList.toggle('on', x === b)); });
+  { let keep = null; const cmpOn = e => { e.preventDefault(); if (!R.orig || keep) return; const g = rc.getContext('2d'); keep = g.getImageData(0, 0, rc.width, rc.height); g.clearRect(0, 0, rc.width, rc.height); g.drawImage(R.orig, 0, 0, rc.width, rc.height); };
+    const cmpOff = () => { if (!keep) return; rc.getContext('2d').putImageData(keep, 0, 0); keep = null; };
+    const cb = $('#rCompare'); ['pointerdown'].forEach(ev => cb.addEventListener(ev, cmpOn)); ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => cb.addEventListener(ev, cmpOff)); }
   $('#rReset').onclick = () => { const g = rc.getContext('2d'); g.clearRect(0, 0, rc.width, rc.height); g.drawImage(R.base, 0, 0); };
   $('#rApply').onclick = async () => { $('#refineModal').hidden = true; const c = document.createElement('canvas'); c.width = rc.width; c.height = rc.height; c.getContext('2d').drawImage(rc, 0, 0); await replaceImage(R.o, c, { pristine: R.orig }); toast('Edges refined', '🖌️'); };
   $('#refine').onclick = () => openRefine();

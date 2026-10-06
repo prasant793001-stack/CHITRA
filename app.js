@@ -313,7 +313,9 @@
   function place(o) {
     const handled = typeof chitra !== 'undefined' && chitra.beforePlace && chitra.beforePlace(o); // print-layout slots can claim photos
     if (!handled) o.set({ left: W / 2, top: H / 2, originX: 'center', originY: 'center' });
-    canvas.add(o); canvas.setActiveObject(o); canvas.requestRenderAll();
+    canvas.add(o);
+    if (handled && o.inSlot) { const objs = canvas.getObjects(), sl = objs.find(x => x.slot && x.slot.id === o.inSlot); if (sl) canvas.moveTo(o, objs.indexOf(sl) + 1); } // photo sits on its frame, under the template's text
+    canvas.setActiveObject(o); canvas.requestRenderAll();
     if (isMobile()) closeSheets(); // Canva-style: panel tucks away so you can edit what you just added
   }
   const shadow = (color, k, blur = 0) => new fabric.Shadow({ color, offsetX: u() * k, offsetY: u() * k, blur });
