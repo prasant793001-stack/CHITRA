@@ -42,4 +42,14 @@ const del = JSON.stringify({ type: 'customer.subscription.deleted', data: { obje
 await call('/billing/webhook', { method: 'POST', body: del, headers: { 'stripe-signature': `t=${t},v1=${s3}` } }); r = await call('/me', { token }); ok('cancellation downgrades to free', r.j.plan === 'free');
 r = await call('/billing/checkout', { method: 'POST', token, body: { plan: 'pro' } }); ok('checkout says not configured (no keys)', r.s === 503);
 r = await call('/projects', { method: 'OPTIONS' }); ok('CORS preflight', r.s === 204 && r.h.get('access-control-allow-origin') === 'https://x.test');
+// approval links
+const tiny = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+r = await call('/share', { method: 'POST', body: { name: 'Mug', image: 'nope' }, token }); ok('share rejects non-images', r.s === 400);
+r = await call('/share', { method: 'POST', body: { name: 'Mug', image: tiny }, token }); ok('share link created', r.s === 200 && /^[a-z0-9]{10}$/.test(r.j.id), JSON.stringify(r)); const sid = r.j.id;
+r = await call('/share/' + sid); ok('anyone with the link can view', r.s === 200 && r.j.name === 'Mug' && r.j.image === tiny && !r.j.owner);
+r = await call('/share/' + sid + '/comment', { method: 'POST', body: { name: 'Zed', text: '<b>Make the logo bigger</b>' } }); ok('customer comments', r.s === 200 && r.j.comments.length === 1 && !/[<>]/.test(r.j.comments[0].text));
+r = await call('/share/' + sid + '/comment', { method: 'POST', body: { text: '   ' } }); ok('empty comment refused', r.s === 400);
+r = await call('/share/' + sid + '/approve', { method: 'POST', body: { name: 'Zed' } }); ok('customer approves', r.s === 200 && r.j.approved.by === 'Zed');
+r = await call('/share/' + sid + '/comment', { method: 'POST', body: { name: 'Zed', text: 'Actually, one more change' } }); ok('new comment withdraws approval', r.j.approved === null);
+r = await call('/share/zzzzzzzzzz'); ok('unknown link 404', r.s === 404);
 console.log(`\n${pass}/${pass + fail} passed`); process.exit(fail ? 1 : 0);

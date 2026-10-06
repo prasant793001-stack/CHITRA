@@ -16,5 +16,14 @@ await p2.click('#acctBtn'); await p2.fill('#auEmail', 'maker@example.com'); awai
 const local2 = await p2.evaluate(async () => (await chitra.store.list()).map(m => m.name)); ok('design appears on a second device', local2.includes('Cloud poster'), local2.join(','));
 ok('plan is free by default', await p2.evaluate(() => localStorage.getItem('chitra.plan')) === 'free');
 await p2.evaluate(() => chitra.cloud.checkout('pro')); await p2.waitForTimeout(500);
+// approval link round-trip
+await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('11 oz mug wrap'), template: 'mug-1', name: 'Mug for Zed' })); await p.waitForTimeout(1200);
+const link = await p.evaluate(() => chitra.cloud.share()); ok('approval link created', /\?view=[a-z0-9]{10,}/.test(link), link);
+const ctx3 = await mk(), p3 = await ctx3.newPage(); await p3.goto(link); await p3.waitForSelector('#vName'); await p3.waitForTimeout(800);
+ok('customer sees the design', await p3.evaluate(() => document.querySelector('#vName').textContent) === 'Mug for Zed' && await p3.evaluate(() => document.querySelector('#vImg').naturalWidth > 0));
+ok('customer view hides the editor', !(await p3.isVisible('#home')));
+await p3.fill('#vWho', 'Zed'); await p3.fill('#vText', 'Bigger logo please'); await p3.click('#vSend'); await p3.waitForTimeout(600); await p3.click('#vOk'); await p3.waitForTimeout(600);
+ok('customer comment + approval shown', (await p3.textContent('#vCom')).includes('Bigger logo please') && (await p3.textContent('#vState')).includes('Approved by Zed'));
+const fb = await p.evaluate(async () => { const id = JSON.parse(localStorage.getItem('chitra.shares'))[0].id; return chitra.cloud.api('/share/' + id); }); ok('designer sees the feedback', fb.approved?.by === 'Zed' && fb.comments.length === 1);
 ok('page errors', errs.length === 0, errs.join('|'));
 await b.close(); srv.close(); console.log(`\n${pass}/${pass + fail} passed`); process.exit(fail ? 1 : 0);

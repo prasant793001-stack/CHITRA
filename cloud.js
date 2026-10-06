@@ -59,6 +59,43 @@
   if (cloud.signedIn) pull();
   if (/[?&]paid=1/.test(location.search)) { setTimeout(async () => { try { const me = await api('/me'); setPlan(me.plan); toast('Thank you! Your plan is now ' + me.plan.toUpperCase(), ''); C.confetti(); } catch { } history.replaceState(null, '', location.pathname); }, 800); }
 
+
+  /* ---------- customer approval links ---------- */
+  const shares = () => { try { return JSON.parse(ls.get('chitra.shares') || '[]'); } catch { return []; } };
+  cloud.share = async () => {
+    if (!cloud.signedIn) { toast('Sign in to create approval links', ''); cloud.signIn(); return null; }
+    let el; try { el = C.renderDesign(true); } catch { toast('Could not render this design', ''); return null; }
+    const k = Math.min(1, 1400 / Math.max(el.width, el.height)), c = document.createElement('canvas'); c.width = Math.round(el.width * k); c.height = Math.round(el.height * k); c.getContext('2d').drawImage(el, 0, 0, c.width, c.height);
+    let q = 0.88, img = c.toDataURL('image/jpeg', q); while (img.length > 3.8e6 && q > 0.4) { q -= 0.12; img = c.toDataURL('image/jpeg', q); }
+    const name = $('#projectName').value; const r = await api('/share', { method: 'POST', body: { name, image: img } });
+    const l = shares(); l.unshift({ id: r.id, name, at: Date.now() }); ls.set('chitra.shares', JSON.stringify(l.slice(0, 20)));
+    return `${location.origin}${location.pathname}?view=${r.id}`;
+  };
+  const pm = $('#printModal');
+  if (pm) {
+    const box = document.createElement('div'); box.className = 'approve-box'; box.innerHTML = `<h4>Customer approval</h4><p class="tip">Send your customer a link to look at the design, comment and approve it — no account needed.</p><div class="pr-btns"><button class="btn" id="apMake">Create approval link</button><button class="btn" id="apCheck">Check feedback</button></div><input id="apLink" readonly hidden><p class="tip" id="apStatus"></p><div id="apList"></div>`;
+    $('#prHint', pm).before(box);
+    $('#apMake').onclick = async e => { e.target.disabled = true; try { const url = await cloud.share(); if (!url) return; const li = $('#apLink'); li.hidden = false; li.value = url; li.select(); try { await navigator.clipboard.writeText(url); } catch { } $('#apStatus').textContent = 'Link copied. Paste it into WhatsApp or email.'; if (navigator.share) navigator.share({ title: 'Please review my design', url }).catch(() => { }); } catch (err) { $('#apStatus').textContent = err.message; } finally { e.target.disabled = false; } };
+    $('#apCheck').onclick = async () => {
+      const l = shares()[0]; if (!l) return ($('#apStatus').textContent = 'Create an approval link first.');
+      try { const r = await api('/share/' + l.id); $('#apStatus').innerHTML = r.approved ? `<b class="ok">Approved by ${esc(r.approved.by)}</b> ${new Date(r.approved.at).toLocaleString()}` : `Waiting for approval · ${r.comments.length} comment${r.comments.length === 1 ? '' : 's'}`; $('#apList').innerHTML = r.comments.map(m => `<div class="cm"><b>${esc(m.by)}</b> ${esc(m.text)}</div>`).join(''); } catch (err) { $('#apStatus').textContent = err.message; }
+    };
+  }
+  function esc(t) { return String(t).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch])); }
+
+  /* ---------- the page a customer sees ---------- */
+  const vid = new URLSearchParams(location.search).get('view');
+  if (vid && /^[a-z0-9]{10,20}$/i.test(vid)) {
+    document.getElementById('splash')?.remove();
+    const v = Object.assign(document.createElement('div'), { id: 'viewer' }); v.innerHTML = `<header><b>${ico('sparkles', 18)} Chitra</b><span>Design review</span></header><main><div class="v-img"><img id="vImg" alt="Design to review"></div><aside><h2 id="vName">Loading…</h2><p class="tip" id="vState"></p><div id="vCom"></div><input id="vWho" placeholder="Your name" maxlength="40"><textarea id="vText" rows="3" placeholder="Tell the designer what to change…" maxlength="400"></textarea><div class="pr-btns"><button class="btn" id="vSend">Send comment</button><button class="cta" id="vOk">${ico('check', 16)} Approve design</button></div></aside></main>`;
+    document.body.appendChild(v); document.body.classList.add('viewing');
+    const paint = r => { $('#vImg').src = r.image || $('#vImg').src; $('#vName').textContent = r.name; $('#vState').innerHTML = r.approved ? `<b class="ok">Approved by ${esc(r.approved.by)}</b>` : 'Please review this design, then approve it or leave a comment.'; $('#vCom').innerHTML = (r.comments || []).map(m => `<div class="cm"><b>${esc(m.by)}</b> ${esc(m.text)}</div>`).join(''); };
+    api('/share/' + vid).then(paint).catch(e => { $('#vName').textContent = 'Link not available'; $('#vState').textContent = e.message; });
+    const post = async (kind, body) => { try { const r = await api(`/share/${vid}/${kind}`, { method: 'POST', body: { name: $('#vWho').value.trim() || 'Customer', ...body } }); const full = await api('/share/' + vid); paint(full); return r; } catch (e) { $('#vState').textContent = e.message; } };
+    $('#vSend').onclick = async () => { const t = $('#vText').value.trim(); if (!t) return; await post('comment', { text: t }); $('#vText').value = ''; };
+    $('#vOk').onclick = () => post('approve', {});
+  }
+
   /* ---------- checkout ---------- */
   cloud.checkout = async plan => {
     if (!cloud.signedIn) { toast('Sign in first, then choose your plan', ''); cloud.signIn(); return; }

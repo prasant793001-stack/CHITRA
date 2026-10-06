@@ -53,6 +53,20 @@ export default {
         return json(env, { received: true });
       }
 
+      /* ---- customer approval links: public read / comment / approve (the link itself is the secret) ---- */
+      const sm = /^\/share\/([a-z0-9]{10,20})(?:\/(comment|approve))?$/i.exec(path);
+      if (sm) {
+        const id = sm[1], key = `s:${id}`, rec = await env.DATA.get(key, { type: 'json' }); if (!rec) return json(env, { error: 'This link has expired or does not exist' }, 404);
+        if (!sm[2] && req.method === 'GET') return json(env, { name: rec.name, image: rec.image, comments: rec.comments, approved: rec.approved, created: rec.created });
+        if (req.method === 'POST') {
+          const ip = req.headers.get('cf-connecting-ip') || 'anon', rk = `rlc:${id}:${ip}`, n = +((await env.DATA.get(rk)) || 0); if (n >= 12) return json(env, { error: 'Too many messages — try again later' }, 429); await env.DATA.put(rk, String(n + 1), { expirationTtl: 3600 });
+          const b = await req.json().catch(() => ({})), who = String(b.name || 'Customer').replace(/[<>]/g, '').slice(0, 40) || 'Customer';
+          if (sm[2] === 'comment') { const text = String(b.text || '').replace(/[<>]/g, '').trim().slice(0, 400); if (!text) return json(env, { error: 'Write a comment first' }, 400); if (rec.comments.length >= 40) return json(env, { error: 'Comment limit reached' }, 400); rec.comments.push({ by: who, text, at: Date.now() }); rec.approved = null; }
+          else rec.approved = { by: who, at: Date.now() };
+          await env.DATA.put(key, JSON.stringify(rec), { expirationTtl: 2592000 }); return json(env, { ok: true, approved: rec.approved, comments: rec.comments });
+        }
+      }
+
       /* ---- sign-in with an emailed code ---- */
       if (path === '/auth/start' && req.method === 'POST') {
         const { email } = await req.json().catch(() => ({})); const e = String(email || '').trim().toLowerCase(); if (!validEmail(e)) return json(env, { error: 'Enter a valid email' }, 400);
@@ -89,6 +103,13 @@ export default {
         }
       }
 
+      if (path === '/share' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({})), img = String(b.image || ''); if (!/^data:image\/(png|jpeg|webp);base64,/.test(img) || img.length > 4e6) return json(env, { error: 'Image missing or too large' }, 400);
+        const mine = (await env.DATA.list({ prefix: `so:${email}:` })).keys.length; if (mine >= 50) return json(env, { error: 'Too many active approval links — wait for some to expire' }, 429);
+        const id = [...crypto.getRandomValues(new Uint8Array(8))].map(x => 'abcdefghijkmnpqrstuvwxyz23456789'[x % 32]).join('') + String(Date.now() % 100).padStart(2, '0'), name = String(b.name || 'Design').slice(0, 80);
+        await env.DATA.put(`s:${id}`, JSON.stringify({ owner: email, name, image: img, comments: [], approved: null, created: Date.now() }), { expirationTtl: 2592000 }); await env.DATA.put(`so:${email}:${id}`, JSON.stringify({ name }), { expirationTtl: 2592000 });
+        return json(env, { id });
+      }
       if (path === '/billing/checkout' && req.method === 'POST') {
         const { plan } = await req.json().catch(() => ({})), price = plan === 'biz' ? env.PRICE_BIZ : env.PRICE_PRO; if (!env.STRIPE_KEY || !price) return json(env, { error: 'Billing is not configured yet' }, 503);
         const r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { authorization: `Bearer ${env.STRIPE_KEY}`, 'content-type': 'application/x-www-form-urlencoded' }, body: form({ mode: 'subscription', 'line_items[0][price]': price, 'line_items[0][quantity]': 1, success_url: `${env.APP_URL}?paid=1`, cancel_url: `${env.APP_URL}?paid=0`, client_reference_id: email, customer_email: email, 'metadata[plan]': plan === 'biz' ? 'biz' : 'pro', allow_promotion_codes: 'true' }) });
