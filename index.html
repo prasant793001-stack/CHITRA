@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chitra – Design Editor</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Chitra</div>
+  <select id="sizePreset" title="Canvas size">
+    <option value="1080x1080">Instagram Post (1080×1080)</option>
+    <option value="1080x1920">Story (1080×1920)</option>
+    <option value="1280x720">YouTube Thumbnail (1280×720)</option>
+    <option value="1200x630">Facebook Post (1200×630)</option>
+    <option value="1920x1080">Presentation (1920×1080)</option>
+    <option value="794x1123">A4 Poster</option>
+  </select>
+  <label class="color-pick" title="Background color">BG <input type="color" id="bgColor" value="#ffffff"></label>
+  <span class="spacer"></span>
+  <button id="undo" title="Undo (Ctrl+Z)">↶</button>
+  <button id="redo" title="Redo (Ctrl+Y)">↷</button>
+  <button id="zoomOut" title="Zoom out">−</button>
+  <span id="zoomLabel">100%</span>
+  <button id="zoomIn" title="Zoom in">+</button>
+  <button id="saveProject">Save</button>
+  <label class="btn" for="openProject">Open</label>
+  <input type="file" id="openProject" accept=".json" hidden>
+  <select id="exportFormat"><option value="png">PNG</option><option value="jpeg">JPG</option></select>
+  <button id="download" class="primary">Download</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <section>
+      <h3>Elements</h3>
+      <div class="grid">
+        <button data-add="rect">▭ Rectangle</button>
+        <button data-add="circle">◯ Circle</button>
+        <button data-add="triangle">△ Triangle</button>
+        <button data-add="line">╱ Line</button>
+        <button data-add="star">★ Star</button>
+        <button data-add="heart">♥ Heart</button>
+      </div>
+    </section>
+    <section>
+      <h3>Text</h3>
+      <button data-text="heading" class="wide big">Add a heading</button>
+      <button data-text="sub" class="wide">Add a subheading</button>
+      <button data-text="body" class="wide small">Add body text</button>
+    </section>
+    <section>
+      <h3>Uploads</h3>
+      <label class="btn wide" for="imgUpload">＋ Upload image</label>
+      <input type="file" id="imgUpload" accept="image/*" multiple hidden>
+    </section>
+    <section>
+      <h3>Templates</h3>
+      <div class="grid">
+        <button data-template="quote">Quote</button>
+        <button data-template="sale">Sale</button>
+        <button data-template="event">Event</button>
+        <button data-template="blank">Blank</button>
+      </div>
+    </section>
+  </nav>
+
+  <main class="stage" id="stage">
+    <div class="canvas-wrap" id="canvasWrap"><canvas id="c"></canvas></div>
+  </main>
+
+  <aside class="props" id="props">
+    <div id="emptyProps" class="hint">Select an element to edit it.<br><br>Shortcuts:<br>Del – delete<br>Ctrl+D – duplicate<br>Ctrl+Z / Y – undo / redo<br>Arrows – nudge</div>
+    <div id="propsBody" hidden>
+      <section>
+        <h3>Arrange</h3>
+        <div class="grid">
+          <button id="forward">Forward</button>
+          <button id="backward">Backward</button>
+          <button id="toFront">To front</button>
+          <button id="toBack">To back</button>
+          <button id="duplicate">Duplicate</button>
+          <button id="lock">Lock/Unlock</button>
+          <button id="flipH">Flip ↔</button>
+          <button id="flipV">Flip ↕</button>
+          <button id="delete" class="danger">Delete</button>
+        </div>
+        <div class="grid">
+          <button data-align="left">⇤ Left</button>
+          <button data-align="center">↔ Center</button>
+          <button data-align="right">⇥ Right</button>
+          <button data-align="top">⇡ Top</button>
+          <button data-align="middle">↕ Middle</button>
+          <button data-align="bottom">⇣ Bottom</button>
+        </div>
+      </section>
+      <section id="styleSec">
+        <h3>Style</h3>
+        <label class="row">Fill <input type="color" id="fill"></label>
+        <label class="row">Border <input type="color" id="stroke"></label>
+        <label class="row">Border width <input type="range" id="strokeWidth" min="0" max="40" value="0"></label>
+        <label class="row">Opacity <input type="range" id="opacity" min="0" max="100" value="100"></label>
+        <label class="row">Rotation <input type="range" id="angle" min="0" max="360" value="0"></label>
+        <label class="row">Shadow <input type="checkbox" id="shadow"></label>
+      </section>
+      <section id="textSec" hidden>
+        <h3>Text</h3>
+        <select id="fontFamily">
+          <option>Arial</option><option>Helvetica</option><option>Georgia</option><option>Times New Roman</option>
+          <option>Courier New</option><option>Verdana</option><option>Trebuchet MS</option><option>Impact</option>
+          <option>Comic Sans MS</option><option>Palatino Linotype</option>
+        </select>
+        <label class="row">Size <input type="number" id="fontSize" min="6" max="600" value="48"></label>
+        <div class="grid">
+          <button id="bold"><b>B</b></button>
+          <button id="italic"><i>I</i></button>
+          <button id="underline"><u>U</u></button>
+          <button data-talign="left">Left</button>
+          <button data-talign="center">Center</button>
+          <button data-talign="right">Right</button>
+        </div>
+        <label class="row">Line height <input type="range" id="lineHeight" min="80" max="250" value="116"></label>
+        <label class="row">Letter spacing <input type="range" id="charSpacing" min="-100" max="800" value="0"></label>
+      </section>
+      <section id="imageSec" hidden>
+        <h3>Image adjustments</h3>
+        <label class="row">Brightness <input type="range" data-filter="brightness" min="-100" max="100" value="0"></label>
+        <label class="row">Contrast <input type="range" data-filter="contrast" min="-100" max="100" value="0"></label>
+        <label class="row">Saturation <input type="range" data-filter="saturation" min="-100" max="100" value="0"></label>
+        <label class="row">Blur <input type="range" data-filter="blur" min="0" max="100" value="0"></label>
+        <div class="grid">
+          <button data-preset="grayscale">B&amp;W</button>
+          <button data-preset="sepia">Sepia</button>
+          <button data-preset="invert">Invert</button>
+          <button data-preset="vintage">Vintage</button>
+          <button data-preset="reset">Reset</button>
+          <button id="cropToCanvas">Fill canvas</button>
+        </div>
+      </section>
+    </div>
+  </aside>
+</div>
+
+<script src="vendor/fabric.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
