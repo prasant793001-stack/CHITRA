@@ -101,5 +101,13 @@
   }
   document.addEventListener('chitra:editor', () => setTimeout(() => { if (!$('#app').hidden) startTour(); }, 900));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && tourEl) { tourEl.remove(); tourEl = null; try { localStorage.setItem('chitra.tour', '1'); } catch { } } });
+
+  /* ---------- optional analytics + error reports (only when configured in config.js) ---------- */
+  const CFGP = window.CHITRA_CONFIG || {};
+  if (CFGP.analytics?.plausibleDomain) { const s = Object.assign(document.createElement('script'), { defer: true, src: 'https://plausible.io/js/script.js' }); s.dataset.domain = CFGP.analytics.plausibleDomain; document.head.appendChild(s); }
+  if (CFGP.apiUrl && CFGP.reportErrors !== false) {
+    const seen = new Set(); const send = (msg, src) => { const key = msg + src; if (seen.has(key) || seen.size > 15) return; seen.add(key); try { navigator.sendBeacon?.(CFGP.apiUrl.replace(/\/$/, '') + '/log', new Blob([JSON.stringify({ msg, src, ua: navigator.userAgent, v: 'web' })], { type: 'text/plain' })); } catch { } };
+    addEventListener('error', e => send(e.message || 'error', `${(e.filename || '').split('/').pop()}:${e.lineno}`)); addEventListener('unhandledrejection', e => send(String(e.reason?.message || e.reason || 'rejection').slice(0, 300), 'promise'));
+  }
   $('#cmd') && C.addCommand?.('Keyboard shortcuts & help', openHelp);
 })();

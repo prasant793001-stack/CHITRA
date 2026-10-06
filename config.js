@@ -11,6 +11,8 @@ window.CHITRA_CONFIG = {
   // Photo search. SAFEST: deploy worker/photos-proxy.js (free Cloudflare Worker) and paste its URL here - the keys then never reach the browser.
   // URL of your deployed worker/api.js (accounts, cloud sync, subscriptions). Leave blank to run fully offline/local.
   apiUrl: '',
+  // Optional: { plausibleDomain: 'yourdomain.com' } for privacy-friendly analytics. Error reports go to your worker (apiUrl) unless reportErrors:false.
+  analytics: {},
   photoProxy: '',
   // Where "Send to print" delivers orders (WhatsApp number with country code, email). Leave blank to just share the file.
   shop: { name: '', whatsapp: '', email: '' },

@@ -403,20 +403,20 @@
     g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 3; g.beginPath(); g.moveTo(208 * k, 72 * k); g.quadraticCurveTo(300 * k, 142 * k, 392 * k, 72 * k); g.stroke();
     g.restore();
   }
-  function drawMug(g) {
-    const cx = 450, R = 180, top = 230, bot = 650, ry = 28, col = M.color;
+  function drawMug(g, o = {}) {
+    const cx = 450, R = o.R || 180, top = o.top || 230, bot = o.bot || 650, ry = o.ry || 28, col = M.color;
     // floor shadow
     g.save(); g.fillStyle = 'rgba(0,0,0,.45)'; blur(g, 16); g.beginPath(); g.ellipse(cx + 20, bot + 18, 230, 34, 0, 0, Math.PI * 2); g.fill(); noTint(g); g.restore();
     // handle
-    g.save(); g.lineCap = 'round';
+    if (!o.noHandle) { g.save(); g.lineCap = 'round';
     g.strokeStyle = shade(col, -0.12); g.lineWidth = 46; g.beginPath(); g.arc(cx + R + 5, 440, 98, -1.25, 1.25); g.stroke();
-    g.strokeStyle = shade(col, 0.18); g.lineWidth = 12; g.beginPath(); g.arc(cx + R + 5, 440, 105, -1.1, 0.9); g.stroke(); g.restore();
+    g.strokeStyle = shade(col, 0.18); g.lineWidth = 12; g.beginPath(); g.arc(cx + R + 5, 440, 105, -1.1, 0.9); g.stroke(); g.restore(); }
     // body
     const body = new Path2D(); body.moveTo(cx - R, top); body.lineTo(cx - R, bot); body.ellipse(cx, bot, R, ry, 0, Math.PI, 0, true); body.lineTo(cx + R, top); body.ellipse(cx, top, R, ry, 0, 0, Math.PI, true); body.closePath();
     g.fillStyle = col; g.fill(body);
     g.save(); g.clip(body);
     // wrap the artwork around the cylinder (per-column projection)
-    const arcFrac = 2 * Math.PI * 0.9, srcPer = M.art.width / arcFrac, dh = Math.min(400, 2 * Math.PI * 0.9 * R * (M.art.height / M.art.width)), y0 = (top + bot) / 2 - dh / 2 + 6;
+    const arcFrac = 2 * Math.PI * 0.9, srcPer = M.art.width / arcFrac, dh = Math.min(o.maxH || 400, 2 * Math.PI * 0.9 * R * (M.art.height / M.art.width)), y0 = (top + bot) / 2 - dh / 2 + 6;
     for (let x = -R; x < R; x += 1) {
       const t = clamp(x / R, -0.999, 0.999), a = Math.asin(t), sx = M.art.width / 2 + a * srcPer, sw = Math.max(1, srcPer / Math.sqrt(1 - t * t) / R * 1.2), off = ry * (Math.sqrt(1 - t * t) - 0.5);
       g.drawImage(M.art, clamp(sx, 0, M.art.width - 1), 0, sw, M.art.height, cx + x, y0 + off, 1.6, dh);
@@ -431,6 +431,43 @@
     g.fillStyle = shade(col, 0.25); g.beginPath(); g.ellipse(cx, top, R, ry, 0, 0, Math.PI * 2); g.fill();
     g.fillStyle = shade(col, -0.55); g.beginPath(); g.ellipse(cx, top + 2, R - 10, ry - 6, 0, 0, Math.PI * 2); g.fill();
     g.fillStyle = 'rgba(255,255,255,.18)'; g.beginPath(); g.ellipse(cx - 40, top - 4, R - 60, 5, 0, Math.PI, 0); g.fill();
+    if (o.lid) { // tumbler lid + straw
+      g.save(); g.strokeStyle = '#d7dbe2'; g.lineWidth = 14; g.lineCap = 'round'; g.beginPath(); g.moveTo(cx + 40, top - 10); g.lineTo(cx + 80, top - 130); g.stroke(); g.restore();
+      g.fillStyle = shade(col, -0.05); g.beginPath(); g.ellipse(cx, top - 6, R + 6, ry + 3, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = 'rgba(255,255,255,.22)'; g.beginPath(); g.ellipse(cx - 30, top - 12, R - 50, ry - 12, 0, Math.PI, 0); g.fill();
+    }
+  }
+  function drawTumbler(g) { drawMug(g, { R: 135, top: 150, bot: 690, ry: 24, noHandle: true, lid: true, maxH: 440 }); }
+  function drawTote(g) {
+    const x = 190, y = 300, w = 520, h = 520, col = M.color;
+    g.save(); g.fillStyle = 'rgba(0,0,0,.4)'; blur(g, 22); g.fillRect(x + 20, y + h - 10, w - 40, 36); noTint(g); g.restore();
+    g.save(); g.lineCap = 'round'; g.strokeStyle = shade(col, -0.18); g.lineWidth = 26; g.beginPath(); g.moveTo(x + 150, y + 6); g.bezierCurveTo(x + 130, y - 210, x + w - 130, y - 210, x + w - 150, y + 6); g.stroke(); g.strokeStyle = 'rgba(255,255,255,.12)'; g.lineWidth = 6; g.beginPath(); g.moveTo(x + 156, y + 4); g.bezierCurveTo(x + 136, y - 200, x + w - 136, y - 200, x + w - 156, y + 4); g.stroke(); g.restore();
+    g.fillStyle = col; g.beginPath(); g.moveTo(x, y); g.lineTo(x + w, y); g.lineTo(x + w + 6, y + h); g.lineTo(x - 6, y + h); g.closePath(); g.fill();
+    g.save(); g.clip();
+    const s = Math.min(330 / M.art.width, 360 / M.art.height), dw = M.art.width * s, dh = M.art.height * s, layer = mk(), lg = layer.getContext('2d'); blur(lg, 0.5); lg.drawImage(M.art, x + w / 2 - dw / 2, y + 90, dw, dh); noTint(lg); g.globalAlpha = 0.96; g.drawImage(layer, 0, 0); g.globalAlpha = 1;
+    const gr = g.createLinearGradient(x, 0, x + w, 0); gr.addColorStop(0, 'rgba(0,0,0,.25)'); gr.addColorStop(.25, 'rgba(255,255,255,.06)'); gr.addColorStop(.7, 'rgba(0,0,0,.05)'); gr.addColorStop(1, 'rgba(0,0,0,.28)'); g.fillStyle = gr; g.fillRect(x - 10, y, w + 20, h);
+    const r = rng(7); blur(g, 7); g.lineCap = 'round'; for (let i = 0; i < 9; i++) { g.lineWidth = 14 + r() * 22; g.strokeStyle = `rgba(0,0,0,${0.04 + r() * 0.05})`; const xx = x + 30 + r() * (w - 60); g.beginPath(); g.moveTo(xx, y + 40); g.quadraticCurveTo(xx + (r() - .5) * 80, y + h / 2, xx + (r() - .5) * 40, y + h - 20); g.stroke(); } noTint(g);
+    g.fillStyle = g.createPattern(fabricNoise(), 'repeat'); g.fillRect(x - 10, y, w + 20, h);
+    g.strokeStyle = shade(col, -0.25); g.lineWidth = 3; g.setLineDash([10, 7]); g.beginPath(); g.moveTo(x + 8, y + 30); g.lineTo(x + w - 8, y + 30); g.stroke(); g.setLineDash([]);
+    g.restore();
+  }
+  function drawPad(g) {
+    const x = 120, y = 230, w = 660, h = 500, rr = 46;
+    g.save(); g.fillStyle = 'rgba(0,0,0,.45)'; blur(g, 22); g.beginPath(); g.roundRect(x + 10, y + 26, w, h, rr); g.fill(); noTint(g); g.restore();
+    g.save(); g.beginPath(); g.roundRect(x, y, w, h, rr); g.clip(); g.fillStyle = M.color; g.fillRect(x, y, w, h);
+    const s = Math.max(w / M.art.width, h / M.art.height), dw = M.art.width * s, dh = M.art.height * s; g.drawImage(M.art, x + w / 2 - dw / 2, y + h / 2 - dh / 2, dw, dh);
+    const gr = g.createLinearGradient(x, y, x + w, y + h); gr.addColorStop(0, 'rgba(255,255,255,.22)'); gr.addColorStop(.45, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.18)'); g.fillStyle = gr; g.fillRect(x, y, w, h);
+    g.fillStyle = g.createPattern(fabricNoise(), 'repeat'); g.globalAlpha = 0.7; g.fillRect(x, y, w, h); g.globalAlpha = 1; g.restore();
+    g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = 3; g.setLineDash([9, 6]); g.beginPath(); g.roundRect(x + 10, y + 10, w - 20, h - 20, rr - 8); g.stroke(); g.setLineDash([]);
+  }
+  function drawCase(g) {
+    const x = 290, y = 110, w = 320, h = 680, rr = 64;
+    g.save(); g.fillStyle = 'rgba(0,0,0,.45)'; blur(g, 24); g.beginPath(); g.roundRect(x + 18, y + 30, w, h, rr); g.fill(); noTint(g); g.restore();
+    g.save(); g.beginPath(); g.roundRect(x, y, w, h, rr); g.clip(); g.fillStyle = M.color; g.fillRect(x, y, w, h);
+    const s = Math.max(w / M.art.width, h / M.art.height), dw = M.art.width * s, dh = M.art.height * s; g.drawImage(M.art, x + w / 2 - dw / 2, y + h / 2 - dh / 2, dw, dh);
+    const gr = g.createLinearGradient(x, 0, x + w, 0); gr.addColorStop(0, 'rgba(0,0,0,.28)'); gr.addColorStop(.18, 'rgba(255,255,255,.0)'); gr.addColorStop(.32, 'rgba(255,255,255,.2)'); gr.addColorStop(.42, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.34)'); g.fillStyle = gr; g.fillRect(x, y, w, h);
+    g.fillStyle = '#14141c'; g.beginPath(); g.roundRect(x + 24, y + 24, 128, 128, 34); g.fill();
+    [[60, 62], [60, 118], [112, 90]].forEach(([cx, cy]) => { g.fillStyle = '#2a2a35'; g.beginPath(); g.arc(x + cx + 8, y + cy + 8, 25, 0, 7); g.fill(); g.fillStyle = '#0a0a10'; g.beginPath(); g.arc(x + cx + 8, y + cy + 8, 15, 0, 7); g.fill(); g.fillStyle = 'rgba(120,150,255,.55)'; g.beginPath(); g.arc(x + cx + 3, y + cy + 3, 4, 0, 7); g.fill(); });
+    g.restore(); g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 3; g.beginPath(); g.roundRect(x + 1.5, y + 1.5, w - 3, h - 3, rr); g.stroke();
   }
   function drawPhoto(g) {
     if (!M.photo) { g.fillStyle = '#222'; g.fillRect(0, 0, MS, MS); g.fillStyle = '#9c9cb8'; g.font = '28px sans-serif'; g.textAlign = 'center'; g.fillText('Upload a photo of your blank product →', MS / 2, MS / 2); return; }
@@ -446,7 +483,7 @@
     const c = $('#mockCanvas'), g = c.getContext('2d'); g.clearRect(0, 0, MS, MS);
     try { M.art = C.renderDesign(false); } catch { toast('This design uses an image that blocks export (CORS) — upload it instead', '⚠️'); return; }
     if (M.kind === 'photo') return drawPhoto(g);
-    backdrop(g); (M.kind === 'mug' ? drawMug : drawShirt)(g);
+    backdrop(g); ({ mug: drawMug, tumbler: drawTumbler, tote: drawTote, pad: drawPad, case: drawCase }[M.kind] || drawShirt)(g);
   }
   function buildMockUI() {
     if ($('#mockColors').children.length) return;
@@ -477,7 +514,8 @@
       const url = URL.createObjectURL(b), a = document.createElement('a'); a.href = url; a.download = 'mockup.png'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 2000); confetti(); toast('Mockup saved', '👀');
     });
   }
-  function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = C.guide === 'mug' ? 'mug' : 'shirt'; $('#mockup').hidden = false; drawMockup(); }
+  const guessKind = () => { const n = $('#productName').textContent; return C.guide === 'mug' ? 'mug' : /tumbler/i.test(n) ? 'tumbler' : /tote/i.test(n) ? 'tote' : /mouse/i.test(n) ? 'pad' : /phone/i.test(n) ? 'case' : 'shirt'; };
+  function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = guessKind(); $('#mockup').hidden = false; drawMockup(); }
   $('#mockupBtn').onclick = openMockup;
 
   Object.assign(C, { openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });

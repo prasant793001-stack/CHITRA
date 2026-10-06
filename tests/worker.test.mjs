@@ -52,4 +52,6 @@ r = await call('/share/' + sid + '/comment', { method: 'POST', body: { text: '  
 r = await call('/share/' + sid + '/approve', { method: 'POST', body: { name: 'Zed' } }); ok('customer approves', r.s === 200 && r.j.approved.by === 'Zed');
 r = await call('/share/' + sid + '/comment', { method: 'POST', body: { name: 'Zed', text: 'Actually, one more change' } }); ok('new comment withdraws approval', r.j.approved === null);
 r = await call('/share/zzzzzzzzzz'); ok('unknown link 404', r.s === 404);
+r = await call('/log', { method: 'POST', body: { msg: 'boom', src: 'app.js:1', ua: 'x', v: '5' } }); ok('error report accepted', r.s === 200 && [...store.keys()].some(k => k.startsWith('log:')));
+r = await call('/log', { method: 'POST', body: 'nope' }); ok('bad error report refused', r.s === 400);
 console.log(`\n${pass}/${pass + fail} passed`); process.exit(fail ? 1 : 0);

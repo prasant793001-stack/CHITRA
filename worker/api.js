@@ -67,6 +67,14 @@ export default {
         }
       }
 
+      /* ---- anonymous client error reports (for the closed beta) ---- */
+      if (path === '/log' && req.method === 'POST') {
+        const ip = req.headers.get('cf-connecting-ip') || 'anon', rk = `rll:${ip}`, n = +((await env.DATA.get(rk)) || 0); if (n >= 20) return json(env, { ok: false }, 429); await env.DATA.put(rk, String(n + 1), { expirationTtl: 3600 });
+        const raw = (await req.text()).slice(0, 2000); let b = {}; try { b = JSON.parse(raw); } catch { return json(env, { error: 'bad json' }, 400); }
+        const rec = { at: Date.now(), msg: String(b.msg || '').slice(0, 300), src: String(b.src || '').slice(0, 120), ua: String(b.ua || '').slice(0, 160), v: String(b.v || '').slice(0, 20) };
+        await env.DATA.put(`log:${Date.now()}:${Math.random().toString(36).slice(2, 6)}`, JSON.stringify(rec), { expirationTtl: 604800 }); return json(env, { ok: true });
+      }
+
       /* ---- sign-in with an emailed code ---- */
       if (path === '/auth/start' && req.method === 'POST') {
         const { email } = await req.json().catch(() => ({})); const e = String(email || '').trim().toLowerCase(); if (!validEmail(e)) return json(env, { error: 'Enter a valid email' }, 400);
