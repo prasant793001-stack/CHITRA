@@ -79,7 +79,13 @@
   async function fromTemplate(name) {
     const m = META[name]; if (!guardPro(m)) return;
     await C.ensureTpl(name, 'full');
-    await C.newDocument({ product: C.productByName(m.p), template: name, name: m.n }); confetti(innerWidth / 2, innerHeight / 3, 70);
+    const prod = C.productByName(m.p);
+    await C.newDocument({ product: prod, template: name, name: m.title || m.n }); confetti(innerWidth / 2, innerHeight / 3, 70);
+    if (/^Presentation/.test(prod.name)) { // a deck starts with themed follow-up pages, not empty ones
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+      await wait(500); C.addPage(false, 'content'); await wait(500); C.addPage(false, 'two'); await wait(500); document.querySelector('#pageList .pg')?.click();
+      C.toast('Deck ready — pages 2 and 3 follow this template’s style', '');
+    }
   }
   const QUICK = [['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['camera', 'Instagram', 'Instagram post'], ['smartphone', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
   function renderQuick() {

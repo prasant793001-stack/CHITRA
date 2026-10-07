@@ -1088,6 +1088,7 @@
     { n: 'Enhance / upscale photo 2×', i: 'search', k: 'quality sharpen', run: () => chitra.enhance() },
     { n: 'Group selected', i: 'group', k: 'ctrl g', run: groupSel },
     { n: 'Ungroup', i: 'ungroup', k: 'ctrl shift g', run: ungroupSel },
+    ...PAGE_KINDS.map(([k, n]) => ({ n: 'Add page: ' + n, i: 'plus', k: 'page slide new themed', run: () => addPage(false, k) })),
     { n: 'Pack designs onto sheet', i: 'ungroup', k: 'gang sheet', run: pack },
     { n: 'Toggle print guides', i: 'ruler', k: 'margin', run: () => { $('#showGuides').click(); } },
     { n: 'Toggle transparent background', i: 'blend', k: 'bg', run: () => { $('#transparent').click(); } },
@@ -1129,10 +1130,37 @@
     });
   }
   const switchPage = i => { if (i === cur || i < 0 || i >= pages.length) return; savePage(); loadPage(i); };
-  function addPage(dup) {
+  /* A design's theme is read from its first page (background, heading + body fonts, colours), so every extra page matches it - for built-in templates and for the user's own designs alike. */
+  function themeOf() {
+    const d = parseSnap(pages[0].json), os = d.canvas.objects || [], area = d.W * d.H, col = c => typeof c === 'string' && c && c !== 'transparent' && c !== 'rgba(0,0,0,0)';
+    const tx = os.filter(o => /text/i.test(o.type) && (o.text || '').trim()).map(o => ({ f: o.fontFamily, c: o.fill, w: o.fontWeight, t: o.text, s: (o.fontSize || 16) * (o.scaleY || 1) })).sort((a, b) => b.s - a.s);
+    const head = tx[0], body = tx.slice(1).find(t => t.t.length > 14 && t.f !== head?.f) || tx.slice(1).find(t => t.t.length > 14) || tx[1] || head;
+    const big = os.find(o => /rect/.test(o.type) && o.width * (o.scaleX || 1) * o.height * (o.scaleY || 1) > area * 0.5 && col(o.fill));
+    let bg = col(d.canvas.background) ? d.canvas.background : d.canvas.background?.colorStops?.[0]?.color || (big && big.fill) || null;
+    const hc = head && col(head.c) ? head.c : '#14110f';
+    if (!bg) bg = lum(hc) > 0.6 ? '#14110f' : '#ffffff'; // photo / pattern first page: fall back to a solid that keeps the text readable
+    const ink = lum(bg) < 0.5 ? '#ffffff' : '#14110f', pc = c => col(c) && Math.abs(lum(c) - lum(bg)) > 0.35 ? c : ink;
+    const acc = os.filter(o => /rect|circle|ellipse|path|polygon|triangle/.test(o.type) && col(o.fill) && o !== big).map(o => o.fill).find(c => { const l = lum(c); return Math.abs(l - lum(bg)) > 0.12 && l > 0.08 && l < 0.95; }) || (Math.abs(lum(hc) - lum(bg)) > 0.35 ? hc : '#6d4aff');
+    return { bg, head: { f: head?.f || 'Fredoka', c: pc(hc), w: head?.w || 700 }, body: { f: body?.f || 'Poppins', c: pc(body?.c), w: 400 }, acc };
+  }
+  const PAGE_KINDS = [['content', 'Heading + text'], ['title', 'Big title'], ['two', 'Two columns'], ['quote', 'Quote'], ['blank', 'Blank (keep colours)']];
+  function themedObjects(kind, th) {
+    const m = W * 0.08, k = u(), T = (t, o) => new fabric.Textbox(t, { fontFamily: th.body.f, fill: th.body.c, fontWeight: th.body.w, lineHeight: 1.25, ...o });
+    const Hd = (t, o) => T(t, { fontFamily: th.head.f, fill: th.head.c, fontWeight: th.head.w, lineHeight: 1.05, ...o });
+    const bar = (x, y, w) => new fabric.Rect({ left: x, top: y, width: w, height: Math.max(4, k * 0.012), fill: th.acc, selectable: true });
+    if (kind === 'title') return [Hd('Section title', { left: m, top: H * 0.38, width: W - 2 * m, fontSize: k * 0.12 }), bar(m, H * 0.38 + k * 0.17, k * 0.2), T('A short line that sets up what comes next', { left: m, top: H * 0.38 + k * 0.22, width: W - 2 * m, fontSize: k * 0.035 })];
+    if (kind === 'two') { const cw = (W - 2 * m - m * 0.5) / 2; return [Hd('Heading', { left: m, top: H * 0.1, width: W - 2 * m, fontSize: k * 0.075 }), bar(m, H * 0.1 + k * 0.1, k * 0.14), T('Left column\nAdd your first point here. Keep it short and clear.', { left: m, top: H * 0.34, width: cw, fontSize: k * 0.032 }), T('Right column\nAdd your second point here. Keep it short and clear.', { left: m + cw + m * 0.5, top: H * 0.34, width: cw, fontSize: k * 0.032 })]; }
+    if (kind === 'quote') return [Hd('“', { left: m, top: H * 0.14, width: k * 0.3, fontSize: k * 0.3, fill: th.acc }), Hd('A line worth remembering goes right here.', { left: m, top: H * 0.34, width: W - 2 * m, fontSize: k * 0.07, fontWeight: th.head.w }), T('— Name, role', { left: m, top: H * 0.72, width: W - 2 * m, fontSize: k * 0.03, fill: th.acc })];
+    if (kind === 'blank') return [];
+    return [Hd('Add a heading', { left: m, top: H * 0.1, width: W - 2 * m, fontSize: k * 0.075 }), bar(m, H * 0.1 + k * 0.1, k * 0.14), T('Write your main point in a sentence or two.\n• First supporting idea\n• Second supporting idea\n• Third supporting idea', { left: m, top: H * 0.34, width: W - 2 * m, fontSize: k * 0.034 })];
+  }
+  function addPage(dup, kind = 'content') {
     savePage();
-    const blank = JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: { version: fabric.version, objects: [], background: '' } });
-    pages.splice(cur + 1, 0, { json: dup ? pages[cur].json : blank, thumb: dup ? pages[cur].thumb : null, hist: null }); loadPage(cur + 1); toast(dup ? 'Page duplicated' : 'Page added', '📄');
+    if (dup) { pages.splice(cur + 1, 0, { json: pages[cur].json, thumb: pages[cur].thumb, hist: null }); loadPage(cur + 1); return toast('Page duplicated', '📄'); }
+    const th = themeOf(), blank = JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: { version: fabric.version, objects: [], background: th.bg } });
+    pages.splice(cur + 1, 0, { json: blank, thumb: null, hist: null });
+    loadPage(cur + 1, () => { history.busy = true; themedObjects(kind, th).forEach(o => canvas.add(o)); history.busy = false; canvas.discardActiveObject(); canvas.renderAll(); commit(); renderPages(); });
+    toast('Page added in your design’s style', '📄');
   }
   function deletePage() {
     if (pages.length < 2) return toast('A design needs at least one page', '☝️');
@@ -1148,7 +1176,14 @@
     });
     $('#pageCount').textContent = `Page ${cur + 1} / ${pages.length}`;
   }
-  $('#pgAdd').onclick = () => addPage(false); $('#pgDup').onclick = () => addPage(true); $('#pgDel').onclick = deletePage;
+  $('#pgMore').onclick = e => { // pick a page layout; all of them use the design's own colours + fonts
+    e.stopPropagation(); $('#pgMenu')?.remove(); const m = document.createElement('div'), r = e.currentTarget.getBoundingClientRect(); m.id = 'pgMenu'; m.className = 'pg-menu';
+    m.style.cssText = `left:${Math.max(8, Math.min(r.left, innerWidth - 220))}px;bottom:${innerHeight - r.top + 6}px`;
+    m.innerHTML = '<small>New page in your style</small>' + PAGE_KINDS.map(([k, n]) => `<button data-k="${k}">${n}</button>`).join('');
+    document.body.appendChild(m); m.onclick = ev => { const b = ev.target.closest('[data-k]'); if (b) { addPage(false, b.dataset.k); m.remove(); } };
+    setTimeout(() => document.addEventListener('click', () => m.remove(), { once: true }), 0);
+  };
+  $('#pgAdd').onclick = e => addPage(false, e.shiftKey ? 'blank' : 'content'); $('#pgDup').onclick = () => addPage(true); $('#pgDel').onclick = deletePage;
 
   /* ================= phone / touch: gestures ================= */
   const mobileQ = matchMedia('(max-width:800px)'), isCoarse = matchMedia('(pointer:coarse)').matches;
@@ -1429,7 +1464,7 @@
     canvas.requestRenderAll();
   }) : Promise.resolve();
   const api = {
-    canvas, undo, redo, addText, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
+    canvas, undo, redo, addText, addPage, themeOf, PAGE_KINDS, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
     addCommand: (n, run) => extraCmds.push([n, run]),
     kit: { get W() { return W; }, get H() { return H; }, get B() { return B; }, u, clearAll, shadow }, ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },

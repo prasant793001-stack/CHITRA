@@ -622,3 +622,8 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .mk-pick{position:relative;width:30px;height:30px;border-radius:50%;overflow:hidden;background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--line)}.mk-pick input{position:absolute;inset:-8px;opacity:0;cursor:pointer}
 .mk-ai{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:99px;background:var(--grad);color:#fff;font-size:10px;letter-spacing:.04em}.mk-lbl{width:100%;font-size:11.5px;color:var(--muted);font-weight:700}
 #mockup .mock-side{max-height:78vh;overflow:auto}
+
+.pg-menu{position:fixed;z-index:150;display:grid;gap:2px;min-width:200px;padding:8px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-lg)}
+.pg-menu small{padding:4px 10px 6px;color:var(--muted,#6b6785);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.pg-menu button{border:0;background:none;text-align:left;font:inherit;font-weight:600;padding:9px 10px;border-radius:9px;cursor:pointer}
+.pg-menu button:hover{background:#f2effd}

@@ -71,6 +71,18 @@ module.exports = [
     const [d, r] = await Promise.all([p.waitForEvent('download', { timeout: 30000 }), p.evaluate(() => chitra.recordAnimation())]);
     ok('video downloads (.webm/.mp4) and is not empty', /\.(webm|mp4)$/.test(d.suggestedFilename()) && r.size > 5000, d.suggestedFilename() + ' ' + r.size);
     ok('design restored after recording', await p.evaluate(() => chitra.canvas.getObjects().every(o => o.opacity > 0))); } },
+  { name: 'themed pages', only: 'desktop', run: async (p, ok) => {
+    const r = await p.evaluate(async () => {
+      const id = chitra.listTemplates({ cat: 'all' }).find(i => !chitra.TEMPLATE_META[i].real && chitra.TEMPLATE_META[i].p === 'Presentation 16:9') || chitra.listTemplates({}).find(i => !chitra.TEMPLATE_META[i].real);
+      await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName(chitra.TEMPLATE_META[id].p), template: id });
+      await new Promise(r => setTimeout(r, 600)); const th = chitra.themeOf(); chitra.addPage(false, 'content'); await new Promise(r => setTimeout(r, 800));
+      const os = chitra.canvas.getObjects(), tx = os.filter(o => /textbox/.test(o.type));
+      return { th, n: os.length, bg: chitra.canvas.backgroundColor, fonts: tx.map(o => o.fontFamily), pages: chitra.pages.length };
+    });
+    ok('Add page creates a themed page (not empty)', r.pages === 2 && r.n >= 3, JSON.stringify(r));
+    ok('new page keeps the first page background', !!r.bg && r.bg === r.th.bg, r.bg + ' vs ' + r.th.bg);
+    ok('new page heading uses the theme font', r.fonts[0] === r.th.head.f, r.fonts.join());
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
