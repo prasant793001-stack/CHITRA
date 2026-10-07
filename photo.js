@@ -508,11 +508,12 @@
     g.restore(); g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 3; g.beginPath(); g.roundRect(x + 1.5, y + 1.5, w - 3, h - 3, rr); g.stroke();
   }
   /* Realistic product preview of a flat design (used for template thumbnails): returns a 900x900 canvas */
+  const EXTRA_KINDS = {}; // more products are registered by mockprods.js
   function mockRender(kind, art, color, sceneIdx = 1, opts = {}) {
     const sv = { kind: M.kind, art: M.art, color: M.color, scene: M.scene, sceneIdx: M.sceneIdx };
     Object.assign(M, { kind, art, color, scene: null, sceneIdx });
     const c = document.createElement('canvas'); c.width = c.height = MS; const g = c.getContext('2d');
-    try { backdrop(g); ({ mug: drawMug, tumbler: drawTumbler, tote: drawTote, pad: drawPad, case: drawCase }[kind] || drawShirt)(g, opts); } finally { Object.assign(M, sv); }
+    try { if (!opts.noBackdrop) backdrop(g); (EXTRA_KINDS[kind] || { mug: drawMug, tumbler: drawTumbler, tote: drawTote, pad: drawPad, case: drawCase }[kind] || drawShirt)(g, opts); } finally { Object.assign(M, sv); }
     return c;
   }
   function drawPhoto(g) {
@@ -564,5 +565,5 @@
   function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = guessKind(); $('#mockup').hidden = false; drawMockup(); }
   $('#mockupBtn').onclick = openMockup;
 
-  Object.assign(C, { vault, mockRender, openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
+  Object.assign(C, { mockDraw: EXTRA_KINDS, mockKit: { MS, M, mk, blur, noTint, shade, rng, clamp, fabricNoise, drawMug, drawShirt }, vault, mockRender, openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
 })();

@@ -210,11 +210,9 @@
   function splash() {
     const sp = $('#splash'); let seen = false; try { seen = !!sessionStorage.getItem('chitra.splash'); } catch { }
     if (seen || new URLSearchParams(location.search).has('nosplash')) { sp.remove(); enterHome(); return; }
-    let n = 3, done = false; const count = $('#spCount'), bar = $('#spBar');
-    requestAnimationFrame(() => { bar.style.width = '100%'; });
-    const finish = () => { if (done) return; done = true; clearInterval(t); try { sessionStorage.setItem('chitra.splash', '1'); } catch { } sp.classList.add('out'); enterHome(); setTimeout(() => sp.remove(), 600); };
-    const t = setInterval(() => { n--; if (n <= 0) return finish(); count.textContent = n; count.classList.remove('pop'); void count.offsetWidth; count.classList.add('pop'); }, 800);
-    sp.onclick = finish;
+    let done = false; // no counter, no progress bar: a short branded hello, tap anywhere to go straight in
+    const finish = () => { if (done) return; done = true; clearTimeout(t); try { sessionStorage.setItem('chitra.splash', '1'); } catch { } sp.classList.add('out'); enterHome(); setTimeout(() => sp.remove(), 600); };
+    const t = setTimeout(finish, 1500); sp.onclick = finish;
   }
   splash();
   Object.assign(C, { fromTemplate, openPricing, applyTemplate, fillThumbs, renderTemplates });
