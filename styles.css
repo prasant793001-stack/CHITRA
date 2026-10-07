@@ -627,3 +627,53 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .pg-menu small{padding:4px 10px 6px;color:var(--muted,#6b6785);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
 .pg-menu button{border:0;background:none;text-align:left;font:inherit;font-weight:600;padding:9px 10px;border-radius:9px;cursor:pointer}
 .pg-menu button:hover{background:#f2effd}
+
+/* ===== Inspector, "pro editor" skin: quiet neutral panel, thin controls, segmented groups (no cartoon colours) ===== */
+.inspector{--ink2:#0e1318;--soft:#f3f3f6;--soft2:#e9e9ef;--hair:#e8e8ee;padding:0 16px 20px;font-size:13px;color:var(--ink2)}
+.inspector .tabs{display:flex;gap:18px;padding:0;margin:0 -16px 6px;border-radius:0;background:none;border-bottom:1px solid var(--hair);padding:0 16px}
+.inspector .tabs button{padding:13px 2px 11px;border-radius:0;font:600 13px "Plus Jakarta Sans",system-ui,sans-serif;color:#6b6f7b;border-bottom:2px solid transparent;margin-bottom:-1px}
+.inspector .tabs button.on{background:none;box-shadow:none;color:var(--ink2);border-bottom-color:var(--ink2)}
+.inspector section>div+div,.inspector section+section{border-top:1px solid var(--hair);margin-top:14px;padding-top:2px}
+.inspector h4{margin:16px 0 10px;font:700 13px "Plus Jakarta Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none;color:var(--ink2)}
+.inspector .btn{background:var(--soft);border:1px solid transparent;border-radius:8px;padding:8px 10px;font-weight:600;font-size:12.5px;color:var(--ink2);box-shadow:none;gap:7px;justify-content:center}
+.inspector .btn:hover{background:var(--soft2);border-color:transparent}
+.inspector .btn.on,.inspector .btn[aria-pressed=true]{background:#e6defb;color:#4a24c9}
+.inspector .btn.hot{background:#f1ecff;color:#4a24c9;border-color:transparent}
+.inspector .btn.hot:hover{background:#e6defb;color:#4a24c9;border-color:transparent}
+.inspector .btn.danger{color:#c4223f}
+.inspector .row2{gap:8px}
+.inspector .row3{gap:0;border-radius:8px;overflow:hidden;background:var(--soft);margin-bottom:8px;grid-template-columns:repeat(6,1fr)}
+.inspector .row3 .btn{border-radius:0;background:transparent;padding:9px 0;min-width:0}
+.inspector .row3 .btn:hover{background:var(--soft2)}
+.inspector .row3 .btn+.btn{box-shadow:inset 1px 0 0 var(--hair)}
+.inspector .row3:has(> .btn:nth-child(3):last-child){grid-template-columns:repeat(3,1fr)}
+.inspector section:not(#textSec) .row3{grid-template-columns:repeat(3,1fr);gap:6px;background:none;overflow:visible}
+.inspector section:not(#textSec) .row3 .btn{background:var(--soft);border-radius:8px;box-shadow:none}
+.inspector section:not(#textSec) .row3 .btn:hover{background:var(--soft2)}
+.inspector .slider-row{margin:12px 0;font-weight:500;color:#444a57;font-size:13px}
+.inspector input[type=range]{accent-color:#7c3aed;height:18px;width:52%}
+.inspector input[type=number],.inspector .text-in{background:var(--soft);border:1px solid transparent;border-radius:8px;padding:7px 9px;width:64px;font:600 13px inherit;text-align:right}
+.inspector .text-in{width:100%;text-align:left}
+.inspector input[type=number]:focus,.inspector .text-in:focus{outline:2px solid #7c3aed;background:#fff}
+.inspector input[type=color]{width:34px;height:26px;padding:0;border:1px solid var(--hair);border-radius:7px;background:#fff;cursor:pointer}
+.inspector .switch{margin:12px 0;font-weight:500;color:#444a57;justify-content:space-between;flex-direction:row-reverse}
+.inspector .switch i{width:34px;height:20px;background:#cfd2da}
+.inspector .switch i::after{width:14px;height:14px;left:3px;top:3px}
+.inspector .switch input:checked+i{background:#7c3aed}.inspector .switch input:checked+i::after{transform:translateX(14px)}
+.inspector .swatches{gap:6px;grid-template-columns:repeat(8,1fr)}
+.inspector .swatches button{border-radius:6px;border:0;box-shadow:inset 0 0 0 1px rgba(14,19,24,.14)}
+.inspector .swatches button:hover{transform:none;box-shadow:inset 0 0 0 1px rgba(14,19,24,.14),0 0 0 2px #fff,0 0 0 4px #7c3aed}
+.inspector .font-btn{background:var(--soft);border:1px solid transparent;border-radius:8px;padding:9px 12px;font-size:15px}
+.inspector .font-btn:hover{background:var(--soft2);border-color:transparent}
+.inspector .brand-row{font-size:12px;color:#6b6f7b}
+.inspector .mini{border-radius:6px;border:1px solid var(--hair)}
+.inspector .tip,.inspector .dpi{font-size:12px;color:#6b6f7b}
+.inspector #emptyProps{padding:40px 12px}
+.inspector .mascot{width:52px;height:52px;border-radius:50%;background:var(--soft);color:#6b6f7b;box-shadow:none}
+.inspector #emptyProps b{font:700 15px "Plus Jakarta Sans",system-ui,sans-serif}
+.inspector .keys kbd{background:var(--soft);border:0;border-radius:5px;padding:2px 6px;font-size:11px}
+
+.gfx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.gfx-card{aspect-ratio:1;display:grid;place-items:center;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fafafc;cursor:pointer;transition:.12s}
+.gfx-card:hover{border-color:#7c3aed;background:#fff;box-shadow:0 4px 14px rgba(60,30,160,.14)}
+.gfx-card svg{max-width:100%;max-height:100%}

@@ -91,6 +91,14 @@ module.exports = [
     const url = await p.evaluate(async () => { const id = chitra.listTemplates({ cat: 'mockup' })[5]; await chitra.ensureTpl(id, 'thumb'); return chitra.renderTemplateThumb(id, chitra.productByName(chitra.TEMPLATE_META[id].p), 300); });
     ok('mock template thumbnails render', !!url && url.length > 6000, url && url.length);
   } },
+  { name: 'built-in graphics library', only: 'desktop', run: async (p, ok) => {
+    ok('150+ built-in graphics', await p.evaluate(() => chitra.GRAPHICS_COUNT >= 150));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(600);
+    await p.click('#rail [data-tab=shapes]'); await p.click('#catGrid [data-el=graphics]'); await p.waitForTimeout(400);
+    ok('graphics grid shows cards', await p.locator('.gfx-card').count() >= 30);
+    await p.click('.gfx-card >> nth=24'); await p.waitForTimeout(500);
+    ok('clicking a graphic places it on the page', await p.evaluate(() => chitra.canvas.getObjects().length >= 1 && chitra.canvas.getObjects().every(o => o.getScaledWidth() > 20)));
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
