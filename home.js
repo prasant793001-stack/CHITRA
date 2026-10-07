@@ -13,20 +13,40 @@
 
   /* ================= template thumbnails (lazy, cached, one at a time) ================= */
   const cache = {}; let chain = C.fontsReady;
+  /* flat design -> realistic product photo (mug / tee / tumbler ...) so the grid looks like a store, not clip-art */
+  async function mockThumb(flatUrl, meta, seed) {
+    const img = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = flatUrl; }); if (!img) return flatUrl;
+    let art = document.createElement('canvas'); art.width = img.width; art.height = img.height; art.getContext('2d').drawImage(img, 0, 0);
+    { // trim transparent margins so the print fills the product like a real order would
+      const s = document.createElement('canvas'), N = 96; s.width = s.height = N; const g = s.getContext('2d', { willReadFrequently: true }); g.drawImage(art, 0, 0, N, N); const d = g.getImageData(0, 0, N, N).data; let x0 = N, y0 = N, x1 = -1, y1 = -1;
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (d[(y * N + x) * 4 + 3] > 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+      if (x1 > x0 && y1 > y0 && meta.mockKind === 'shirt') { const pad = 2, sx = Math.max(0, x0 - pad) / N * img.width, sy = Math.max(0, y0 - pad) / N * img.height, sw = Math.min(N, x1 - x0 + 1 + 2 * pad) / N * img.width, sh = Math.min(N, y1 - y0 + 1 + 2 * pad) / N * img.height; const c2 = document.createElement('canvas'); c2.width = Math.round(sw); c2.height = Math.round(sh); c2.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, c2.width, c2.height); art = c2; }
+    }
+    let lum = 0, wsum = 0; { const s = document.createElement('canvas'); s.width = s.height = 32; const g = s.getContext('2d', { willReadFrequently: true }); g.drawImage(art, 0, 0, 32, 32); const d = g.getImageData(0, 0, 32, 32).data; for (let i = 0; i < d.length; i += 4) { const a = d[i + 3] / 255; lum += a * (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255; wsum += a; } }
+    const mean = wsum > 3 ? lum / wsum : 0.3, dark = mean > 0.62, color = meta.mockKind === 'shirt' ? (dark ? '#23283d' : ['#ffffff', '#f1ece3', '#dfe9f5', '#f6e3e3'][seed % 4]) : (dark ? '#23283d' : '#ffffff');
+    let opts = {};
+    if (meta.mockKind === 'mug' || meta.mockKind === 'tumbler') { // keep the whole headline visible: real wraps leave white sides
+      const wide = document.createElement('canvas'); wide.width = Math.round(art.width * 1.38); wide.height = art.height; wide.getContext('2d').drawImage(art, (wide.width - art.width) / 2, 0); opts = { arc: 3.25, ratio: art.height / art.width * 1.0 }; art = wide;
+    }
+    const m = C.mockRender(meta.mockKind, art, color, 1 + (seed % 3), opts), out = document.createElement('canvas'); out.width = out.height = 420; out.getContext('2d').drawImage(m, 0, 0, 420, 420); return out.toDataURL('image/jpeg', 0.82);
+  }
   function thumbFor(name) {
     if (cache[name]) return Promise.resolve(cache[name]);
     chain = chain.then(async () => {
-      if (cache[name]) return; const key = `tpl:${C.TPL_VERSION}:${name}`;
-      if (META[name].gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return; } } catch { } }
-      const fontsOk = await C.ensureTplFonts(META[name].f); await new Promise(r => setTimeout(r, 0)); cache[name] = C.renderTemplateThumb(name, C.productByName(META[name].p), 340);
-      if (!fontsOk) { const u = cache[name]; setTimeout(() => { if (cache[name] === u) delete cache[name]; }, 0); return; } // never cache a fallback-font render
-      if (META[name].gen && cache[name]) C.kv.set(key, cache[name]).catch(() => { });
+      if (cache[name]) return; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}`;
+      if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return; } } catch { } }
+      const ok = await C.ensureTpl(name, 'thumb'); await new Promise(r => setTimeout(r, 0));
+      C.__photoKind = 'thumb'; let url; try { url = C.renderTemplateThumb(name, C.productByName(meta.p), meta.mockKind ? 900 : 340); } finally { C.__photoKind = null; }
+      if (url && meta.mockKind) url = await mockThumb(url, meta, name.length + name.charCodeAt(name.length - 1));
+      cache[name] = url;
+      if (!ok) { const u = cache[name]; setTimeout(() => { if (cache[name] === u) delete cache[name]; }, 0); return; } // never cache a fallback render
+      if (meta.gen && cache[name]) C.kv.set(key, cache[name]).catch(() => { });
     });
     return chain.then(() => cache[name]);
   }
   const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); const im = e.target; thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } }); } }), { rootMargin: '400px' }) : null;
   function fillThumbs(root) { $$('img[data-tpl]:not(.ready)', root).forEach(im => io ? io.observe(im) : thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } })); }
-  const ratio = n => { const p = C.productByName(META[n].p); return (p.w / p.h).toFixed(3); };
+  const ratio = n => { if (META[n].mockKind) return '1.000'; const p = C.productByName(META[n].p); return (p.w / p.h).toFixed(3); };
   /* paged grid: renders 48 cards, "Show more" adds the next batch (keeps 2,000 templates fast) */
   function pagedGrid(el, names, card, bind, step = 48) {
     let shown = 0; el.innerHTML = '';
@@ -58,7 +78,7 @@
   /* ================= creating designs ================= */
   async function fromTemplate(name) {
     const m = META[name]; if (!guardPro(m)) return;
-    await C.ensureTplFonts(m.f);
+    await C.ensureTpl(name, 'full');
     await C.newDocument({ product: C.productByName(m.p), template: name, name: m.n }); confetti(innerWidth / 2, innerHeight / 3, 70);
   }
   const QUICK = [['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['camera', 'Instagram', 'Instagram post'], ['smartphone', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
@@ -118,13 +138,13 @@
     const counts = {}; Object.values(META).forEach(m => { counts[m.cat] = (counts[m.cat] || 0) + 1; });
     $('#hmCatTiles').innerHTML = Object.entries(C.CAT_LABEL).map(([k, n], i) => `<button class="cat-tile" data-ct="${k}" style="--tint:${TINT[i % TINT.length]}"><b>${n}</b><small>${counts[k] || 0} designs</small><span>${C.ico(CAT_ICON[k] || 'layout-template', 34)}</span></button>`).join('');
     $$('#hmCatTiles [data-ct]').forEach(b => b.onclick = () => { tplCat = b.dataset.ct; renderTemplates(); $('#hmTemplates').scrollIntoView({ behavior: 'smooth' }); });
-    const names = Object.keys(META).filter(n => tplCat === 'all' || META[n].cat === tplCat);
+    const names = C.listTemplates({ cat: tplCat });
     pagedGrid($('#hmTplGrid'), names, n => tplCard(n), bindTpl);
   }
   function bindTpl(root) { fillThumbs(root); $$('[data-t]', root).forEach(a => a.onclick = () => fromTemplate(a.dataset.t)); }
   async function renderTrending() {
     let items = []; try { const r = await fetch(CFG.communityFeed || 'community.json', { cache: 'no-cache' }); items = (await r.json()).items || []; } catch { }
-    if (!items.length) items = Object.keys(META).slice(0, 8).map(t => ({ template: t, title: META[t].n, by: 'Chitra team', tag: META[t].cat }));
+    if (!items.length) items = C.listTemplates().slice(0, 10).map(t => ({ template: t, title: META[t].n, by: 'Chitra team', tag: META[t].cat }));
     items = items.filter(i => META[i.template]);
     $('#hmTrendRow').innerHTML = items.map(i => `<article class="tcard big" data-t="${i.template}"><div class="thumb chk"><img data-tpl="${i.template}" alt=""></div><em class="fire">${C.ico('flame', 12)} Trending</em><div class="meta"><b>${esc(i.title || META[i.template].n)}</b><small>by ${esc(i.by || 'Chitra team')} · ${esc(i.tag || '')}</small></div></article>`).join('');
     bindTpl($('#hmTrendRow'));
@@ -135,7 +155,7 @@
     q = q.trim().toLowerCase(); const res = $('#hmResults'), sec = $('#hmSections');
     if (!q) { res.hidden = true; sec.hidden = false; return; }
     const prods = C.PRODUCTS.filter(p => `${p.name} ${p.g} ${C.dim(p)}`.toLowerCase().includes(q));
-    const tpls = Object.keys(META).filter(n => q.split(/\s+/).every(w => `${META[n].n} ${META[n].cat} ${META[n].p} ${META[n].t || ''}`.toLowerCase().includes(w)));
+    const tpls = C.listTemplates({ q });
     const mine = (await C.store.list()).filter(m => m.name.toLowerCase().includes(q));
     const lays = C.LAYOUTS.filter(l => l.name.toLowerCase().includes(q));
     res.innerHTML = `<h2>Results for “${esc(q)}”</h2>
@@ -161,6 +181,7 @@
   });
 
   async function refreshHome() { renderRecent(); renderLayoutRow(); }
+  document.addEventListener('chitra:templates', () => { if (!$('#home').hidden) { renderTemplates(); renderTrending(); } renderEditorTemplates(); });
   document.addEventListener('chitra:home', refreshHome); document.addEventListener('chitra:layouts', renderLayoutRow);
 
   /* ================= editor "Design" panel ================= */
@@ -170,12 +191,12 @@
     if (!$('#tplSearch')) { const i = document.createElement('input'); i.id = 'tplSearch'; i.type = 'search'; i.placeholder = 'Search templates…'; i.className = 'panel-search'; $('#tplTabs').before(i); i.oninput = () => { edQ = i.value.trim().toLowerCase(); renderEditorTemplates(); }; }
     $('#tplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === edCat ? ' on' : ''}" data-ec="${k}">${n}</button>`).join('');
     $$('#tplTabs [data-ec]').forEach(b => b.onclick = () => { edCat = b.dataset.ec; renderEditorTemplates(); });
-    const names = Object.keys(META).filter(n => (edCat === 'all' || META[n].cat === edCat) && (!edQ || edQ.split(/\s+/).every(w => `${META[n].n} ${META[n].cat} ${META[n].t || ''}`.toLowerCase().includes(w))));
+    const names = C.listTemplates({ cat: edCat, q: edQ });
     pagedGrid($('#tplGrid'), names, n => `<button class="tcard2" data-et="${n}"><div class="thumb chk" style="aspect-ratio:${ratio(n)}"><img data-tpl="${n}" alt=""></div>${META[n].pro ? `<em class="crown">${C.ico('crown', 12)}</em>` : ''}<b>${esc(META[n].n)}</b></button>`, el => { fillThumbs(el); $$('[data-et]', el).forEach(b => b.onclick = () => applyTemplate(b.dataset.et)); }, 30);
   }
   async function applyTemplate(name) {
     const m = META[name]; if (!guardPro(m)) return;
-    await C.ensureTplFonts(m.f);
+    await C.ensureTpl(name, 'full');
     const p = C.productByName(m.p);
     if (C.canvas.getObjects().filter(o => !o.slot).length && !confirm('Replace your current design with this template?')) return;
     if ((p.w !== C.W || p.h !== C.H) && confirm(`“${m.n}” is made for ${p.name} (${C.dim(p)}). Resize this page to match?`)) { C.canvas.discardActiveObject(); C.setSize(p.w, p.h, false, p.guide, p.dpi, p); }

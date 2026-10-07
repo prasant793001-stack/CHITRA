@@ -14,6 +14,11 @@ export default {
     const origin = env.ALLOWED_ORIGIN || '*', url = new URL(req.url);
     if (req.method === 'OPTIONS') return new Response(null, { headers: { 'access-control-allow-origin': origin, 'access-control-allow-methods': 'GET', 'access-control-allow-headers': '*' } });
     if (req.headers.get('origin') && env.ALLOWED_ORIGIN && req.headers.get('origin') !== env.ALLOWED_ORIGIN) return J({ error: 'forbidden' }, origin, 403);
+    if (url.pathname === '/track') { // Unsplash asks apps to ping the download endpoint when a photo is used
+      const id = (url.searchParams.get('id') || '').replace(/[^A-Za-z0-9_-]/g, '').slice(0, 40);
+      if (id && env.UNSPLASH_KEY) await fetch(`https://api.unsplash.com/photos/${id}/download?client_id=${env.UNSPLASH_KEY}`).catch(() => { });
+      return J({ ok: true }, origin);
+    }
     if (url.pathname !== '/search') return J({ ok: true }, origin);
     const q = encodeURIComponent((url.searchParams.get('q') || '').slice(0, 100)), page = Math.max(1, +url.searchParams.get('page') || 1), kind = url.searchParams.get('kind') === 'graphic' ? 'graphic' : 'photo';
     const jobs = [];

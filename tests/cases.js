@@ -71,4 +71,17 @@ module.exports = [
     const [d, r] = await Promise.all([p.waitForEvent('download', { timeout: 30000 }), p.evaluate(() => chitra.recordAnimation())]);
     ok('video downloads (.webm/.mp4) and is not empty', /\.(webm|mp4)$/.test(d.suggestedFilename()) && r.size > 5000, d.suggestedFilename() + ' ' + r.size);
     ok('design restored after recording', await p.evaluate(() => chitra.canvas.getObjects().every(o => o.opacity > 0))); } },
+  { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
+    await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
+    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('catalog creates 800+ photographic templates', n >= 800, n);
+    const first = await q.evaluate(() => chitra.listTemplates({}).slice(0, 12).map(id => !!chitra.TEMPLATE_META[id].real)); ok('photographic designs are listed first', first.slice(0, 8).every(Boolean), first.join());
+    const cats = await q.evaluate(() => new Set(chitra.listTemplates({}).slice(0, 12).map(id => chitra.TEMPLATE_META[id].cat)).size); ok('"All" mixes categories', cats >= 6, cats);
+    await q.evaluate(async () => { await chitra.ensureTpl('rig-3', 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'rig-3' }); }); await q.waitForTimeout(1200);
+    const r = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, credit: im?.credit?.by, text: chitra.canvas.getObjects().some(o => /textbox/.test(o.type)) }; }); ok('real template opens with a photo + live text', r.img && r.text && r.credit === 'Test Photographer', JSON.stringify(r));
+    ok('credits file lists the photographer', (await q.evaluate(() => chitra.collectCredits().map(c => c.by))).includes('Test Photographer'));
+    const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
+    await q.evaluate(() => chitra.showHome()); await q.waitForTimeout(500); await q.click('#hmCatTiles [data-ct=mug]'); await q.waitForTimeout(6000);
+    const kinds = await q.evaluate(() => [...document.querySelectorAll('#hmTplGrid img[data-tpl].ready')].slice(0, 6).map(i => i.src.slice(0, 22))); ok('mug templates are shown on a realistic mug', kinds.length > 0 && kinds.every(k => k.startsWith('data:image/jpeg')), kinds.join(' | '));
+    ok('no page errors in real-template flow', errs.length === 0, errs.join('|')); await q.close(); } },
 ];

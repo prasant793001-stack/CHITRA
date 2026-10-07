@@ -421,6 +421,7 @@ Wander|Find your adventure|travel`);
       ribbon() { const cx = W / 2, cy = H * 0.46, bw = W * 0.96, bh = k * 0.26; rect(cx - bw / 2, cy - bh / 2, bw, bh, P.a, { angle: -6, originX: 'left', left: cx - bw / 2, stroke: P.ink, strokeWidth: k * 0.012 }); const t = text({ x: W * 0.1, y: H * 0.32, w: W * 0.8, h: H * 0.28 }, { up: 1, noSub: 1, tFill: onCol(P.a), maxT: 0.18, shadow: null }); if (c.s) { const sb = rect(cx - W * 0.3, H * 0.66, W * 0.6, k * 0.1, P.ink, { rx: k * 0.05, ry: k * 0.05, angle: 3, originX: 'left', left: cx - W * 0.3 }); const s = new fabric.Textbox(c.s.toUpperCase(), { left: cx, top: H * 0.66 + k * 0.02, originX: 'center', width: W * 0.56, fontFamily: f.b, fontSize: k * 0.05, fill: onCol(P.ink), textAlign: 'center', charSpacing: 200, ...(BODY_BOLD.has(f.b) ? { fontWeight: 'bold' } : {}) }); add(s); } sparkles(P.a); },
       retrosun() { const cx = W / 2, cy = H * 0.42, r = k * 0.3; const g = new fabric.Group([new fabric.Rect({ left: cx - r, top: cy - r, width: r * 2, height: r * 0.7, fill: P.b }), new fabric.Rect({ left: cx - r, top: cy - r * 0.3, width: r * 2, height: r * 0.7, fill: P.a }), new fabric.Rect({ left: cx - r, top: cy + r * 0.4, width: r * 2, height: r * 0.6, fill: P.ink })], { clipPath: new fabric.Circle({ left: cx, top: cy, radius: r, originX: 'center', originY: 'center', absolutePositioned: true }) }); add(g); text({ x: W * 0.08, y: cy + r * 1.15, w: W * 0.84, h: H * 0.3 }, { up: 1, maxT: 0.16, stroke: lum(P.ink) < 0.5 ? '#ffffff' : '#15131f', tFill: lum(P.ink) < 0.5 ? P.ink : '#ffffff', sFill: lum(P.ink) < 0.5 ? P.ink : '#ffffff' }); },
     };
+    if (spec.real && C.realLayouts) Object.assign(LAY, C.realLayouts({ W, H, k, P, c, f, rnd, add, rect, circ, poly, text, extra, tb, wide, tall, flip, spark, B, ph: (spec.photos || []).map(C.photoById), kind: C.__photoKind || 'full', NOCASE }));
     LAY[spec.layout]();
     return LAY;
   }
@@ -513,6 +514,9 @@ Wander|Find your adventure|travel`);
     }));
     return all;
   };
-  C.TPL_VERSION = '4.4'; C.CAT_LABEL = CAT_LABEL; C.GEN_COUNT = total;
+  Object.assign(C, { COPY: { QUOTES, PROMO, EVENTS, SERVICES, INVITES, CARDS, YT, SLIDES, PIN, MISC }, MOODS: MOOD, pal, cap, hashSeed, drawTemplate: draw });
+  Object.entries(META).forEach(([id, m]) => { const pre = id.split('-')[0], mk = m.cat === 'mug' ? 'mug' : m.cat === 'tshirt' ? 'shirt' : { tumb: 'tumbler', pad: 'pad', case: 'case', tote: 'tote' }[pre]; if (mk) m.mockKind = mk; }); // grid shows these on a real product
+  C.markMock = () => Object.entries(META).forEach(([id, m]) => { if (!m.mockKind && m.cat === 'mug') m.mockKind = 'mug'; });
+  C.TPL_VERSION = '5.0'; C.CAT_LABEL = CAT_LABEL; C.GEN_COUNT = total;
   console.info('[chitra] templates ready:', Object.keys(META).length);
 })();

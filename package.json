@@ -6,9 +6,10 @@
   "scripts": {
     "serve": "http-server -p 8123 -c-1 .",
     "check": "node tools/check.js",
-    "test": "node tests/run.js && node tests/worker.test.mjs && node tests/cloud.e2e.mjs",
+    "test": "node tests/run.js && node tests/worker.test.mjs && node tests/harvest.test.mjs && node tests/cloud.e2e.mjs",
     "api": "node tests/devapi.mjs",
-    "lint": "eslint *.js"
+    "lint": "eslint *.js",
+    "harvest": "node tools/harvest-photos.mjs"
   },
   "devDependencies": {
     "http-server": "^14.1.1",

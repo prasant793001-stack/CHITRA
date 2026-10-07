@@ -389,7 +389,7 @@
     blur(sg, 9); sg.lineCap = 'round';
     for (let i = 0; i < 16; i++) {
       const x = 230 + r() * 440, y0 = 200 + r() * 120, bend = (r() - 0.5) * 120, len = 160 + r() * 380;
-      sg.lineWidth = 14 + r() * 26; sg.strokeStyle = `rgba(0,0,0,${0.05 + r() * 0.07})`; sg.beginPath(); sg.moveTo(x, y0); sg.quadraticCurveTo(x + bend, y0 + len / 2, x + bend * 0.4, y0 + len); sg.stroke();
+      sg.lineWidth = 14 + r() * 26; sg.strokeStyle = `rgba(0,0,0,${0.02 + r() * 0.04})`; sg.beginPath(); sg.moveTo(x, y0); sg.quadraticCurveTo(x + bend, y0 + len / 2, x + bend * 0.4, y0 + len); sg.stroke();
       sg.lineWidth = 8 + r() * 14; sg.strokeStyle = `rgba(255,255,255,${0.04 + r() * 0.06})`; sg.beginPath(); sg.moveTo(x + 18, y0); sg.quadraticCurveTo(x + 18 + bend, y0 + len / 2, x + 18 + bend * 0.4, y0 + len); sg.stroke();
     }
     sg.strokeStyle = 'rgba(0,0,0,.30)'; sg.lineWidth = 16; // armpit creases & under-collar shadow
@@ -416,7 +416,7 @@
     g.fillStyle = col; g.fill(body);
     g.save(); g.clip(body);
     // wrap the artwork around the cylinder (per-column projection)
-    const arcFrac = 2 * Math.PI * 0.9, srcPer = M.art.width / arcFrac, dh = Math.min(o.maxH || 400, 2 * Math.PI * 0.9 * R * (M.art.height / M.art.width)), y0 = (top + bot) / 2 - dh / 2 + 6;
+    const arcFrac = o.arc || 2 * Math.PI * 0.9, srcPer = M.art.width / arcFrac, dh = Math.min(o.maxH || 400, arcFrac * R * (o.ratio ?? M.art.height / M.art.width)), y0 = (top + bot) / 2 - dh / 2 + 6;
     for (let x = -R; x < R; x += 1) {
       const t = clamp(x / R, -0.999, 0.999), a = Math.asin(t), sx = M.art.width / 2 + a * srcPer, sw = Math.max(1, srcPer / Math.sqrt(1 - t * t) / R * 1.2), off = ry * (Math.sqrt(1 - t * t) - 0.5);
       g.drawImage(M.art, clamp(sx, 0, M.art.width - 1), 0, sw, M.art.height, cx + x, y0 + off, 1.6, dh);
@@ -436,7 +436,7 @@
       g.fillStyle = shade(col, -0.05); g.beginPath(); g.ellipse(cx, top - 6, R + 6, ry + 3, 0, 0, Math.PI * 2); g.fill(); g.fillStyle = 'rgba(255,255,255,.22)'; g.beginPath(); g.ellipse(cx - 30, top - 12, R - 50, ry - 12, 0, Math.PI, 0); g.fill();
     }
   }
-  function drawTumbler(g) { drawMug(g, { R: 135, top: 150, bot: 690, ry: 24, noHandle: true, lid: true, maxH: 440 }); }
+  function drawTumbler(g, op = {}) { drawMug(g, { ...op, R: 135, top: 150, bot: 690, ry: 24, noHandle: true, lid: true, maxH: 440 }); }
   function drawTote(g) {
     const x = 190, y = 300, w = 520, h = 520, col = M.color;
     g.save(); g.fillStyle = 'rgba(0,0,0,.4)'; blur(g, 22); g.fillRect(x + 20, y + h - 10, w - 40, 36); noTint(g); g.restore();
@@ -468,6 +468,14 @@
     g.fillStyle = '#14141c'; g.beginPath(); g.roundRect(x + 24, y + 24, 128, 128, 34); g.fill();
     [[60, 62], [60, 118], [112, 90]].forEach(([cx, cy]) => { g.fillStyle = '#2a2a35'; g.beginPath(); g.arc(x + cx + 8, y + cy + 8, 25, 0, 7); g.fill(); g.fillStyle = '#0a0a10'; g.beginPath(); g.arc(x + cx + 8, y + cy + 8, 15, 0, 7); g.fill(); g.fillStyle = 'rgba(120,150,255,.55)'; g.beginPath(); g.arc(x + cx + 3, y + cy + 3, 4, 0, 7); g.fill(); });
     g.restore(); g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 3; g.beginPath(); g.roundRect(x + 1.5, y + 1.5, w - 3, h - 3, rr); g.stroke();
+  }
+  /* Realistic product preview of a flat design (used for template thumbnails): returns a 900x900 canvas */
+  function mockRender(kind, art, color, sceneIdx = 1, opts = {}) {
+    const sv = { kind: M.kind, art: M.art, color: M.color, scene: M.scene, sceneIdx: M.sceneIdx };
+    Object.assign(M, { kind, art, color, scene: null, sceneIdx });
+    const c = document.createElement('canvas'); c.width = c.height = MS; const g = c.getContext('2d');
+    try { backdrop(g); ({ mug: drawMug, tumbler: drawTumbler, tote: drawTote, pad: drawPad, case: drawCase }[kind] || drawShirt)(g, opts); } finally { Object.assign(M, sv); }
+    return c;
   }
   function drawPhoto(g) {
     if (!M.photo) { g.fillStyle = '#222'; g.fillRect(0, 0, MS, MS); g.fillStyle = '#9c9cb8'; g.font = '28px sans-serif'; g.textAlign = 'center'; g.fillText('Upload a photo of your blank product →', MS / 2, MS / 2); return; }
@@ -518,5 +526,5 @@
   function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = guessKind(); $('#mockup').hidden = false; drawMockup(); }
   $('#mockupBtn').onclick = openMockup;
 
-  Object.assign(C, { openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
+  Object.assign(C, { mockRender, openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
 })();
