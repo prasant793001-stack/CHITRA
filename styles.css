@@ -598,3 +598,6 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .tcard .thumb{position:relative}.tcard:hover .thumb::after{opacity:1;transform:translate(-50%,0)}
 @media (hover:none){.tcard .thumb::after{display:none}}
 @media (prefers-reduced-motion:reduce){.hero,.hero-art i,.hero-card,.ticker-in{animation:none!important}.reveal{opacity:1;transform:none}}
+
+.lib-chip{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:10px;padding:10px 16px;border:0;border-radius:99px;background:#1c1840;color:#fff;font:700 12.5px "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:var(--shadow-lg)}
+.lib-chip i{width:13px;height:13px;border-radius:50%;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;animation:spin .8s linear infinite}

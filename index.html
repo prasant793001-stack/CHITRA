@@ -564,9 +564,13 @@
     <h1>Owner setup</h1>
     <p class="sub">Keys pasted here are kept only in <b>this browser</b> (never in the code or on GitHub). To serve all your customers without exposing keys, deploy the free proxy in <code>worker/</code> and paste its URL below.</p>
     <label style="display:block"><span class="lbl">Photo proxy URL (recommended)</span><input id="admProxy" class="text-in" style="width:100%;margin:6px 0 10px" placeholder="https://chitra-photos.yourname.workers.dev"></label>
-    <label style="display:block"><span class="lbl">Pixabay key (this device only)</span><input id="admPixabay" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
-    <label style="display:block"><span class="lbl">Pexels key (this device only)</span><input id="admPexels" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
-    <button id="admSave" class="cta wide">Save</button>
+    <label style="display:block"><span class="lbl">Pixabay key</span><input id="admPixabay" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
+    <label style="display:block"><span class="lbl">Unsplash access key</span><input id="admUnsplash" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
+    <label style="display:block"><span class="lbl">Pexels key (optional)</span><input id="admPexels" type="password" class="text-in" style="width:100%;margin:6px 0 10px" autocomplete="off"></label>
+    <label style="display:block"><span class="lbl">Passphrase to lock the keys</span><input id="admPass" type="password" class="text-in" style="width:100%;margin:6px 0 6px" autocomplete="new-password" placeholder="6+ characters"></label>
+    <label class="menu-switch" style="padding:4px 0"><input type="checkbox" id="admRemember"><span><b>Remember on this device</b><small>No passphrase prompt on this browser</small></span></label>
+    <button id="admSave" class="cta wide">Save &amp; lock keys</button>
+    <button id="admWipe" class="btn wide" style="margin-top:8px">Remove keys from this browser</button>
     <p class="tip" id="admStatus"></p>
   </div>
 </div>

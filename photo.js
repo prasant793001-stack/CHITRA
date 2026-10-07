@@ -256,15 +256,42 @@
   const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
   const SEAL = 'chitra-studio';
   const unseal = str => { try { return atob(str).split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) ^ SEAL.charCodeAt(i % SEAL.length))).join(''); } catch { return ''; } };
+  /* ---- key vault: API keys are stored AES-GCM encrypted (PBKDF2 passphrase) so nothing readable sits in localStorage ---- */
+  const VK = 'chitra.vault', te = new TextEncoder(), b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf))), unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  let KEYS = null; // decrypted keys, memory only
+  const vaultRec = () => { try { return JSON.parse(lsGet(VK) || 'null'); } catch { return null; } };
+  const deriveKey = async (pass, salt) => crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: 250000, hash: 'SHA-256' }, await crypto.subtle.importKey('raw', te.encode(pass), 'PBKDF2', false, ['deriveKey']), { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+  const decryptWith = async (key, rec) => JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(rec.i) }, key, unb64(rec.d))));
+  const vault = {
+    state() { if (vaultRec()) return KEYS ? 'open' : 'locked'; return lsGet('chitra.keys') ? 'plain' : 'none'; },
+    async unlock(pass) { const rec = vaultRec(); if (!rec) return false; try { KEYS = await decryptWith(await deriveKey(pass, unb64(rec.s)), rec); return true; } catch { return false; } },
+    async tryRemembered() { const rec = vaultRec(); if (!rec || KEYS) return !!KEYS; try { const k = await C.kv.get('vaultkey'); if (k) { KEYS = await decryptWith(k, rec); return true; } } catch { } return false; },
+    async save(keys, pass, remember) {
+      const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12)), key = await deriveKey(pass, salt);
+      const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, te.encode(JSON.stringify(keys)));
+      localStorage.setItem(VK, JSON.stringify({ v: 1, s: b64(salt), i: b64(iv), d: b64(ct) })); localStorage.removeItem('chitra.keys'); KEYS = { ...keys };
+      try { remember ? await C.kv.set('vaultkey', key) : await C.kv.del('vaultkey'); } catch { }
+    },
+    wipe() { localStorage.removeItem(VK); localStorage.removeItem('chitra.keys'); KEYS = null; C.kv.del('vaultkey').catch(() => { }); },
+    async ensure() { // unlock silently if possible, else ask for the passphrase once per visit
+      if (vault.state() !== 'locked') return true; if (await vault.tryRemembered()) return true;
+      return new Promise(res => {
+        const m = document.createElement('div'); m.className = 'modal'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
+        m.innerHTML = '<div class="sheet small"><h2>Unlock your photo keys</h2><p class="tip">Enter the passphrase you set in Owner setup. Your keys never leave this device.</p><form id="vfm"><input id="vpw" type="password" class="text-in" style="width:100%" autocomplete="current-password" placeholder="Passphrase"><p class="tip err" id="verr"></p><div class="pr-btns"><button class="cta" type="submit">Unlock</button><button class="btn" type="button" id="vskip">Not now</button></div></form></div>'; document.body.appendChild(m);
+        const done = ok => { m.remove(); res(ok); }; $('#vpw', m).focus(); $('#vskip', m).onclick = () => done(false);
+        $('#vfm', m).onsubmit = async e => { e.preventDefault(); $('#verr', m).textContent = 'Checking…'; if (await vault.unlock($('#vpw', m).value)) done(true); else $('#verr', m).textContent = 'That passphrase is not right'; };
+      });
+    },
+  };
   function stockConfig() {
-    const CFG = window.CHITRA_CONFIG || {}, sealed = CFG.sealedKeys || {}; let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
+    const CFG = window.CHITRA_CONFIG || {}, sealed = CFG.sealedKeys || {}; let own = KEYS || {}; if (!KEYS && !vaultRec()) { try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { } }
     const pick = n => own[n] || (sealed[n] ? unseal(sealed[n]) : '');
     return { proxy: (lsGet('chitra.proxy') || CFG.photoProxy || '').replace(/\/$/, ''), pixabay: pick('pixabay'), pexels: pick('pexels'), unsplash: pick('unsplash') };
   }
   const NORM = {
-    pixabay: x => ({ id: 'px' + x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, by: x.user, site: 'Pixabay', link: x.pageURL, title: (x.tags || '').split(',')[0] }),
-    pexels: x => ({ id: 'pe' + x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, by: x.photographer, site: 'Pexels', link: x.url, title: x.alt || '' }),
-    unsplash: x => ({ id: 'un' + x.id, thumb: x.urls.small, full: x.urls.regular, by: x.user.name, site: 'Unsplash', link: x.links.html, title: x.alt_description || '' }),
+    pixabay: x => ({ id: 'px' + x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, w: x.imageWidth, h: x.imageHeight, by: x.user, site: 'Pixabay', link: x.pageURL, title: (x.tags || '').split(',')[0] }),
+    pexels: x => ({ id: 'pe' + x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, w: x.width, h: x.height, by: x.photographer, site: 'Pexels', link: x.url, title: x.alt || '' }),
+    unsplash: x => ({ id: 'un' + x.id, dl: x.id, thumb: x.urls.small, full: x.urls.regular, w: x.width, h: x.height, by: x.user.name, site: 'Unsplash', link: x.links.html, title: x.alt_description || '' }),
     openverse: x => ({ id: 'ov' + x.id, thumb: x.thumbnail || x.url, full: x.url, by: x.creator || 'Unknown', site: 'Openverse', link: x.foreign_landing_url, title: x.title || '' }),
   };
   const getJSON = async (url, opt) => { const r = await fetch(url, opt); if (!r.ok) throw new Error(url.split('/')[2] + ' ' + r.status); return r.json(); };
@@ -279,6 +306,7 @@
     async openverse(q, page) { const j = await getJSON(`https://api.openverse.org/v1/images/?q=${enc(q)}&page=${page}&page_size=24&license_type=commercial&mature=false`); return { items: j.results.map(NORM.openverse), more: page < j.page_count }; },
   };
   async function stockSearch(q, { page = 1, kind = 'photo' } = {}) {
+    if (vault.state() === 'locked') await vault.ensure();
     const cfg = stockConfig();
     if (cfg.proxy) return getJSON(`${cfg.proxy}/search?q=${enc(q)}&page=${page}&kind=${kind}`); // keys live on the server, never in the browser
     const jobs = [];
@@ -305,17 +333,26 @@
   }
 
   /* ---- hidden owner setup: Ctrl+Shift+K or tap the logo 7 times. Keys stay in THIS browser only. ---- */
-  function openAdmin() {
-    let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
-    $('#admProxy').value = lsGet('chitra.proxy') || ''; $('#admPixabay').value = own.pixabay || ''; $('#admPexels').value = own.pexels || '';
-    const c = stockConfig(); $('#admStatus').textContent = 'Active: ' + ([c.proxy && 'proxy', c.pixabay && 'source A', c.pexels && 'source B', c.unsplash && 'source C'].filter(Boolean).join(', ') || 'none (keyless fallback)');
+  async function openAdmin() {
+    if (vault.state() === 'locked') await vault.ensure();
+    const st = vault.state(); ['admPixabay', 'admPexels', 'admUnsplash'].forEach(id => { $('#' + id).value = ''; });
+    $('#admProxy').value = lsGet('chitra.proxy') || ''; $('#admPass').value = ''; $('#admRemember').checked = !!(await C.kv.get('vaultkey').catch(() => null));
+    const have = n => (KEYS && KEYS[n]) || (st === 'plain' && (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}')[n]; } catch { return ''; } })());
+    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash']].forEach(([id, n]) => { $('#' + id).placeholder = have(n) ? 'saved - leave empty to keep' : 'paste key'; });
+    const c = stockConfig(); $('#admStatus').textContent = (st === 'plain' ? 'Your keys are stored UNENCRYPTED in this browser - choose a passphrase and press Save to lock them. ' : st === 'open' || st === 'locked' ? 'Keys are encrypted on this device. ' : 'No keys saved yet. ') + 'Active: ' + ([c.proxy && 'proxy', c.pixabay && 'Pixabay', c.pexels && 'Pexels', c.unsplash && 'Unsplash'].filter(Boolean).join(', ') || 'none (keyless fallback)');
     $('#adminModal').hidden = false;
   }
-  $('#admSave').onclick = () => {
-    let own = {}; try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { }
-    try { localStorage.setItem('chitra.keys', JSON.stringify({ ...own, pixabay: $('#admPixabay').value.trim(), pexels: $('#admPexels').value.trim() })); localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
-    $('#adminModal').hidden = true; toast('Saved on this device', '');
+  $('#admSave').onclick = async () => {
+    const prev = KEYS || (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}'); } catch { return {}; } })(), keys = { ...prev };
+    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash']].forEach(([id, n]) => { const v = $('#' + id).value.trim(); if (v) keys[n] = v; });
+    try { localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
+    if (Object.keys(keys).length) {
+      const pass = $('#admPass').value; if (pass.length < 6) { $('#admStatus').textContent = 'Choose a passphrase of at least 6 characters to lock your keys.'; return; }
+      try { await vault.save(keys, pass, $('#admRemember').checked); } catch { $('#admStatus').textContent = 'This browser cannot encrypt keys (needs HTTPS).'; return; }
+    }
+    $('#adminModal').hidden = true; toast('Saved - keys are encrypted on this device', ''); document.dispatchEvent(new Event('chitra:keys'));
   };
+  $('#admWipe') && ($('#admWipe').onclick = () => { if (confirm('Remove all saved keys from this browser?')) { vault.wipe(); $('#adminModal').hidden = true; toast('Keys removed', ''); } });
   document.addEventListener('keydown', e => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); openAdmin(); } });
   let taps = 0, tapT; [$('#homeBtn'), $('.hm-logo')].forEach(el => el && el.addEventListener('click', () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => { taps = 0; }, 1500); if (taps >= 7) { taps = 0; openAdmin(); } }));
 
@@ -526,5 +563,5 @@
   function openMockup() { buildMockUI(); if (M.kind !== 'photo') M.kind = guessKind(); $('#mockup').hidden = false; drawMockup(); }
   $('#mockupBtn').onclick = openMockup;
 
-  Object.assign(C, { mockRender, openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
+  Object.assign(C, { vault, mockRender, openMockup, removeBg, magicFix, enhance, refine: openRefine, imgOutline, replaceImage, natCanvas, busy, stock: { search: stockSearch, add: addStock, config: stockConfig, addToCanvas } });
 })();

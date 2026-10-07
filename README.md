@@ -71,4 +71,4 @@ Never commit raw keys to this public repo (`tools/seal-key.js` only scrambles th
 - Backend setup: `docs/BACKEND.md`. Launch checklist: `docs/LAUNCH.md`.
 
 ## Real photos (v6)
-~1,000 photographic templates + realistic product previews (mug / tee / tumbler / tote / mouse pad / phone case) in the template grid. Photos come from a catalog you build once with `tools/harvest-photos.mjs` - see **docs/PHOTOS.md**.
+~1,000 photographic templates + realistic product previews (mug / tee / tumbler / tote / mouse pad / phone case) in the template grid. Photos come from a catalog you build once with `tools/harvest-photos.mjs` - see **docs/PHOTOS.md**. Easiest: *Live mode* - enter your keys once in Owner setup (Ctrl+Shift+K); they are stored encrypted and the app builds the photo library itself.

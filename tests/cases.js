@@ -84,4 +84,25 @@ module.exports = [
     await q.evaluate(() => chitra.showHome()); await q.waitForTimeout(500); await q.click('#hmCatTiles [data-ct=mug]'); await q.waitForTimeout(6000);
     const kinds = await q.evaluate(() => [...document.querySelectorAll('#hmTplGrid img[data-tpl].ready')].slice(0, 6).map(i => i.src.slice(0, 22))); ok('mug templates are shown on a realistic mug', kinds.length > 0 && kinds.every(k => k.startsWith('data:image/jpeg')), kinds.join(' | '));
     ok('no page errors in real-template flow', errs.length === 0, errs.join('|')); await q.close(); } },
+  { name: 'live photo library + key vault', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const base = 'http://localhost:8123/tests/fixtures/photos/';
+    await ctx.route('https://pixabay.com/api/**', r => { const q = new URL(r.request().url()).searchParams.get('q') || '', off = q.length % 12; const hits = Array.from({ length: 16 }, (_, i) => { const n = String((off + i * 2) % 36).padStart(2, '0'); return { id: `${q.length}${i}${n}`, webformatURL: `${base}f${n}_t.jpg`, largeImageURL: `${base}f${n}.jpg`, imageWidth: +n % 3 ? 1280 : 853, imageHeight: +n % 3 ? 853 : 1280, user: 'Mock Photographer', pageURL: 'https://pixabay.com/x', tags: q + ', photo' }; }); r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ hits, totalHits: 100 }) }); });
+    const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
+    await q.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('chitra.keys', JSON.stringify({ pixabay: 'PLAINKEY-123' })); } });
+    await q.goto('http://localhost:8123/?nosplash&livetopics=14&livedelay=0'); ok('plaintext keys are detected', await q.evaluate(() => chitra.vault.state()) === 'plain');
+    await q.waitForFunction(() => Object.values(chitra.TEMPLATE_META).some(m => m.real), null, { timeout: 40000 }).catch(() => { });
+    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('library built from live search -> photographic templates', n >= 20, n);
+    await q.evaluate(async () => { const id = chitra.listTemplates({})[0]; await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1000);
+    const r1 = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, by: im?.credit?.by, site: im?.credit?.site }; }); ok('live template carries a photo with credit', r1.img && r1.by === 'Mock Photographer' && r1.site === 'Pixabay', JSON.stringify(r1));
+    const cached = await q.evaluate(async () => (await chitra.kv.get('ibindex'))?.length || 0); ok('photos are cached on the device after first use', cached > 0, cached);
+    await q.evaluate(() => chitra.vault.save({ pixabay: 'PLAINKEY-123', unsplash: 'UNS-KEY-9' }, 'secret1', false));
+    ok('keys no longer stored in plain text', await q.evaluate(() => localStorage.getItem('chitra.keys') === null && !localStorage.getItem('chitra.vault').includes('PLAINKEY') && !localStorage.getItem('chitra.vault').includes('UNS-KEY')));
+    const dump = await q.evaluate(() => JSON.stringify({ ...localStorage })); ok('no key anywhere in localStorage', !/PLAINKEY|UNS-KEY/.test(dump));
+    await q.goto('http://localhost:8123/?nosplash&nolive=1'); await q.waitForTimeout(800);
+    ok('after reload the vault is locked and no key is usable', await q.evaluate(() => chitra.vault.state() === 'locked' && !chitra.stock.config().pixabay));
+    ok('wrong passphrase refused', (await q.evaluate(() => chitra.vault.unlock('nope123'))) === false);
+    ok('right passphrase unlocks', await q.evaluate(async () => (await chitra.vault.unlock('secret1')) && chitra.stock.config().pixabay === 'PLAINKEY-123' && chitra.stock.config().unsplash === 'UNS-KEY-9'));
+    await q.evaluate(() => chitra.vault.save({ pixabay: 'PLAINKEY-123' }, 'secret1', true)); await q.goto('http://localhost:8123/?nosplash&nolive=1'); await q.waitForTimeout(600);
+    ok('"remember on this device" unlocks silently', await q.evaluate(async () => (await chitra.vault.tryRemembered()) && chitra.stock.config().pixabay === 'PLAINKEY-123'));
+    ok('no page errors in live/vault flow', errs.length === 0, errs.join('|')); await q.close(); } },
 ];

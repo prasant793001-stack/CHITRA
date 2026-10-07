@@ -12,24 +12,32 @@
   const urlOf = (p, kind) => p.s === 'un' ? `${p.u}${p.u.includes('?') ? '&' : '?'}auto=format&fit=crop&q=${kind === 'thumb' ? 60 : 78}&w=${kind === 'thumb' ? 420 : 1500}` : (kind === 'thumb' ? p.t : p.f);
   C.photoById = id => PH.byId[id] || null;
   C.photoEl = (p, kind = 'full') => (p ? imgCache.get(urlOf(p, kind)) || null : null);
-  function load(url) {
-    if (imgCache.has(url) && imgCache.get(url)) return Promise.resolve(true);
-    return new Promise(res => { const im = new Image(); im.crossOrigin = 'anonymous'; const t = setTimeout(() => res(false), 9000); im.onload = () => { clearTimeout(t); imgCache.set(url, im); res(true); }; im.onerror = () => { clearTimeout(t); res(false); }; im.src = url; });
+  /* Photos are fetched once and kept on the device (IndexedDB): faster, works offline, and no repeated hot-linking of the providers' servers. */
+  const IBX = 'ibindex';
+  async function cachePut(url, blob) { try { await C.kv.set('ib:' + url, blob); const ix = (await C.kv.get(IBX)) || []; ix.push(url); if (ix.length > 700) { for (const u of ix.splice(0, 100)) await C.kv.del('ib:' + u); } await C.kv.set(IBX, ix); } catch { } }
+  const fromSrc = (src, cors) => new Promise(res => { const im = new Image(); if (cors) im.crossOrigin = 'anonymous'; const t = setTimeout(() => res(null), 12000); im.onload = () => { clearTimeout(t); res(im); }; im.onerror = () => { clearTimeout(t); res(null); }; im.src = src; });
+  async function load(url) {
+    if (imgCache.get(url)) return true;
+    try {
+      let blob = await C.kv.get('ib:' + url);
+      if (!blob) { const r = await fetch(url, { mode: 'cors' }); if (r.ok) { blob = await r.blob(); if (blob.size > 0 && blob.size < 8e6) cachePut(url, blob); } }
+      if (blob) { const im = await fromSrc(URL.createObjectURL(blob), false); if (im) { imgCache.set(url, im); return true; } }
+    } catch { }
+    const im = await fromSrc(url, true); if (im) { imgCache.set(url, im); return true; } return false;
   }
   C.preloadPhotos = (ids, kind) => Promise.all((ids || []).map(id => PH.byId[id]).filter(Boolean).map(p => load(urlOf(p, kind)))).then(r => r.every(Boolean));
   const baseFonts = C.ensureTplFonts;
   C.ensureTpl = async (id, kind = 'full') => {
     const m = META[id]; if (!m) return false;
     const [f, p] = await Promise.all([baseFonts(m.f), C.preloadPhotos(m.ph, kind)]);
-    if (kind === 'full') trackUnsplash((m.ph || []).map(x => PH.byId[x]).filter(p => p && p.s === 'un'));
+    if (kind === 'full') trackUnsplash((m.ph || []).map(x => PH.byId[x]).filter(p => p && p.dl));
     return f && p;
   };
   /* Unsplash asks apps to ping their download endpoint when a photo is used. Done through your photo proxy (keys stay server-side) or the owner's own key. */
   const tracked = new Set();
   function trackUnsplash(list) {
-    const CFG = window.CHITRA_CONFIG || {}; let own = {}; try { own = JSON.parse(localStorage.getItem('chitra.keys') || '{}'); } catch { }
-    const proxy = (localStorage.getItem('chitra.proxy') || CFG.photoProxy || '').replace(/\/$/, '');
-    list.forEach(p => { if (!p.dl || tracked.has(p.dl)) return; tracked.add(p.dl); try { if (proxy) fetch(`${proxy}/track?id=${encodeURIComponent(p.dl)}`, { mode: 'no-cors' }).catch(() => { }); else if (own.unsplash) fetch(`https://api.unsplash.com/photos/${encodeURIComponent(p.dl)}/download?client_id=${encodeURIComponent(own.unsplash)}`).catch(() => { }); } catch { } });
+    const CFG = window.CHITRA_CONFIG || {}, sc = C.stock?.config?.() || {}, proxy = (sc.proxy || localStorage.getItem('chitra.proxy') || CFG.photoProxy || '').replace(/\/$/, '');
+    list.forEach(p => { if (!p.dl || tracked.has(p.dl)) return; tracked.add(p.dl); try { if (proxy) fetch(`${proxy}/track?id=${encodeURIComponent(p.dl)}`, { mode: 'no-cors' }).catch(() => { }); else if (sc.unsplash) fetch(`https://api.unsplash.com/photos/${encodeURIComponent(p.dl)}/download?client_id=${encodeURIComponent(sc.unsplash)}`).catch(() => { }); } catch { } });
   }
 
   /* ---------------- drawing helpers ---------------- */
@@ -40,7 +48,7 @@
   C.realLayouts = env => {
     const { W, H, k, P, c, f, rnd, add, rect, circ, poly, text: text0, extra, tb, wide, tall, flip, spark, B, ph: phs, kind, NOCASE } = env;
     const fab = window.fabric, SH = (a, b) => new fab.Shadow({ color: `rgba(0,0,0,${a})`, blur: k * b, offsetX: 0, offsetY: k * b * 0.4 });
-    const credit = p => ({ site: p.s === 'un' ? 'Unsplash' : 'Pixabay', by: p.by, link: p.l, title: (p.k && p.k[0]) || '' });
+    const credit = p => ({ site: p.site || (p.s === 'un' ? 'Unsplash' : 'Pixabay'), by: p.by, link: p.l, title: (p.k && p.k[0]) || '' });
     const grad = (x, y, w, h, stops, vertical = true) => rect(x, y, w, h, new fab.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: vertical ? { x1: 0, y1: 0, x2: 0, y2: h } : { x1: 0, y1: 0, x2: w, y2: 0 }, colorStops: stops }));
     /* cover-fit photo into a box, optionally rounded / circular / custom clip */
     function photo(i, x, y, w, h, o = {}) {
@@ -177,6 +185,7 @@
   }
 
   function registerReal() {
+    Object.keys(META).forEach(k => { if (META[k].real) { delete META[k]; delete TEMPLATES[k]; } });
     const pools = { PROMO: C.COPY?.PROMO, EVENTS: C.COPY?.EVENTS, SERVICES: C.COPY?.SERVICES, INVITES: C.COPY?.INVITES, YT: C.COPY?.YT, SLIDES: C.COPY?.SLIDES, PIN: C.COPY?.PIN, QUOTES: C.COPY?.QUOTES, CARDS: C.COPY?.CARDS, MISC: C.COPY?.MISC };
     let made = 0; const want = FAMS.reduce((s, f) => s + f[4], 0), scale = Math.min(1, (PH.list.length * 2.5) / want); // never reuse a photo more than ~2x: fewer photos => fewer (still unique) designs
     FAMS.forEach((fam, fi) => {
@@ -206,13 +215,57 @@
     return [...mix(real), ...mix(rest)];
   };
 
+  function setCatalog(photos, announce = true) {
+    PH.list = photos.filter(p => p && p.id && (p.s === 'un' && p.u ? true : p.f && p.t)); PH.byId = Object.fromEntries(PH.list.map(p => [p.id, p])); PH.ready = PH.list.length > 0;
+    const n = PH.ready ? registerReal() : 0; if (announce) document.dispatchEvent(new CustomEvent('chitra:templates', { detail: { real: n } })); return n;
+  }
+
+  /* ---------------- live catalog: built in THIS browser from the photo search you already use (your keys / proxy) ---------------- */
+  const LIVE_TOPICS = [['coffee', 'coffee cup cafe'], ['food', 'gourmet food plate'], ['pizza', 'pizza'], ['burger', 'burger'], ['dessert', 'dessert cake'], ['healthy', 'healthy salad bowl'], ['drinks', 'cocktail drinks'], ['tea', 'tea cup'], ['fitness', 'fitness workout gym'], ['yoga', 'yoga meditation'], ['spa', 'spa wellness'], ['travel', 'travel adventure landscape'], ['beach', 'tropical beach'], ['mountains', 'mountain landscape'], ['city', 'city skyline night'], ['market', 'street market'], ['nature', 'nature forest'], ['flowers', 'flowers bouquet'], ['plants', 'green plants'], ['party', 'party celebration confetti'], ['birthday', 'birthday cake balloons'], ['wedding', 'wedding'], ['love', 'romantic couple'], ['baby', 'baby'], ['kids', 'children playing'], ['christmas', 'christmas decoration'], ['winter', 'winter snow'], ['festival', 'festival colorful'], ['lights', 'bokeh lights'], ['halloween', 'halloween pumpkin'], ['music', 'music instrument'], ['concert', 'concert crowd stage'], ['art', 'art painting colorful'], ['books', 'books library'], ['education', 'classroom learning'], ['tech', 'technology laptop'], ['office', 'modern office workspace'], ['business', 'business meeting'], ['team', 'team collaboration'], ['fashion', 'fashion clothing'], ['beauty', 'beauty cosmetics'], ['interior', 'interior design living room'], ['home', 'cozy home'], ['pets', 'pet portrait'], ['dog', 'dog'], ['cat', 'cat'], ['cars', 'car'], ['sports', 'sports action'], ['sunrise', 'sunrise sky'], ['sunset', 'sunset sky'], ['abstract', 'abstract colorful background'], ['texture', 'texture pattern'], ['shopping', 'shopping bags']];
+  const QP = new URLSearchParams(location.search); if (QP.get('livetopics')) LIVE_TOPICS.length = Math.min(LIVE_TOPICS.length, +QP.get('livetopics')); // test hook
+  const DAY = 864e5, live = { running: false, done: 0, total: LIVE_TOPICS.length };
+  const siteTag = s => ({ Pixabay: 'px', Pexels: 'pe', Unsplash: 'un', Openverse: 'ov' }[s] || 'lv');
+  const liveHave = () => { const c = C.stock?.config?.() || {}; return !!(c.proxy || c.pixabay || c.pexels || c.unsplash); };
+  function chipUi() {
+    let el = document.getElementById('libChip'); if (!el) { el = Object.assign(document.createElement('button'), { id: 'libChip', className: 'lib-chip', hidden: true }); document.body.appendChild(el); }
+    return el;
+  }
+  C.buildPhotoLibrary = async ({ force = false } = {}) => {
+    if (live.running) return 0;
+    const saved = await C.kv.get('livecat').catch(() => null), have = saved?.photos?.length > 150;
+    if (have && !PH.ready) setCatalog(saved.photos); // the cached library works instantly and offline, with or without keys
+    if (have && !force && Date.now() - saved.t < 7 * DAY) return PH.list.length;
+    if (C.vault?.state() === 'locked' && !(await C.vault.tryRemembered())) { // keys are locked: offer to unlock (never prompt uninvited)
+      const chip = chipUi(); chip.hidden = false; chip.disabled = false; chip.innerHTML = 'Unlock your photo keys to refresh the template photos'; chip.onclick = async () => { chip.hidden = true; if (await C.vault.ensure()) C.buildPhotoLibrary({ force }); }; return have ? PH.list.length : 0;
+    }
+    if (!liveHave()) return have ? PH.list.length : 0;
+    live.running = true; live.done = 0; const chip = chipUi(); chip.onclick = null; const all = [], seen = new Set(saved?.photos?.map(p => p.id) || []); if (saved?.photos) all.push(...saved.photos);
+    chip.hidden = false; chip.disabled = true;
+    try {
+      for (const [topic, q] of LIVE_TOPICS) {
+        chip.innerHTML = `<i></i><span>Building your photo library ${live.done}/${live.total}</span>`;
+        try {
+          const r = await C.stock.search(q, { page: 1, kind: 'photo' }), items = (r.items || []).filter(it => it.full && it.thumb && !seen.has(it.id)).slice(0, 10);
+          items.forEach(it => { seen.add(it.id); const w = it.w || 1600, h = it.h || 1000; all.push({ id: it.id, s: 'lv', site: it.site, t: it.thumb, f: it.full, dl: it.site === 'Unsplash' ? it.dl : undefined, w, h, o: w > h * 1.15 ? 'l' : h > w * 1.15 ? 'p' : 's', c: '#8a8fa3', by: it.by || it.site, l: it.site === 'Unsplash' ? `${it.link}?utm_source=chitra_studio&utm_medium=referral` : it.link, k: [topic, ...String(it.title || '').toLowerCase().split(/[\s,]+/).filter(x => x.length > 3).slice(0, 3)] });
+          });
+        } catch (e) { if (live.done === 0 && /401|403|429/.test(String(e.message))) break; }
+        live.done++; if (live.done % 8 === 0 && all.length > 60) setCatalog(all);
+        await new Promise(r => setTimeout(r, QP.get('livedelay') ? +QP.get('livedelay') : 450));
+      }
+      if (all.length > 900) all.splice(0, all.length - 900);
+      if (all.length) { await C.kv.set('livecat', { t: Date.now(), photos: all }).catch(() => { }); setCatalog(all); }
+    } finally { live.running = false; chip.hidden = true; }
+    return all.length;
+  };
+  document.addEventListener('chitra:keys', () => C.buildPhotoLibrary({ force: true }));
+  C.addCommand && C.addCommand('Rebuild photo library (fresh photos)', () => C.buildPhotoLibrary({ force: true }).then(n => n && C.toast(`Photo library ready - ${n} photos`, '')));
+
   C.loadCatalog = async (url = 'data/photos.json') => {
     try {
       const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) return 0; const cat = await r.json(); if (!cat?.photos?.length) return 0;
-      PH.list = cat.photos.filter(p => p && p.id && (p.s === 'un' ? p.u : p.f && p.t)); PH.byId = Object.fromEntries(PH.list.map(p => [p.id, p])); PH.ready = true;
-      const n = registerReal(); document.dispatchEvent(new CustomEvent('chitra:templates', { detail: { real: n } })); return n;
+      return setCatalog(cat.photos);
     } catch { return 0; }
   };
   C.photoCatalog = PH;
-  C.loadCatalog(new URLSearchParams(location.search).get('catalog') || undefined);
+  C.loadCatalog(new URLSearchParams(location.search).get('catalog') || undefined).then(n => { if (!n && !new URLSearchParams(location.search).has('nolive')) setTimeout(() => C.buildPhotoLibrary().catch(() => { }), 2500); });
 })();
