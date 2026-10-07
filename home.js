@@ -6,7 +6,7 @@
   const META = C.TEMPLATE_META;
   const CATS = [['all', 'All'], ...Object.entries(C.CAT_LABEL || {})];
   const TINT = ['#efe7ff', '#dff6ff', '#fff0d9', '#e4f9e8', '#ffe6f0', '#fff6c8', '#e8ecff'];
-  const CAT_ICON = { mug: 'coffee', tshirt: 'shirt', social: 'camera', story: 'smartphone', pinterest: 'pin', poster: 'image', flyer: 'newspaper', invite: 'gift', card: 'credit-card', cert: 'award', menu: 'utensils', youtube: 'video', slides: 'presentation', wallpaper: 'monitor', merch: 'shopping-bag', sticker: 'sticker' };
+  const CAT_ICON = { mockup: 'frame', mug: 'coffee', tshirt: 'shirt', social: 'camera', story: 'smartphone', pinterest: 'pin', poster: 'image', flyer: 'newspaper', invite: 'gift', card: 'credit-card', cert: 'award', menu: 'utensils', youtube: 'video', slides: 'presentation', wallpaper: 'monitor', merch: 'shopping-bag', sticker: 'sticker' };
   const plan = () => { try { return localStorage.getItem('chitra.plan') || 'free'; } catch { return 'free'; } };
   const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; };

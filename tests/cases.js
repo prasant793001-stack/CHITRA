@@ -83,6 +83,14 @@ module.exports = [
     ok('new page keeps the first page background', !!r.bg && r.bg === r.th.bg, r.bg + ' vs ' + r.th.bg);
     ok('new page heading uses the theme font', r.fonts[0] === r.th.head.f, r.fonts.join());
   } },
+  { name: 'mock templates (marketing mockups)', only: 'desktop', run: async (p, ok) => {
+    const n = await p.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.mock).length); ok('200+ mock templates exist', n >= 200, n);
+    ok('Mock templates is the first category', await p.evaluate(() => Object.keys(chitra.CAT_LABEL)[0] === 'mockup'));
+    const r = await p.evaluate(async () => { const id = chitra.listTemplates({ cat: 'mockup' })[0]; await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName(chitra.TEMPLATE_META[id].p), template: id }); await new Promise(r => setTimeout(r, 900)); const os = chitra.canvas.getObjects(), im = os.find(o => o.mock); return { id, im: !!im, tx: os.filter(o => /textbox/.test(o.type)).length, kind: im?.mock?.kind }; });
+    ok('mock template opens with a product picture + editable text', r.im && r.tx >= 2, JSON.stringify(r));
+    const url = await p.evaluate(async () => { const id = chitra.listTemplates({ cat: 'mockup' })[5]; await chitra.ensureTpl(id, 'thumb'); return chitra.renderTemplateThumb(id, chitra.productByName(chitra.TEMPLATE_META[id].p), 300); });
+    ok('mock template thumbnails render', !!url && url.length > 6000, url && url.length);
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);

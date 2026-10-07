@@ -4,7 +4,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData', 'slot', 'inSlot', 'credit', 'isIcon'];
+  const EXTRA = ['adj', 'locked', 'lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'archData', 'slot', 'inSlot', 'credit', 'isIcon', 'mock'];
   let DPI = 300;
   const FONTS = ['Fredoka', 'Bangers', 'Anton', 'Bebas Neue', 'Chewy', 'Lobster', 'Pacifico', 'Permanent Marker', 'Righteous',
     'Arial', 'Georgia', 'Impact', 'Verdana', 'Courier New'];

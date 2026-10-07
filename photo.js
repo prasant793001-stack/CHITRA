@@ -112,6 +112,13 @@
     for (let i = 0; i < W0 * H0; i++) { const t = Math.min(1, Math.max(0, (ud[i * 4 + 3] / 255 - 0.3) / 0.4)), s = t * t * (3 - 2 * t); od.data[i * 4 + 3] = Math.round(od.data[i * 4 + 3] * s); }
     ox.putImageData(od, 0, 0); return out;
   }
+  /* share of visible pixels in a cut-out (data URL or canvas): guards against "removed everything / removed nothing" */
+  async function coverageOf(x) {
+    let c = x; if (typeof x === 'string') { const im = new Image(); im.src = x; await im.decode(); c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; c.getContext('2d').drawImage(im, 0, 0); }
+    const k = Math.min(1, 200 / Math.max(c.width, c.height)), t = document.createElement('canvas'); t.width = Math.max(1, Math.round(c.width * k)); t.height = Math.max(1, Math.round(c.height * k));
+    const g = t.getContext('2d', { willReadFrequently: true }); g.drawImage(c, 0, 0, t.width, t.height); const d = g.getImageData(0, 0, t.width, t.height).data; let n = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++; return n / (t.width * t.height);
+  }
   async function removeBg(o = needImage()) {
     if (!o) return;
     const src = natCanvas(o, 3000), job = busy('Removing background…');
@@ -122,13 +129,18 @@
         try { out = await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 1 }, progress: (key, cur, total) => job.set(`AI cut-out… ${total ? Math.round((cur / total) * 100) : 0}%`) }); break; } catch (e) { console.warn('model', model, e); }
       }
       if (!out) throw new Error('no model');
-      job.done(); await replaceImage(o, await blobToDataURL(out), { pristine: src });
+      const res = await blobToDataURL(out), cov = await coverageOf(res);
+      job.done();
+      if (cov < 0.02) { toast('The AI could not find a clear subject — original kept. Try Refine to mark it', '⚠️'); return; }
+      await replaceImage(o, res, { pristine: src });
       confetti(innerWidth / 2, innerHeight / 2, 80); toast('Background removed', '✂️');
     } catch (e) {
       console.warn('AI cut-out unavailable', e); job.done();
       const j2 = busy('AI model offline — using quick cut-out…'); await tick();
-      await replaceImage(o, smartCut(src), { pristine: src }); j2.done();
-      toast('Offline cut-out used — for the best result connect to the internet (AI model); use Refine to touch up', '✂️');
+      const quick = smartCut(src), cov = coverageOf(quick); j2.done();
+      if (await cov < 0.06 || await cov > 0.97) { toast('Could not separate the subject without the AI model. Check your connection and retry', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o); } }); return; }
+      await replaceImage(o, quick, { pristine: src });
+      toast('AI model unavailable (blocked or offline) — used a rough colour-based cut instead. Retry for the AI result, or use Refine', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o); } });
     }
   }
   $('#removeBg').onclick = () => removeBg();
