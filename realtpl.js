@@ -178,9 +178,9 @@
 
   function registerReal() {
     const pools = { PROMO: C.COPY?.PROMO, EVENTS: C.COPY?.EVENTS, SERVICES: C.COPY?.SERVICES, INVITES: C.COPY?.INVITES, YT: C.COPY?.YT, SLIDES: C.COPY?.SLIDES, PIN: C.COPY?.PIN, QUOTES: C.COPY?.QUOTES, CARDS: C.COPY?.CARDS, MISC: C.COPY?.MISC };
-    let made = 0;
+    let made = 0; const want = FAMS.reduce((s, f) => s + f[4], 0), scale = Math.min(1, (PH.list.length * 2.5) / want); // never reuse a photo more than ~2x: fewer photos => fewer (still unique) designs
     FAMS.forEach((fam, fi) => {
-      const pool = pools[fam[3]]; if (!pool || !pool.length) return; const [pre, cat, prod, , count, moods, layouts] = fam;
+      const pool = pools[fam[3]]; if (!pool || !pool.length) return; const [pre, cat, prod, , count0, moods, layouts] = fam, count = Math.max(4, Math.floor(count0 * scale));
       for (let i = 0; i < count; i++) {
         const c0 = pool[i % pool.length], v = Math.floor(i / pool.length), id = `${pre}-${i + 1}`, seed = C.hashSeed(id);
         const layout = layouts[(i * 5 + v * 3 + fi) % layouts.length], mood = moods[(i * 3 + v + fi) % moods.length], pairs = C.MOODS[mood], f = pairs[(i * 7 + v * 5 + fi) % pairs.length];

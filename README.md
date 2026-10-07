@@ -69,3 +69,6 @@ Never commit raw keys to this public repo (`tools/seal-key.js` only scrambles th
 - `npm test` runs: browser regression suite (desktop + phone), worker unit tests (accounts, cloud saves, Stripe webhook, approval links) and a real-browser-to-worker end-to-end test. `npm run check` / `npm run lint` catch syntax and undefined-variable bugs. CI runs everything on every push.
 - New: Magic Resize, version history, Brand kit, "describe it" template finder, send-to-print (WhatsApp/email/share), PDF crop marks + 3 mm bleed, customer approval links, photo-frame templates, first-run tour, keyboard shortcuts (press `?`), accessibility pass, offline banner.
 - Backend setup: `docs/BACKEND.md`. Launch checklist: `docs/LAUNCH.md`.
+
+## Real photos (v6)
+~1,000 photographic templates + realistic product previews (mug / tee / tumbler / tote / mouse pad / phone case) in the template grid. Photos come from a catalog you build once with `tools/harvest-photos.mjs` - see **docs/PHOTOS.md**.

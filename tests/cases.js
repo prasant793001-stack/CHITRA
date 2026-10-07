@@ -74,7 +74,7 @@ module.exports = [
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
-    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('catalog creates 800+ photographic templates', n >= 800, n);
+    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('36-photo fixture catalog scales templates to ~2x photos (unique, not repeated)', n >= 60 && n <= 36 * 2.6, n);
     const first = await q.evaluate(() => chitra.listTemplates({}).slice(0, 12).map(id => !!chitra.TEMPLATE_META[id].real)); ok('photographic designs are listed first', first.slice(0, 8).every(Boolean), first.join());
     const cats = await q.evaluate(() => new Set(chitra.listTemplates({}).slice(0, 12).map(id => chitra.TEMPLATE_META[id].cat)).size); ok('"All" mixes categories', cats >= 6, cats);
     await q.evaluate(async () => { await chitra.ensureTpl('rig-3', 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'rig-3' }); }); await q.waitForTimeout(1200);
