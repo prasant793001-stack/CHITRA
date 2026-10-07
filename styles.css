@@ -686,3 +686,7 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .gx-tabs{display:flex;gap:4px;background:var(--f2);padding:3px;border-radius:10px;margin-bottom:10px}
 .gx-tabs button{flex:1;border:0;background:none;padding:7px;border-radius:8px;font-weight:600;font-size:12.5px;cursor:pointer;color:var(--muted)}
 .gx-tabs button.on{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+
+.studio-sheet{position:relative;width:min(1100px,96vw);height:min(92vh,900px);padding:0;overflow:hidden;border-radius:18px}
+.studio-sheet iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+.studio-sheet .x{z-index:3;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.2)}

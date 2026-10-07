@@ -49,7 +49,7 @@
 
   /* ================= AI background removal (+ flood-fill fallback) ================= */
   let imglyP = null;
-  const loadImgly = () => imglyP ||= import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/+esm');
+  const loadImgly = () => imglyP ||= import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm').then(m => ({ removeBackground: m.default || m.removeBackground, preload: m.preload }));
   /* Offline cut-out ("pro" classical pipeline): learns the background palette from the picture's border and the subject palette from its
      centre (k-means in Lab), refines both a few rounds (GrabCut-style), keeps only background connected to the border, drops specks,
      fills holes and feathers the edge. Used when the AI model cannot be downloaded. */
@@ -162,9 +162,10 @@
   /* ---- photos: the best AI model, run twice. Pass 2 zooms into the subject found by pass 1, so hair, fur and thin edges get far more pixels to work with. ---- */
   function alphaOf(c) { const g = c.getContext('2d', { willReadFrequently: true }), d = g.getImageData(0, 0, c.width, c.height).data, a = new Uint8Array(c.width * c.height); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3]; return a; }
   async function aiCut(mod, src, job) {
-    const models = matchMedia('(pointer:coarse)').matches ? ['isnet_fp16', 'isnet_quint8'] : ['isnet', 'isnet_fp16', 'isnet_quint8']; // full-precision model: slowest, cleanest
-    const run = async (blob, label) => { for (const model of models) { try { return await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 1 }, progress: (key, cur, total) => job.set(`${label} ${total ? Math.round((cur / total) * 100) : 0}%`) }); } catch (e) { console.warn('model', model, e); } } throw new Error('no model'); };
-    const first = await run(await canvasToBlob(src), 'AI cut-out (pass 1 of 2)…'); const img1 = await createImageBitmap(first);
+    const models = ['isnet_quint8', 'isnet_fp16']; // Cutout Studio's proven setup first, the sharper fp16 model as backup
+    const proc = c => { const k = Math.min(1, 1280 / Math.max(c.width, c.height)); if (k === 1) return canvasToBlob(c); const t = document.createElement('canvas'); t.width = Math.round(c.width * k); t.height = Math.round(c.height * k); const g = t.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, t.width, t.height); return new Promise(r => t.toBlob(r, 'image/jpeg', 0.92)); }; // model works at ~1280px: faster and cleaner
+    const run = async (blob, label) => { for (const model of models) { try { return await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 0.85 }, progress: (key, cur, total) => job.set(`${label} ${total ? Math.round((cur / total) * 100) : 0}%`) }); } catch (e) { console.warn('model', model, e); } } throw new Error('no model'); };
+    const first = await run(await proc(src), 'Cut-out (pass 1 of 2)…'); const img1 = await createImageBitmap(first);
     const m1 = document.createElement('canvas'); m1.width = src.width; m1.height = src.height; m1.getContext('2d').drawImage(img1, 0, 0, src.width, src.height);
     const a1 = alphaOf(m1); let x0 = src.width, y0 = src.height, x1 = -1, y1 = -1; for (let y = 0; y < src.height; y++) for (let x = 0; x < src.width; x++) if (a1[y * src.width + x] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
     let alpha = a1;
@@ -172,7 +173,7 @@
       const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.1), cx = Math.max(0, x0 - pad), cy = Math.max(0, y0 - pad), cw = Math.min(src.width, x1 + pad) - cx, ch = Math.min(src.height, y1 + pad) - cy;
       const crop = document.createElement('canvas'); crop.width = cw; crop.height = ch; crop.getContext('2d').drawImage(src, cx, cy, cw, ch, 0, 0, cw, ch);
       try {
-        const second = await run(await canvasToBlob(crop), 'AI cut-out (pass 2 of 2)…'), img2 = await createImageBitmap(second), m2 = document.createElement('canvas'); m2.width = cw; m2.height = ch; m2.getContext('2d').drawImage(img2, 0, 0, cw, ch);
+        const second = await run(await proc(crop), 'Cut-out (pass 2 of 2)…'), img2 = await createImageBitmap(second), m2 = document.createElement('canvas'); m2.width = cw; m2.height = ch; m2.getContext('2d').drawImage(img2, 0, 0, cw, ch);
         const a2 = alphaOf(m2); alpha = new Uint8Array(src.width * src.height); for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) alpha[(cy + y) * src.width + cx + x] = a2[y * cw + x];
       } catch (e) { console.warn('pass 2 skipped', e); }
     }

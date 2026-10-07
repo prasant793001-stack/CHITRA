@@ -132,7 +132,7 @@
   const CATS = [
     ['shapes', 'Shapes', 'shapes', '#fff4cc', '#b27a00'], ['graphics', 'Graphics', 'sparkles', '#ffe9d6', '#d4540a'], ['icons', 'Icons', 'smile', '#dff7ea', '#0f8f55'],
     ['photos', 'Photos', 'image', '#e4f6f3', '#0b8579'], ['mockups', 'Mockups', 'shirt', '#fff0e0', '#e85d04'], ['effects', 'Effects', 'wand-sparkles', '#f1ffd0', '#4f7a00'],
-    ['stickers', 'Stickers', 'sticker', '#fde8ec', '#c0264a'], ['backdrops', 'Backdrops', 'layout-grid', '#e8f0ff', '#2b59c3'], ['lines', 'Lines', 'minus', '#f3eaff', '#6d3fc7'],
+    ['stickers', 'Stickers', 'sticker', '#fde8ec', '#c0264a'], ['qr', 'QR & barcodes', 'scan', '#e8f0ff', '#2b59c3'], ['backdrops', 'Backdrops', 'layout-grid', '#e8f0ff', '#2b59c3'], ['lines', 'Lines', 'minus', '#f3eaff', '#6d3fc7'],
   ];
   const home = $('#elHome'), view = $('#elView'), back = $('#elBack'), title = $('#elTitle');
   let searchHook = null, current = 'home';
@@ -142,6 +142,7 @@
   $('#popShapes').onclick = e => { const b = e.target.closest('[data-shape]'); if (b) addShape(+b.dataset.shape); };
 
   function open(name, q = '') {
+    if (name === 'qr') { C.openQR && C.openQR(); return; }
     current = name; searchHook = null; const cat = CATS.find(c => c[0] === name);
     home.hidden = name !== 'home' && name !== 'search'; view.hidden = name === 'home'; back.hidden = name === 'home';
     title.textContent = name === 'home' ? 'Elements' : name === 'search' ? 'Results' : cat[1]; $('#elSearch').placeholder = PLACE[name] || PLACE.home; $('#elSearch').value = q;

@@ -126,6 +126,17 @@ module.exports = [
     ok('premium graphic is placed as a coloured vector', await p.evaluate(() => chitra.canvas.getObjects().length >= 1));
     await p.evaluate(() => document.querySelector('.gx-tabs [data-m=b]').click()); await p.waitForTimeout(300); ok('built-in tab still works', await p.locator('.gfx-card').count() > 20);
   } },
+  { name: 'QR studio integration', only: 'desktop', run: async (p, ok) => {
+    ok('QR & barcodes is an Elements category', await p.evaluate(() => !!document.querySelector('#catGrid [data-el=qr]')));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
+    await p.evaluate(() => chitra.openQR()); await p.waitForTimeout(2500);
+    const fr = p.frames().find(f => f.url().includes('studio/qr.html')); ok('QR studio loads inside the app', !!fr);
+    ok('embedded mode shows the Add-to-design bar', fr && await fr.evaluate(() => !!document.getElementById('cxAdd')));
+    const n0 = await p.evaluate(() => chitra.canvas.getObjects().length);
+    await p.evaluate(() => { const f = document.querySelector('#qrFrame'); f.contentWindow.postMessage('noop', '*'); });
+    await fr.evaluate(() => { document.getElementById('cxAdd').click(); }); await p.waitForTimeout(1500);
+    ok('Add to my design places the picture on the page and closes the studio', await p.evaluate(n => chitra.canvas.getObjects().length > n && document.getElementById('qrStudio').hidden, n0), 'qr lib may be offline in tests');
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
