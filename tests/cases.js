@@ -105,4 +105,16 @@ module.exports = [
     await q.evaluate(() => chitra.vault.save({ pixabay: 'PLAINKEY-123' }, 'secret1', true)); await q.goto('http://localhost:8123/?nosplash&nolive=1'); await q.waitForTimeout(600);
     ok('"remember on this device" unlocks silently', await q.evaluate(async () => (await chitra.vault.tryRemembered()) && chitra.stock.config().pixabay === 'PLAINKEY-123'));
     ok('no page errors in live/vault flow', errs.length === 0, errs.join('|')); await q.close(); } },
+  { name: 'live library resumes after reload and exports a public catalog', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const base = 'http://localhost:8123/tests/fixtures/photos/';
+    await ctx.route('https://api.unsplash.com/**', r => { const q = new URL(r.request().url()).searchParams.get('query') || ''; const results = Array.from({ length: 10 }, (_, i) => { const n = String((q.length + i * 3) % 36).padStart(2, '0'); return { id: `u${q.length}${i}${n}`, urls: { small: `${base}f${n}_t.jpg`, regular: `${base}f${n}.jpg` }, width: 1600, height: 1000, user: { name: 'Mock Unsplasher' }, links: { html: 'https://unsplash.com/photos/x' }, alt_description: q }; }); r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ results, total_pages: 5 }) }); });
+    const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
+    await q.addInitScript(() => { if (!sessionStorage.getItem('seeded2')) { sessionStorage.setItem('seeded2', '1'); localStorage.removeItem('chitra.vault'); localStorage.setItem('chitra.keys', JSON.stringify({ unsplash: 'UKEY' })); } });
+    await q.goto('http://localhost:8123/?nosplash&livetopics=24&livedelay=250'); await q.evaluate(async () => { await chitra.kv.del('livecat'); await chitra.kv.del('vaultkey'); }); await q.waitForTimeout(4200);
+    const mid = await q.evaluate(async () => { const s = await chitra.kv.get('livecat'); return s ? { complete: s.complete, idx: s.idx } : null; }); ok('progress is saved while building', !!mid && mid.complete === false && mid.idx >= 4, JSON.stringify(mid));
+    await q.goto('http://localhost:8123/?nosplash&livetopics=24&livedelay=0'); for (let i = 0; i < 60; i++) { if (await q.evaluate(async () => (await chitra.kv.get('livecat'))?.complete === true)) break; await q.waitForTimeout(500); }
+    ok('reload resumed and finished the library', await q.evaluate(async () => (await chitra.kv.get('livecat'))?.complete === true));
+    const exp = await q.evaluate(async () => { const s = await chitra.kv.get('livecat'); return s.photos.filter(p => p.site === 'Unsplash').length; }); ok('unsplash photos present', exp > 20, exp);
+    const [dl] = await Promise.all([q.waitForEvent('download', { timeout: 10000 }), q.evaluate(() => chitra.exportCatalog())]); ok('catalog export downloads photos.json', dl.suggestedFilename() === 'photos.json');
+    ok('no page errors (resume/export)', errs.length === 0, errs.join('|')); await q.close(); } },
 ];

@@ -352,6 +352,7 @@
     }
     $('#adminModal').hidden = true; toast('Saved - keys are encrypted on this device', ''); document.dispatchEvent(new Event('chitra:keys'));
   };
+  $('#admExport') && ($('#admExport').onclick = () => C.exportCatalog && C.exportCatalog());
   $('#admWipe') && ($('#admWipe').onclick = () => { if (confirm('Remove all saved keys from this browser?')) { vault.wipe(); $('#adminModal').hidden = true; toast('Keys removed', ''); } });
   document.addEventListener('keydown', e => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') { e.preventDefault(); openAdmin(); } });
   let taps = 0, tapT; [$('#homeBtn'), $('.hm-logo')].forEach(el => el && el.addEventListener('click', () => { taps++; clearTimeout(tapT); tapT = setTimeout(() => { taps = 0; }, 1500); if (taps >= 7) { taps = 0; openAdmin(); } }));

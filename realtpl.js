@@ -234,31 +234,41 @@
     if (live.running) return 0;
     const saved = await C.kv.get('livecat').catch(() => null), have = saved?.photos?.length > 150;
     if (have && !PH.ready) setCatalog(saved.photos); // the cached library works instantly and offline, with or without keys
-    if (have && !force && Date.now() - saved.t < 7 * DAY) return PH.list.length;
+    if (have && !force && saved.complete !== false && Date.now() - saved.t < 7 * DAY) return PH.list.length;
     if (C.vault?.state() === 'locked' && !(await C.vault.tryRemembered())) { // keys are locked: offer to unlock (never prompt uninvited)
       const chip = chipUi(); chip.hidden = false; chip.disabled = false; chip.innerHTML = 'Unlock your photo keys to refresh the template photos'; chip.onclick = async () => { chip.hidden = true; if (await C.vault.ensure()) C.buildPhotoLibrary({ force }); }; return have ? PH.list.length : 0;
     }
     if (!liveHave()) return have ? PH.list.length : 0;
-    live.running = true; live.done = 0; const chip = chipUi(); chip.onclick = null; const all = [], seen = new Set(saved?.photos?.map(p => p.id) || []); if (saved?.photos) all.push(...saved.photos);
+    live.running = true; const resume = !force && saved && saved.complete === false ? saved.idx || 0 : 0; live.done = resume; const chip = chipUi(); chip.onclick = null; const all = [], seen = new Set(saved?.photos?.map(p => p.id) || []); if (saved?.photos) all.push(...saved.photos);
     chip.hidden = false; chip.disabled = true;
     try {
-      for (const [topic, q] of LIVE_TOPICS) {
+      for (const [topic, q] of LIVE_TOPICS.slice(resume)) {
         chip.innerHTML = `<i></i><span>Building your photo library ${live.done}/${live.total}</span>`;
         try {
           const r = await C.stock.search(q, { page: 1, kind: 'photo' }), items = (r.items || []).filter(it => it.full && it.thumb && !seen.has(it.id)).slice(0, 10);
           items.forEach(it => { seen.add(it.id); const w = it.w || 1600, h = it.h || 1000; all.push({ id: it.id, s: 'lv', site: it.site, t: it.thumb, f: it.full, dl: it.site === 'Unsplash' ? it.dl : undefined, w, h, o: w > h * 1.15 ? 'l' : h > w * 1.15 ? 'p' : 's', c: '#8a8fa3', by: it.by || it.site, l: it.site === 'Unsplash' ? `${it.link}?utm_source=chitra_studio&utm_medium=referral` : it.link, k: [topic, ...String(it.title || '').toLowerCase().split(/[\s,]+/).filter(x => x.length > 3).slice(0, 3)] });
           });
         } catch (e) { if (live.done === 0 && /401|403|429/.test(String(e.message))) break; }
-        live.done++; if (live.done % 8 === 0 && all.length > 60) setCatalog(all);
+        live.done++; if (live.done % 4 === 0) { C.kv.set('livecat', { t: Date.now(), photos: all.slice(-900), idx: live.done, complete: false }).catch(() => { }); if (live.done % 8 === 0 && all.length > 60) setCatalog(all); } // a reload mid-way resumes instead of restarting
         await new Promise(r => setTimeout(r, QP.get('livedelay') ? +QP.get('livedelay') : 450));
       }
       if (all.length > 900) all.splice(0, all.length - 900);
-      if (all.length) { await C.kv.set('livecat', { t: Date.now(), photos: all }).catch(() => { }); setCatalog(all); }
+      if (all.length) { await C.kv.set('livecat', { t: Date.now(), photos: all, idx: live.total, complete: true }).catch(() => { }); setCatalog(all); }
     } finally { live.running = false; chip.hidden = true; }
     return all.length;
   };
   document.addEventListener('chitra:keys', () => C.buildPhotoLibrary({ force: true }));
   C.addCommand && C.addCommand('Rebuild photo library (fresh photos)', () => C.buildPhotoLibrary({ force: true }).then(n => n && C.toast(`Photo library ready - ${n} photos`, '')));
+
+  /* Owner: download the live library as data/photos.json so EVERY visitor gets the photographic templates.
+     Only photo sources that allow hot-linking go in (Unsplash, Pexels). Pixabay's terms forbid hot-linking, so for Pixabay use tools/harvest-photos.mjs (downloads + resizes the files into the repo). */
+  C.exportCatalog = async () => {
+    const saved = await C.kv.get('livecat').catch(() => null); const list = (saved?.photos || []).filter(p => p.site === 'Unsplash' || p.site === 'Pexels');
+    if (!list.length) return C.toast('Nothing to export yet - build the library first (needs Unsplash/Pexels keys)', '');
+    const blob = new Blob([JSON.stringify({ v: 1, updated: new Date().toISOString().slice(0, 10), photos: list })], { type: 'application/json' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'photos.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+    C.toast(`Exported ${list.length} photos - put the file in the repo as data/photos.json`, ''); return list.length;
+  };
+  C.addCommand && C.addCommand('Export photo catalog (data/photos.json)', C.exportCatalog);
 
   C.loadCatalog = async (url = 'data/photos.json') => {
     try {

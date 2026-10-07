@@ -33,7 +33,7 @@
   function thumbFor(name) {
     if (cache[name]) return Promise.resolve(cache[name]);
     chain = chain.then(async () => {
-      if (cache[name]) return; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}`;
+      if (cache[name]) return; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}:${(meta.ph || []).join(',')}`; // photo ids in the key: a rebuilt library never shows stale thumbnails
       if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return; } } catch { } }
       const ok = await C.ensureTpl(name, 'thumb'); await new Promise(r => setTimeout(r, 0));
       C.__photoKind = 'thumb'; let url; try { url = C.renderTemplateThumb(name, C.productByName(meta.p), meta.mockKind ? 900 : 340); } finally { C.__photoKind = null; }
