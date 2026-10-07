@@ -1379,7 +1379,7 @@
   /* ================= keyboard ================= */
   document.addEventListener('keydown', e => {
     const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
-    if (mod && k === 'k') { e.preventDefault(); $('#cmd').hidden ? openCmd() : ($('#cmd').hidden = true); return; }
+    if (mod && k === 'k' && !e.shiftKey) { e.preventDefault(); $('#cmd').hidden ? openCmd() : ($('#cmd').hidden = true); return; }
     if (k === 'escape') { $$('.modal').forEach(m => { m.hidden = true; }); menu.hidden = true; return; }
     const el = document.activeElement;
     if (/INPUT|SELECT|TEXTAREA/.test(el?.tagName) && !/range|color|checkbox/.test(el.type || '')) return;
