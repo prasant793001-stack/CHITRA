@@ -123,10 +123,12 @@
 
   /* ================= toasts & confetti ================= */
   const WARN = new Set(['⚠️', '☝️', '👆', 'ℹ️']);
-  function toast(msg, tag = '') {
+  function toast(msg, tag = '', action) { // action = { label, fn }: shows a button (e.g. Undo) and keeps the toast a little longer
     const t = document.createElement('div'), warn = WARN.has(tag); t.className = 'toast' + (warn ? ' warn' : '');
-    t.innerHTML = `<span class="ti">${ico(warn ? 'triangle-alert' : 'check', 14)}</span><span></span>`; $('span:last-child', t).textContent = msg;
-    $('#toasts').appendChild(t); setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 350); }, 2400);
+    t.innerHTML = `<span class="ti">${ico(warn ? 'triangle-alert' : 'check', 14)}</span><span class="tm"></span>`; $('.tm', t).textContent = msg;
+    const kill = () => { t.classList.add('out'); setTimeout(() => t.remove(), 350); };
+    if (action) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = action.label; b.onclick = () => { action.fn(); kill(); }; t.appendChild(b); }
+    $('#toasts').appendChild(t); setTimeout(kill, action ? 6000 : 2400);
   }
   function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 150) {
     const c = $('#confetti'); c.width = innerWidth; c.height = innerHeight; const g = c.getContext('2d');
@@ -603,8 +605,8 @@
     if (isMobile()) closeSheets();
   }
   $$('[data-template]').forEach(b => b.onclick = () => {
-    if (canvas.getObjects().length && !confirm('Replace your current design with this quick start?')) return;
-    loadTemplate(b.dataset.template);
+    const had = canvas.getObjects().length; loadTemplate(b.dataset.template);
+    if (had) toast('Quick start applied', '', { label: 'Undo', fn: undo });
   });
 
   /* ================= magic: palettes, surprise, sparkle ================= */

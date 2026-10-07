@@ -136,7 +136,7 @@
     $('#hmTplTabs').innerHTML = CATS.map(([k, n]) => `<button class="chip${k === tplCat ? ' on' : ''}" data-c="${k}">${n}</button>`).join('');
     $$('#hmTplTabs [data-c]').forEach(b => b.onclick = () => { tplCat = b.dataset.c; renderTemplates(); });
     const counts = {}; Object.values(META).forEach(m => { counts[m.cat] = (counts[m.cat] || 0) + 1; });
-    $('#hmCatTiles').innerHTML = Object.entries(C.CAT_LABEL).map(([k, n], i) => `<button class="cat-tile" data-ct="${k}" style="--tint:${TINT[i % TINT.length]}"><b>${n}</b><small>${counts[k] || 0} designs</small><span>${C.ico(CAT_ICON[k] || 'layout-template', 34)}</span></button>`).join('');
+    $('#hmCatTiles').innerHTML = Object.entries(C.CAT_LABEL).map(([k, n], i) => `<button class="cat-tile" data-ct="${k}" style="--tint:${TINT[i % TINT.length]}"><b>${n}</b><small>Browse templates</small><span>${C.ico(CAT_ICON[k] || 'layout-template', 34)}</span></button>`).join('');
     $$('#hmCatTiles [data-ct]').forEach(b => b.onclick = () => { tplCat = b.dataset.ct; renderTemplates(); $('#hmTemplates').scrollIntoView({ behavior: 'smooth' }); });
     const names = C.listTemplates({ cat: tplCat });
     pagedGrid($('#hmTplGrid'), names, n => tplCard(n), bindTpl);
@@ -198,9 +198,10 @@
     const m = META[name]; if (!guardPro(m)) return;
     await C.ensureTpl(name, 'full');
     const p = C.productByName(m.p);
-    if (C.canvas.getObjects().filter(o => !o.slot).length && !confirm('Replace your current design with this template?')) return;
-    if ((p.w !== C.W || p.h !== C.H) && confirm(`“${m.n}” is made for ${p.name} (${C.dim(p)}). Resize this page to match?`)) { C.canvas.discardActiveObject(); C.setSize(p.w, p.h, false, p.guide, p.dpi, p); }
+    const had = C.canvas.getObjects().filter(o => !o.slot).length;
+    if (p.w !== C.W || p.h !== C.H) { C.canvas.discardActiveObject(); C.setSize(p.w, p.h, false, p.guide, p.dpi, p); } // a template always brings its own page size
     C.loadTemplate(name);
+    C.toast(`“${m.n}” applied`, '', had ? { label: 'Undo', fn: C.undo } : undefined);
   }
 
   /* ================= splash → Home ================= */

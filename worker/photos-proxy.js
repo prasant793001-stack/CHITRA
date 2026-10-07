@@ -5,9 +5,9 @@
 const J = (o, origin, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'access-control-allow-origin': origin, 'cache-control': 'public, max-age=300' } });
 const get = async u => { const r = await fetch(u, { headers: { 'user-agent': 'chitra-studio' } }); if (!r.ok) throw new Error(r.status); return r.json(); };
 const N = {
-  pixabay: h => ({ id: 'p' + h.id, thumb: h.webformatURL, full: h.largeImageURL, w: h.imageWidth, h: h.imageHeight, by: h.user, link: h.pageURL, site: 'Pixabay', title: h.tags }),
-  pexels: p => ({ id: 'x' + p.id, thumb: p.src.medium, full: p.src.large2x || p.src.large, w: p.width, h: p.height, by: p.photographer, link: p.url, site: 'Pexels', title: p.alt || '' }),
-  unsplash: p => ({ id: 'u' + p.id, dl: p.id, thumb: p.urls.small, full: p.urls.regular, w: p.width, h: p.height, by: p.user?.name, link: p.links?.html, site: 'Unsplash', title: p.alt_description || '' }),
+  pixabay: h => ({ id: 'p' + h.id, thumb: h.webformatURL, full: h.largeImageURL, w: h.imageWidth, h: h.imageHeight, by: h.user, link: h.pageURL, site: 'Pixabay', title: h.tags, tags: h.tags || '' }),
+  pexels: p => ({ id: 'x' + p.id, thumb: p.src.medium, full: p.src.large2x || p.src.large, w: p.width, h: p.height, by: p.photographer, link: p.url, site: 'Pexels', title: p.alt || '', tags: p.alt || '' }),
+  unsplash: p => ({ id: 'u' + p.id, dl: p.id, thumb: p.urls.small, full: p.urls.regular, w: p.width, h: p.height, by: p.user?.name, link: p.links?.html, site: 'Unsplash', title: p.alt_description || '', tags: `${p.alt_description || ''} ${p.description || ''}` }),
 };
 export default {
   async fetch(req, env) {

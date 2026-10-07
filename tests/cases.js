@@ -74,10 +74,10 @@ module.exports = [
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
-    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('36-photo fixture catalog scales templates to ~2x photos (unique, not repeated)', n >= 60 && n <= 36 * 2.6, n);
+    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('fixture catalog yields only topic-matched photographic templates (unique, not repeated)', n >= 15 && n <= 36 * 2.6, n);
     const first = await q.evaluate(() => chitra.listTemplates({}).slice(0, 12).map(id => !!chitra.TEMPLATE_META[id].real)); ok('photographic designs are listed first', first.slice(0, 8).every(Boolean), first.join());
     const cats = await q.evaluate(() => new Set(chitra.listTemplates({}).slice(0, 12).map(id => chitra.TEMPLATE_META[id].cat)).size); ok('"All" mixes categories', cats >= 6, cats);
-    await q.evaluate(async () => { await chitra.ensureTpl('rig-3', 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'rig-3' }); }); await q.waitForTimeout(1200);
+    await q.evaluate(async () => { const id = chitra.listTemplates({}).find(i => chitra.TEMPLATE_META[i].real); await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1200);
     const r = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, credit: im?.credit?.by, text: chitra.canvas.getObjects().some(o => /textbox/.test(o.type)) }; }); ok('real template opens with a photo + live text', r.img && r.text && r.credit === 'Test Photographer', JSON.stringify(r));
     ok('credits file lists the photographer', (await q.evaluate(() => chitra.collectCredits().map(c => c.by))).includes('Test Photographer'));
     const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
@@ -91,7 +91,7 @@ module.exports = [
     await q.addInitScript(() => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('chitra.keys', JSON.stringify({ pixabay: 'PLAINKEY-123' })); } });
     await q.goto('http://localhost:8123/?nosplash&livetopics=14&livedelay=0'); ok('plaintext keys are detected', await q.evaluate(() => chitra.vault.state()) === 'plain');
     await q.waitForFunction(() => Object.values(chitra.TEMPLATE_META).some(m => m.real), null, { timeout: 40000 }).catch(() => { });
-    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('library built from live search -> photographic templates', n >= 20, n);
+    const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('library built from live search -> photographic templates (topic-matched only)', n >= 8, n);
     await q.evaluate(async () => { const id = chitra.listTemplates({})[0]; await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1000);
     const r1 = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, by: im?.credit?.by, site: im?.credit?.site }; }); ok('live template carries a photo with credit', r1.img && r1.by === 'Mock Photographer' && r1.site === 'Pixabay', JSON.stringify(r1));
     const cached = await q.evaluate(async () => (await chitra.kv.get('ibindex'))?.length || 0); ok('photos are cached on the device after first use', cached > 0, cached);

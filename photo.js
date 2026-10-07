@@ -289,9 +289,9 @@
     return { proxy: (lsGet('chitra.proxy') || CFG.photoProxy || '').replace(/\/$/, ''), pixabay: pick('pixabay'), pexels: pick('pexels'), unsplash: pick('unsplash') };
   }
   const NORM = {
-    pixabay: x => ({ id: 'px' + x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, w: x.imageWidth, h: x.imageHeight, by: x.user, site: 'Pixabay', link: x.pageURL, title: (x.tags || '').split(',')[0] }),
-    pexels: x => ({ id: 'pe' + x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, w: x.width, h: x.height, by: x.photographer, site: 'Pexels', link: x.url, title: x.alt || '' }),
-    unsplash: x => ({ id: 'un' + x.id, dl: x.id, thumb: x.urls.small, full: x.urls.regular, w: x.width, h: x.height, by: x.user.name, site: 'Unsplash', link: x.links.html, title: x.alt_description || '' }),
+    pixabay: x => ({ id: 'px' + x.id, thumb: x.webformatURL, full: x.largeImageURL || x.webformatURL, w: x.imageWidth, h: x.imageHeight, tags: x.tags || '', by: x.user, site: 'Pixabay', link: x.pageURL, title: (x.tags || '').split(',')[0] }),
+    pexels: x => ({ id: 'pe' + x.id, thumb: x.src.medium, full: x.src.large2x || x.src.large, w: x.width, h: x.height, tags: x.alt || '', by: x.photographer, site: 'Pexels', link: x.url, title: x.alt || '' }),
+    unsplash: x => ({ id: 'un' + x.id, dl: x.id, thumb: x.urls.small, full: x.urls.regular, w: x.width, h: x.height, tags: `${x.alt_description || ''} ${x.description || ''}`, by: x.user.name, site: 'Unsplash', link: x.links.html, title: x.alt_description || '' }),
     openverse: x => ({ id: 'ov' + x.id, thumb: x.thumbnail || x.url, full: x.url, by: x.creator || 'Unknown', site: 'Openverse', link: x.foreign_landing_url, title: x.title || '' }),
   };
   const getJSON = async (url, opt) => { const r = await fetch(url, opt); if (!r.ok) throw new Error(url.split('/')[2] + ' ' + r.status); return r.json(); };

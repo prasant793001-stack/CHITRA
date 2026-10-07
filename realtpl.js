@@ -153,8 +153,36 @@
   };
 
   /* ---------------- catalog + registration ---------------- */
-  const RULES = [[/coffee|cafe|latte|espresso/, ['coffee', 'cafe']], [/tea|chai/, ['tea', 'coffee']], [/pizza|burger|food|menu|cook|bake|chef|recipe|kitchen|snack|biryani|dinner|taste|eat/, ['food', 'dessert', 'healthy']], [/gym|fitness|workout|run|marathon|sport|football|cricket|yoga|health/, ['fitness', 'yoga', 'sports']], [/yoga|calm|retreat|spa|selfcare|relax/, ['yoga', 'spa', 'nature']], [/travel|trip|adventure|wander|vacation|beach|summer|hotel|tour|explore/, ['travel', 'beach', 'mountains']], [/birthday|party|celebrat|anniversary|cheers|bash|pool/, ['party', 'birthday']], [/wedding|bride|engage|married|love|valentine|mr|mrs/, ['wedding', 'flowers', 'love']], [/baby|kid|child|school|daycare/, ['kids', 'baby']], [/christmas|xmas|santa|winter|holiday/, ['christmas', 'winter']], [/diwali|festival|lights|mela|eid|ramadan/, ['festival', 'lights']], [/halloween|spooky/, ['halloween']], [/music|concert|rock|band|dj|dance|song|podcast|festival/, ['music', 'concert']], [/art|exhibit|paint|design|creative|photograph/, ['art', 'abstract']], [/book|read|library|study|learn|class|course|education|tuition|exam/, ['books', 'education']], [/tech|code|startup|summit|ai|software|digital|gaming|game/, ['tech', 'office']], [/business|office|team|job|hiring|corporate|meeting|pitch|finance|money|marketing|brand|report/, ['business', 'office', 'team']], [/salon|beauty|hair|makeup|skin|glow|fashion|style|spa/, ['beauty', 'fashion']], [/home|house|real estate|property|interior|decor|clean/, ['interior', 'home']], [/pet|dog|cat|paws|groom/, ['pets', 'dog', 'cat']], [/car|auto|ride|bike|motor|wash/, ['cars']], [/flower|plant|garden|bloom|nature|green/, ['flowers', 'nature', 'plants']], [/sale|offer|deal|shop|launch|new arrival|store|discount|black friday/, ['shopping', 'fashion', 'abstract']], [/morning|sunshine|sunrise|hello|good/, ['sunrise', 'nature', 'coffee']], [/night|sunset|dream|quote|motivation|inspire|vibes/, ['sunset', 'nature', 'abstract']], [/city|urban|street|market|fair|neighbo/, ['city', 'market']]];
-  const FALLBACK = ['nature', 'abstract', 'city', 'sunset', 'texture'];
+  /* ---- precise copy -> photo-topic matching: a photo is only used when it genuinely shows what the words say ---- */
+  const COPY_RULES = [
+    [/pizza/, ['pizza']], [/burger/, ['burger']], [/taco|mexican/, ['mexican']], [/biryani|curry|kebab|dum |indian food/, ['indianfood']], [/sushi|japanese/, ['sushi']],
+    [/hot chocolate|cocoa|cosy mode/, ['hotchocolate', 'winter']], [/chai|\btea\b|tea time|steep/, ['tea']], [/coffee|espresso|latte|caffein|brew|café|cafe\b|barista/, ['coffee']],
+    [/ice cream|gelato/, ['icecream']], [/cake|bakery|baker|bake sale|pastry|dessert|sweet treats|cookie|donut|golden crust/, ['dessert', 'bakery']],
+    [/healthy|salad|vegan|green plate|fresh & healthy|nutrition/, ['healthy']], [/juice|smoothie|cocktail|wine tasting|cheers to you|sip happens|drinks/, ['drinks']],
+    [/menu|chef|recipe|cooking|kitchen|food|taste|eat\b|dinner|restaurant|catering|truck|snack|brunch|farmers market|market/, ['food']],
+    [/yoga|namaste|meditat|breathe|zen/, ['yoga']], [/spa|serenity|self ?care|wellness|massage|relax/, ['spa']], [/marathon|charity run|city run|run for/, ['running']],
+    [/gym|fitness|workout|lift|training|muscle|no pain|challenge/, ['fitness']], [/cricket/, ['cricket']], [/football|soccer|goal!/, ['football']], [/sport|play hard|match|tournament/, ['sports']], [/bike|cycl/, ['bike']],
+    [/beach|summer|sun · sea|sand|ocean|salty|pool party/, ['beach']], [/mountain|hike|camp|trek|explore|adventure|calling/, ['mountains']], [/travel|trip|wander|pack your bags|vacation|tour|journey|hotel|lifetime/, ['travel']],
+    [/sunset|golden hour/, ['sunset']], [/sunrise|good morning|hello sunshine|rise & shine|wake up|morning/, ['sunrise']],
+    [/wedding|bride|bridal|mr & mrs|just married|engage|she said yes|married/, ['wedding']], [/love|valentine|heart|my sunshine|make me happy/, ['love']],
+    [/baby|shower|naming|newborn/, ['baby']], [/kids|child|little one|future legend|daycare|mom of boys/, ['kids']], [/graduat|tassel/, ['graduation']],
+    [/birthday|make a wish/, ['birthday']], [/anniversary|reunion|farewell|retirement|party|bash|celebrat|cheers/, ['party']],
+    [/christmas|santa|xmas|ho ho/, ['christmas']], [/winter|snow/, ['winter']], [/diwali|diya|rangoli|festival of lights|mela/, ['diwali']], [/eid|ramadan|iftar|mubarak/, ['eid']],
+    [/halloween|spooky|costume/, ['halloween']], [/new year|midnight|countdown|resolution|goals/, ['fireworks']], [/independence|jai hind|republic/, ['flag']], [/festival|carnival/, ['festival']],
+    [/podcast/, ['podcast']], [/gamer|gaming|game on|level up/, ['gaming']], [/music|concert|rock|band|live on stage|open mic|dance|dj\b|show|stage|turn it up|talent/, ['concert', 'music']],
+    [/code|coder|tech|startup|summit|software|digital|\bai\b|laptop|webinar|online course/, ['tech']], [/book|read|library|chapter|story|stories/, ['books']],
+    [/study|exam|school|tuition|class|learn|education|course|student|teacher|maths|science fair|homework/, ['education']],
+    [/team|together|family|friends|community|neighbo|meet the team|spirit/, ['team']], [/office|boss|hustle|business|pitch|meeting|job|hiring|career|agency|report|quarterly|proposal|marketing|roadmap|case study|portfolio|finance|money|lawyer|advisor|manager/, ['business', 'office']],
+    [/art|paint|creative|exhibit|design|photograph|gallery|create/, ['art']], [/fashion|style|outfit|boutique|stylist|tailor|stitch|clothing|runway/, ['fashion']], [/beauty|salon|hair|makeup|skin|glow|nail|cosmetic/, ['beauty']],
+    [/real estate|property|housewarming|interior|decor|dream home|keys|home sweet/, ['interior']], [/home|house|clean|plumb|repair|mover|moving/, ['home']],
+    [/dog|puppy|paws|groom/, ['dog']], [/\bcat\b|kitten|purr/, ['cat']], [/pet\b|pets/, ['pets']], [/car\b|cars|wash|auto|driving|king of the road/, ['cars']],
+    [/flower|bloom|bouquet/, ['flowers']], [/plant|garden|grow|green/, ['plants']], [/wild|nature|free spirit|farm|forest/, ['nature']],
+    [/sale|offer|deal|discount|black friday|flash|delivery|order|store|arrival|launch|collection|sold out|buy|price|shop|open for orders|giveaway/, ['shopping']],
+  ];
+  const GENERIC = /quote|inspir|thank|motivat|vibes|positive|dream|stay |kind|humble|hustle|coming soon|booking|book now|tips|ideas|review|welcome|hello|greeting|announce|follow|win big|sarcasm|funny|less drama|not a morning|born to create|self love|you've got this|curious|good things|grand opening|hiring|open|new menu|workshop|register|podcast out|customer love|behind the scenes|tip of the day|learn something|stay tuned/;
+  const NEUTRAL = ['abstract', 'texture', 'sunrise', 'sunset', 'nature', 'lights'];
+  function topicsFor(c0) { const hay = `${c0.t} ${c0.s}`.toLowerCase(); for (const [re, ts] of COPY_RULES) if (re.test(hay)) return ts; return GENERIC.test(hay) ? NEUTRAL : null; }
+  const STYLE = { rHero: 'Cinematic', rCenter: 'Spotlight', rSplit: 'Split', rCard: 'Card', rPolaroid: 'Polaroid', rMagazine: 'Magazine', rArch: 'Arch', rCircle: 'Portrait', rCollage: 'Collage', rDuotone: 'Duotone', rBlur: 'Frosted', rBorder: 'Framed', rYT: 'Thumbnail', rSide: 'Editorial' };
   const FAMS = [
     // prefix, category, product, copy pool name, count, moods, layouts, preferred photo orientation
     ['rig', 'social', 'Instagram post', 'PROMO', 170, ['modern', 'bold', 'elegant', 'fun'], ['rHero', 'rCenter', 'rCard', 'rDuotone', 'rBlur', 'rBorder', 'rPolaroid', 'rCircle', 'rArch', 'rCollage', 'rSplit'], 's'],
@@ -173,15 +201,14 @@
     ['rpc', 'card', 'Postcard', 'MISC', 40, ['script', 'elegant'], ['rBorder', 'rCenter', 'rHero', 'rBlur'], 'l'],
   ];
 
+  /* Returns photo ids that really show the topic, or null (then NO photographic template is made for those words - a graphic one still exists). */
   function pickPhotos(c0, fam, i, n) {
-    const hay = `${c0.t} ${c0.g}`.toLowerCase(), topics = new Set(); RULES.forEach(([re, ts]) => { if (re.test(hay)) ts.forEach(t => topics.add(t)); });
-    let pool = PH.list.filter(p => (p.k || []).some(t => topics.has(t)));
-    if (pool.length < n + 2) pool = pool.concat(PH.list.filter(p => (p.k || []).some(t => FALLBACK.includes(t))));
-    if (pool.length < n) pool = PH.list;
+    const topics = topicsFor(c0); if (!topics) return null;
+    let pool = PH.list.filter(p => topics.includes((p.k || [])[0])); if (pool.length < n) return null;
     const want = fam[7], pref = pool.filter(p => want === 's' ? true : p.o === want); if (pref.length >= n + 1) pool = pref;
-    const out = [], step = 7 + (i % 5), start = (i * step + fam[0].length * 13) % pool.length;
-    for (let j = 0; out.length < n && j < pool.length; j++) { const p = pool[(start + j * 3) % pool.length]; if (!out.includes(p.id)) out.push(p.id); }
-    return out;
+    const out = [], step = 3 + (i % 4), start = (i * step + fam[0].length * 13) % pool.length;
+    for (let j = 0; out.length < n && j < pool.length; j++) { const p = pool[(start + j * 2 + (j ? 1 : 0)) % pool.length]; if (!out.includes(p.id)) out.push(p.id); }
+    return out.length === n ? out : null;
   }
 
   function registerReal() {
@@ -193,11 +220,11 @@
       for (let i = 0; i < count; i++) {
         const c0 = pool[i % pool.length], v = Math.floor(i / pool.length), id = `${pre}-${i + 1}`, seed = C.hashSeed(id);
         const layout = layouts[(i * 5 + v * 3 + fi) % layouts.length], mood = moods[(i * 3 + v + fi) % moods.length], pairs = C.MOODS[mood], f = pairs[(i * 7 + v * 5 + fi) % pairs.length];
-        const nPh = layout === 'rCollage' ? 3 : 1, photos = pickPhotos(c0, fam, i, nPh), p = C.pal(((i * 11 + v * 7 + fi * 5) % 24) + (i % 3 === 0 ? 24 : 0));
+        const nPh = layout === 'rCollage' ? 3 : 1, photos = pickPhotos(c0, fam, i, nPh); if (!photos) continue; const p = C.pal(((i * 11 + v * 7 + fi * 5) % 24) + (i % 3 === 0 ? 24 : 0));
         const c = { t: c0.t, s: c0.s, g: c0.g };
         if (cat === 'invite') c.o = "You're invited"; else if (cat === 'poster') c.o = 'Live · Local · Loud'; else if (pre === 'rbc') { c.x = '+1 234 567 890 · hello@email.com'; } else if (cat === 'flyer') { c.o = 'Now open'; c.x = 'www.yourwebsite.com · +1 234 567 890'; }
         const spec = { layout, pal: p, c, f: { d: f[0], b: f[1] }, seed, photos, real: true };
-        META[id] = { n: `${c0.t} · ${C.cap(layout.slice(1))}`, cat, p: prod, t: `${c0.g} ${cat} photo photographic real ${mood} ${layout}`.toLowerCase(), f: [f[0], f[1]], ph: photos, gen: 1, real: 1, pro: i % 7 === 6 };
+        META[id] = { n: `${c0.t} · ${STYLE[layout] || 'Photo'}`, title: c0.t, spec, cat, p: prod, t: `${c0.g} ${cat} photo photographic real ${mood} ${layout}`.toLowerCase(), f: [f[0], f[1]], ph: photos, gen: 1, real: 1, pro: i % 7 === 6 };
         TEMPLATES[id] = () => { K.clearAll(''); C.drawTemplate(spec); };
         if (cat === 'mug') META[id].mockKind = 'mug';
         made++;
@@ -223,6 +250,12 @@
   /* ---------------- live catalog: built in THIS browser from the photo search you already use (your keys / proxy) ---------------- */
   const LIVE_TOPICS = [['coffee', 'coffee cup cafe'], ['food', 'gourmet food plate'], ['pizza', 'pizza'], ['burger', 'burger'], ['dessert', 'dessert cake'], ['healthy', 'healthy salad bowl'], ['drinks', 'cocktail drinks'], ['tea', 'tea cup'], ['fitness', 'fitness workout gym'], ['yoga', 'yoga meditation'], ['spa', 'spa wellness'], ['travel', 'travel adventure landscape'], ['beach', 'tropical beach'], ['mountains', 'mountain landscape'], ['city', 'city skyline night'], ['market', 'street market'], ['nature', 'nature forest'], ['flowers', 'flowers bouquet'], ['plants', 'green plants'], ['party', 'party celebration confetti'], ['birthday', 'birthday cake balloons'], ['wedding', 'wedding'], ['love', 'romantic couple'], ['baby', 'baby'], ['kids', 'children playing'], ['christmas', 'christmas decoration'], ['winter', 'winter snow'], ['festival', 'festival colorful'], ['lights', 'bokeh lights'], ['halloween', 'halloween pumpkin'], ['music', 'music instrument'], ['concert', 'concert crowd stage'], ['art', 'art painting colorful'], ['books', 'books library'], ['education', 'classroom learning'], ['tech', 'technology laptop'], ['office', 'modern office workspace'], ['business', 'business meeting'], ['team', 'team collaboration'], ['fashion', 'fashion clothing'], ['beauty', 'beauty cosmetics'], ['interior', 'interior design living room'], ['home', 'cozy home'], ['pets', 'pet portrait'], ['dog', 'dog'], ['cat', 'cat'], ['cars', 'car'], ['sports', 'sports action'], ['sunrise', 'sunrise sky'], ['sunset', 'sunset sky'], ['abstract', 'abstract colorful background'], ['texture', 'texture pattern'], ['shopping', 'shopping bags']];
   const QP = new URLSearchParams(location.search); if (QP.get('livetopics')) LIVE_TOPICS.length = Math.min(LIVE_TOPICS.length, +QP.get('livetopics')); // test hook
+  const MUST = {}; // topic key -> regex its photos must match (checked against the photo's own title/tags)
+  async function loadTopics() {
+    try { const r = await fetch('data/photo-topics.json'); if (r.ok) { const j = await r.json(); const list = j.topics.map(t => [t.k, t.q]); j.topics.forEach(t => { MUST[t.k] = t.must ? new RegExp(t.must, 'i') : null; }); LIVE_TOPICS.length = 0; LIVE_TOPICS.push(...list); } } catch { }
+    if (QP.get('livetopics')) LIVE_TOPICS.length = Math.min(LIVE_TOPICS.length, +QP.get('livetopics')); live.total = LIVE_TOPICS.length;
+  }
+  const LIB_VERSION = 3; // bump when the matching rules change: older libraries (built without the relevance filter) are rebuilt
   const DAY = 864e5, live = { running: false, done: 0, total: LIVE_TOPICS.length };
   const siteTag = s => ({ Pixabay: 'px', Pexels: 'pe', Unsplash: 'un', Openverse: 'ov' }[s] || 'lv');
   const liveHave = () => { const c = C.stock?.config?.() || {}; return !!(c.proxy || c.pixabay || c.pexels || c.unsplash); };
@@ -232,7 +265,8 @@
   }
   C.buildPhotoLibrary = async ({ force = false } = {}) => {
     if (live.running) return 0;
-    const saved = await C.kv.get('livecat').catch(() => null), have = saved?.photos?.length > 150;
+    let saved = await C.kv.get('livecat').catch(() => null); if (saved && saved.ver !== LIB_VERSION) saved = null; // old library: rebuild with the strict relevance filter
+    await loadTopics(); const have = saved?.photos?.length > 150;
     if (have && !PH.ready) setCatalog(saved.photos); // the cached library works instantly and offline, with or without keys
     if (have && !force && saved.complete !== false && Date.now() - saved.t < 7 * DAY) return PH.list.length;
     if (C.vault?.state() === 'locked' && !(await C.vault.tryRemembered())) { // keys are locked: offer to unlock (never prompt uninvited)
@@ -245,15 +279,17 @@
       for (const [topic, q] of LIVE_TOPICS.slice(resume)) {
         chip.innerHTML = `<i></i><span>Building your photo library ${live.done}/${live.total}</span>`;
         try {
-          const r = await C.stock.search(q, { page: 1, kind: 'photo' }), items = (r.items || []).filter(it => it.full && it.thumb && !seen.has(it.id)).slice(0, 10);
-          items.forEach(it => { seen.add(it.id); const w = it.w || 1600, h = it.h || 1000; all.push({ id: it.id, s: 'lv', site: it.site, t: it.thumb, f: it.full, dl: it.site === 'Unsplash' ? it.dl : undefined, w, h, o: w > h * 1.15 ? 'l' : h > w * 1.15 ? 'p' : 's', c: '#8a8fa3', by: it.by || it.site, l: it.site === 'Unsplash' ? `${it.link}?utm_source=chitra_studio&utm_medium=referral` : it.link, k: [topic, ...String(it.title || '').toLowerCase().split(/[\s,]+/).filter(x => x.length > 3).slice(0, 3)] });
+          const must = MUST[topic], txt = it => `${it.tags || ''} ${it.title || ''}`.toLowerCase();
+          // strict relevance: for a specific topic the photo's own tags/title must mention it (no tags = rejected), so "pizza" never gets a cake
+          const r = await C.stock.search(q, { page: 1, kind: 'photo' }), items = (r.items || []).filter(it => it.full && it.thumb && !seen.has(it.id) && (!must || must.test(txt(it)))).slice(0, 10);
+          items.forEach(it => { seen.add(it.id); const w = it.w || 1600, h = it.h || 1000; all.push({ id: it.id, s: 'lv', site: it.site, t: it.thumb, f: it.full, dl: it.site === 'Unsplash' ? it.dl : undefined, w, h, o: w > h * 1.15 ? 'l' : h > w * 1.15 ? 'p' : 's', c: '#8a8fa3', by: it.by || it.site, l: it.site === 'Unsplash' ? `${it.link}?utm_source=chitra_studio&utm_medium=referral` : it.link, g: txt(it).slice(0, 140), k: [topic] });
           });
         } catch (e) { if (live.done === 0 && /401|403|429/.test(String(e.message))) break; }
-        live.done++; if (live.done % 4 === 0) { C.kv.set('livecat', { t: Date.now(), photos: all.slice(-900), idx: live.done, complete: false }).catch(() => { }); if (live.done % 8 === 0 && all.length > 60) setCatalog(all); } // a reload mid-way resumes instead of restarting
+        live.done++; if (live.done % 4 === 0) { C.kv.set('livecat', { ver: LIB_VERSION, t: Date.now(), photos: all.slice(-900), idx: live.done, complete: false }).catch(() => { }); if (live.done % 8 === 0 && all.length > 60) setCatalog(all); } // a reload mid-way resumes instead of restarting
         await new Promise(r => setTimeout(r, QP.get('livedelay') ? +QP.get('livedelay') : 450));
       }
       if (all.length > 900) all.splice(0, all.length - 900);
-      if (all.length) { await C.kv.set('livecat', { t: Date.now(), photos: all, idx: live.total, complete: true }).catch(() => { }); setCatalog(all); }
+      if (all.length) { await C.kv.set('livecat', { ver: LIB_VERSION, t: Date.now(), photos: all, idx: live.total, complete: true }).catch(() => { }); setCatalog(all); }
     } finally { live.running = false; chip.hidden = true; }
     return all.length;
   };

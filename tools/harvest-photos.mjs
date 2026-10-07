@@ -14,8 +14,9 @@ const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ?
 const PIX = process.env.PIXABAY_KEY, UNS = process.env.UNSPLASH_KEY, OUT = arg('out', '.'), PER = +arg('per', 3), UMAX = +arg('unsplash-max', 45);
 const PIX_API = process.env.PIXABAY_API || 'https://pixabay.com/api/', UNS_API = process.env.UNSPLASH_API || 'https://api.unsplash.com';
 if (!PIX && !UNS) { console.error('Set PIXABAY_KEY and/or UNSPLASH_KEY in the environment.'); process.exit(1); }
-const ALL_TOPICS = { coffee: 'coffee cup cafe', cafe: 'cafe interior', tea: 'tea cup', food: 'gourmet food plate', pizza: 'pizza', burger: 'burger', dessert: 'dessert cake', healthy: 'healthy salad bowl', drinks: 'cocktail drink', fitness: 'fitness workout gym', yoga: 'yoga meditation', spa: 'spa wellness', travel: 'travel landscape adventure', beach: 'tropical beach', mountains: 'mountain landscape', city: 'city skyline night', market: 'street market', nature: 'nature forest', flowers: 'flowers bouquet', plants: 'green plants', party: 'party celebration confetti', birthday: 'birthday cake balloons', wedding: 'wedding', love: 'romantic couple heart', baby: 'baby', kids: 'children playing', christmas: 'christmas decoration', winter: 'winter snow', festival: 'festival colorful', lights: 'lights bokeh', halloween: 'halloween pumpkin', music: 'music instrument', concert: 'concert crowd stage', art: 'art painting colorful', books: 'books library', education: 'classroom school learning', tech: 'technology laptop', office: 'modern office workspace', business: 'business meeting', team: 'team collaboration', fashion: 'fashion clothing', beauty: 'beauty cosmetics', interior: 'interior design living room', home: 'cozy home', pets: 'pet portrait', dog: 'dog', cat: 'cat', cars: 'car', sports: 'sports action', sunrise: 'sunrise sky', sunset: 'sunset sky', abstract: 'abstract colorful background', texture: 'texture pattern', shopping: 'shopping bags', agriculture: 'farm harvest' };
-const TOPICS = Object.fromEntries(Object.entries(ALL_TOPICS).slice(0, +arg('topics', 999)));
+// topics + the "must" regex come from data/photo-topics.json (shared with the in-app live library) so a photo is only kept when its own tags prove it matches the topic
+const TJ = JSON.parse(fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), '../data/photo-topics.json'), 'utf8')).topics.slice(0, +arg('topics', 999));
+const TOPICS = Object.fromEntries(TJ.map(t => [t.k, t.q])), MUST = Object.fromEntries(TJ.map(t => [t.k, new RegExp('\\b(' + t.must + ')', 'i')]));
 const SL = +(process.env.HARVEST_SLEEP_SCALE ?? 1), sleep = ms => new Promise(r => setTimeout(r, ms * SL));
 const get = async (url, opt) => { for (let i = 0; i < 3; i++) { try { const r = await fetch(url, opt); if (r.status === 429) { await sleep(8000 * (i + 1)); continue; } if (!r.ok) throw new Error(r.status + ' ' + url.split('?')[0]); return r; } catch (e) { if (i === 2) throw e; await sleep(1500); } } };
 fs.mkdirSync(path.join(OUT, 'photos'), { recursive: true }); fs.mkdirSync(path.join(OUT, 'data'), { recursive: true });
@@ -36,7 +37,7 @@ async function pixabay() {
   for (const [topic, q] of Object.entries(TOPICS)) for (const [ori, key] of [['horizontal', 'l'], ['vertical', 'p']]) {
     const url = `${PIX_API}?key=${encodeURIComponent(PIX)}&q=${encodeURIComponent(q)}&image_type=photo&orientation=${ori}&min_width=${ori === 'horizontal' ? 1600 : 1000}&min_height=${ori === 'vertical' ? 1400 : 900}&safesearch=true&order=popular&per_page=40`;
     let j; try { j = await (await get(url)).json(); } catch (e) { console.warn('skip', topic, ori, e.message); continue; }
-    const picks = (j.hits || []).filter(h => !have.has('px' + h.id) && h.largeImageURL).slice(0, PER);
+    const picks = (j.hits || []).filter(h => !have.has('px' + h.id) && h.largeImageURL && MUST[topic].test(String(h.tags || ''))).slice(0, PER);
     for (const h of picks) {
       try {
         const buf = Buffer.from(await (await get(h.largeImageURL)).arrayBuffer()), id = 'px' + h.id, f = `photos/${id}.jpg`, t = `photos/${id}_t.jpg`;
@@ -57,6 +58,7 @@ async function unsplash() {
     let j; try { j = await (await get(`${UNS_API}/search/photos?query=${encodeURIComponent(q)}&orientation=${ori}&per_page=8&order_by=relevant&content_filter=high&client_id=${encodeURIComponent(UNS)}`)).json(); } catch (e) { console.warn('skip', topic, ori, e.message); continue; }
     for (const p of (j.results || []).slice(0, 5)) {
       const id = 'un' + p.id; if (have.has(id) || !p.urls?.raw) continue;
+      if (!MUST[topic].test(`${p.alt_description || ''} ${p.description || ''} ${(p.tags || []).map(t => t.title).join(' ')}`)) continue;
       cat.photos.push({ id, s: 'un', u: p.urls.raw, dl: p.id, w: p.width, h: p.height, o: key, c: p.color || '#8a8fa3', by: p.user?.name || 'Unsplash', l: `${p.links?.html || 'https://unsplash.com'}?utm_source=chitra_studio&utm_medium=referral`, k: [topic, ...((p.tags || []).map(t => t.title)).slice(0, 3)] }); have.add(id); n++;
     }
     await sleep(400);

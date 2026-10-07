@@ -7,8 +7,8 @@ const seenKeys = [];
 const srv = http.createServer((req, res) => { const u = new URL(req.url, 'http://x'); seenKeys.push(u.searchParams.get('key') || u.searchParams.get('client_id'));
   if (u.pathname === '/img') { res.writeHead(200, { 'content-type': 'image/jpeg' }); return res.end(IMG); }
   res.setHeader('content-type', 'application/json');
-  if (u.pathname === '/api/') { const q = u.searchParams.get('q'), o = u.searchParams.get('orientation'); return res.end(JSON.stringify({ hits: [1, 2, 3, 4].map(i => ({ id: `${q.length}${o[0]}${i}`, largeImageURL: `http://localhost:${srv.address().port}/img`, pageURL: 'https://pixabay.com/x', user: 'Ann', tags: 'a, b, c', imageWidth: 1280, imageHeight: 853 })) })); }
-  if (u.pathname === '/search/photos') { const q = u.searchParams.get('query'); return res.end(JSON.stringify({ results: [1, 2].map(i => ({ id: `${q.length}${i}`, urls: { raw: 'https://images.unsplash.com/photo-' + q.length + i }, width: 4000, height: 3000, color: '#112233', user: { name: 'Bob' }, links: { html: 'https://unsplash.com/photos/x' }, tags: [{ title: 'tag' }] })) })); }
+  if (u.pathname === '/api/') { const q = u.searchParams.get('q'), o = u.searchParams.get('orientation'); return res.end(JSON.stringify({ hits: [1, 2, 3, 4].map(i => ({ id: `${q.length}${o[0]}${i}`, largeImageURL: `http://localhost:${srv.address().port}/img`, pageURL: 'https://pixabay.com/x', user: 'Ann', tags: `${q}, test, photo`, imageWidth: 1280, imageHeight: 853 })) })); }
+  if (u.pathname === '/search/photos') { const q = u.searchParams.get('query'); return res.end(JSON.stringify({ results: [1, 2].map(i => ({ id: `${q.length}${i}`, urls: { raw: 'https://images.unsplash.com/photo-' + q.length + i }, width: 4000, height: 3000, color: '#112233', user: { name: 'Bob' }, links: { html: 'https://unsplash.com/photos/x' }, alt_description: q, tags: [{ title: 'tag' }] })) })); }
   res.writeHead(404); res.end('{}'); }).listen(0);
 await new Promise(r => srv.once('listening', r)); const port = srv.address().port;
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'harvest-'));
