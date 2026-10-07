@@ -9,13 +9,13 @@
   const imgCache = new Map(); // url -> HTMLImageElement | null
 
   /* ---------------- photo access ---------------- */
-  const urlOf = (p, kind) => p.s === 'un' ? `${p.u}${p.u.includes('?') ? '&' : '?'}auto=format&fit=crop&q=${kind === 'thumb' ? 60 : 78}&w=${kind === 'thumb' ? 420 : 1500}` : (kind === 'thumb' ? p.t : p.f);
+  const urlOf = (p, kind) => p.s === 'un' ? `${p.u}${p.u.includes('?') ? '&' : '?'}auto=format&fit=crop&q=${kind === 'thumb' ? 60 : 78}&w=${kind === 'thumb' ? 420 : 1500}` : (((window.CHITRA_CONFIG || {}).assetBase || '') + (kind === 'thumb' ? p.t : p.f));
   C.photoById = id => PH.byId[id] || null;
   C.photoEl = (p, kind = 'full') => (p ? imgCache.get(urlOf(p, kind)) || null : null);
   /* Photos are fetched once and kept on the device (IndexedDB): faster, works offline, and no repeated hot-linking of the providers' servers. */
   const IBX = 'ibindex';
   async function cachePut(url, blob) { try { await C.kv.set('ib:' + url, blob); const ix = (await C.kv.get(IBX)) || []; ix.push(url); if (ix.length > 700) { for (const u of ix.splice(0, 100)) await C.kv.del('ib:' + u); } await C.kv.set(IBX, ix); } catch { } }
-  const fromSrc = (src, cors) => new Promise(res => { const im = new Image(); if (cors) im.crossOrigin = 'anonymous'; const t = setTimeout(() => res(null), 12000); im.onload = () => { clearTimeout(t); res(im); }; im.onerror = () => { clearTimeout(t); res(null); }; im.src = src; });
+  const fromSrc = (src, cors) => new Promise(res => { const im = new Image(); if (cors) im.crossOrigin = 'anonymous'; const t = setTimeout(() => res(null), 8000); im.onload = () => { clearTimeout(t); res(im); }; im.onerror = () => { clearTimeout(t); res(null); }; im.src = src; });
   async function load(url) {
     if (imgCache.get(url)) return true;
     try {
@@ -31,6 +31,7 @@
     const m = META[id]; if (!m) return false;
     const [f, p] = await Promise.all([baseFonts(m.f), C.preloadPhotos(m.ph, kind)]);
     if (kind === 'full') trackUnsplash((m.ph || []).map(x => PH.byId[x]).filter(p => p && p.dl));
+    if (!p && kind === 'thumb' && navigator.onLine && m.real) m.dead = 1; // its photo is gone / blocked: hide this design instead of showing an empty frame
     return f && p;
   };
   /* Unsplash asks apps to ping their download endpoint when a photo is used. Done through your photo proxy (keys stay server-side) or the owner's own key. */
@@ -202,17 +203,21 @@
   ];
 
   /* Returns photo ids that really show the topic, or null (then NO photographic template is made for those words - a graphic one still exists). */
+  let USE = new Map(), COPYUSE = new Map(); // photo id -> times used overall; copy title -> Set of photo ids already shown with those words
+  const mix = str => { let h = 2166136261; for (let k = 0; k < str.length; k++) h = Math.imul(h ^ str.charCodeAt(k), 16777619); return (h >>> 0) / 4294967296; };
   function pickPhotos(c0, fam, i, n) {
     const topics = topicsFor(c0); if (!topics) return null;
     let pool = PH.list.filter(p => topics.includes((p.k || [])[0])); if (pool.length < n) return null;
     const want = fam[7], pref = pool.filter(p => want === 's' ? true : p.o === want); if (pref.length >= n + 1) pool = pref;
-    const out = [], step = 3 + (i % 4), start = (i * step + fam[0].length * 13) % pool.length;
-    for (let j = 0; out.length < n && j < pool.length; j++) { const p = pool[(start + j * 2 + (j ? 1 : 0)) % pool.length]; if (!out.includes(p.id)) out.push(p.id); }
-    return out.length === n ? out : null;
+    const seen = COPYUSE.get(c0.t) || new Set(); // never show the same picture twice for the same words, and use each photo at most twice overall
+    const ranked = pool.filter(p => !seen.has(p.id) && (USE.get(p.id) || 0) < 2).sort((x, y) => ((USE.get(x.id) || 0) - (USE.get(y.id) || 0)) || (mix(x.id + i) - mix(y.id + i)));
+    if (ranked.length < n) return null;
+    const out = ranked.slice(0, n).map(p => p.id); out.forEach(id => { USE.set(id, (USE.get(id) || 0) + 1); seen.add(id); }); COPYUSE.set(c0.t, seen);
+    return out;
   }
 
   function registerReal() {
-    Object.keys(META).forEach(k => { if (META[k].real) { delete META[k]; delete TEMPLATES[k]; } });
+    Object.keys(META).forEach(k => { if (META[k].real) { delete META[k]; delete TEMPLATES[k]; } }); USE = new Map(); COPYUSE = new Map();
     const pools = { PROMO: C.COPY?.PROMO, EVENTS: C.COPY?.EVENTS, SERVICES: C.COPY?.SERVICES, INVITES: C.COPY?.INVITES, YT: C.COPY?.YT, SLIDES: C.COPY?.SLIDES, PIN: C.COPY?.PIN, QUOTES: C.COPY?.QUOTES, CARDS: C.COPY?.CARDS, MISC: C.COPY?.MISC };
     let made = 0; const want = FAMS.reduce((s, f) => s + f[4], 0), scale = Math.min(1, (PH.list.length * 2.5) / want); // never reuse a photo more than ~2x: fewer photos => fewer (still unique) designs
     FAMS.forEach((fam, fi) => {
@@ -236,7 +241,7 @@
   /* listing: photographic designs first, mixed across categories so "All" feels like a store window */
   C.listTemplates = ({ cat = 'all', q = '' } = {}) => {
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
-    let ids = Object.keys(META).filter(id => (cat === 'all' || META[id].cat === cat) && (!words.length || words.every(w => `${META[id].n} ${META[id].cat} ${META[id].t || ''}`.toLowerCase().includes(w))));
+    let ids = Object.keys(META).filter(id => !META[id].dead && (cat === 'all' || META[id].cat === cat) && (!words.length || words.every(w => `${META[id].n} ${META[id].cat} ${META[id].t || ''}`.toLowerCase().includes(w))));
     const real = ids.filter(id => META[id].real), rest = ids.filter(id => !META[id].real);
     const mix = list => { if (cat !== 'all') return list; const by = {}; list.forEach(id => (by[META[id].cat] ||= []).push(id)); const keys = Object.keys(by), out = []; for (let i = 0; keys.some(k => by[k][i]); i++) keys.forEach(k => by[k][i] && out.push(by[k][i])); return out; };
     return [...mix(real), ...mix(rest)];

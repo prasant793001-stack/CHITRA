@@ -147,7 +147,7 @@
     title.textContent = name === 'home' ? 'Elements' : name === 'search' ? 'Results' : cat[1]; $('#elSearch').placeholder = PLACE[name] || PLACE.home; $('#elSearch').value = q;
     if (name === 'home') return;
     home.hidden = true; view.hidden = false; view.scrollTop = 0;
-    ({ shapes: shapesView, lines: linesView, icons: iconsView, photos: () => stockView('photo'), graphics: () => { if (!C.graphicsView) return stockView('graphic'); searchHook = C.graphicsView(view, () => stockView('graphic')); }, mockups: mocksView, effects: effectsView, stickers: stickersView, backdrops: backdropsView, search: () => searchView(q) })[name](q);
+    ({ shapes: shapesView, lines: linesView, icons: iconsView, photos: () => stockView('photo'), graphics: () => { if (!C.graphicsView) return stockView('graphic'); searchHook = C.graphicsView(view, () => stockView('graphic')); }, mockups: mocksView, effects: effectsView, stickers: () => { if (!C.premiumView) return stickersView(); searchHook = C.premiumView(view, 'stickers', null); }, backdrops: backdropsView, search: () => searchView(q) })[name](q);
   }
   back.onclick = () => open('home'); document.addEventListener('click', e => { const b = e.target.closest('#catGrid [data-el], #elHome [data-el]'); if (b) open(b.dataset.el); });
 

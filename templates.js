@@ -510,7 +510,7 @@ Wander|Find your adventure|travel`);
     let all = true;
     await Promise.all(names.filter(Boolean).map(async n => {
       if (fontOk[n]) return; await C.loadFont?.(n);
-      try { const r = await Promise.race([document.fonts.load(`700 40px "${n}"`), new Promise(r => setTimeout(() => r(null), 2500))]); const r2 = await document.fonts.load(`40px "${n}"`); if ((r && r.length) || r2.length) fontOk[n] = 1; else all = false; } catch { all = false; }
+      try { const r = await Promise.race([document.fonts.load(`700 40px "${n}"`), new Promise(r => setTimeout(() => r(null), 1500))]); const r2 = await document.fonts.load(`40px "${n}"`); if ((r && r.length) || r2.length) fontOk[n] = 1; else all = false; } catch { all = false; }
     }));
     return all;
   };

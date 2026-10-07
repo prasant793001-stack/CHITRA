@@ -119,17 +119,80 @@
     const g = t.getContext('2d', { willReadFrequently: true }); g.drawImage(c, 0, 0, t.width, t.height); const d = g.getImageData(0, 0, t.width, t.height).data; let n = 0;
     for (let i = 3; i < d.length; i += 4) if (d[i] > 40) n++; return n / (t.width * t.height);
   }
-  async function removeBg(o = needImage()) {
+
+  /* ---- flat graphics (flags, logos, clip-art): the AI model is trained on photos and treats white stripes / light parts as "background".
+     For these we only remove background that is CONNECTED to the picture's edge (flood fill from the border), so inside colours - white included - survive. ---- */
+  function graphicInfo(src) {
+    const k = Math.min(1, 160 / Math.max(src.width, src.height)), w = Math.max(8, Math.round(src.width * k)), h = Math.max(8, Math.round(src.height * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0, w, h); const d = g.getImageData(0, 0, w, h).data;
+    const hist = new Map(), bord = new Map(); let n = 0, nb = 0;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4; if (d[i + 3] < 20) continue; const key = ((d[i] >> 4) << 8) | ((d[i + 1] >> 4) << 4) | (d[i + 2] >> 4); hist.set(key, (hist.get(key) || 0) + 1); n++; if (x < 2 || y < 2 || x >= w - 2 || y >= h - 2) { bord.set(key, (bord.get(key) || 0) + 1); nb++; } }
+    const top = [...hist.values()].sort((a, b) => b - a).slice(0, 12).reduce((a, b) => a + b, 0) / Math.max(n, 1), bb = [...bord.entries()].sort((a, b) => b[1] - a[1])[0];
+    const transparentEdge = nb < w * 2 + h * 2; // most edge pixels already transparent
+    return { flat: top > 0.82, uniformBorder: !!bb && bb[1] / Math.max(nb, 1) > 0.8, bgKey: bb ? bb[0] : 0, transparentEdge };
+  }
+  function floodCut(src, { tol = 34, keepWhites = false } = {}) {
+    const W0 = src.width, H0 = src.height, out = document.createElement('canvas'); out.width = W0; out.height = H0; const g = out.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0);
+    const im = g.getImageData(0, 0, W0, H0), d = im.data, N = W0 * H0;
+    // background colour = the most common colour on the border
+    const cnt = new Map(); const sample = (x, y) => { const i = (y * W0 + x) * 4; if (d[i + 3] < 20) return; const k = ((d[i] >> 3) << 10) | ((d[i + 1] >> 3) << 5) | (d[i + 2] >> 3), e = cnt.get(k) || [0, 0, 0, 0]; e[0]++; e[1] += d[i]; e[2] += d[i + 1]; e[3] += d[i + 2]; cnt.set(k, e); };
+    for (let x = 0; x < W0; x += 2) { sample(x, 0); sample(x, H0 - 1); } for (let y = 0; y < H0; y += 2) { sample(0, y); sample(W0 - 1, y); }
+    const best = [...cnt.values()].sort((a, b) => b[0] - a[0])[0]; const bg = best ? [best[1] / best[0], best[2] / best[0], best[3] / best[0]] : [255, 255, 255];
+    const dist = i => { const dr = d[i] - bg[0], dg = d[i + 1] - bg[1], db = d[i + 2] - bg[2]; return Math.sqrt(dr * dr * 0.3 + dg * dg * 0.59 + db * db * 0.11) * 1.8; };
+    const isBg = new Uint8Array(N), stack = []; const push = p => { if (!isBg[p]) { const i = p * 4; if (d[i + 3] < 20 || dist(i) <= tol) { isBg[p] = 1; stack.push(p); } } };
+    for (let x = 0; x < W0; x++) { push(x); push((H0 - 1) * W0 + x); } for (let y = 0; y < H0; y++) { push(y * W0); push(y * W0 + W0 - 1); }
+    while (stack.length) { const p = stack.pop(), x = p % W0; if (x > 0) push(p - 1); if (x < W0 - 1) push(p + 1); if (p >= W0) push(p - W0); if (p < N - W0) push(p + W0); }
+    let mask = isBg;
+    if (keepWhites) { // restore everything inside the outline of what remains (its convex hull): white stripes, light parts that touch the edge
+      const pts = []; for (let y = 0; y < H0; y += 2) { let x0 = -1, x1 = -1; for (let x = 0; x < W0; x++) if (!isBg[y * W0 + x]) { if (x0 < 0) x0 = x; x1 = x; } if (x0 >= 0) pts.push([x0, y], [x1, y]); }
+      pts.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); const lo = [], up = [];
+      for (const p of pts) { while (lo.length > 1 && cr(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); } for (const p of pts.slice().reverse()) { while (up.length > 1 && cr(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }
+      const hull = lo.slice(0, -1).concat(up.slice(0, -1)); if (hull.length > 2) { const hc = document.createElement('canvas'); hc.width = W0; hc.height = H0; const hg = hc.getContext('2d'); hg.fillStyle = '#fff'; hg.beginPath(); hull.forEach((p, i) => (i ? hg.lineTo(p[0], p[1]) : hg.moveTo(p[0], p[1]))); hg.closePath(); hg.fill(); const hd = hg.getImageData(0, 0, W0, H0).data; mask = new Uint8Array(N); for (let p = 0; p < N; p++) mask[p] = isBg[p] && hd[p * 4] < 128 ? 1 : 0; }
+    }
+    // soft, de-fringed edge: fg pixels next to background get partial alpha and have the background colour removed from them
+    for (let p = 0; p < N; p++) {
+      const i = p * 4;
+      if (mask[p]) { d[i + 3] = 0; continue; }
+      const x = p % W0; const nearBg = (x > 0 && mask[p - 1]) || (x < W0 - 1 && mask[p + 1]) || (p >= W0 && mask[p - W0]) || (p < N - W0 && mask[p + W0]);
+      if (nearBg) { const q = dist(i), a = Math.min(1, Math.max(0.15, (q - tol * 0.5) / (tol * 1.2))); if (a < 1) { for (let c = 0; c < 3; c++) d[i + c] = Math.max(0, Math.min(255, (d[i + c] - (1 - a) * bg[c]) / a)); d[i + 3] = Math.round(d[i + 3] * a); } }
+    }
+    g.putImageData(im, 0, 0); return out;
+  }
+
+  /* ---- photos: the best AI model, run twice. Pass 2 zooms into the subject found by pass 1, so hair, fur and thin edges get far more pixels to work with. ---- */
+  function alphaOf(c) { const g = c.getContext('2d', { willReadFrequently: true }), d = g.getImageData(0, 0, c.width, c.height).data, a = new Uint8Array(c.width * c.height); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3]; return a; }
+  async function aiCut(mod, src, job) {
+    const models = matchMedia('(pointer:coarse)').matches ? ['isnet_fp16', 'isnet_quint8'] : ['isnet', 'isnet_fp16', 'isnet_quint8']; // full-precision model: slowest, cleanest
+    const run = async (blob, label) => { for (const model of models) { try { return await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 1 }, progress: (key, cur, total) => job.set(`${label} ${total ? Math.round((cur / total) * 100) : 0}%`) }); } catch (e) { console.warn('model', model, e); } } throw new Error('no model'); };
+    const first = await run(await canvasToBlob(src), 'AI cut-out (pass 1 of 2)…'); const img1 = await createImageBitmap(first);
+    const m1 = document.createElement('canvas'); m1.width = src.width; m1.height = src.height; m1.getContext('2d').drawImage(img1, 0, 0, src.width, src.height);
+    const a1 = alphaOf(m1); let x0 = src.width, y0 = src.height, x1 = -1, y1 = -1; for (let y = 0; y < src.height; y++) for (let x = 0; x < src.width; x++) if (a1[y * src.width + x] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    let alpha = a1;
+    if (x1 > x0 && y1 > y0 && (x1 - x0) * (y1 - y0) < 0.7 * src.width * src.height) {
+      const pad = Math.round(Math.max(x1 - x0, y1 - y0) * 0.1), cx = Math.max(0, x0 - pad), cy = Math.max(0, y0 - pad), cw = Math.min(src.width, x1 + pad) - cx, ch = Math.min(src.height, y1 + pad) - cy;
+      const crop = document.createElement('canvas'); crop.width = cw; crop.height = ch; crop.getContext('2d').drawImage(src, cx, cy, cw, ch, 0, 0, cw, ch);
+      try {
+        const second = await run(await canvasToBlob(crop), 'AI cut-out (pass 2 of 2)…'), img2 = await createImageBitmap(second), m2 = document.createElement('canvas'); m2.width = cw; m2.height = ch; m2.getContext('2d').drawImage(img2, 0, 0, cw, ch);
+        const a2 = alphaOf(m2); alpha = new Uint8Array(src.width * src.height); for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) alpha[(cy + y) * src.width + cx + x] = a2[y * cw + x];
+      } catch (e) { console.warn('pass 2 skipped', e); }
+    }
+    const out = document.createElement('canvas'); out.width = src.width; out.height = src.height; const g = out.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0); const id = g.getImageData(0, 0, out.width, out.height), d = id.data;
+    for (let i = 0; i < alpha.length; i++) { const t = Math.min(1, Math.max(0, (alpha[i] / 255 - 0.08) / 0.84)); d[i * 4 + 3] = Math.round(d[i * 4 + 3] * t * t * (3 - 2 * t)); } // trim the grey halo, keep soft edges
+    g.putImageData(id, 0, 0); return out;
+  }
+
+  async function removeBg(o = needImage(), opt = {}) {
     if (!o) return;
     const src = natCanvas(o, 3000), job = busy('Removing background…');
     try {
-      const mod = await loadImgly();
-      const blob = await canvasToBlob(src); let out;
-      for (const model of ['isnet_fp16', 'isnet_quint8']) { // best quality first, lighter model if the device/network can't manage it
-        try { out = await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 1 }, progress: (key, cur, total) => job.set(`AI cut-out… ${total ? Math.round((cur / total) * 100) : 0}%`) }); break; } catch (e) { console.warn('model', model, e); }
+      const info = graphicInfo(src);
+      if (!opt.forceAI && info.flat && info.uniformBorder && !info.transparentEdge) { // flags, logos, clip-art: exact, edge-connected removal that never touches inner colours
+        await tick(); const res = floodCut(src, { keepWhites: !!opt.keepWhites }), cov = await coverageOf(res); job.done();
+        if (cov < 0.02 || cov > 0.985) { toast('No plain background found around this graphic — use Refine to paint the parts to keep', '⚠️'); return; }
+        await replaceImage(o, res, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 60);
+        toast(opt.keepWhites ? 'Background removed — white parts kept' : 'Outer background removed — inner colours kept', '✂️', opt.keepWhites ? undefined : { label: 'Keep white parts', fn: async () => { await replaceImage(o, floodCut(src, { keepWhites: true }), { pristine: src }); toast('White parts kept', '✂️'); } }); return;
       }
-      if (!out) throw new Error('no model');
-      const res = await blobToDataURL(out), cov = await coverageOf(res);
+      const mod = await loadImgly(), res = await aiCut(mod, src, job), cov = await coverageOf(res);
       job.done();
       if (cov < 0.02) { toast('The AI could not find a clear subject — original kept. Try Refine to mark it', '⚠️'); return; }
       await replaceImage(o, res, { pristine: src });
@@ -138,9 +201,9 @@
       console.warn('AI cut-out unavailable', e); job.done();
       const j2 = busy('AI model offline — using quick cut-out…'); await tick();
       const quick = smartCut(src), cov = coverageOf(quick); j2.done();
-      if (await cov < 0.06 || await cov > 0.97) { toast('Could not separate the subject without the AI model. Check your connection and retry', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o); } }); return; }
+      if (await cov < 0.06 || await cov > 0.97) { toast('Could not separate the subject without the AI model. Check your connection and retry', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o, { forceAI: true }); } }); return; }
       await replaceImage(o, quick, { pristine: src });
-      toast('AI model unavailable (blocked or offline) — used a rough colour-based cut instead. Retry for the AI result, or use Refine', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o); } });
+      toast('AI model unavailable (blocked or offline) — used a rough colour-based cut instead. Retry for the AI result, or use Refine', '⚠️', { label: 'Retry AI', fn: () => { imglyP = null; removeBg(o, { forceAI: true }); } });
     }
   }
   $('#removeBg').onclick = () => removeBg();

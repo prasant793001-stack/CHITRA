@@ -57,20 +57,57 @@
     });
   }
 
-  C.graphicsView = (view, fallback) => {
+  const builtinView = (view, fallback) => {
     let pack = 'All', q = '', shown = 60;
     const draw = () => {
       const list = ALL.filter(it => (pack === 'All' || it.pack === pack) && (!q || it.tags.includes(q)));
-      view.innerHTML = `<div class="chips" id="gxChips">${PACKS.map(n => `<button class="chip${n === pack ? ' on' : ''}" data-p="${n}">${n}</button>`).join('')}</div>
+      view.innerHTML = `<div class="gx-tabs"><button data-m="p">Premium</button><button class="on">Shapes &amp; decor</button></div><div class="chips" id="gxChips">${PACKS.map(n => `<button class="chip${n === pack ? ' on' : ''}" data-p="${n}">${n}</button>`).join('')}</div>
         <div class="gfx-grid">${list.slice(0, shown).map(it => `<button class="gfx-card" data-id="${it.id}" title="${it.name}">${svgOf(it).svg.replace(/width="\d+" height="\d+"/, 'width="100%" height="100%"')}</button>`).join('')}</div>
         ${list.length > shown ? '<button class="btn wide" id="gxMore" style="margin-top:10px">Show more</button>' : ''}${list.length ? '' : '<p class="tip">No built-in graphics match.</p>'}
         <button class="btn wide" id="gxOnline" style="margin-top:12px">${C.ico('search', 15)} Search millions more online</button><p class="tip">Click to add. Select a graphic to recolour it.</p>`;
+      $$('.gx-tabs [data-m=p]', view).forEach(b => b.onclick = () => C.graphicsView(view, fallback));
       $$('#gxChips [data-p]', view).forEach(b => b.onclick = () => { pack = b.dataset.p; shown = 60; draw(); });
       $$('.gfx-card', view).forEach(b => b.onclick = () => add(ALL.find(x => x.id === b.dataset.id)));
       $('#gxMore', view) && ($('#gxMore', view).onclick = () => { shown += 60; draw(); });
       $('#gxOnline', view).onclick = () => fallback();
     };
-    draw(); return v => { q = v.trim().toLowerCase(); shown = 60; draw(); };
+    draw(); const hook = v => { q = v.trim().toLowerCase(); shown = 60; draw(); }; C.__gxHook = hook; return hook;
   };
   C.GRAPHICS_COUNT = ALL.length;
+
+  /* ---- Premium colour graphics: Microsoft Fluent Emoji 3D/flat (MIT), Google Noto (Apache-2.0), Circle Flags (MIT), Flat Color Icons (MIT), served by the free Iconify API ---- */
+  const API = 'https://api.iconify.design', SETS = { graphics: 'fluent-emoji,fluent-emoji-flat,noto,flat-color-icons', stickers: 'fluent-emoji,noto,fluent-emoji-flat', flags: 'circle-flags,noto' };
+  const CHIPS = { graphics: ['Food', 'Animals', 'Heart', 'Party', 'Travel', 'Nature', 'Sports', 'Music', 'Tech', 'Business', 'Weather', 'Flag', 'Fire', 'Star', 'Gift', 'Flower', 'Camera', 'Rocket', 'Crown', 'Sparkles'], stickers: ['Smile', 'Love', 'Party', 'Pizza', 'Coffee', 'Cat', 'Dog', 'Sun', 'Fire', 'Trophy', 'Gift', 'Cake', 'Balloon', 'Sparkles', 'Rainbow', 'Thumbs up'] };
+  C.premiumView = (view, kind, builtin) => {
+    let q = '', start = 0, token = 0, sets = SETS[kind] || SETS.graphics, flags = false;
+    const draw = () => {
+      view.innerHTML = `<div class="gx-tabs"><button class="on" data-m="p">Premium</button>${builtin ? '<button data-m="b">Shapes &amp; decor</button>' : ''}</div><div class="chips" id="pxChips">${(CHIPS[kind] || CHIPS.graphics).map(c => `<button class="chip" data-q="${c}">${c}</button>`).join('')}<button class="chip" data-q="@flags">🏳️ Flags</button></div>
+        <div class="gfx-grid" id="pxGrid"></div><button id="pxMore" class="btn wide" hidden style="margin-top:10px">Load more</button><p class="tip" id="pxNote"></p>
+        <p class="tip" style="font-size:11px">Colour graphics: Microsoft Fluent Emoji (MIT), Google Noto (Apache-2.0), Circle Flags &amp; Flat Color Icons (MIT), via Iconify.</p>`;
+      $$('.gx-tabs [data-m=b]', view).forEach(b => b.onclick = () => builtin());
+      $$('#pxChips [data-q]', view).forEach(b => b.onclick = () => { flags = b.dataset.q === '@flags'; q = flags ? 'flag' : b.dataset.q; $('#elSearch').value = flags ? '' : q; $$('#pxChips .chip', view).forEach(x => x.classList.toggle('on', x === b)); run(true); });
+      $('#pxMore', view).onclick = () => run(false);
+    };
+    async function run(reset) {
+      const grid = $('#pxGrid', view), more = $('#pxMore', view), note = $('#pxNote', view), my = ++token;
+      if (reset) { start = 0; grid.innerHTML = '<p class="tip" style="grid-column:1/-1">Searching…</p>'; more.hidden = true; note.textContent = ''; }
+      try {
+        const r = await fetch(`${API}/search?query=${encodeURIComponent(q || 'sparkles')}&limit=60&start=${start}&prefixes=${flags ? SETS.flags : sets}`); if (!r.ok) throw new Error(r.status); const j = await r.json(); if (my !== token) return;
+        if (reset) grid.innerHTML = ''; const icons = (j.icons || []);
+        if (!icons.length && reset) grid.innerHTML = '<p class="tip" style="grid-column:1/-1">No results. Try another word.</p>';
+        icons.forEach(id => { const [pre, name] = id.split(':'), b = document.createElement('button'); b.className = 'gfx-card'; b.title = name.replace(/-/g, ' '); b.innerHTML = `<img loading="lazy" alt="" src="${API}/${pre}/${name}.svg?height=96">`; b.onclick = () => addPremium(pre, name); grid.appendChild(b); });
+        start += icons.length; more.hidden = start >= (j.total || 0);
+      } catch (e) { console.warn(e); if (my === token && reset) { grid.innerHTML = `<div class="empty-card retry"><b>Couldn't load graphics</b><small>${navigator.onLine ? 'The graphics service did not answer.' : 'You are offline — the built-in set still works.'}</small><button class="btn" id="pxRetry">Try again</button></div>`; $('#pxRetry', view).onclick = () => run(true); } }
+    }
+    draw(); q = (CHIPS[kind] || CHIPS.graphics)[0]; $('#pxChips .chip', view)?.classList.add('on'); run(true);
+    const hook = v => { flags = false; q = v.trim() || q; run(true); }; C.__gxHook = hook; return v => C.__gxHook(v);
+  };
+  async function addPremium(pre, name) {
+    try {
+      const svg = await (await fetch(`${API}/${pre}/${name}.svg?height=512`)).text();
+      window.fabric.loadSVGFromString(svg, (objs, opts) => { const g = window.fabric.util.groupSVGElements(objs, opts), s = (u() * 0.32) / Math.max(g.width || 512, g.height || 512); g.set({ scaleX: s, scaleY: s }); C.place(g); C.commit(); });
+    } catch { C.toast('Could not load that graphic — check your connection', '⚠️'); }
+  }
+  C.graphicsView = (view, fallback) => C.premiumView(view, 'graphics', () => builtinView(view, fallback));
+
 })();

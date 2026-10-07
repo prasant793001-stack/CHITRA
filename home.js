@@ -12,7 +12,7 @@
   const ago = ts => { const m = Math.round((Date.now() - ts) / 60000); return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`; };
 
   /* ================= template thumbnails (lazy, cached, one at a time) ================= */
-  const cache = {}; let chain = C.fontsReady;
+  const cache = {};
   /* flat design -> realistic product photo (mug / tee / tumbler ...) so the grid looks like a store, not clip-art */
   async function mockThumb(flatUrl, meta, seed) {
     const img = await new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = flatUrl; }); if (!img) return flatUrl;
@@ -30,22 +30,25 @@
     }
     const m = C.mockRender(meta.mockKind, art, color, 1 + (seed % 3), opts), out = document.createElement('canvas'); out.width = out.height = 420; out.getContext('2d').drawImage(m, 0, 0, 420, 420); return out.toDataURL('image/jpeg', 0.82);
   }
+  /* Thumbnails: rendered lazily, 4 at a time (network-bound), newest-visible first, so the cards you are looking at fill in first. */
+  const waiting = [], inflight = {}; let running = 0;
+  const pump = () => { while (running < 4 && waiting.length) { const job = waiting.pop(); running++; job().finally(() => { running--; pump(); }); } };
+  async function makeThumb(name) {
+    await C.fontsReady; if (cache[name]) return cache[name]; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}:${(meta.ph || []).join(',')}`; // photo ids in the key: a rebuilt library never shows stale thumbnails
+    if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return hit; } } catch { } }
+    const ok = await C.ensureTpl(name, 'thumb'); if (meta.dead) return null; await new Promise(r => setTimeout(r, 0));
+    C.__photoKind = 'thumb'; let url; try { url = C.renderTemplateThumb(name, C.productByName(meta.p), meta.mockKind ? 900 : 340); } finally { C.__photoKind = null; }
+    if (url && meta.mockKind) url = await mockThumb(url, meta, name.length + name.charCodeAt(name.length - 1));
+    if (!ok) return url; // never cache a fallback render (fonts still loading)
+    cache[name] = url; if (meta.gen && url) C.kv.set(key, url).catch(() => { }); return url;
+  }
   function thumbFor(name) {
     if (cache[name]) return Promise.resolve(cache[name]);
-    chain = chain.then(async () => {
-      if (cache[name]) return; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}:${(meta.ph || []).join(',')}`; // photo ids in the key: a rebuilt library never shows stale thumbnails
-      if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return; } } catch { } }
-      const ok = await C.ensureTpl(name, 'thumb'); await new Promise(r => setTimeout(r, 0));
-      C.__photoKind = 'thumb'; let url; try { url = C.renderTemplateThumb(name, C.productByName(meta.p), meta.mockKind ? 900 : 340); } finally { C.__photoKind = null; }
-      if (url && meta.mockKind) url = await mockThumb(url, meta, name.length + name.charCodeAt(name.length - 1));
-      cache[name] = url;
-      if (!ok) { const u = cache[name]; setTimeout(() => { if (cache[name] === u) delete cache[name]; }, 0); return; } // never cache a fallback render
-      if (meta.gen && cache[name]) C.kv.set(key, cache[name]).catch(() => { });
-    });
-    return chain.then(() => cache[name]);
+    return inflight[name] ||= new Promise(res => { waiting.push(async () => { try { res(await makeThumb(name)); } catch { res(null); } delete inflight[name]; }); pump(); });
   }
-  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); const im = e.target; thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } }); } }), { rootMargin: '400px' }) : null;
-  function fillThumbs(root) { $$('img[data-tpl]:not(.ready)', root).forEach(im => io ? io.observe(im) : thumbFor(im.dataset.tpl).then(u => { if (u) { im.src = u; im.classList.add('ready'); } })); }
+  const show = (im, u) => { if (u) { im.src = u; im.classList.add('ready'); } else if (META[im.dataset.tpl]?.dead) im.closest('.tcard,.tcard2')?.remove(); };
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { io.unobserve(e.target); const im = e.target; thumbFor(im.dataset.tpl).then(u => show(im, u)); } }), { rootMargin: '300px' }) : null;
+  function fillThumbs(root) { $$('img[data-tpl]:not(.ready)', root).forEach(im => io ? io.observe(im) : thumbFor(im.dataset.tpl).then(u => show(im, u))); }
   const ratio = n => { if (META[n].mockKind) return '1.000'; const p = C.productByName(META[n].p); return (p.w / p.h).toFixed(3); };
   /* paged grid: renders 48 cards, "Show more" adds the next batch (keeps 2,000 templates fast) */
   function pagedGrid(el, names, card, bind, step = 48) {

@@ -94,10 +94,37 @@ module.exports = [
   { name: 'built-in graphics library', only: 'desktop', run: async (p, ok) => {
     ok('150+ built-in graphics', await p.evaluate(() => chitra.GRAPHICS_COUNT >= 150));
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(600);
-    await p.click('#rail [data-tab=shapes]'); await p.click('#catGrid [data-el=graphics]'); await p.waitForTimeout(400);
+    await p.click('#rail [data-tab=shapes]'); await p.click('#catGrid [data-el=graphics]'); await p.waitForTimeout(400); await p.click('.gx-tabs [data-m=b]'); await p.waitForTimeout(300);
     ok('graphics grid shows cards', await p.locator('.gfx-card').count() >= 30);
     await p.click('.gfx-card >> nth=24'); await p.waitForTimeout(500);
     ok('clicking a graphic places it on the page', await p.evaluate(() => chitra.canvas.getObjects().length >= 1 && chitra.canvas.getObjects().every(o => o.getScaledWidth() > 20)));
+  } },
+  { name: 'background remover keeps flat-graphic colours', only: 'desktop', run: async (p, ok) => {
+    const r = await p.evaluate(async () => {
+      await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' });
+      const mk = outline => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, 400, 300); g.fillStyle = '#ff9933'; g.fillRect(60, 60, 280, 60); g.fillStyle = '#138808'; g.fillRect(60, 180, 280, 60); if (outline) { g.strokeStyle = '#999'; g.lineWidth = 3; g.strokeRect(60, 60, 280, 180); } g.strokeStyle = '#000080'; g.beginPath(); g.arc(200, 150, 20, 0, 7); g.stroke(); return c.toDataURL(); };
+      const alphaAt = (o, fx, fy) => { const c = document.createElement('canvas'), el = o.getElement(); c.width = el.naturalWidth || el.width; c.height = el.naturalHeight || el.height; const g = c.getContext('2d'); g.drawImage(el, 0, 0); return g.getImageData(Math.round(c.width * fx), Math.round(c.height * fy), 1, 1).data[3]; };
+      const out = {};
+      for (const [name, outline, opt] of [['outlined', true, {}], ['open', false, {}], ['openKeep', false, { keepWhites: true }]]) {
+        chitra.canvas.clear(); await chitra.addImageFromURL(mk(outline)); await new Promise(r => setTimeout(r, 500)); const o = chitra.canvas.getObjects().find(x => x.type === 'image'); chitra.canvas.setActiveObject(o);
+        await chitra.removeBg(o, opt); await new Promise(r => setTimeout(r, 800)); const im = chitra.canvas.getObjects().find(x => x.type === 'image');
+        out[name] = { corner: alphaAt(im, 0.02, 0.02), band: alphaAt(im, 0.3, 0.5), orange: alphaAt(im, 0.3, 0.3) };
+      }
+      return out;
+    });
+    ok('white margin removed, orange kept (outlined flag)', r.outlined.corner === 0 && r.outlined.orange > 240, JSON.stringify(r.outlined));
+    ok('white stripe inside an outlined flag is kept', r.outlined.band > 240, JSON.stringify(r.outlined));
+    ok('"Keep white parts" restores an open white stripe', r.openKeep.band > 240 && r.openKeep.corner === 0, JSON.stringify(r.openKeep));
+  } },
+  { name: 'premium graphics (Iconify)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#f5b800"/><circle cx="11" cy="13" r="2" fill="#333"/><circle cx="21" cy="13" r="2" fill="#333"/></svg>';
+    await ctx.route('https://api.iconify.design/**', r => { const u = r.request().url(); if (u.includes('/search')) return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons: ['fluent-emoji:pizza', 'noto:cat-face', 'circle-flags:in'], total: 3 }) }); r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
+    await p.click('#rail [data-tab=shapes]'); await p.evaluate(() => { document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(1200);
+    ok('premium graphics grid fills from the service', await p.locator('#pxGrid .gfx-card').count() === 3);
+    await p.evaluate(() => document.querySelector('#pxGrid .gfx-card').click()); await p.waitForTimeout(800);
+    ok('premium graphic is placed as a coloured vector', await p.evaluate(() => chitra.canvas.getObjects().length >= 1));
+    await p.evaluate(() => document.querySelector('.gx-tabs [data-m=b]').click()); await p.waitForTimeout(300); ok('built-in tab still works', await p.locator('.gfx-card').count() > 20);
   } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));

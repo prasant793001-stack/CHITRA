@@ -14,6 +14,7 @@ window.CHITRA_CONFIG = {
   // Optional: { plausibleDomain: 'yourdomain.com' } for privacy-friendly analytics. Error reports go to your worker (apiUrl) unless reportErrors:false.
   analytics: {},
   photoProxy: '',
+  assetBase: '', // optional: host photos/ and data/ on another site (CDN or a second repo), e.g. 'https://cdn.jsdelivr.net/gh/you/chitra-assets@main/'
   // Where "Send to print" delivers orders (WhatsApp number with country code, email). Leave blank to just share the file.
   shop: { name: '', whatsapp: '', email: '' },
   // Fallback only (a deterrent, NOT real security): keys scrambled with tools/seal-key.js. Never paste raw keys in this public file.

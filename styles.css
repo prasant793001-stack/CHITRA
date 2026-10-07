@@ -677,3 +677,12 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .gfx-card{aspect-ratio:1;display:grid;place-items:center;padding:8px;border:1px solid var(--line);border-radius:10px;background:#fafafc;cursor:pointer;transition:.12s}
 .gfx-card:hover{border-color:#7c3aed;background:#fff;box-shadow:0 4px 14px rgba(60,30,160,.14)}
 .gfx-card svg{max-width:100%;max-height:100%}
+
+/* thumbnails shimmer until their picture is drawn */
+.thumb.chk img[data-tpl]:not(.ready){opacity:0}
+.thumb.chk:has(img[data-tpl]:not(.ready)){background:linear-gradient(100deg,#eceaf6 30%,#f8f7fd 50%,#eceaf6 70%);background-size:220% 100%;animation:shim 1.2s linear infinite}
+@keyframes shim{to{background-position:-120% 0}}
+
+.gx-tabs{display:flex;gap:4px;background:var(--f2);padding:3px;border-radius:10px;margin-bottom:10px}
+.gx-tabs button{flex:1;border:0;background:none;padding:7px;border-radius:8px;font-weight:600;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.gx-tabs button.on{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.1)}
