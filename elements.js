@@ -120,7 +120,7 @@
         if (!items.length && reset) grid.innerHTML = '<p class="tip">No results. Try another word.</p>';
         items.forEach(it => { const b = document.createElement('button'); b.className = 'photo-card' + (kind === 'graphic' ? ' gfx' : ''); b.innerHTML = '<img loading="lazy" alt="">'; $('img', b).src = it.thumb; b.onclick = () => C.stock.add(it, kind); grid.appendChild(b); });
         more.hidden = !r.more;
-      } catch (e) { console.warn(e); if (my === token) { if (reset) grid.innerHTML = ''; toast('Could not load images — check your connection', '⚠️'); } }
+      } catch (e) { console.warn(e); if (my === token) { if (reset) grid.innerHTML = `<div class="empty-card retry"><b>Couldn't load images</b><small>${navigator.onLine ? 'The photo service did not answer.' : 'You are offline.'}</small><button class="btn" id="stkRetry">Try again</button></div>`; else page--; const rb = $('#stkRetry', view); if (rb) rb.onclick = () => run(true); toast('Could not load images — check your connection', ''); } }
     }
     $$('.chip', view).forEach(c => c.onclick = () => { q = c.dataset.q; $('#elSearch').value = q; $$('.chip', view).forEach(x => x.classList.toggle('on', x === c)); run(true); });
     more.onclick = () => { page++; run(false); };
