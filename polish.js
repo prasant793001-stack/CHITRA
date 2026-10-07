@@ -109,5 +109,22 @@
     const seen = new Set(); const send = (msg, src) => { const key = msg + src; if (seen.has(key) || seen.size > 15) return; seen.add(key); try { navigator.sendBeacon?.(CFGP.apiUrl.replace(/\/$/, '') + '/log', new Blob([JSON.stringify({ msg, src, ua: navigator.userAgent, v: 'web' })], { type: 'text/plain' })); } catch { } };
     addEventListener('error', e => send(e.message || 'error', `${(e.filename || '').split('/').pop()}:${e.lineno}`)); addEventListener('unhandledrejection', e => send(String(e.reason?.message || e.reason || 'rejection').slice(0, 300), 'promise'));
   }
+
+  /* ---------- Home: a living hero (floating design cards), trending ticker, scroll reveals ---------- */
+  (() => {
+    const art = $('.hero-art'); if (!art) return;
+    const fill = () => {
+      const seen = new Set(), ids = (C.listTemplates ? C.listTemplates({}) : []).filter(id => { const m = C.TEMPLATE_META[id], t = m.n.split(' · ')[0]; if (m.mockKind || seen.has(t)) return false; seen.add(t); return true; }).slice(0, 3); if (ids.length < 3) return;
+      $$('.hero-card', art).forEach(e => e.remove());
+      ids.forEach((id, i) => { const d = document.createElement('div'); d.className = `hero-card c${i + 1}`; d.innerHTML = `<img data-tpl="${id}" alt="">`; d.onclick = () => C.fromTemplate(id); art.appendChild(d); }); C.fillThumbs?.(art);
+    };
+    fill(); document.addEventListener('chitra:templates', fill);
+    const tick = Object.assign(document.createElement('div'), { className: 'ticker', ariaLabel: 'Popular searches' });
+    const words = ['Birthday', 'Eid Mubarak', 'Diwali', 'Mega sale', 'Wedding', 'Coffee mug', 'Yoga', 'Pizza', 'Travel', 'Christmas', 'Grand opening', 'Thank you', 'New arrival', 'Baby shower', 'Fitness', 'Music festival'];
+    tick.innerHTML = `<div class="ticker-in">${[...words, ...words].map(w => `<button class="chip" data-w="${w}">${w}</button>`).join('')}</div>`;
+    $('#hmQuick')?.before(tick);
+    tick.addEventListener('click', e => { const w = e.target.closest('[data-w]')?.dataset.w; if (!w) return; $('#hmSearch').value = w; $('#hmSearch').dispatchEvent(new Event('input')); window.scrollTo?.(0, 0); });
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.08 }); $$('#hmSections > section').forEach(s => { s.classList.add('reveal'); io.observe(s); }); }
+  })();
   $('#cmd') && C.addCommand?.('Keyboard shortcuts & help', openHelp);
 })();

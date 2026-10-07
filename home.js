@@ -217,5 +217,5 @@
     sp.onclick = finish;
   }
   splash();
-  Object.assign(C, { fromTemplate, openPricing, applyTemplate });
+  Object.assign(C, { fromTemplate, openPricing, applyTemplate, fillThumbs, renderTemplates });
 })();
