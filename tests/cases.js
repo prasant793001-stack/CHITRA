@@ -146,7 +146,8 @@ module.exports = [
   } },
   { name: 'AI art gallery, layers, blank pages, white canvas', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
-    await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    // like the live service: model=flux is pay-walled (402) for anonymous visitors, the default model is free
+    await ctx.route('https://image.pollinations.ai/**', r => r.request().url().includes('model=flux') ? r.fulfill({ status: 402, contentType: 'application/json', body: '{}' }) : r.fulfill({ status: 200, contentType: 'image/png', body: png }));
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('A3'), template: 'blank' })); await p.waitForTimeout(600);
     ok('paper sizes start pure white', await p.evaluate(() => chitra.canvas.backgroundColor === '#ffffff'), await p.evaluate(() => chitra.canvas.backgroundColor));
     await p.evaluate(() => { document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiCut').checked = false; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(3500);

@@ -468,9 +468,15 @@
   let aiHist = [];
   (async () => { try { const h = await C.kv.get('aihist'); if (Array.isArray(h)) { aiHist = h; renderAiGrid(); } } catch { } })();
   const saveAiHist = () => { try { C.kv.set('aihist', aiHist.slice(0, 18)); } catch { } };
+  let fluxPaid = false; // Pollinations answers 402 (payment required) for model=flux once the anonymous allowance is used; the default model stays free
   async function cloudImage(prompt, w, h) {
-    const url = `https://image.pollinations.ai/prompt/${enc(prompt)}?width=${w}&height=${h}&nologo=true&model=flux&seed=${Math.floor(Math.random() * 1e6)}`;
-    for (let t = 0; t < 3; t++) { const r = await fetch(url + '&t=' + t); if (r.ok) return r.blob(); await new Promise(res => setTimeout(res, 2500 * (t + 1))); } throw new Error('AI busy');
+    const base = `https://image.pollinations.ai/prompt/${enc(prompt)}?width=${w}&height=${h}&nologo=true&seed=${Math.floor(Math.random() * 1e6)}`;
+    for (let t = 0; t < 4; t++) {
+      const r = await fetch(base + (fluxPaid ? '' : '&model=flux') + '&t=' + t); if (r.ok) return r.blob();
+      if (r.status === 402 && !fluxPaid) { fluxPaid = true; continue; } // switch to the free model straight away, no wait
+      await new Promise(res => setTimeout(res, 3000 * (t + 1)));
+    }
+    throw new Error('AI busy');
   }
   $('#aiGo').onclick = async () => {
     const prompt = $('#aiPrompt').value.trim(); if (!prompt) return toast('Describe your image first', '✍️');
