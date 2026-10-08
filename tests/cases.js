@@ -186,6 +186,18 @@ module.exports = [
       return { n: hand.length, objs: chitra.canvas.getObjects().length, first: chitra.listTemplates({})[0], isHand: !!chitra.TEMPLATE_META[chitra.listTemplates({})[0]].hand, cat: chitra.TEMPLATE_META[id].cat }; });
     ok('hand-made templates are registered', r.n >= 8, r.n); ok('a hand-made template opens with layered content', r.objs >= 6, r.objs); ok('hand-made templates are listed first', r.isHand, r.first);
   } },
+  { name: 'ready-made photo mockup pack', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+    await ctx.route('**/data/mockups/index.json', r => r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ v: 1, mockups: [{ id: 'demo-1', name: 'Demo mug', kind: 'mug', file: 'mockups/demo-1.png', thumb: 'mockups/demo-1.png', quad: [[.3, .3], [.7, .3], [.7, .7], [.3, .7]], curve: 1.2, opacity: .9, shade: .5, blur: .3, fit: 'contain' }] }) }));
+    await ctx.route('**/mockups/demo-1.png', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(400);
+    await p.evaluate(() => chitra.openPhotoMock()); await p.waitForTimeout(1200);
+    ok('ready-made pack appears in the studio', await p.locator('#pmPack [data-pk]').count() === 1);
+    await p.evaluate(() => document.querySelector('#pmPack [data-pk]').click()); await p.waitForTimeout(800);
+    const q = await p.evaluate(() => chitra.photoMock.studio.S);
+    ok('choosing a ready-made mockup loads its photo and print area', !!q.base && q.kind === 'mug' && q.quad.length === 4, JSON.stringify(q.quad && q.quad[0]));
+    await p.evaluate(() => { document.getElementById('pmStudio').hidden = true; });
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);

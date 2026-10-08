@@ -6,7 +6,7 @@ const T = require('./cases');
 (async () => {
   const b = await chromium.launch(); const errs = [];
   for (const mobile of [false, true]) {
-    const ctx = await b.newContext(mobile ? { ...devices['Pixel 7'] } : { viewport: { width: 1366, height: 800 }, acceptDownloads: true });
+    const ctx = await b.newContext({ serviceWorkers: 'block', ...(mobile ? { ...devices['Pixel 7'] } : { viewport: { width: 1366, height: 800 }, acceptDownloads: true }) }); // the service worker would bypass route mocks
     await ctx.route(/fonts\.(googleapis|gstatic)|jsdelivr|staticimgly/, r => r.abort());
     await ctx.addInitScript(() => { try { localStorage.setItem('chitra.tour', '1'); } catch { } });
     const p = await ctx.newPage(); p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/ERR_FAILED|Failed to load resource/.test(m.text())) errs.push(m.text()); });

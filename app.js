@@ -91,7 +91,8 @@
     P('present', 'Presentation & screens', '🎞️', 'Video 4K', 3840, 2160, 'none', 96),
     P('present', 'Presentation & screens', '🌆', 'Desktop wallpaper', 2560, 1440, 'none', 96),
   ];
-  const PROD_ICONS = [[/mug|ornament/i, 'coffee'], [/tumbler/i, 'cup-soda'], [/hoodie|tee|t-shirt|sleeve|chest/i, 'shirt'], [/tote/i, 'shopping-bag'], [/cap /i, 'hard-hat'], [/gang/i, 'layout-grid'], [/coaster/i, 'square'], [/mouse/i, 'mouse'], [/phone/i, 'smartphone'], [/pillow/i, 'box'],
+  const PROD_ICONS = [[/instagram/i, 'brand:instagram'], [/story|reel|tiktok/i, 'brand:tiktok'], [/facebook/i, 'brand:facebook'], [/youtube/i, 'brand:youtube'], [/linkedin/i, 'linkedin'], [/twitter|^x /i, 'brand:x'], [/pinterest/i, 'brand:pinterest'], [/etsy/i, 'brand:etsy'],
+    [/mug|ornament/i, 'coffee'], [/tumbler/i, 'cup-soda'], [/hoodie|tee|t-shirt|sleeve|chest/i, 'shirt'], [/tote/i, 'shopping-bag'], [/cap /i, 'hard-hat'], [/gang/i, 'layout-grid'], [/coaster/i, 'square'], [/mouse/i, 'mouse'], [/phone/i, 'smartphone'], [/pillow/i, 'box'],
     [/business card/i, 'credit-card'], [/flyer/i, 'newspaper'], [/postcard/i, 'mail'], [/invitation/i, 'gift'], [/certificate/i, 'award'], [/menu/i, 'utensils'], [/brochure/i, 'book-open'], [/ticket/i, 'ticket'], [/bookmark/i, 'bookmark'], [/label|sticker/i, 'tag'], [/door/i, 'door-open'], [/banner/i, 'flag'],
     [/poster|photo/i, 'image'], [/instagram/i, 'camera'], [/story|reel|tiktok/i, 'smartphone'], [/facebook/i, 'users'], [/youtube/i, 'video'], [/linkedin/i, 'briefcase'], [/twitter/i, 'message-circle'], [/pinterest/i, 'pin'], [/etsy/i, 'store'], [/presentation/i, 'presentation'], [/video/i, 'video'], [/wallpaper/i, 'monitor'], [/\bA\d\b|letter|legal|tabloid|half/i, 'file-text']];
   const prodIconName = p => (PROD_ICONS.find(([re]) => re.test(p.name)) || [0, 'file'])[1];
@@ -267,7 +268,8 @@
     PRODUCTS.filter(p => (pickTab === 'all' || p.cat === pickTab) && (!q || `${p.name} ${p.g} ${dim(p)}`.toLowerCase().includes(q))).forEach(p => {
       if (p.g !== last) { const h = document.createElement('h4'); h.textContent = p.g; grid.appendChild(h); last = p.g; }
       const b = document.createElement('button'); b.className = 'pcard' + (p.name === product.name && p.w === W ? ' on' : '');
-      b.innerHTML = `<span class="pi">${ico(prodIconName(p), 22)}</span><b>${p.name}</b><small>${dim(p)}</small>`;
+      const ic = prodIconName(p), br = /^brand:/.test(ic) ? window.CHITRA_BRANDS && window.CHITRA_BRANDS[ic.slice(6)] : ic === 'linkedin' ? { h: '0A66C2' } : null; // real platform logo on a tint of its own colour
+      b.innerHTML = `<span class="pi"${br ? ` style="background:#${br.h}1a;color:#${br.h}"` : ''}>${ico(ic, 22)}</span><b>${p.name}</b><small>${dim(p)}</small>`;
       b.onclick = () => chooseProduct(p); grid.appendChild(b); n++;
     });
     if (!n) grid.innerHTML = '<p class="tip">Nothing matches. Try “A4”, “poster” or “mug” — or make a custom size.</p>';

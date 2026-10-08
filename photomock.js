@@ -104,7 +104,8 @@
         <button class="btn wide" id="pmReset">Reset print area</button>
         <button class="cta wide" id="pmAdd" style="margin-top:10px">${ico('plus', 16)} Add to my design</button>
         <div class="row2" style="margin-top:8px"><button class="btn" id="pmSave">${ico('save', 16)} Save mockup</button><button class="btn" id="pmDl">${ico('download', 16)} PNG</button></div>
-        <h4>My mockups</h4><div class="pm-mine" id="pmMine"></div>
+        <div id="pmPackBox" hidden><h4>Ready-made photo mockups</h4><div class="pm-mine" id="pmPack"></div></div>
+        <h4>My mockups <button class="btn small" id="pmExport" style="margin-left:8px" title="Owner: download all your saved mockups as a pack to publish for every customer">Export pack</button></h4><div class="pm-mine" id="pmMine"></div>
       </div>
     </div>
     <div class="pm-pick" id="pmPick" hidden><div class="pm-pick-head"><b id="pmPickT">Find a product photo</b><button class="btn small" id="pmPickX">Close</button></div><div class="chips" id="pmPickChips"></div><div class="photo-grid" id="pmPickGrid"></div><button class="btn wide" id="pmPickMore" hidden>Load more</button><p class="tip" id="pmPickNote"></p></div>
@@ -187,7 +188,25 @@
       S.base = bc; S.baseBlob = await kv.get('pmb:' + rec.id); S.name = rec.name; S.id = rec.id; S.kind = rec.kind || 'shirt'; S.quad = rec.spec.quad.map(p => [...p]); S.credit = rec.credit || undefined;
       $('#pmCurve', m).value = Math.round(rec.spec.curve * 100); $('#pmOpacity', m).value = Math.round(rec.spec.opacity * 100); $('#pmShade', m).value = Math.round(rec.spec.shade * 100); $('#pmBlur', m).value = Math.round(rec.spec.blur * 10); $('#pmFit', m).value = rec.spec.fit || 'contain'; $$('#pmProd .chip', m).forEach(x => x.classList.toggle('on', x.dataset.k === S.kind)); draw(); };
   }
-  C.openPhotoMock = async (o = {}) => { m.hidden = false; await renderMine(); if (o.base) await setBase(o.base, o.name); else draw(); };
+  /* ---- ready-made pack (data/mockups/index.json + mockups/*.jpg, published with the site) ---- */
+  const BASEURL = () => (window.CHITRA_CONFIG || {}).assetBase || '';
+  async function renderPack() {
+    let idx; try { idx = await (await fetch(BASEURL() + 'data/mockups/index.json', { cache: 'no-cache' })).json(); } catch { return; } const items = idx.mockups || []; $('#pmPackBox', m).hidden = !items.length; if (!items.length) return;
+    const box = $('#pmPack', m); box.innerHTML = items.map(x => `<button class="pm-card" data-pk="${x.id}" title="${(x.name || '').replace(/"/g, '')}"><img loading="lazy" alt="" src="${BASEURL()}${x.thumb || x.file}"><span>${(x.name || 'Mockup').replace(/</g, '&lt;')}</span></button>`).join('');
+    box.onclick = async e => { const c = e.target.closest('[data-pk]'); if (!c) return; const x = items.find(i => i.id === c.dataset.pk); try { const im = new Image(); im.crossOrigin = 'anonymous'; im.src = BASEURL() + x.file; await im.decode(); await setBase(im, x.name); S.kind = x.kind || 'shirt'; const W = S.base.width, H = S.base.height; S.quad = x.quad.map(([px, py]) => [px * W, py * H]); S.credit = x.credit || undefined;
+        $('#pmCurve', m).value = Math.round((x.curve || 0) * 100); $('#pmOpacity', m).value = Math.round((x.opacity ?? 0.96) * 100); $('#pmShade', m).value = Math.round((x.shade ?? 0.55) * 100); $('#pmBlur', m).value = Math.round((x.blur ?? 0.5) * 10); $('#pmFit', m).value = x.fit || 'contain'; $$('#pmProd .chip', m).forEach(b => b.classList.toggle('on', b.dataset.k === S.kind)); draw(); } catch { toast('That mockup photo could not be loaded', '⚠️'); } };
+  }
+  /* owner: export every saved mockup as a publishable pack (zip with mockups/*.jpg + data/mockups/index.json) */
+  $('#pmExport', m).onclick = async () => {
+    const l = await list(); if (!l.length) return toast('Save a mockup first (My mockups)', '☝️');
+    if (!window.JSZip) await new Promise((res, rej) => { const sc = Object.assign(document.createElement('script'), { src: 'studio/vendor/jszip.min.js', onload: res, onerror: rej }); document.head.appendChild(sc); });
+    const zip = new window.JSZip(), idx = { v: 1, mockups: [] };
+    for (const r of l) { const b = await kv.get('pmb:' + r.id); if (!b) continue; zip.file(`mockups/${r.id}.jpg`, b); const t = r.thumb.split(',')[1]; zip.file(`mockups/${r.id}_t.jpg`, t, { base64: true });
+      idx.mockups.push({ id: r.id, name: r.name, kind: r.kind, file: `mockups/${r.id}.jpg`, thumb: `mockups/${r.id}_t.jpg`, quad: r.spec.quad.map(([x, y]) => [+(x / r.w).toFixed(4), +(y / r.h).toFixed(4)]), curve: r.spec.curve, opacity: r.spec.opacity, shade: r.spec.shade, blur: r.spec.blur, fit: r.spec.fit, credit: r.credit || undefined }); }
+    zip.file('data/mockups/index.json', JSON.stringify(idx, null, 1)); const blob = await zip.generateAsync({ type: 'blob' }), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'chitra-mockup-pack.zip'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast('Pack downloaded — unzip it into the repo root and commit', '');
+  };
+  C.openPhotoMock = async (o = {}) => { renderPack(); m.hidden = false; await renderMine(); if (o.base) await setBase(o.base, o.name); else draw(); };
   C.addCommand && C.addCommand('Photo mockup: put my design on a real product photo', () => C.openPhotoMock());
   C.photoMock.studio = { S, spec, setBase, draw };
 })();

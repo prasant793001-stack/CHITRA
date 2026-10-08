@@ -92,7 +92,7 @@
       C.toast('Deck ready — pages 2 and 3 follow this template’s style', '');
     }
   }
-  const QUICK = [['camera', 'Photo mockup', '@pm'], ['scan', 'QR code', '@qr'], ['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['camera', 'Instagram', 'Instagram post'], ['smartphone', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
+  const QUICK = [['camera', 'Photo mockup', '@pm'], ['scan', 'QR code', '@qr'], ['file-text', 'A4 page', 'A4'], ['image', 'A3 poster', 'A3'], ['coffee', 'Mug wrap', '11 oz mug wrap'], ['shirt', 'T-shirt', 'T-shirt front'], ['cup-soda', 'Tumbler', '20 oz tumbler'], ['brand:instagram', 'Instagram', 'Instagram post'], ['brand:tiktok', 'Story', 'Story / Reel / TikTok'], ['credit-card', 'Business card', 'Business card'], ['presentation', 'Presentation', 'Presentation 16:9']];
   function renderQuick() {
     $('#hmQuick').innerHTML = QUICK.map(([i, n, p]) => `<button data-q="${esc(p)}"><i>${C.ico(i, 22)}</i><span>${n}</span></button>`).join('') +
       `<button data-q="@sheet"><i>${C.ico('printer', 22)}</i><span>Print sheet</span></button><button data-q="@custom"><i>${C.ico('ruler', 22)}</i><span>Custom size</span></button>`;
