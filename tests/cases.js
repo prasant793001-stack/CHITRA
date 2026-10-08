@@ -104,7 +104,9 @@ module.exports = [
       await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' });
       const mk = outline => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, 400, 300); g.fillStyle = '#ff9933'; g.fillRect(60, 60, 280, 60); g.fillStyle = '#138808'; g.fillRect(60, 180, 280, 60); if (outline) { g.strokeStyle = '#999'; g.lineWidth = 3; g.strokeRect(60, 60, 280, 180); } g.strokeStyle = '#000080'; g.beginPath(); g.arc(200, 150, 20, 0, 7); g.stroke(); return c.toDataURL(); };
       const alphaAt = (o, fx, fy) => { const c = document.createElement('canvas'), el = o.getElement(); c.width = el.naturalWidth || el.width; c.height = el.naturalHeight || el.height; const g = c.getContext('2d'); g.drawImage(el, 0, 0); return g.getImageData(Math.round(c.width * fx), Math.round(c.height * fy), 1, 1).data[3]; };
+      const full = () => { const c = document.createElement('canvas'); c.width = 450; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#ff9933'; g.fillRect(0, 0, 450, 100); g.fillStyle = '#fff'; g.fillRect(0, 100, 450, 100); g.fillStyle = '#138808'; g.fillRect(0, 200, 450, 100); g.strokeStyle = '#000080'; g.lineWidth = 3; g.beginPath(); g.arc(225, 150, 40, 0, 7); g.stroke(); return c.toDataURL(); }; // a flag with no background at all
       const out = {};
+      chitra.canvas.clear(); await chitra.addImageFromURL(full()); await new Promise(r => setTimeout(r, 500)); { const o = chitra.canvas.getObjects().find(x => x.type === 'image'); chitra.canvas.setActiveObject(o); await chitra.removeBg(o); await new Promise(r => setTimeout(r, 800)); const im = chitra.canvas.getObjects().find(x => x.type === 'image'); out.fullBleed = { saffron: alphaAt(im, 0.1, 0.15), white: alphaAt(im, 0.1, 0.5), green: alphaAt(im, 0.9, 0.85), told: [...document.querySelectorAll('.toast .tm')].some(t => /no background to remove/.test(t.textContent)), offersAI: [...document.querySelectorAll('.toast .tact')].some(b => /Try AI anyway/.test(b.textContent)) }; }
       for (const [name, outline, opt] of [['outlined', true, {}], ['open', false, {}], ['openKeep', false, { keepWhites: true }]]) {
         chitra.canvas.clear(); await chitra.addImageFromURL(mk(outline)); await new Promise(r => setTimeout(r, 500)); const o = chitra.canvas.getObjects().find(x => x.type === 'image'); chitra.canvas.setActiveObject(o);
         await chitra.removeBg(o, opt); await new Promise(r => setTimeout(r, 800)); const im = chitra.canvas.getObjects().find(x => x.type === 'image');
@@ -114,6 +116,7 @@ module.exports = [
     });
     ok('white margin removed, orange kept (outlined flag)', r.outlined.corner === 0 && r.outlined.orange > 240, JSON.stringify(r.outlined));
     ok('white stripe inside an outlined flag is kept', r.outlined.band > 240, JSON.stringify(r.outlined));
+    ok('a flag that fills the picture is left whole (no background to remove)', r.fullBleed.saffron === 255 && r.fullBleed.white === 255 && r.fullBleed.green === 255 && r.fullBleed.told && r.fullBleed.offersAI, JSON.stringify(r.fullBleed));
     ok('"Keep white parts" restores an open white stripe', r.openKeep.band > 240 && r.openKeep.corner === 0, JSON.stringify(r.openKeep));
   } },
   { name: 'premium graphics (Iconify)', only: 'desktop', run: async (p, ok, mobile, ctx) => {

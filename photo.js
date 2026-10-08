@@ -129,7 +129,8 @@
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4; if (d[i + 3] < 20) continue; const key = ((d[i] >> 4) << 8) | ((d[i + 1] >> 4) << 4) | (d[i + 2] >> 4); hist.set(key, (hist.get(key) || 0) + 1); n++; if (x < 2 || y < 2 || x >= w - 2 || y >= h - 2) { bord.set(key, (bord.get(key) || 0) + 1); nb++; } }
     const top = [...hist.values()].sort((a, b) => b - a).slice(0, 12).reduce((a, b) => a + b, 0) / Math.max(n, 1), bb = [...bord.entries()].sort((a, b) => b[1] - a[1])[0];
     const transparentEdge = nb < w * 2 + h * 2; // most edge pixels already transparent
-    return { flat: top > 0.82, uniformBorder: !!bb && bb[1] / Math.max(nb, 1) > 0.8, bgKey: bb ? bb[0] : 0, transparentEdge };
+    let onBorder = 0; for (const [key, v] of hist) if ((bord.get(key) || 0) >= 2) onBorder += v; // share of the picture painted in colours that also touch the edge: ~1 for a full-bleed flag, much lower when an object sits on a backdrop
+    return { flat: top > 0.82, flatScore: top, borderColourShare: onBorder / Math.max(n, 1), uniformBorder: !!bb && bb[1] / Math.max(nb, 1) > 0.8, bgKey: bb ? bb[0] : 0, transparentEdge };
   }
   function floodCut(src, { tol = 34, keepWhites = false } = {}) {
     const W0 = src.width, H0 = src.height, out = document.createElement('canvas'); out.width = W0; out.height = H0; const g = out.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0);
@@ -193,6 +194,9 @@
         if (cov < 0.02 || cov > 0.985) { toast('No plain background found around this graphic — use Refine to paint the parts to keep', '⚠️'); return; }
         await replaceImage(o, res, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 60);
         toast(opt.keepWhites ? 'Background removed — white parts kept' : 'Outer background removed — inner colours kept', '✂️', opt.keepWhites ? undefined : { label: 'Keep white parts', fn: async () => { await replaceImage(o, floodCut(src, { keepWhites: true }), { pristine: src }); toast('White parts kept', '✂️'); } }); return;
+      }
+      if (!opt.forceAI && info.flatScore > 0.9 && info.borderColourShare > 0.92 && !info.uniformBorder && !info.transparentEdge) { // a flag, logo or poster that fills the whole picture: there is no background, and the AI would keep only one detail (e.g. the wheel of a flag) and erase the rest
+        job.done(); toast('This graphic fills the whole picture, so there is no background to remove', 'ℹ️', { label: 'Try AI anyway', fn: () => removeBg(o, { forceAI: true }) }); return;
       }
       const mod = await loadImgly(), res = await aiCut(mod, src, job), cov = await coverageOf(res);
       job.done();

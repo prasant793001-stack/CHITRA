@@ -1,5 +1,5 @@
 /* Chitra Studio service worker: makes the app installable and usable offline (stale-while-revalidate). */
-const V = 'chitra-7595e969c9';
+const V = 'chitra-86bf96642d';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './photo.js', './layouts.js', './crop.js', './mockprods.js', './mockups.js', './photomock.js', './fonts.js', './graphics.js', './elements.js', './templates.js', './realtpl.js', './mocktpl.js', './tplspec.js', './home.js', './apps.js', './studio/qr.html', './studio/vendor/qrcode.min.js', './studio/vendor/JsBarcode.all.min.js', './studio/vendor/jszip.min.js', './polish.js', './studio.js', './cloud.js', './icons-duo.js', './icons-brand.js', './icons.js', './config.js', './vendor/fabric.min.js', './vendor/jspdf.umd.min.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(V).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener('activate', e => e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())));
