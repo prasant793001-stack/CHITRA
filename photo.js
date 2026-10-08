@@ -411,16 +411,18 @@
   /* ---- hidden owner setup: Ctrl+Shift+K or tap the logo 7 times. Keys stay in THIS browser only. ---- */
   async function openAdmin() {
     if (vault.state() === 'locked') await vault.ensure();
-    const st = vault.state(); ['admPixabay', 'admPexels', 'admUnsplash'].forEach(id => { $('#' + id).value = ''; });
+    const st = vault.state(); ['admPixabay', 'admPexels', 'admUnsplash', 'admComfyUrl', 'admComfyToken'].forEach(id => { $('#' + id).value = ''; });
     $('#admProxy').value = lsGet('chitra.proxy') || ''; $('#admPass').value = ''; $('#admRemember').checked = !!(await C.kv.get('vaultkey').catch(() => null));
     const have = n => (KEYS && KEYS[n]) || (st === 'plain' && (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}')[n]; } catch { return ''; } })());
-    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash']].forEach(([id, n]) => { $('#' + id).placeholder = have(n) ? 'saved - leave empty to keep' : 'paste key'; });
+    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash'], ['admComfyToken', 'comfyToken']].forEach(([id, n]) => { $('#' + id).placeholder = have(n) ? 'saved - leave empty to keep' : 'paste key'; });
+    $('#admComfyUrl').value = (KEYS && KEYS.comfyUrl) || '';
     const c = stockConfig(); $('#admStatus').textContent = (st === 'plain' ? 'Your keys are stored UNENCRYPTED in this browser - choose a passphrase and press Save to lock them. ' : st === 'open' || st === 'locked' ? 'Keys are encrypted on this device. ' : 'No keys saved yet. ') + 'Active: ' + ([c.proxy && 'proxy', c.pixabay && 'Pixabay', c.pexels && 'Pexels', c.unsplash && 'Unsplash'].filter(Boolean).join(', ') || 'none (keyless fallback)');
     $('#adminModal').hidden = false;
   }
   $('#admSave').onclick = async () => {
     const prev = KEYS || (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}'); } catch { return {}; } })(), keys = { ...prev };
-    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash']].forEach(([id, n]) => { const v = $('#' + id).value.trim(); if (v) keys[n] = v; });
+    [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash'], ['admComfyToken', 'comfyToken']].forEach(([id, n]) => { const v = $('#' + id).value.trim(); if (v) keys[n] = v; });
+    { const cu = $('#admComfyUrl').value.trim(); if (cu) keys.comfyUrl = cu; else delete keys.comfyUrl; }
     try { localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
     if (Object.keys(keys).length) {
       const pass = $('#admPass').value; if (pass.length < 6) { $('#admStatus').textContent = 'Choose a passphrase of at least 6 characters to lock your keys.'; return; }
@@ -439,24 +441,56 @@
   let aiStyle = 4;
   $('#aiStyles').innerHTML = AI_STYLES.map((s, i) => `<button type="button" class="chip${i === aiStyle ? ' on' : ''}" data-ai="${i}">${s[0]}</button>`).join('');
   $$('[data-ai]').forEach(b => b.onclick = () => { aiStyle = +b.dataset.ai; $$('[data-ai]').forEach(x => x.classList.toggle('on', x === b)); });
-  const aiHist = [];
+  /* ---- owner-only local AI: your own ComfyUI (Z-Image Turbo). URL + token live in the encrypted key vault, never in the code. Food / drink prompts always use the cloud generator instead. ---- */
+  const FOOD_RE = /\b(food|foods|pizza|burger|fries|pasta|noodle|noodles|ramen|sushi|taco|tacos|burrito|sandwich|salad|soup|curry|biryani|rice|bread|cake|cupcake|cookie|biscuit|donut|doughnut|pastry|dessert|chocolate|candy|sweet|sweets|ice ?cream|fruit|fruits|apple|banana|mango|berry|strawberry|vegetable|vegetables|meat|steak|chicken|fish|egg|eggs|cheese|breakfast|lunch|dinner|snack|meal|dish|plate|bowl of|coffee|tea|milkshake|smoothie|juice|cocktail|beer|wine|drink|drinks|beverage|edible|cuisine|recipe|bbq|barbecue|grill|kebab|pie|waffle|pancake|honey|jam|butter|bakery|restaurant menu)\b/i;
+  const comfy = {
+    cfg() { const k = KEYS || {}; return { url: String(k.comfyUrl || '').replace(/\/$/, ''), token: k.comfyToken || '' }; },
+    available() { return !!this.cfg().url; },
+    async generate(prompt, { w = 1024, h = 1024, seed = Math.floor(Math.random() * 1e15), onQueued } = {}) {
+      const { url, token } = this.cfg(), H = { 'content-type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) };
+      const wf = await (await fetch('data/comfy-zimage.json')).json();
+      wf['57:27'].inputs.text = prompt; wf['57:3'].inputs.seed = seed; wf['57:13'].inputs.width = w; wf['57:13'].inputs.height = h; wf['9'].inputs.filename_prefix = 'chitra';
+      const r = await fetch(`${url}/prompt`, { method: 'POST', headers: H, body: JSON.stringify({ prompt: wf, client_id: 'chitra-' + Math.random().toString(36).slice(2) }) }); if (!r.ok) throw new Error('ComfyUI ' + r.status);
+      const { prompt_id } = await r.json(); onQueued && onQueued();
+      for (let i = 0; i < 240; i++) { // up to ~4 minutes
+        await new Promise(res => setTimeout(res, 1000)); const hr = await fetch(`${url}/history/${prompt_id}`, { headers: H }); if (!hr.ok) continue; const hj = await hr.json(), out = hj[prompt_id]; if (!out) continue;
+        const im = Object.values(out.outputs || {}).flatMap(o => o.images || [])[0]; if (!im) throw new Error('ComfyUI returned no image');
+        return (await fetch(`${url}/view?filename=${enc(im.filename)}&subfolder=${enc(im.subfolder || '')}&type=${enc(im.type || 'output')}`, { headers: H })).blob();
+      }
+      throw new Error('ComfyUI timed out');
+    },
+  };
+  C.localAI = { comfy, isFood: t => FOOD_RE.test(t) };
+
+  /* ---- AI Art: 3 variations per prompt, kept in the left panel. Nothing goes on the canvas until the user clicks one. ---- */
+  const VARIANTS = ['', ', alternative composition, different angle', ', close-up detail, fresh colour palette'];
+  let aiHist = [];
+  (async () => { try { const h = await C.kv.get('aihist'); if (Array.isArray(h)) { aiHist = h; renderAiGrid(); } } catch { } })();
+  const saveAiHist = () => { try { C.kv.set('aihist', aiHist.slice(0, 18)); } catch { } };
+  async function cloudImage(prompt, w, h) {
+    const url = `https://image.pollinations.ai/prompt/${enc(prompt)}?width=${w}&height=${h}&nologo=true&model=flux&seed=${Math.floor(Math.random() * 1e6)}`;
+    for (let t = 0; t < 3; t++) { const r = await fetch(url + '&t=' + t); if (r.ok) return r.blob(); await new Promise(res => setTimeout(res, 2500 * (t + 1))); } throw new Error('AI busy');
+  }
   $('#aiGo').onclick = async () => {
     const prompt = $('#aiPrompt').value.trim(); if (!prompt) return toast('Describe your image first', '✍️');
-    const [w, h] = $('#aiShape').value.split('x'), job = busy('Generating your image… (can take ~20s)');
-    try {
-      const url = `https://image.pollinations.ai/prompt/${enc(prompt + ', ' + AI_STYLES[aiStyle][1])}?width=${w}&height=${h}&nologo=true&model=flux&seed=${Math.floor(Math.random() * 1e6)}`;
-      const r = await fetch(url); if (!r.ok) throw new Error('AI ' + r.status);
-      const data = await blobToDataURL(await r.blob()); job.done();
-      aiHist.unshift(data); aiHist.length = Math.min(aiHist.length, 8); renderAiGrid();
-      fabric.Image.fromURL(data, async img => {
-        const o = addToCanvas(img, 'Generated!'); confetti(innerWidth / 2, innerHeight / 3, 70);
-        if ($('#aiCut').checked) await removeBg(o);
-      });
-    } catch (e) { console.warn(e); job.done(); toast('The free AI service is busy or offline — try again', '⚠️'); }
+    if (vault.state() === 'locked') await vault.ensure();
+    const [w, h] = $('#aiShape').value.split('x').map(Number), style = AI_STYLES[aiStyle][1], food = FOOD_RE.test(prompt), local = comfy.available() && !food;
+    const ids = [0, 1, 2].map(i => 'p' + Date.now() + i); ids.forEach(id => aiHist.unshift({ id, pending: true })); renderAiGrid();
+    const btn = $('#aiGo'); btn.disabled = true;
+    if (comfy.available() && food) toast('Food prompts use the cloud generator (your local model is skipped for food)', 'ℹ️');
+    const one = async (i, id) => {
+      const full = prompt + VARIANTS[i] + ', ' + style;
+      try { const blob = local ? await comfy.generate(full, { w, h }) : await cloudImage(full, w, h); const data = await blobToDataURL(blob), slot = aiHist.find(x => x.id === id); if (slot) { slot.pending = false; slot.data = data; slot.prompt = prompt; } }
+      catch (e) { console.warn(e); const k = aiHist.findIndex(x => x.id === id); if (k >= 0) aiHist[k] = { id, failed: true }; }
+      renderAiGrid();
+    };
+    if (local) await Promise.all(ids.map((id, i) => one(i, id))); else for (let i = 0; i < 3; i++) await one(i, ids[i]); // the free cloud service allows one at a time
+    btn.disabled = false; aiHist = aiHist.filter(x => !x.failed || ids.includes(x.id)); if (!aiHist.some(x => ids.includes(x.id) && x.data)) toast('The generator is busy or offline — try again', '⚠️'); else toast('Pick the one you like — click it to add to your design', '');
+    aiHist = aiHist.filter(x => x.pending || x.data || x.failed).slice(0, 24); saveAiHist(); renderAiGrid();
   };
   function renderAiGrid() {
-    $('#aiGrid').innerHTML = aiHist.map((d, i) => `<button class="photo-card" data-aih="${i}"><img src="${d}" alt=""></button>`).join('');
-    $$('[data-aih]').forEach(b => b.onclick = () => fabric.Image.fromURL(aiHist[b.dataset.aih], img => addToCanvas(img, 'Added')));
+    $('#aiGrid').innerHTML = aiHist.map((x, i) => x.pending ? `<div class="photo-card ai-wait"><i></i><span>Creating…</span></div>` : x.failed ? `<div class="photo-card ai-fail"><span>Failed</span></div>` : `<button class="photo-card" data-aih="${i}" title="Click to add to your design"><img src="${x.data}" alt=""><em class="ai-add">+ Add</em></button>`).join('');
+    $$('[data-aih]').forEach(b => b.onclick = () => { const x = aiHist[b.dataset.aih]; fabric.Image.fromURL(x.data, async img => { const o = addToCanvas(img, 'Added'); if ($('#aiCut').checked) await removeBg(o); }); });
   }
 
   /* ================= photoreal mockups ================= */

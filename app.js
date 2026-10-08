@@ -104,7 +104,7 @@
   const canvas = new fabric.Canvas('c', { preserveObjectStacking: true, backgroundColor: '' });
   fabric.Object.prototype.set({
     transparentCorners: false, cornerColor: '#ffffff', cornerStrokeColor: '#6d4aff', borderColor: '#6d4aff',
-    cornerStyle: 'circle', cornerSize: 13, padding: 3, borderScaleFactor: 2.5,
+    cornerStyle: 'circle', cornerSize: 11, padding: 2, borderScaleFactor: 1.25,
   });
   const u = () => Math.min(W, H);
   // Canva-style: ONE click/tap selects & moves; DOUBLE click/tap edits (handled in editObject below).
@@ -154,7 +154,9 @@
   const shrink = j => { walkObjs(j.objects, o => { if (typeof o.src === 'string' && o.src.length > 4000) { let id = imgIds.get(o.src); if (id === undefined) { id = ++imgSeq; imgIds.set(o.src, id); imgStore.set(id, o.src); } o.src = TOK + id; } }); return j; };
   const expand = str => str.replace(/chitra-img:(\d+)/g, (m, id) => imgStore.get(+id) ?? m);
   const parseSnap = json => { const d = JSON.parse(json); walkObjs(d.canvas.objects, o => { if (typeof o.src === 'string' && o.src.startsWith(TOK)) o.src = imgStore.get(+o.src.slice(TOK.length)) || o.src; }); return d; };
-  const snapshot = () => JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: shrink(canvas.toJSON(EXTRA)) });
+  let themedDoc = false; // true only for structured template documents (presentation, menu, invitation, certificate...): extra pages then follow the template's look
+  const THEMED_CATS = new Set(['slides', 'menu', 'invite', 'cert', 'card', 'flyer']);
+  const snapshot = () => JSON.stringify({ W, H, dpi: DPI, themed: themedDoc || undefined, name: $('#projectName').value, canvas: shrink(canvas.toJSON(EXTRA)) });
   let commitT = null;
   function doCommit() {
     commitT = null; if (history.busy) return;
@@ -434,7 +436,7 @@
   const T = (text, o) => new fabric.Textbox(text, { fontFamily: 'Fredoka', textAlign: 'center', originX: 'center', originY: 'center', width: W * 0.8, ...o });
   const outline = (c = '#14110f') => ({ stroke: c, strokeWidth: u() * 0.012, paintFirst: 'stroke', strokeLineJoin: 'round' });
   const TEMPLATES = {
-    blank: () => clearAll(''),
+    blank: () => clearAll(B.backgroundColor || ''),
     slogan: () => {
       clearAll('');
       B.add(T('GOOD', { left: W / 2, top: H * 0.3, fontFamily: 'Bangers', fontSize: u() * 0.3, fill: '#ffd23f', ...outline(), shadow: shadow('#14110f', 0.014) }));
@@ -746,10 +748,10 @@
   function placeFloat() {
     const tb = $('#floatTb'), o = active();
     if (!o) { tb.hidden = true; return; }
-    const r = o.getBoundingRect(), above = r.top > 64;
+    const r = o.getBoundingRect(), above = r.top > 110;
     tb.hidden = false;
     tb.style.left = r.left + r.width / 2 + 'px';
-    tb.style.top = (above ? r.top - 12 : r.top + r.height + 12) + 'px';
+    tb.style.top = (above ? r.top - (o.locked || isCoarse ? 14 : 58) : r.top + r.height + 14) + 'px'; // sits above the rotate handle so it never hides it
     tb.style.transform = `translate(-50%,${above ? '-100%' : '0'})`;
     tb.style.setProperty('--ft-t', tb.style.transform);
     $('[data-ft=lock]').innerHTML = ico(o.locked ? 'lock-open' : 'lock', 18);
@@ -762,14 +764,24 @@
   const LAYER_NAMES = { rect: 'Box', circle: 'Circle', triangle: 'Triangle', polygon: 'Star', path: 'Heart', line: 'Line', group: 'Group', image: 'Image' };
   const layerName = o => isArch(o) ? o.archData.text : isText(o) ? (o.text || '').replace(/\n/g, ' ').slice(0, 26) : LAYER_NAMES[o.type] || o.type;
   const layerIcon = o => ico(o.slot ? 'printer' : isArch(o) ? 'spline' : isText(o) ? 'type' : isImage(o) ? 'image' : o.isIcon ? 'sparkle' : 'shapes', 16);
+  const thumbCache = new WeakMap();
+  function layerThumb(o) { // tiny preview of the layer itself, so images / shapes can be told apart at a glance
+    if (isText(o) || isArch(o)) return null;
+    const key = [o.width, o.height, o.scaleX, o.scaleY, o.angle, o.fill && o.fill.type ? 'g' : o.fill, o.cropX, o.cropY, o.flipX, o.opacity, isImage(o) && o._element ? (o._element.src || '').slice(-24) + (o.filters || []).length : ''].join('|');
+    const hit = thumbCache.get(o); if (hit && hit.key === key) return hit.url;
+    let url = null; try { const m = 40 / Math.max(o.getScaledWidth(), o.getScaledHeight(), 1); url = o.toDataURL({ format: 'png', multiplier: Math.min(m * 2, 4), enableRetinaScaling: false }); } catch { }
+    thumbCache.set(o, { key, url }); return url;
+  }
   let dragIdx = null;
   function renderLayers() {
     const ul = $('#layers'); if (!ul || $('#tab-layers').hidden) return;
     const objs = canvas.getObjects(); ul.innerHTML = ''; $('#layersEmpty').hidden = objs.length > 0;
+    let imgNo = 0; const imgIdx = new Map(); objs.forEach(o => { if (isImage(o)) imgIdx.set(o, ++imgNo); });
     [...objs].reverse().forEach((o, li) => {
       const row = document.createElement('li'); row.draggable = true; row.className = o === active() ? 'sel' : '';
-      row.innerHTML = `<span class="ico">${layerIcon(o)}</span><span class="nm"></span><button data-eye title="Show / hide">${ico(o.visible === false ? 'eye-off' : 'eye', 16)}</button><button data-lk title="Lock">${ico(o.locked ? 'lock' : 'lock-open', 16)}</button>`;
-      $('.nm', row).textContent = layerName(o);
+      const th = li < 40 ? layerThumb(o) : null;
+      row.innerHTML = `<span class="ico${th ? ' th' : ''}">${th ? `<img alt="" src="${th}">` : layerIcon(o)}</span><span class="nm"></span><button data-eye title="Show / hide">${ico(o.visible === false ? 'eye-off' : 'eye', 16)}</button><button data-lk title="Lock">${ico(o.locked ? 'lock' : 'lock-open', 16)}</button>`;
+      $('.nm', row).textContent = isImage(o) ? (o.mock ? `Mockup · ${o.mock.kind}` : o.credit && o.credit.title ? `Photo · ${o.credit.title}` : `Image ${imgIdx.get(o)}`) : layerName(o);
       row.onclick = e => {
         if (e.target.closest('[data-eye]')) { o.visible = o.visible === false; if (!o.visible) canvas.discardActiveObject(); canvas.requestRenderAll(); commit(); return; }
         if (e.target.closest('[data-lk]')) { canvas.setActiveObject(o); toggleLock(); return; }
@@ -1088,7 +1100,7 @@
     { n: 'Enhance / upscale photo 2×', i: 'search', k: 'quality sharpen', run: () => chitra.enhance() },
     { n: 'Group selected', i: 'group', k: 'ctrl g', run: groupSel },
     { n: 'Ungroup', i: 'ungroup', k: 'ctrl shift g', run: ungroupSel },
-    ...PAGE_KINDS.map(([k, n]) => ({ n: 'Add page: ' + n, i: 'plus', k: 'page slide new themed', run: () => addPage(false, k) })),
+    ...PAGE_KINDS.map(([k, n]) => ({ n: 'Add page: ' + n, i: 'plus', k: 'page slide new themed', run: () => addPage(false, k, true) })),
     { n: 'Pack designs onto sheet', i: 'ungroup', k: 'gang sheet', run: pack },
     { n: 'Toggle print guides', i: 'ruler', k: 'margin', run: () => { $('#showGuides').click(); } },
     { n: 'Toggle transparent background', i: 'blend', k: 'bg', run: () => { $('#transparent').click(); } },
@@ -1154,13 +1166,14 @@
     if (kind === 'blank') return [];
     return [Hd('Add a heading', { left: m, top: H * 0.1, width: W - 2 * m, fontSize: k * 0.075 }), bar(m, H * 0.1 + k * 0.1, k * 0.14), T('Write your main point in a sentence or two.\n• First supporting idea\n• Second supporting idea\n• Third supporting idea', { left: m, top: H * 0.34, width: W - 2 * m, fontSize: k * 0.034 })];
   }
-  function addPage(dup, kind = 'content') {
+  function addPage(dup, kind = 'content', explicit = false) {
     savePage();
     if (dup) { pages.splice(cur + 1, 0, { json: pages[cur].json, thumb: pages[cur].thumb, hist: null }); loadPage(cur + 1); return toast('Page duplicated', '📄'); }
-    const th = themeOf(), blank = JSON.stringify({ W, H, dpi: DPI, name: $('#projectName').value, canvas: { version: fabric.version, objects: [], background: th.bg } });
+    const themed = themedDoc || kind !== 'content' || explicit, th = themed ? themeOf() : null, bgBlank = canvas.backgroundColor === '' ? '' : '#ffffff'; // a normal design gets a clean blank page
+    const blank = JSON.stringify({ W, H, dpi: DPI, themed: themedDoc || undefined, name: $('#projectName').value, canvas: { version: fabric.version, objects: [], background: th ? th.bg : bgBlank } });
     pages.splice(cur + 1, 0, { json: blank, thumb: null, hist: null });
-    loadPage(cur + 1, () => { history.busy = true; themedObjects(kind, th).forEach(o => canvas.add(o)); history.busy = false; canvas.discardActiveObject(); canvas.renderAll(); commit(); renderPages(); });
-    toast('Page added in your design’s style', '📄');
+    loadPage(cur + 1, () => { history.busy = true; if (th) themedObjects(kind, th).forEach(o => canvas.add(o)); history.busy = false; canvas.discardActiveObject(); canvas.renderAll(); commit(); renderPages(); });
+    toast(th ? 'Page added in your design’s style' : 'Blank page added', '📄');
   }
   function deletePage() {
     if (pages.length < 2) return toast('A design needs at least one page', '☝️');
@@ -1180,7 +1193,7 @@
     e.stopPropagation(); $('#pgMenu')?.remove(); const m = document.createElement('div'), r = e.currentTarget.getBoundingClientRect(); m.id = 'pgMenu'; m.className = 'pg-menu';
     m.style.cssText = `left:${Math.max(8, Math.min(r.left, innerWidth - 220))}px;bottom:${innerHeight - r.top + 6}px`;
     m.innerHTML = '<small>New page in your style</small>' + PAGE_KINDS.map(([k, n]) => `<button data-k="${k}">${n}</button>`).join('');
-    document.body.appendChild(m); m.onclick = ev => { const b = ev.target.closest('[data-k]'); if (b) { addPage(false, b.dataset.k); m.remove(); } };
+    document.body.appendChild(m); m.onclick = ev => { const b = ev.target.closest('[data-k]'); if (b) { addPage(false, b.dataset.k, true); m.remove(); } };
     setTimeout(() => document.addEventListener('click', () => m.remove(), { once: true }), 0);
   };
   $('#pgAdd').onclick = e => addPage(false, e.shiftKey ? 'blank' : 'content'); $('#pgDup').onclick = () => addPage(true); $('#pgDel').onclick = deletePage;
@@ -1366,7 +1379,7 @@
   const schedSave = () => { clearTimeout(saveT); if (projectId) { document.dispatchEvent(new Event('chitra:dirty')); saveT = setTimeout(saveNow, 1800); } };
   function loadProject(d) {
     pages.length = 0;
-    d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); if (d.name) $('#projectName').value = d.name;
+    d.pages.forEach(j => pages.push({ json: j, thumb: null, hist: null })); try { themedDoc = !!JSON.parse(d.pages[0]).themed; } catch { themedDoc = false; } if (d.name) $('#projectName').value = d.name;
     loadPage(Math.min(d.cur || 0, pages.length - 1));
   }
   /* ---- Home <-> editor ---- */
@@ -1384,10 +1397,10 @@
   }
   // Start a brand-new design (blank, from a template, or from a saved print layout)
   async function newDocument({ product: p, w, h, dpi, guide: g, template, layoutJson, name } = {}) {
-    await saveNow(); flushCommit(); projectId = uid(); lastCard = { id: null, url: null };
+    await saveNow(); flushCommit(); projectId = uid(); lastCard = { id: null, url: null }; themedDoc = !!(template && TEMPLATE_META[template] && THEMED_CATS.has(TEMPLATE_META[template].cat));
     pages.length = 0; pages.push({ json: null, thumb: null, hist: null }); cur = 0;
     $('#projectName').value = name || (p ? `${p.name} design` : 'Untitled design');
-    history.busy = true; canvas.clear(); history.busy = false; canvas.backgroundColor = '';
+    history.busy = true; canvas.clear(); history.busy = false; canvas.backgroundColor = p && /transfer|dtf|sticker|label/i.test(`${p.g || ''} ${p.name || ''}`) ? '' : '#ffffff'; // paper / screen / mug sizes start pure white; DTF transfers stay transparent
     setSize(p?.w ?? w, p?.h ?? h, false, g ?? p?.guide ?? 'none', p?.dpi ?? dpi ?? 300, p);
     showEditor();
     if (layoutJson) await new Promise(res => { const d = parseSnap(layoutJson); history.busy = true; canvas.loadFromJSON(d.canvas, () => { history.busy = false; res(); }); });
@@ -1464,7 +1477,7 @@
     canvas.requestRenderAll();
   }) : Promise.resolve();
   const api = {
-    canvas, undo, redo, addText, addPage, themeOf, PAGE_KINDS, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
+    canvas, undo, redo, addText, addPage, themeOf, PAGE_KINDS, setThemedDoc: v => { themedDoc = !!v; }, isThemedCat: c => THEMED_CATS.has(c), get themedDoc() { return themedDoc; }, TEMPLATES, setSize, pack, surprise, exportFile, applyPalette, PALETTES,
     addCommand: (n, run) => extraCmds.push([n, run]),
     kit: { get W() { return W; }, get H() { return H; }, get B() { return B; }, u, clearAll, shadow }, ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },

@@ -6,7 +6,7 @@
   const SLOT_PRESETS = [
     ['11 oz mug wrap', 8.25, 3.5, 'mug'], ['15 oz mug wrap', 9, 3.75, 'mug'], ['20 oz tumbler wrap', 9.3, 8.2, 'tumbler'], ['T-shirt front', 11, 13, 'shirt'], ['T-shirt back', 12, 16, 'shirt'],
     ['Left chest', 4, 4, 'shirt'], ['Pocket logo', 3.5, 3.5, 'shirt'], ['Coaster', 4, 4, 'plain'], ['Mouse pad', 9.5, 7.9, 'plain'], ['Phone case', 3, 6, 'plain'],
-    ['Sticker 2.5 in', 2.5, 2.5, 'plain'], ['Cap front', 4, 2, 'plain'], ['Sleeve', 3, 10, 'plain'], ['Custom size', 5, 5, 'plain'],
+    ['Sticker 2.5 in', 2.5, 2.5, 'sticker'], ['Keychain 2.2 in', 2.2, 2.2, 'keychain'], ['Cap front', 4, 2, 'plain'], ['Sleeve', 3, 10, 'plain'], ['Custom size', 5, 5, 'plain'],
   ];
   // sheet px @300 DPI, slots in inches
   const SHEETS = { A4: [2480, 3508], A3: [3508, 4961] };
@@ -27,8 +27,28 @@
     { id: 'chest-a4-4', name: 'Left chest · A4 (4 up)', icon: '📍', sheet: 'A4', slots: grid('A4', 4, 4, 2, 2, 'Left chest', 'shirt') },
     { id: 'phone-a4-2', name: 'Phone case · A4 (2 up)', icon: '📱', sheet: 'A4', slots: grid('A4', 3, 6, 2, 1, 'Phone case', 'plain') },
     { id: 'mousepad-a3-2', name: 'Mouse pad · A3 (2 up)', icon: '🖱️', sheet: 'A3', slots: grid('A3', 9.5, 7.9, 1, 2, 'Mouse pad', 'plain') },
-    { id: 'sticker-a4-9', name: 'Stickers 2.5 in · A4 (9 up)', icon: '🏷️', sheet: 'A4', slots: grid('A4', 2.5, 2.5, 3, 3, 'Sticker', 'plain') },
+    { id: 'sticker-a4-9', name: 'Stickers 2.5 in · A4 (9 up)', icon: '🏷️', sheet: 'A4', slots: grid('A4', 2.5, 2.5, 3, 3, 'Sticker', 'sticker') },
+    { id: 'key-a4-12', name: 'Keychains 2.2 in · A4 (12 up)', icon: '🔑', sheet: 'A4', slots: grid('A4', 2.2, 2.2, 3, 4, 'Keychain', 'keychain') },
+    { id: 'sticker-a3-24', name: 'Stickers 2.5 in · A3 (24 up)', icon: '🏷️', sheet: 'A3', slots: grid('A3', 2.5, 2.5, 4, 6, 'Sticker', 'sticker', 0.2) },
   ];
+
+
+  /* ---- product markings drawn inside every print area (works for saved + reloaded layouts too: it hooks Rect rendering) ---- */
+  const rectRender = fabric.Rect.prototype._render;
+  fabric.Rect.prototype._render = function (ctx) {
+    rectRender.call(this, ctx); if (!this.slot || this.__plain) return;
+    const { label, kind, w: iw, h: ih } = this.slot, W = this.width, H = this.height, u = Math.min(W, H), fs = Math.max(18, Math.min(u * 0.075, 54)), ink = 'rgba(109,74,255,.85)', soft = 'rgba(109,74,255,.45)';
+    ctx.save(); ctx.lineWidth = Math.max(1.5, u * 0.004); ctx.strokeStyle = soft; ctx.fillStyle = ink; ctx.setLineDash([]);
+    if (kind === 'mug') { [-1, 1].forEach(sd => { ctx.beginPath(); ctx.setLineDash([u * 0.03, u * 0.03]); ctx.moveTo(sd * W * 0.44, -H / 2 + H * 0.08); ctx.lineTo(sd * W * 0.44, H / 2 - H * 0.08); ctx.stroke(); }); ctx.setLineDash([]); ctx.font = `600 ${fs * 0.7}px "Plus Jakarta Sans",system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('◂ handle side', -W * 0.44 + W * 0.075, H / 2 - fs * 0.35); ctx.fillText('handle side ▸', W * 0.44 - W * 0.075, H / 2 - fs * 0.35); ctx.beginPath(); ctx.moveTo(-u * 0.04, -H / 2 + 2); ctx.lineTo(u * 0.04, -H / 2 + 2); ctx.lineTo(0, -H / 2 + u * 0.07); ctx.closePath(); ctx.fill(); }
+    else if (kind === 'tumbler') { ctx.beginPath(); ctx.setLineDash([u * 0.03, u * 0.03]); ctx.ellipse(0, H / 2 - H * 0.04, W * 0.5, H * 0.045, 0, 0, Math.PI); ctx.stroke(); ctx.beginPath(); ctx.ellipse(0, -H / 2 + H * 0.04, W * 0.5, H * 0.045, 0, Math.PI, Math.PI * 2); ctx.stroke(); }
+    else if (kind === 'shirt') { ctx.beginPath(); ctx.arc(0, -H / 2, u * 0.09, 0, Math.PI); ctx.stroke(); ctx.font = `600 ${fs * 0.7}px "Plus Jakarta Sans",system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('collar', 0, -H / 2 + u * 0.1); ctx.beginPath(); ctx.moveTo(0, -H / 2 + u * 0.16); ctx.lineTo(0, H / 2 - u * 0.04); ctx.setLineDash([u * 0.02, u * 0.04]); ctx.stroke(); }
+    else if (kind === 'keychain') { ctx.beginPath(); ctx.lineWidth = Math.max(2, u * 0.012); ctx.strokeStyle = ink; ctx.arc(0, -H / 2 + u * 0.14, u * 0.055, 0, 7); ctx.stroke(); }
+    ctx.restore();
+    // label + size, top-left, never inside the artwork area of the picture (the photo covers it once placed)
+    ctx.save(); ctx.font = `700 ${fs}px "Plus Jakarta Sans",system-ui,sans-serif`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = ink; const sz = `${+iw.toFixed(2)}×${+ih.toFixed(2)} in`; ctx.fillText(label, -W / 2 + fs * 0.45, -H / 2 + fs * 0.4, W - fs); ctx.font = `600 ${fs * 0.72}px "Plus Jakarta Sans",system-ui,sans-serif`; ctx.fillStyle = soft; ctx.fillText(sz, -W / 2 + fs * 0.45, -H / 2 + fs * 1.55, W - fs); ctx.restore();
+    // crop marks just outside the corners
+    ctx.save(); ctx.strokeStyle = 'rgba(0,0,0,.55)'; ctx.lineWidth = Math.max(1, u * 0.002); const g = u * 0.02, L = u * 0.05; [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => { ctx.beginPath(); ctx.moveTo(sx * (W / 2 + g), sy * H / 2); ctx.lineTo(sx * (W / 2 + g + L), sy * H / 2); ctx.moveTo(sx * W / 2, sy * (H / 2 + g)); ctx.lineTo(sx * W / 2, sy * (H / 2 + g + L)); ctx.stroke(); }); ctx.restore();
+  };
 
   /* ================= slots ================= */
   const slots = () => canvas.getObjects().filter(o => o.slot).sort((a, b) => a.top - b.top || a.left - b.left); // reading order
@@ -38,8 +58,8 @@
   function makeSlot({ label, kind = 'plain', w, h, x, y }, dpi = C.dpi, lock = $('#slotLock')?.checked !== false) {
     const k = Math.min(C.W, C.H);
     const r = new fabric.Rect({
-      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(109,74,255,.08)', stroke: '#6d4aff', strokeWidth: Math.max(2, k * 0.0035), strokeUniform: true,
-      strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false,
+      left: x * dpi, top: y * dpi, width: w * dpi, height: h * dpi, fill: 'rgba(109,74,255,.05)', stroke: '#6d4aff', strokeWidth: Math.max(2, k * 0.0025), strokeUniform: true,
+      strokeDashArray: [k * 0.012, k * 0.008], objectCaching: false, rx: kind === 'sticker' ? Math.min(w, h) * dpi * 0.12 : kind === 'keychain' ? Math.min(w, h) * dpi * 0.2 : 0, ry: kind === 'sticker' ? Math.min(w, h) * dpi * 0.12 : kind === 'keychain' ? Math.min(w, h) * dpi * 0.2 : 0,
     });
     r.slot = { id: C.uid(), label, kind, w, h };
     applyLock(r, lock); return r;
@@ -151,7 +171,7 @@
     const [w, h] = SHEETS[def.sheet];
     if (asNew) { await C.newDocument({ w, h, dpi: 300, guide: 'paper', template: 'blank', name: def.name }); buildLayout(def); canvas.renderAll(); C.commit(); toast('Layout ready — drop your photos in', def.icon); return; }
     if (canvas.getObjects().length && !confirm('Replace this page with the layout?')) return;
-    C.history.busy = true; canvas.clear(); canvas.backgroundColor = ''; C.history.busy = false; C.setSize(w, h, true, 'paper', 300); buildLayout(def); C.commit();
+    C.history.busy = true; canvas.clear(); canvas.backgroundColor = '#ffffff'; C.history.busy = false; C.setSize(w, h, true, 'paper', 300); buildLayout(def); C.commit();
     toast('Layout applied — drop your photos in', def.icon);
   }
   // thumbnail of a layout (sheet with labelled print areas)

@@ -137,6 +137,24 @@ module.exports = [
     await fr.evaluate(() => { document.getElementById('cxAdd').click(); }); await p.waitForTimeout(1500);
     ok('Add to my design places the picture on the page and closes the studio', await p.evaluate(n => chitra.canvas.getObjects().length > n && document.getElementById('qrStudio').hidden, n0), 'qr lib may be offline in tests');
   } },
+  { name: 'AI art gallery, layers, blank pages, white canvas', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+    await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('A3'), template: 'blank' })); await p.waitForTimeout(600);
+    ok('paper sizes start pure white', await p.evaluate(() => chitra.canvas.backgroundColor === '#ffffff'), await p.evaluate(() => chitra.canvas.backgroundColor));
+    await p.evaluate(() => { document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiCut').checked = false; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(3500);
+    ok('AI makes 3 variations and shows them in the left panel', await p.locator('#aiGrid [data-aih]').count() === 3, await p.locator('#aiGrid [data-aih]').count());
+    ok('nothing is added to the canvas automatically', await p.evaluate(() => chitra.canvas.getObjects().length === 0));
+    await p.evaluate(() => document.querySelector('#aiGrid [data-aih]').click()); await p.waitForTimeout(700);
+    ok('clicking a result adds it to the canvas', await p.evaluate(() => chitra.canvas.getObjects().length === 1));
+    await p.evaluate(() => document.querySelector('#aiGrid [data-aih]:nth-of-type(2)').click()); await p.waitForTimeout(700);
+    await p.evaluate(() => document.querySelector('[data-itab=layers]').click()); await p.waitForTimeout(300);
+    ok('layers show a thumbnail and numbered names', await p.evaluate(() => { const r = [...document.querySelectorAll('#layers li')]; return r.length === 2 && r.every(x => x.querySelector('.ico.th img')) && new Set(r.map(x => x.querySelector('.nm').textContent)).size === 2; }));
+    await p.evaluate(() => document.querySelector('[data-itab=design]').click());
+    await p.evaluate(() => chitra.addPage(false)); await p.waitForTimeout(900);
+    const pg = await p.evaluate(() => ({ n: chitra.canvas.getObjects().length, bg: chitra.canvas.backgroundColor, pages: chitra.pages.length }));
+    ok('Add page on a normal design gives a blank white page', pg.pages === 2 && pg.n === 0 && pg.bg === '#ffffff', JSON.stringify(pg));
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
@@ -183,20 +201,21 @@ module.exports = [
     const exp = await q.evaluate(async () => { const s = await chitra.kv.get('livecat'); return s.photos.filter(p => p.site === 'Unsplash').length; }); ok('unsplash photos present', exp > 20, exp);
     const [dl] = await Promise.all([q.waitForEvent('download', { timeout: 10000 }), q.evaluate(() => chitra.exportCatalog())]); ok('catalog export downloads photos.json', dl.suggestedFilename() === 'photos.json');
     ok('no page errors (resume/export)', errs.length === 0, errs.join('|')); await q.close(); } },
-  { name: 'corner drag crops a photo (does not resize it)', only: 'desktop', run: async (p, ok) => {
+  { name: 'photo handles: edges crop, corners resize', only: 'desktop', run: async (p, ok) => {
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('A4'), template: 'blank' })); await p.waitForTimeout(500);
     const url = await p.evaluate(() => { const c = document.createElement('canvas'); c.width = 800; c.height = 600; const x = c.getContext('2d'); const g = x.createLinearGradient(0, 0, 800, 600); g.addColorStop(0, '#f00'); g.addColorStop(1, '#00f'); x.fillStyle = g; x.fillRect(0, 0, 800, 600); return c.toDataURL(); });
     await p.evaluate(u => new Promise(r => fabric.Image.fromURL(u, i => { i.scaleToWidth(1200); chitra.place(i); r(); })), url); await p.waitForTimeout(300);
-    const info = () => p.evaluate(() => { const o = chitra.active(), c = chitra.canvas, b = c.upperCanvasEl.getBoundingClientRect(), pt = k => ({ x: b.left + o.oCoords[k].x, y: b.top + o.oCoords[k].y }); const br = o.getPointByOrigin('right', 'bottom'); return { sx: o.scaleX, sw: o.width, sh: o.height, cx: o.cropX || 0, cy: o.cropY || 0, tl: pt('tl'), br: pt('br'), mr: pt('mr'), brAbs: { x: br.x, y: br.y }, rs: o.oCoords.rs ? pt('rs') : null }; });
-    const a = await info(); await p.mouse.move(a.tl.x, a.tl.y); await p.mouse.down(); await p.mouse.move(a.tl.x + 30, a.tl.y + 20, { steps: 6 }); await p.mouse.move(a.tl.x + 60, a.tl.y + 40, { steps: 6 }); await p.mouse.up(); await p.waitForTimeout(200);
-    const b = await info(); ok('corner drag crops (scale unchanged, frame smaller, picture offset)', b.sx === a.sx && b.sw < a.sw && b.sh < a.sh && b.cx > 0 && b.cy > 0, JSON.stringify({ sx: [a.sx, b.sx], sw: [a.sw, b.sw], cx: b.cx }));
-    ok('opposite corner stays put', Math.abs(b.brAbs.x - a.brAbs.x) < 1.5 && Math.abs(b.brAbs.y - a.brAbs.y) < 1.5, JSON.stringify([a.brAbs, b.brAbs]));
-    const b2 = await info(); await p.mouse.move(b2.tl.x, b2.tl.y); await p.mouse.down(); await p.mouse.move(b2.tl.x - 200, b2.tl.y - 200, { steps: 8 }); await p.mouse.up(); const c2 = await info();
-    ok('dragging outward restores the hidden part, never beyond the original', c2.cx >= 0 && c2.cy >= 0 && c2.sw <= 800 + 0.01 && c2.sw > b2.sw, JSON.stringify({ cx: c2.cx, sw: c2.sw }));
+    const info = () => p.evaluate(() => { const o = chitra.active(), c = chitra.canvas, b = c.upperCanvasEl.getBoundingClientRect(), pt = k => ({ x: b.left + o.oCoords[k].x, y: b.top + o.oCoords[k].y }); const br = o.getPointByOrigin('right', 'bottom'); return { sx: o.scaleX, sw: o.width, sh: o.height, cx: o.cropX || 0, cy: o.cropY || 0, tl: pt('tl'), br: pt('br'), ml: pt('ml'), mr: pt('mr'), mt: pt('mt'), brAbs: { x: br.x, y: br.y }, rs: !!o.oCoords.rs, rotate: !!o.oCoords.mtr }; });
+    const a = await info(); ok('no separate round resize knob any more', !a.rs, JSON.stringify(a.rs));
+    await p.mouse.move(a.mt.x, a.mt.y); await p.mouse.down(); await p.mouse.move(a.mt.x, a.mt.y + 30, { steps: 6 }); await p.mouse.move(a.mt.x, a.mt.y + 60, { steps: 6 }); await p.mouse.up(); await p.waitForTimeout(200);
+    const b = await info(); ok('top-edge drag crops (scale unchanged, frame shorter, picture offset)', b.sx === a.sx && b.sh < a.sh && b.cy > 0 && b.sw === a.sw, JSON.stringify({ sx: [a.sx, b.sx], sh: [a.sh, b.sh], cy: b.cy }));
+    const b2 = await info(); await p.mouse.move(b2.mt.x, b2.mt.y); await p.mouse.down(); await p.mouse.move(b2.mt.x, b2.mt.y - 300, { steps: 8 }); await p.mouse.up(); const c2 = await info();
+    ok('dragging outward restores the hidden part, never beyond the original', c2.cy >= 0 && c2.sh <= 600 + 0.01 && c2.sh > b2.sh, JSON.stringify({ cy: c2.cy, sh: c2.sh }));
     await p.evaluate(() => { const o = chitra.active(); o.flipX = true; o.dirty = true; chitra.canvas.requestRenderAll(); o.setCoords(); }); const f1 = await info(); await p.mouse.move(f1.mr.x, f1.mr.y); await p.mouse.down(); await p.mouse.move(f1.mr.x - 80, f1.mr.y, { steps: 6 }); await p.mouse.up(); const f2 = await info();
     ok('crop works on a flipped photo', f2.sw < f1.sw && f2.sx === f1.sx, JSON.stringify([f1.sw, f2.sw]));
-    const r0 = await info(); await p.mouse.move(r0.rs.x, r0.rs.y); await p.mouse.down(); await p.mouse.move(r0.rs.x + 80, r0.rs.y + 80, { steps: 6 }); await p.mouse.up(); const r1 = await info();
-    ok('the round handle resizes (scale changes, crop kept)', r1.sx > r0.sx && Math.abs(r1.sw - r0.sw) < 0.01, JSON.stringify([r0.sx, r1.sx])); } },
+    const r0 = await info(); await p.mouse.move(r0.br.x, r0.br.y); await p.mouse.down(); await p.mouse.move(r0.br.x + 80, r0.br.y + 80, { steps: 6 }); await p.mouse.up(); const r1 = await info();
+    ok('corner drag resizes (scale changes, crop kept)', r1.sx > r0.sx && Math.abs(r1.sw - r0.sw) < 0.01, JSON.stringify([r0.sx, r1.sx]));
+    ok('rotate handle is still available', r1.rotate); } },
   { name: 'mockups: every product, scenes, sheet, shuffle', only: 'desktop', run: async (p, ok) => {
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'ig-5', name: 'Mock me' })); await p.waitForTimeout(1200);
     await p.evaluate(() => chitra.openMockup()); await p.waitForTimeout(500);

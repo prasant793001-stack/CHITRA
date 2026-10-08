@@ -1,5 +1,5 @@
 /* Chitra Studio – Canva-style photo handles: dragging a corner or edge CROPS the photo (the picture stays put, the frame changes).
-   A separate round handle just outside the bottom-right corner resizes. Shift + corner also resizes. */
+   Corners resize (aspect-locked), edge bars crop. Shift + edge also scales. */
 (() => {
   if (!window.fabric) return;
   const F = fabric, U = F.util, CU = F.controlsUtils, PURPLE = '#6d4aff';
@@ -31,28 +31,22 @@
   }
   const cursorFor = (corner) => (e, ctl, obj) => { const a = Math.round(((obj.angle % 360) + 360) % 360 / 45) % 8, map = { tl: 0, mt: 1, tr: 2, mr: 3, br: 4, mb: 5, bl: 6, ml: 7 }, cs = ['nwse-resize', 'ns-resize', 'nesw-resize', 'ew-resize']; return cs[(map[corner] + a) % 4]; };
 
-  function bracket(dx, dy) { // Canva-like corner bracket
+  function dot(ctx, left, top, style, obj) { // corner = resize: small white circle, hairline purple outline
+    ctx.save(); ctx.translate(left, top); ctx.rotate(U.degreesToRadians(obj.angle)); ctx.shadowColor = 'rgba(40,20,120,.25)'; ctx.shadowBlur = 3; ctx.fillStyle = '#fff'; ctx.strokeStyle = PURPLE; ctx.lineWidth = 1.25;
+    ctx.beginPath(); ctx.arc(0, 0, 5.5, 0, 7); ctx.fill(); ctx.shadowBlur = 0; ctx.stroke(); ctx.restore();
+  }
+  function bar(vertical) { // edge = crop: slim white pill
     return function (ctx, left, top, style, obj) {
-      ctx.save(); ctx.translate(left, top); ctx.rotate(U.degreesToRadians(obj.angle)); const s = 15;
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.shadowColor = 'rgba(40,20,120,.45)'; ctx.shadowBlur = 5; ctx.strokeStyle = '#fff'; ctx.lineWidth = 5.5;
-      ctx.beginPath(); ctx.moveTo(0, dy * s); ctx.lineTo(0, 0); ctx.lineTo(dx * s, 0); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.translate(left, top); ctx.rotate(U.degreesToRadians(obj.angle)); ctx.shadowColor = 'rgba(40,20,120,.3)'; ctx.shadowBlur = 3; ctx.fillStyle = '#fff'; ctx.strokeStyle = PURPLE; ctx.lineWidth = 1.25; const L = 20, T = 6;
+      ctx.beginPath(); (ctx.roundRect ? ctx.roundRect(vertical ? -T / 2 : -L / 2, vertical ? -L / 2 : -T / 2, vertical ? T : L, vertical ? L : T, 3) : ctx.rect(-L / 2, -T / 2, L, T)); ctx.fill(); ctx.shadowBlur = 0; ctx.stroke(); ctx.restore();
     };
   }
-  function bar(vertical) {
-    return function (ctx, left, top, style, obj) {
-      ctx.save(); ctx.translate(left, top); ctx.rotate(U.degreesToRadians(obj.angle)); ctx.shadowColor = 'rgba(40,20,120,.45)'; ctx.shadowBlur = 5; ctx.fillStyle = '#fff'; const L = 22, T = 6;
-      ctx.beginPath(); (ctx.roundRect ? ctx.roundRect(vertical ? -T / 2 : -L / 2, vertical ? -L / 2 : -T / 2, vertical ? T : L, vertical ? L : T, 3) : ctx.rect(-L / 2, -T / 2, L, T)); ctx.fill(); ctx.restore();
-    };
-  }
-  function resizeKnob(ctx, left, top, style, obj) {
-    ctx.save(); ctx.translate(left, top); ctx.rotate(U.degreesToRadians(obj.angle)); ctx.shadowColor = 'rgba(40,20,120,.4)'; ctx.shadowBlur = 6; ctx.fillStyle = PURPLE; ctx.beginPath(); ctx.arc(0, 0, 13, 0, 7); ctx.fill(); ctx.shadowBlur = 0;
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(-4.5, 4.5); ctx.lineTo(4.5, -4.5); ctx.moveTo(0.5, -4.5); ctx.lineTo(4.5, -4.5); ctx.lineTo(4.5, -0.5); ctx.moveTo(-0.5, 4.5); ctx.lineTo(-4.5, 4.5); ctx.lineTo(-4.5, 0.5); ctx.stroke(); ctx.restore();
-  }
-  const mk = (x, y, sides, name, render, extra = {}) => new F.Control({ x, y, actionName: 'crop', actionHandler: cropAction(sides), cursorStyleHandler: cursorFor(name), render, sizeX: 34, sizeY: 34, touchSizeX: 58, touchSizeY: 58, ...extra });
+  const resizeAction = CU.scalingEqually;
+  const mk = (x, y, sides, name, render, extra = {}) => new F.Control({ x, y, actionName: 'crop', actionHandler: cropAction(sides), cursorStyleHandler: cursorFor(name), render, sizeX: 18, sizeY: 18, touchSizeX: 58, touchSizeY: 58, ...extra });
   const c = Object.assign({}, F.Object.prototype.controls);
-  c.tl = mk(-0.5, -0.5, 'lt', 'tl', bracket(1, 1)); c.tr = mk(0.5, -0.5, 'rt', 'tr', bracket(-1, 1)); c.bl = mk(-0.5, 0.5, 'lb', 'bl', bracket(1, -1)); c.br = mk(0.5, 0.5, 'rb', 'br', bracket(-1, -1));
-  c.ml = mk(-0.5, 0, 'l', 'ml', bar(true), { sizeX: 24, sizeY: 44 }); c.mr = mk(0.5, 0, 'r', 'mr', bar(true), { sizeX: 24, sizeY: 44 });
-  c.mt = mk(0, -0.5, 't', 'mt', bar(false), { sizeX: 44, sizeY: 24 }); c.mb = mk(0, 0.5, 'b', 'mb', bar(false), { sizeX: 44, sizeY: 24 });
-  c.rs = new F.Control({ x: 0.5, y: 0.5, offsetX: 26, offsetY: 26, actionName: 'scale', actionHandler: CU.scalingEqually, cursorStyle: 'nwse-resize', render: resizeKnob, sizeX: 30, sizeY: 30, touchSizeX: 56, touchSizeY: 56 });
+  const corner = (x, y, name) => new F.Control({ x, y, actionName: 'scale', actionHandler: resizeAction, cursorStyleHandler: cursorFor(name), render: dot, sizeX: 18, sizeY: 18, touchSizeX: 52, touchSizeY: 52 });
+  c.tl = corner(-0.5, -0.5, 'tl'); c.tr = corner(0.5, -0.5, 'tr'); c.bl = corner(-0.5, 0.5, 'bl'); c.br = corner(0.5, 0.5, 'br');
+  c.ml = mk(-0.5, 0, 'l', 'ml', bar(true), { sizeX: 16, sizeY: 36 }); c.mr = mk(0.5, 0, 'r', 'mr', bar(true), { sizeX: 16, sizeY: 36 });
+  c.mt = mk(0, -0.5, 't', 'mt', bar(false), { sizeX: 36, sizeY: 16 }); c.mb = mk(0, 0.5, 'b', 'mb', bar(false), { sizeX: 36, sizeY: 16 });
   F.Image.prototype.controls = c;
 })();

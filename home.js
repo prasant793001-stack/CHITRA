@@ -210,7 +210,7 @@
     const p = C.productByName(m.p);
     const had = C.canvas.getObjects().filter(o => !o.slot).length;
     if (p.w !== C.W || p.h !== C.H) { C.canvas.discardActiveObject(); C.setSize(p.w, p.h, false, p.guide, p.dpi, p); } // a template always brings its own page size
-    C.loadTemplate(name);
+    C.loadTemplate(name); C.setThemedDoc(C.isThemedCat(m.cat) && (C.pages.length === 1)); // only structured templates (slides, menus, invitations…) make later pages follow the theme
     C.toast(`“${m.n}” applied`, '', had ? { label: 'Undo', fn: C.undo } : undefined);
   }
 
