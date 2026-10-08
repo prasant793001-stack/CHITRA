@@ -118,10 +118,17 @@ module.exports = [
   } },
   { name: 'premium graphics (Iconify)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#f5b800"/><circle cx="11" cy="13" r="2" fill="#333"/><circle cx="21" cy="13" r="2" fill="#333"/></svg>';
-    await ctx.route('https://api.iconify.design/**', r => { const u = r.request().url(); if (u.includes('/search')) return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons: ['fluent-emoji:pizza', 'noto:cat-face', 'circle-flags:in'], total: 3 }) }); r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
+    const answers = { cat: ['noto:cat-face', 'fluent-emoji:pizza'], dog: ['noto:dog', 'noto:birthday-cake'], in: ['circle-flags:in', 'circle-flags:in-ka'] }; // Iconify matches icon names, one word at a time
+    await ctx.route('https://api.iconify.design/**', r => { const u = new URL(r.request().url()); if (u.pathname.endsWith('/search')) { const icons = answers[u.searchParams.get('query')] || []; return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons, total: icons.length }) }); } r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
     await p.click('#rail [data-tab=shapes]'); await p.evaluate(() => { document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(1200);
-    ok('premium graphics grid fills from the service', await p.locator('#pxGrid .gfx-card').count() === 3);
+    const titles = () => p.$$eval('#pxGrid .gfx-card', b => b.map(x => x.title));
+    const first = await titles(); ok('premium graphics open on Animals and merge several words', first.includes('cat face') && first.includes('dog'), first.join(','));
+    ok('food/drink graphics are filtered out (owner rule)', !first.some(t => /pizza|cake/.test(t)), first.join(','));
+    ok('no food chip in Graphics or Stickers', await p.evaluate(() => ![...document.querySelectorAll('#pxChips .chip')].some(c => /food|pizza|coffee|cake/i.test(c.textContent))));
+    await p.evaluate(() => chitra.__gxHook('India flag')); await p.waitForTimeout(800); const fl = await titles();
+    ok('typing a country name shows its flag first', fl[0] === 'in', fl.join(','));
+    await p.evaluate(() => document.querySelector('#pxChips [data-q=Animals]').click()); await p.waitForTimeout(800);
     await p.evaluate(() => document.querySelector('#pxGrid .gfx-card').click()); await p.waitForTimeout(800);
     ok('premium graphic is placed as a coloured vector', await p.evaluate(() => chitra.canvas.getObjects().length >= 1));
     await p.evaluate(() => document.querySelector('.gx-tabs [data-m=b]').click()); await p.waitForTimeout(300); ok('built-in tab still works', await p.locator('.gfx-card').count() > 20);
