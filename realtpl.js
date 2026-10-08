@@ -244,7 +244,10 @@
     let ids = Object.keys(META).filter(id => !META[id].dead && (cat === 'all' || META[id].cat === cat) && (!words.length || words.every(w => `${META[id].n} ${META[id].cat} ${META[id].t || ''}`.toLowerCase().includes(w))));
     const real = ids.filter(id => META[id].real), rest = ids.filter(id => !META[id].real);
     const mix = list => { if (cat !== 'all') return list; const by = {}; list.forEach(id => (by[META[id].cat] ||= []).push(id)); const keys = Object.keys(by), out = []; for (let i = 0; keys.some(k => by[k][i]); i++) keys.forEach(k => by[k][i] && out.push(by[k][i])); return out; };
-    return [...mix(real), ...mix(rest)];
+    const all = [...mix(real), ...mix(rest)]; if (cat !== 'all' || words.length) return all;
+    const seen = new Set(), first = [], later = []; // browsing "All": show each design title once up front, repeats (other colourways) go behind
+    all.forEach(id => { const t = (META[id].title || META[id].n || '').split(' · ')[0].toLowerCase(); (seen.has(t) ? later : first).push(id); seen.add(t); });
+    return [...first, ...later];
   };
 
   function setCatalog(photos, announce = true) {

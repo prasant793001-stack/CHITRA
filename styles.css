@@ -725,3 +725,5 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 
 .ask{text-align:left}.ask h2{margin:0 0 6px;font:800 19px "Plus Jakarta Sans",system-ui,sans-serif}.ask-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
 .btn.danger-solid{background:#d92d4a;border-color:#d92d4a;color:#fff}.btn.danger-solid:hover{background:#b9203a;border-color:#b9203a}
+
+.ic.duo{stroke:none;fill:currentColor}
