@@ -155,6 +155,31 @@ module.exports = [
     const pg = await p.evaluate(() => ({ n: chitra.canvas.getObjects().length, bg: chitra.canvas.backgroundColor, pages: chitra.pages.length }));
     ok('Add page on a normal design gives a blank white page', pg.pages === 2 && pg.n === 0 && pg.bg === '#ffffff', JSON.stringify(pg));
   } },
+  { name: 'photo mockups (real product photo + perspective)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const r = await p.evaluate(async () => {
+      const none = document.createElement('canvas'); none.width = none.height = 900; const base = chitra.mockRender('mug', none, '#ffffff', 2, {});
+      const art = document.createElement('canvas'); art.width = 800; art.height = 400; const g = art.getContext('2d'); g.fillStyle = '#ff0000'; g.fillRect(0, 0, 800, 400);
+      const quad = [[300, 330], [600, 345], [595, 600], [305, 590]], out = chitra.photoMock.render(base, art, { quad, curve: 1.2, opacity: 1, shade: .4, blur: 0, fit: 'cover' });
+      const px = (c, x, y) => [...c.getContext('2d').getImageData(x, y, 1, 1).data.slice(0, 3)];
+      const H = chitra.photoMock.squareToQuad(quad), c0 = chitra.photoMock.mapUV(H, 0, 0), c2 = chitra.photoMock.mapUV(H, 1, 1);
+      return { inside: px(out, 450, 470), outside: px(out, 120, 120), baseOutside: px(base, 120, 120), c0, c2, quad };
+    });
+    ok('art lands inside the marked area (red ink on a white product)', r.inside[0] > 150 && r.inside[1] < 90 && r.inside[2] < 90, JSON.stringify(r.inside));
+    ok('pixels outside the print area are untouched', r.outside.join() === r.baseOutside.join(), JSON.stringify([r.outside, r.baseOutside]));
+    ok('perspective maps the quad corners exactly', Math.abs(r.c0[0] - 300) < .01 && Math.abs(r.c2[0] - 595) < .01 && Math.abs(r.c2[1] - 600) < .01);
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+    await ctx.route('https://image.pollinations.ai/**', rt => rt.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
+    await p.evaluate(() => chitra.openPhotoMock()); await p.waitForTimeout(500);
+    ok('studio opens with product chips and an empty state', await p.evaluate(() => !document.getElementById('pmStudio').hidden && document.querySelectorAll('#pmProd .chip').length >= 8 && !document.getElementById('pmEmpty').hidden));
+    await p.evaluate(() => document.getElementById('pmAI').click()); await p.waitForTimeout(3500);
+    ok('AI blank product photo loads and a print area is proposed', await p.evaluate(() => !!chitra.photoMock.studio.S.base && chitra.photoMock.studio.S.quad.length === 4));
+    const n0 = await p.evaluate(() => chitra.canvas.getObjects().length);
+    await p.evaluate(() => document.getElementById('pmSave').click()); await p.waitForTimeout(800);
+    ok('mockup can be saved and listed', await p.evaluate(async () => (await chitra.photoMock.list()).length >= 1 && document.querySelectorAll('#pmMine .pm-card').length >= 1));
+    await p.evaluate(() => document.getElementById('pmAdd').click()); await p.waitForTimeout(1200);
+    ok('Add to my design places the mockup picture on the page', await p.evaluate(n => chitra.canvas.getObjects().length === n + 1 && document.getElementById('pmStudio').hidden, n0));
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);

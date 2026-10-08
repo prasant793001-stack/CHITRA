@@ -727,3 +727,17 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .btn.danger-solid{background:#d92d4a;border-color:#d92d4a;color:#fff}.btn.danger-solid:hover{background:#b9203a;border-color:#b9203a}
 
 .ic.duo{stroke:none;fill:currentColor}
+
+/* photo mockup studio */
+.pm{width:min(1180px,97vw);max-height:94vh;overflow:auto}
+.pm-body{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+.pm-stage{position:relative;background:repeating-conic-gradient(#ececf2 0 25%,#fff 0 50%) 0 0/20px 20px;border-radius:12px;overflow:hidden;min-height:320px;line-height:0}
+.pm-stage canvas{width:100%;height:auto;display:block}.pm-stage #pmOver{position:absolute;inset:0;cursor:crosshair}
+.pm-empty{position:absolute;inset:0;display:grid;place-content:center;gap:6px;text-align:center;color:var(--muted);line-height:1.4;padding:24px;background:#faf9ff}.pm-empty b{color:var(--text);font-size:18px}
+.pm-side{display:block}.pm-side .chips{margin-bottom:10px}
+.pm-mine{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pm-card{position:relative;border:1px solid var(--line);background:#fff;border-radius:10px;padding:4px;cursor:pointer;display:grid;gap:3px;font-size:10.5px;color:var(--muted);text-align:center}.pm-card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px}
+.pm-card i{position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);font-style:normal;line-height:18px;font-size:13px;opacity:0}.pm-card:hover i{opacity:1}
+.pm-pick{position:absolute;inset:0;z-index:5;background:#fff;border-radius:18px;padding:18px;overflow:auto}.pm-pick-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:40px}
+.pm-hero{display:grid;gap:3px;width:100%;text-align:left;border:0;border-radius:16px;padding:16px;margin-bottom:14px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;cursor:pointer;position:relative}.pm-hero b{font-size:16px}.pm-hero small{opacity:.85;font-size:12px;max-width:80%}.pm-hero span{position:absolute;right:14px;top:14px;opacity:.7}
+@media (max-width:800px){.pm-body{grid-template-columns:1fr}.pm{max-height:96vh}}

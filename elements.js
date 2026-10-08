@@ -173,8 +173,8 @@
   }
   function mocksView(q = '') {
     const l = MOCKS.map((m, i) => [m, i]).filter(([m]) => !q || m[1].toLowerCase().includes(q.toLowerCase()));
-    view.innerHTML = `<div class="mock-grid">${l.map(([m, i]) => `<button class="mock-card" data-mock="${i}"><span class="pv">${m[3]}</span>${m[1]}</button>`).join('')}</div><p class="tip">Add a mockup, then add or drop a photo — it fills the screen automatically.</p>`;
-    $$('[data-mock]', view).forEach(b => b.onclick = () => addMock(+b.dataset.mock)); searchHook = v => mocksView(v);
+    view.innerHTML = `<button class="pm-hero" id="pmHero"><span>${ico('camera', 26)}</span><b>Photo mockup</b><small>Put your design on a real product photo — mug, tee, hoodie, frame…</small></button><div class="mock-grid">${l.map(([m, i]) => `<button class="mock-card" data-mock="${i}"><span class="pv">${m[3]}</span>${m[1]}</button>`).join('')}</div><p class="tip">Add a mockup, then add or drop a photo — it fills the screen automatically.</p>`;
+    $$('[data-mock]', view).forEach(b => b.onclick = () => addMock(+b.dataset.mock)); $('#pmHero', view).onclick = () => C.openPhotoMock(); searchHook = v => mocksView(v);
   }
   function effectsView(q = '') {
     const l = FX.map((f, i) => [f, i]).filter(([f]) => !q || f[1].toLowerCase().includes(q.toLowerCase()));

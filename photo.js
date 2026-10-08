@@ -461,6 +461,7 @@
     },
   };
   C.localAI = { comfy, isFood: t => FOOD_RE.test(t) };
+  C.aiImage = async (prompt, { w = 1024, h = 1024 } = {}) => { if (vault.state() === 'locked') await vault.ensure(); return comfy.available() && !FOOD_RE.test(prompt) ? comfy.generate(prompt, { w, h }) : cloudImage(prompt, w, h); }; // used by Photo mockups
 
   /* ---- AI Art: 3 variations per prompt, kept in the left panel. Nothing goes on the canvas until the user clicks one. ---- */
   const VARIANTS = ['', ', alternative composition, different angle', ', close-up detail, fresh colour palette'];
