@@ -8,25 +8,35 @@ import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } fro
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d; };
 const PEX = process.env.PEXELS_KEY, PIX = process.env.PIXABAY_KEY, OUT = arg('out', '.'), PER = +arg('per', 4); const here = path.dirname(fileURLToPath(import.meta.url));
 if (!PEX && !PIX) { console.error('Set PEXELS_KEY and/or PIXABAY_KEY'); process.exit(1); }
-const PRODUCTS = [ // kind, label, search, proposed quad (fractions), curve
-  ['shirt', 'T-shirt', 'blank white t-shirt mockup', [[.34, .28], [.66, .28], [.66, .56], [.34, .56]], 0], ['hoodie', 'Hoodie', 'blank hoodie mockup', [[.35, .36], [.65, .36], [.65, .6], [.35, .6]], 0],
-  ['mug', 'Mug', 'blank white mug mockup', [[.36, .33], [.6, .33], [.6, .68], [.36, .68]], 1.5], ['tote', 'Tote bag', 'blank tote bag mockup', [[.32, .4], [.68, .4], [.68, .72], [.32, .72]], 0],
-  ['poster', 'Poster frame', 'blank poster frame wall mockup', [[.3, .2], [.7, .2], [.7, .7], [.3, .7]], 0], ['case', 'Phone case', 'blank phone case mockup', [[.4, .22], [.6, .22], [.6, .78], [.4, .78]], 0],
-  ['pillow', 'Pillow', 'blank pillow cushion mockup', [[.3, .3], [.7, .3], [.7, .7], [.3, .7]], 0], ['cap', 'Cap', 'blank white cap mockup', [[.4, .3], [.6, .3], [.6, .46], [.4, .46]], .4],
-  ['notebook', 'Notebook', 'blank notebook cover mockup', [[.3, .2], [.7, .2], [.7, .8], [.3, .8]], 0], ['bottle', 'Bottle', 'blank water bottle mockup', [[.4, .35], [.6, .35], [.6, .7], [.4, .7]], 1.3],
+const PRODUCTS = [ // kind, label, searches (plain product photos, not "mockup" scenes), proposed quad (fractions), curve
+  ['shirt', 'T-shirt', ['plain white t-shirt', 'white t-shirt isolated', 'blank t-shirt front'], [[.34, .28], [.66, .28], [.66, .56], [.34, .56]], 0],
+  ['hoodie', 'Hoodie', ['grey hoodie', 'black hoodie isolated', 'plain hoodie front'], [[.35, .36], [.65, .36], [.65, .6], [.35, .6]], 0],
+  ['mug', 'Mug', ['white mug', 'white ceramic mug isolated'], [[.36, .33], [.6, .33], [.6, .68], [.36, .68]], 1.5],
+  ['tote', 'Tote bag', ['canvas tote bag', 'cotton bag white', 'tote bag'], [[.32, .4], [.68, .4], [.68, .72], [.32, .72]], 0],
+  ['poster', 'Poster frame', ['empty picture frame wall', 'blank frame mockup'], [[.3, .2], [.7, .2], [.7, .7], [.3, .7]], 0],
+  ['case', 'Phone case', ['phone case', 'smartphone back cover', 'white phone case'], [[.4, .22], [.6, .22], [.6, .78], [.4, .78]], 0],
+  ['pillow', 'Pillow', ['white cushion sofa', 'white pillow', 'square cushion'], [[.3, .3], [.7, .3], [.7, .7], [.3, .7]], 0],
+  ['cap', 'Cap', ['baseball cap white', 'baseball cap', 'blank cap'], [[.4, .3], [.6, .3], [.6, .46], [.4, .46]], .4],
+  ['notebook', 'Notebook', ['blank notebook cover', 'kraft notebook'], [[.3, .2], [.7, .2], [.7, .8], [.3, .8]], 0],
+  ['bottle', 'Bottle', ['stainless water bottle', 'sports bottle white', 'aluminium bottle'], [[.4, .35], [.6, .35], [.6, .7], [.4, .7]], 1.3],
 ];
+const KINDS = arg('kinds', '') ? new Set(arg('kinds', '').split(',')) : null; // --kinds hoodie,cap  → only these products
+const EDIBLE = /\b(food|coffee|tea|cake|egg|fruit|berr|apple|banana|bread|wine|beer|juice|cocktail|drink|meal|breakfast|cookie|chocolate|pizza|burger|candy|dessert|snack)/i; // owner's rule: no food or drink imagery
+
 fs.mkdirSync(path.join(OUT, 'mockups'), { recursive: true }); fs.mkdirSync(path.join(OUT, 'data/mockups'), { recursive: true });
-const ip = path.join(OUT, 'data/mockups/index.json'), idx = fs.existsSync(ip) ? JSON.parse(fs.readFileSync(ip, 'utf8')) : { v: 1, mockups: [] }, have = new Set(idx.mockups.map(x => x.id));
+const ip = path.join(OUT, 'data/mockups/index.json'), idx = fs.existsSync(ip) ? JSON.parse(fs.readFileSync(ip, 'utf8')) : { v: 1, mockups: [] }, have = new Set(idx.mockups.map(x => x.id)), seen = new Set(idx.mockups.map(x => x.id.split('-').slice(1).join('-'))); // seen: same photo never kept twice under different products
 const get = async (u, o) => { const r = await fetch(u, o); if (!r.ok) throw new Error(r.status + ' ' + u.split('?')[0]); return r; };
 async function resize(buf, file, max, q) { try { const sharp = (await import('sharp')).default; await sharp(buf).rotate().resize({ width: max, height: max, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: q, mozjpeg: true }).toFile(file); return; } catch { }
   const tmp = file + '.src'; fs.writeFileSync(tmp, buf); const r = spawnSync('python3', [path.join(here, 'resize.py'), tmp, file, String(max), String(q)]); fs.rmSync(tmp, { force: true }); if (r.status !== 0) fs.writeFileSync(file, buf); }
 let n = 0;
-for (const [kind, label, q, quad, curve] of PRODUCTS) {
-  const cands = [];
-  try { if (PEX) (await (await get(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=15&orientation=square`, { headers: { Authorization: PEX } })).json()).photos.forEach(p => cands.push({ id: 'pe' + p.id, url: p.src.large2x || p.src.large, by: p.photographer, link: p.url, site: 'Pexels' })); } catch (e) { console.warn('pexels', kind, e.message); }
-  try { if (PIX) (await (await get(`https://pixabay.com/api/?key=${encodeURIComponent(PIX)}&q=${encodeURIComponent(q)}&image_type=photo&per_page=15&safesearch=true`)).json()).hits.forEach(h => cands.push({ id: 'px' + h.id, url: h.largeImageURL, by: h.user, link: h.pageURL, site: 'Pixabay' })); } catch (e) { console.warn('pixabay', kind, e.message); }
-  let k = 0; for (const c of cands) { if (k >= PER) break; const id = `${kind}-${c.id}`; if (have.has(id)) continue;
+for (const [kind, label, qs, quad, curve] of PRODUCTS) {
+  if (KINDS && !KINDS.has(kind)) continue; const cands = [];
+  for (const q of qs) {
+  try { if (PEX) (await (await get(`https://api.pexels.com/v1/search?query=${encodeURIComponent(q)}&per_page=15&orientation=square`, { headers: { Authorization: PEX } })).json()).photos.forEach(p => cands.push({ tags: p.alt || '', id: 'pe' + p.id, url: p.src.large2x || p.src.large, by: p.photographer, link: p.url, site: 'Pexels' })); } catch (e) { console.warn('pexels', kind, e.message); }
+  try { if (PIX) (await (await get(`https://pixabay.com/api/?key=${encodeURIComponent(PIX)}&q=${encodeURIComponent(q)}&image_type=photo&per_page=15&safesearch=true`)).json()).hits.forEach(h => cands.push({ tags: h.tags || '', id: 'px' + h.id, url: h.largeImageURL, by: h.user, link: h.pageURL, site: 'Pixabay' })); } catch (e) { console.warn('pixabay', kind, e.message); }
+  }
+  let k = 0; for (const c of cands) { if (k >= PER) break; const id = `${kind}-${c.id}`; if (have.has(id) || seen.has(c.id) || EDIBLE.test(c.tags)) continue;
     try { const buf = Buffer.from(await (await get(c.url)).arrayBuffer()); await resize(buf, path.join(OUT, `mockups/${id}.jpg`), 1600, 82); await resize(buf, path.join(OUT, `mockups/${id}_t.jpg`), 360, 70);
-      idx.mockups.push({ id, name: `${label} ${k + 1}`, kind, file: `mockups/${id}.jpg`, thumb: `mockups/${id}_t.jpg`, quad, curve, opacity: .96, shade: .55, blur: .5, fit: 'contain', review: true, credit: { site: c.site, by: c.by, link: c.link } }); have.add(id); k++; n++; } catch (e) { console.warn('skip', id, e.message); } await new Promise(r => setTimeout(r, 300)); }
+      idx.mockups.push({ id, name: `${label} ${k + 1}`, kind, file: `mockups/${id}.jpg`, thumb: `mockups/${id}_t.jpg`, quad, curve, opacity: .96, shade: .55, blur: .5, fit: 'contain', review: true, credit: { site: c.site, by: c.by, link: c.link } }); have.add(id); seen.add(c.id); k++; n++; } catch (e) { console.warn('skip', id, e.message); } await new Promise(r => setTimeout(r, 300)); }
 }
 fs.writeFileSync(ip, JSON.stringify(idx, null, 1)); console.log(`added ${n} photos; total ${idx.mockups.length}. Next: node tools/mockup-sheet.mjs /tmp/m.png and fix the quads (entries marked "review": true).`);
