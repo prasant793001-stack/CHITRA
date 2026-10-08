@@ -1,0 +1,3596 @@
+{
+ "templates": [
+  {
+   "id": "y2k-baby-angel",
+   "name": "Y2K Baby Angel",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "DM Serif Display",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "y2k",
+    "butterfly",
+    "pink",
+    "girly",
+    "trend"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#3b1a4f",
+    "a": "#ff6fb1",
+    "b": "#cfd6e6",
+    "soft": "#ffd6ea"
+   },
+   "variants": [
+    {
+     "name": "Pink Chrome",
+     "theme": {
+      "ink": "#3b1a4f",
+      "a": "#ff6fb1",
+      "b": "#cfd6e6",
+      "soft": "#ffd6ea",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Baby Blue",
+     "theme": {
+      "ink": "#14274e",
+      "a": "#4f9dff",
+      "b": "#dbe7f7",
+      "soft": "#cfe4ff",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Playfair Display",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Lilac Dream",
+     "theme": {
+      "ink": "#2b1650",
+      "a": "#a779ff",
+      "b": "#f3cdf5",
+      "soft": "#e6d8ff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Midnight Cherry",
+     "theme": {
+      "ink": "#1a0b2e",
+      "a": "#ff2f7e",
+      "b": "#b9c3d9",
+      "soft": "#4b2a6b",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Black & Silver",
+     "theme": {
+      "ink": "#111111",
+      "a": "#8a8f9c",
+      "b": "#e4e7ee",
+      "soft": "#d3d6dd",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "star",
+     "x": 0.17,
+     "y": 0.12,
+     "r": 0.07,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "star",
+     "x": 0.86,
+     "y": 0.19,
+     "r": 0.05,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "star",
+     "x": 0.12,
+     "y": 0.43,
+     "r": 0.035,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2462,
+     "y": 0.0507,
+     "w": 0.2376,
+     "h": 0.2833,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 180
+     },
+     "rot": 38,
+     "stroke": "$ink",
+     "sw": 0.01188
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3056,
+     "y": 0.27,
+     "w": 0.1728,
+     "h": 0.201,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 180
+     },
+     "rot": -32,
+     "stroke": "$ink",
+     "sw": 0.01188
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3002,
+     "y": 0.1009,
+     "w": 0.1188,
+     "h": 0.1554,
+     "fill": "$bg",
+     "rot": 38,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3515,
+     "y": 0.3294,
+     "w": 0.081,
+     "h": 0.1005,
+     "fill": "$bg",
+     "rot": -32,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5162,
+     "y": 0.0507,
+     "w": 0.2376,
+     "h": 0.2833,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 180
+     },
+     "rot": -38,
+     "stroke": "$ink",
+     "sw": 0.01188
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5216,
+     "y": 0.27,
+     "w": 0.1728,
+     "h": 0.201,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 180
+     },
+     "rot": 32,
+     "stroke": "$ink",
+     "sw": 0.01188
+    },
+    {
+     "t": "ellipse",
+     "x": 0.581,
+     "y": 0.1009,
+     "w": 0.1188,
+     "h": 0.1554,
+     "fill": "$bg",
+     "rot": -38,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5675,
+     "y": 0.3294,
+     "w": 0.081,
+     "h": 0.1005,
+     "fill": "$bg",
+     "rot": 32,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4811,
+     "y": 0.1375,
+     "w": 0.03780000000000001,
+     "h": 0.2833,
+     "fill": "$ink",
+     "rot": 0
+    },
+    {
+     "t": "line",
+     "x1": 0.4838,
+     "y1": 0.1146,
+     "x2": 0.4298,
+     "y2": 0.0415,
+     "stroke": "$ink",
+     "sw": 0.009504
+    },
+    {
+     "t": "line",
+     "x1": 0.5162,
+     "y1": 0.1146,
+     "x2": 0.5702,
+     "y2": 0.0415,
+     "stroke": "$ink",
+     "sw": 0.009504
+    },
+    {
+     "t": "ellipse",
+     "x": 0.076,
+     "y": 0.2188,
+     "w": 0.08800000000000001,
+     "h": 0.1049,
+     "fill": "$a",
+     "rot": 22,
+     "stroke": "$ink",
+     "sw": 0.0044
+    },
+    {
+     "t": "ellipse",
+     "x": 0.098,
+     "y": 0.3,
+     "w": 0.064,
+     "h": 0.0745,
+     "fill": "$a",
+     "rot": -48,
+     "stroke": "$ink",
+     "sw": 0.0044
+    },
+    {
+     "t": "ellipse",
+     "x": 0.096,
+     "y": 0.2374,
+     "w": 0.044000000000000004,
+     "h": 0.0575,
+     "fill": "$soft",
+     "rot": 22,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.115,
+     "y": 0.322,
+     "w": 0.03,
+     "h": 0.0372,
+     "fill": "$soft",
+     "rot": -48,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.176,
+     "y": 0.2188,
+     "w": 0.08800000000000001,
+     "h": 0.1049,
+     "fill": "$a",
+     "rot": -54,
+     "stroke": "$ink",
+     "sw": 0.0044
+    },
+    {
+     "t": "ellipse",
+     "x": 0.178,
+     "y": 0.3,
+     "w": 0.064,
+     "h": 0.0745,
+     "fill": "$a",
+     "rot": 16,
+     "stroke": "$ink",
+     "sw": 0.0044
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2,
+     "y": 0.2374,
+     "w": 0.044000000000000004,
+     "h": 0.0575,
+     "fill": "$soft",
+     "rot": -54,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.195,
+     "y": 0.322,
+     "w": 0.03,
+     "h": 0.0372,
+     "fill": "$soft",
+     "rot": 16,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.163,
+     "y": 0.2509,
+     "w": 0.014000000000000002,
+     "h": 0.1049,
+     "fill": "$ink",
+     "rot": -16
+    },
+    {
+     "t": "line",
+     "x1": 0.164,
+     "y1": 0.2425,
+     "x2": 0.144,
+     "y2": 0.2154,
+     "stroke": "$ink",
+     "sw": 0.0035200000000000006,
+     "rot": -16
+    },
+    {
+     "t": "line",
+     "x1": 0.176,
+     "y1": 0.2425,
+     "x2": 0.196,
+     "y2": 0.2154,
+     "stroke": "$ink",
+     "sw": 0.0035200000000000006,
+     "rot": -16
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7648,
+     "y": 0.285,
+     "w": 0.0704,
+     "h": 0.0839,
+     "fill": "$b",
+     "rot": 56,
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7824,
+     "y": 0.35,
+     "w": 0.0512,
+     "h": 0.0596,
+     "fill": "$b",
+     "rot": -14,
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7808,
+     "y": 0.2999,
+     "w": 0.0352,
+     "h": 0.046,
+     "fill": "$bg",
+     "rot": 56,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.796,
+     "y": 0.3676,
+     "w": 0.024,
+     "h": 0.0298,
+     "fill": "$bg",
+     "rot": -14,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8448,
+     "y": 0.285,
+     "w": 0.0704,
+     "h": 0.0839,
+     "fill": "$b",
+     "rot": -20,
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8464,
+     "y": 0.35,
+     "w": 0.0512,
+     "h": 0.0596,
+     "fill": "$b",
+     "rot": 50,
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "ellipse",
+     "x": 0.864,
+     "y": 0.2999,
+     "w": 0.0352,
+     "h": 0.046,
+     "fill": "$bg",
+     "rot": -20,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.86,
+     "y": 0.3676,
+     "w": 0.024,
+     "h": 0.0298,
+     "fill": "$bg",
+     "rot": 50,
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8344,
+     "y": 0.3107,
+     "w": 0.011200000000000002,
+     "h": 0.0839,
+     "fill": "$ink",
+     "rot": 18
+    },
+    {
+     "t": "line",
+     "x1": 0.8352,
+     "y1": 0.304,
+     "x2": 0.8192,
+     "y2": 0.2823,
+     "stroke": "$ink",
+     "sw": 0.0032,
+     "rot": 18
+    },
+    {
+     "t": "line",
+     "x1": 0.8448,
+     "y1": 0.304,
+     "x2": 0.8608,
+     "y2": 0.2823,
+     "stroke": "$ink",
+     "sw": 0.0032,
+     "rot": 18
+    },
+    {
+     "t": "text",
+     "text": "baby girl",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.5,
+     "w": 0.86,
+     "size": 0.215,
+     "font": "d",
+     "align": "center",
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 180
+     },
+     "stroke": "$ink",
+     "sw": 0.012,
+     "h": 0.19101923076923077,
+     "italic": true
+    },
+    {
+     "t": "rect",
+     "x": 0.16,
+     "y": 0.7,
+     "w": 0.68,
+     "h": 0.06,
+     "fill": "$ink",
+     "rx": 0.03
+    },
+    {
+     "t": "text",
+     "text": "forever  y2k  angel",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.713,
+     "w": 0.64,
+     "size": 0.04,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 600,
+     "ls": 0.14,
+     "upper": true
+    },
+    {
+     "t": "text",
+     "text": "est. 2000 · soft launch edition",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.795,
+     "w": 0.8,
+     "size": 0.04,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 600,
+     "ls": 0.05,
+     "stroke": "$bg",
+     "sw": 0
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.9,
+     "r": 0.045,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "star",
+     "x": 0.36,
+     "y": 0.9,
+     "r": 0.028,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "star",
+     "x": 0.64,
+     "y": 0.9,
+     "r": 0.028,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.005
+    }
+   ]
+  },
+  {
+   "id": "retro-sun-golden-hour",
+   "name": "Golden Hour Sunset Badge",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Bebas Neue",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "retro",
+    "sunset",
+    "vintage",
+    "summer",
+    "surf",
+    "badge"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#2a1230",
+    "a": "#ff5e3a",
+    "b": "#ffc233",
+    "soft": "#ffe3c2"
+   },
+   "variants": [
+    {
+     "name": "Sunset",
+     "theme": {
+      "ink": "#2a1230",
+      "a": "#ff5e3a",
+      "b": "#ffc233",
+      "soft": "#ffe3c2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "ink": "#06303a",
+      "a": "#12b5a6",
+      "b": "#ffd166",
+      "soft": "#c9f3ee",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Grape Soda",
+     "theme": {
+      "ink": "#1f0c4a",
+      "a": "#e83bd1",
+      "b": "#ffb347",
+      "soft": "#e9d7ff",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Anton",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Desert",
+     "theme": {
+      "ink": "#3a1f0f",
+      "a": "#d9642b",
+      "b": "#f2c879",
+      "soft": "#f8e3c0",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Bungee",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#111111",
+      "a": "#a8a8a8",
+      "b": "#f0f0f0",
+      "soft": "#d8d8d8",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.1,
+     "w": 0.84,
+     "h": 0.8,
+     "fill": "$ink",
+     "rx": 0.09,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0006"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.11,
+     "y": 0.125,
+     "w": 0.78,
+     "h": 0.75,
+     "fill": "none",
+     "rx": 0.07,
+     "stroke": "$b",
+     "sw": 0.006
+    },
+    {
+     "t": "text",
+     "text": "PACIFIC COAST HIGHWAY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.15,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "align": "center",
+     "fill": "$b",
+     "weight": 700,
+     "ls": 0.2
+    },
+    {
+     "t": "ellipse",
+     "x": 0.25,
+     "y": 0.1585,
+     "w": 0.5,
+     "h": 0.4231,
+     "fill": {
+      "grad": [
+       "$b",
+       "$a"
+      ],
+      "angle": 180
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.2,
+     "y": 0.43,
+     "w": 0.6,
+     "h": 0.012,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.2,
+     "y": 0.465,
+     "w": 0.6,
+     "h": 0.017,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.2,
+     "y": 0.505,
+     "w": 0.6,
+     "h": 0.022,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.11,
+     "y": 0.56,
+     "w": 0.78,
+     "h": 0.012,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.11,
+     "y": 0.585,
+     "w": 0.78,
+     "h": 0.008,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "GOLDEN",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.62,
+     "w": 0.74,
+     "size": 0.165,
+     "font": "d",
+     "align": "center",
+     "fill": "$b",
+     "h": 0.1396153846153846
+    },
+    {
+     "t": "text",
+     "text": "HOUR",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.735,
+     "w": 0.74,
+     "size": 0.165,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "h": 0.1396153846153846
+    },
+    {
+     "t": "text",
+     "text": "SURF  ·  SUN  ·  REPEAT",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.845,
+     "w": 0.7,
+     "size": 0.034,
+     "font": "b",
+     "align": "center",
+     "fill": "$soft",
+     "weight": 600,
+     "ls": 0.2
+    },
+    {
+     "t": "star",
+     "x": 0.2,
+     "y": 0.2,
+     "r": 0.025,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.8,
+     "y": 0.22,
+     "r": 0.02,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.3,
+     "y": 0.27,
+     "r": 0.014,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$soft"
+    }
+   ]
+  },
+  {
+   "id": "varsity-arch-24",
+   "name": "Varsity Arch Number",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Alfa Slab One",
+    "Montserrat"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "varsity",
+    "athletic",
+    "college",
+    "sports",
+    "number",
+    "team"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#14264f",
+    "a": "#c8102e",
+    "b": "#f2b705",
+    "soft": "#e6ebf5"
+   },
+   "variants": [
+    {
+     "name": "Navy & Red",
+     "theme": {
+      "ink": "#14264f",
+      "a": "#c8102e",
+      "b": "#f2b705",
+      "soft": "#e6ebf5",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Forest & Gold",
+     "theme": {
+      "ink": "#0f3b2b",
+      "a": "#e0a800",
+      "b": "#f6d56b",
+      "soft": "#e3efe6",
+      "bg": "#fffdf3"
+     }
+    },
+    {
+     "name": "Black & Orange",
+     "theme": {
+      "ink": "#141414",
+      "a": "#ff6a13",
+      "b": "#ffb26b",
+      "soft": "#efefef",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Royal & Sky",
+     "theme": {
+      "ink": "#1a2fa0",
+      "a": "#2f9bff",
+      "b": "#ffd23f",
+      "soft": "#e3ecff",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Bowlby One",
+      "Montserrat"
+     ]
+    },
+    {
+     "name": "Maroon & Cream",
+     "theme": {
+      "ink": "#4a0f1f",
+      "a": "#b3213f",
+      "b": "#e8c27a",
+      "soft": "#f6ead6",
+      "bg": "#fff8ea"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.08,
+     "y": 0.07,
+     "w": 0.84,
+     "h": 0.7108,
+     "fill": "$ink",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0005"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.4254,
+     "w": 0.84,
+     "h": 0.4846,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.12,
+     "y": 0.09000000000000001,
+     "w": 0.76,
+     "h": 0.6431,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.12,
+     "y": 0.4115,
+     "w": 0.76,
+     "h": 0.4785,
+     "fill": "$a"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.145,
+     "y": 0.10700000000000001,
+     "w": 0.71,
+     "h": 0.6008,
+     "fill": "$bg"
+    },
+    {
+     "t": "rect",
+     "x": 0.145,
+     "y": 0.4074,
+     "w": 0.71,
+     "h": 0.4656,
+     "fill": "$bg"
+    },
+    {
+     "t": "star",
+     "x": 0.38,
+     "y": 0.175,
+     "r": 0.022,
+     "n": 5,
+     "inner": 0.45,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.155,
+     "r": 0.026,
+     "n": 5,
+     "inner": 0.45,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.62,
+     "y": 0.175,
+     "r": 0.022,
+     "n": 5,
+     "inner": 0.45,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "RIVERSIDE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.215,
+     "w": 0.6,
+     "size": 0.1,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "h": 0.08461538461538462
+    },
+    {
+     "t": "text",
+     "text": "24",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.31,
+     "w": 0.72,
+     "size": 0.5,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.018,
+     "h": 0.4019230769230769,
+     "shadow": {
+      "x": 0.012,
+      "y": 0.012,
+      "blur": 0,
+      "color": "$ink"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.09,
+     "y": 0.715,
+     "w": 0.82,
+     "h": 0.075,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.09,
+     "y": 0.705,
+     "w": 0.82,
+     "h": 0.006,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.09,
+     "y": 0.795,
+     "w": 0.82,
+     "h": 0.006,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "ATHLETIC DEPARTMENT",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.728,
+     "w": 0.78,
+     "size": 0.043,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 800,
+     "ls": 0.14
+    },
+    {
+     "t": "text",
+     "text": "HAWKS  ·  EST. 1998",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.83,
+     "w": 0.7,
+     "size": 0.038,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 700,
+     "ls": 0.2
+    }
+   ]
+  },
+  {
+   "id": "minimal-geo-badge",
+   "name": "Minimal Geometric Badge",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Montserrat",
+    "Montserrat"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "minimal",
+    "geometric",
+    "badge",
+    "mountain",
+    "clean",
+    "studio"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#1d2733",
+    "a": "#e8765a",
+    "b": "#f3e9dc",
+    "soft": "#f1e8dc"
+   },
+   "variants": [
+    {
+     "name": "Terracotta",
+     "theme": {
+      "ink": "#1d2733",
+      "a": "#e8765a",
+      "b": "#f3e9dc",
+      "soft": "#f1e8dc",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "ink": "#233a31",
+      "a": "#7fa88a",
+      "b": "#e9f0e4",
+      "soft": "#e6eee2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "ink": "#0e2f4a",
+      "a": "#3a8fb7",
+      "b": "#e3f1f6",
+      "soft": "#dcedf3",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "ink": "#4a2a35",
+      "a": "#e8929f",
+      "b": "#fbeaec",
+      "soft": "#fbe2e5",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#111111",
+      "a": "#555555",
+      "b": "#eeeeee",
+      "soft": "#e9e9e9",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.11,
+     "y": 0.07,
+     "w": 0.78,
+     "h": 0.66,
+     "fill": "$soft",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0003"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.11,
+     "y": 0.07,
+     "w": 0.78,
+     "h": 0.66,
+     "fill": "none",
+     "stroke": "$ink",
+     "sw": 0.014
+    },
+    {
+     "t": "ellipse",
+     "x": 0.15,
+     "y": 0.1038,
+     "w": 0.7,
+     "h": 0.5923,
+     "fill": "none",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "ellipse",
+     "x": 0.365,
+     "y": 0.2158,
+     "w": 0.27,
+     "h": 0.2285,
+     "fill": "$a"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.2,
+       0.52
+      ],
+      [
+       0.4,
+       0.3
+      ],
+      [
+       0.55,
+       0.45
+      ],
+      [
+       0.64,
+       0.37
+      ],
+      [
+       0.8,
+       0.52
+      ]
+     ],
+     "fill": "$ink"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.4,
+       0.3
+      ],
+      [
+       0.45,
+       0.365
+      ],
+      [
+       0.4,
+       0.35
+      ],
+      [
+       0.35,
+       0.365
+      ]
+     ],
+     "fill": "$bg"
+    },
+    {
+     "t": "rect",
+     "x": 0.22,
+     "y": 0.53,
+     "w": 0.56,
+     "h": 0.008,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.555,
+     "w": 0.4,
+     "h": 0.008,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.35,
+     "y": 0.5770000000000001,
+     "w": 0.30000000000000004,
+     "h": 0.008,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.4,
+     "y": 0.5990000000000001,
+     "w": 0.2,
+     "h": 0.008,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.49,
+     "y": 0.1615,
+     "w": 0.02,
+     "h": 0.0169,
+     "fill": "$bg"
+    },
+    {
+     "t": "rect",
+     "x": 0.14,
+     "y": 0.8,
+     "w": 0.72,
+     "h": 0.1,
+     "fill": "$ink",
+     "rx": 0.012
+    },
+    {
+     "t": "text",
+     "text": "NORTH & SOUTH",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.822,
+     "w": 0.68,
+     "size": 0.052,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 700,
+     "ls": 0.22
+    }
+   ]
+  },
+  {
+   "id": "stacked-less-talking",
+   "name": "Stacked Slogan Block",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "slogan",
+    "typography",
+    "bold",
+    "quote",
+    "streetwear",
+    "stacked"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#14141a",
+    "a": "#ff3b30",
+    "b": "#ffd60a",
+    "soft": "#f2f2f2"
+   },
+   "variants": [
+    {
+     "name": "Red Alert",
+     "theme": {
+      "ink": "#14141a",
+      "a": "#ff3b30",
+      "b": "#ffd60a",
+      "soft": "#f2f2f2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Cobalt",
+     "theme": {
+      "ink": "#0b1d4d",
+      "a": "#3d7bff",
+      "b": "#7ff0ff",
+      "soft": "#e6efff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Acid",
+     "theme": {
+      "ink": "#101410",
+      "a": "#b6ff1a",
+      "b": "#ff5ca8",
+      "soft": "#efffd0",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Violet",
+     "theme": {
+      "ink": "#22083f",
+      "a": "#a45cff",
+      "b": "#ffb3e6",
+      "soft": "#efe0ff",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Bebas Neue",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#0a0a0a",
+      "a": "#9a9a9a",
+      "b": "#e5e5e5",
+      "soft": "#e0e0e0",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.07,
+     "w": 0.86,
+     "h": 0.86,
+     "fill": "$ink",
+     "rx": 0.035,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0005"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.095,
+     "w": 0.8,
+     "h": 0.81,
+     "fill": "none",
+     "rx": 0.02,
+     "stroke": "$a",
+     "sw": 0.005
+    },
+    {
+     "t": "text",
+     "text": "LESS",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.13,
+     "w": 0.78,
+     "size": 0.29,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "h": 0.24538461538461537
+    },
+    {
+     "t": "rect",
+     "x": 0.14,
+     "y": 0.355,
+     "w": 0.72,
+     "h": 0.02,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "TALKING",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.39,
+     "w": 0.78,
+     "size": 0.205,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "h": 0.17346153846153844
+    },
+    {
+     "t": "text",
+     "text": "MORE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.53,
+     "w": 0.78,
+     "size": 0.29,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "h": 0.24538461538461537
+    },
+    {
+     "t": "rect",
+     "x": 0.14,
+     "y": 0.755,
+     "w": 0.72,
+     "h": 0.02,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "DOING",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.79,
+     "w": 0.7,
+     "size": 0.12,
+     "font": "d",
+     "align": "center",
+     "fill": "$b",
+     "h": 0.10153846153846154
+    },
+    {
+     "t": "star",
+     "x": 0.15,
+     "y": 0.89,
+     "r": 0.018,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.85,
+     "y": 0.89,
+     "r": 0.018,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    }
+   ]
+  },
+  {
+   "id": "good-vibes-self-love",
+   "name": "Good Vibes Self-Love",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Pacifico",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "positive",
+    "self love",
+    "good vibes",
+    "pastel",
+    "quote",
+    "kind"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#5a2a4a",
+    "a": "#ff7ab8",
+    "b": "#ffc65c",
+    "soft": "#ffe3ef"
+   },
+   "variants": [
+    {
+     "name": "Bubblegum",
+     "theme": {
+      "ink": "#5a2a4a",
+      "a": "#ff4f9a",
+      "b": "#ffc65c",
+      "soft": "#ffe3ef",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Mint Calm",
+     "theme": {
+      "ink": "#124a43",
+      "a": "#19a38f",
+      "b": "#ffd37a",
+      "soft": "#d5f5ee",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Lavender",
+     "theme": {
+      "ink": "#3a2468",
+      "a": "#8a63e8",
+      "b": "#ffb3d1",
+      "soft": "#e8defc",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Peachy",
+     "theme": {
+      "ink": "#5a2a1a",
+      "a": "#ff7a4d",
+      "b": "#ffd166",
+      "soft": "#ffe1d1",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Sky",
+     "theme": {
+      "ink": "#12335a",
+      "a": "#3a8dff",
+      "b": "#ffe27a",
+      "soft": "#d6e8ff",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Blob",
+     "x": 0.04,
+     "y": 0.06,
+     "w": 0.92,
+     "pal": [
+      "$soft",
+      "$soft",
+      "$soft"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0002"
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Rainbow cloud",
+     "x": 0.27,
+     "y": 0.11,
+     "w": 0.46,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "good vibes",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.37,
+     "w": 0.78,
+     "size": 0.19,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "stroke": "$bg",
+     "sw": 0.004,
+     "h": 0.16076923076923078,
+     "shadow": {
+      "x": 0.004,
+      "y": 0.005,
+      "blur": 0,
+      "color": "$ink"
+     }
+    },
+    {
+     "t": "text",
+     "text": "ONLY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.5,
+     "w": 0.78,
+     "size": 0.15,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 800,
+     "h": 0.12692307692307692
+    },
+    {
+     "t": "text",
+     "text": "be gentle with yourself",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.655,
+     "w": 0.7,
+     "size": 0.058,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "h": 0.09815384615384616
+    },
+    {
+     "t": "icon",
+     "name": "heart",
+     "x": 0.465,
+     "y": 0.7504,
+     "size": 0.07,
+     "color": "$a",
+     "sw": 2.4
+    },
+    {
+     "t": "text",
+     "text": "SELF-LOVE CLUB",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.815,
+     "w": 0.6,
+     "size": 0.032,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.095,
+     "y": 0.74,
+     "w": 0.17,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.745,
+     "y": 0.12,
+     "w": 0.15,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.115,
+     "y": 0.15,
+     "w": 0.17,
+     "pal": [
+      "$b",
+      "$a",
+      "$bg"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "gamer-player-one",
+   "name": "Gamer Player One",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Bungee",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "gamer",
+    "gaming",
+    "neon",
+    "arcade",
+    "tech",
+    "retro"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#140a2e",
+    "a": "#ff2fb3",
+    "b": "#21e6ff",
+    "soft": "#2a1b55"
+   },
+   "variants": [
+    {
+     "name": "Neon Pink",
+     "theme": {
+      "ink": "#140a2e",
+      "a": "#ff2fb3",
+      "b": "#21e6ff",
+      "soft": "#2a1b55",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Toxic Green",
+     "theme": {
+      "ink": "#07140d",
+      "a": "#2cff7a",
+      "b": "#e8ff3a",
+      "soft": "#0f2a1b",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Arcade Yellow",
+     "theme": {
+      "ink": "#0a1030",
+      "a": "#ffd400",
+      "b": "#ff5a36",
+      "soft": "#1b2760",
+      "bg": "#ffffff"
+     },
+     "fonts": [
+      "Black Ops One",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Cyber Blue",
+     "theme": {
+      "ink": "#04112e",
+      "a": "#2f7bff",
+      "b": "#9bf1ff",
+      "soft": "#10285e",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Ghost",
+     "theme": {
+      "ink": "#181818",
+      "a": "#c8c8c8",
+      "b": "#ffffff",
+      "soft": "#303030",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.96,
+       0.4
+      ],
+      [
+       0.73,
+       0.7371
+      ],
+      [
+       0.27,
+       0.7371
+      ],
+      [
+       0.04,
+       0.4
+      ],
+      [
+       0.27,
+       0.0629
+      ],
+      [
+       0.73,
+       0.0629
+      ]
+     ],
+     "fill": "$ink",
+     "stroke": "$a",
+     "sw": 0.012,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.04,
+      "color": "$a"
+     }
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.9,
+       0.4
+      ],
+      [
+       0.7,
+       0.6931
+      ],
+      [
+       0.3,
+       0.6931
+      ],
+      [
+       0.1,
+       0.4
+      ],
+      [
+       0.3,
+       0.1069
+      ],
+      [
+       0.7,
+       0.1069
+      ]
+     ],
+     "fill": "none",
+     "stroke": "$b",
+     "sw": 0.005
+    },
+    {
+     "t": "icon",
+     "name": "gamepad-2",
+     "x": 0.29,
+     "y": 0.1323,
+     "size": 0.42,
+     "color": "$b",
+     "sw": 1.6,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.03,
+      "color": "$b"
+     }
+    },
+    {
+     "t": "text",
+     "text": "PLAYER 1",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.46,
+     "w": 0.6,
+     "size": 0.12,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "h": 0.10153846153846154,
+     "ls": 0.04,
+     "stroke": "$a",
+     "sw": 0.006
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.57,
+     "w": 0.4,
+     "h": 0.011,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "READY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.595,
+     "w": 0.5,
+     "size": 0.04,
+     "font": "b",
+     "align": "center",
+     "fill": "$b",
+     "weight": 800,
+     "ls": 0.5
+    },
+    {
+     "t": "rect",
+     "x": 0.16,
+     "y": 0.8,
+     "w": 0.68,
+     "h": 0.1,
+     "fill": "$a",
+     "rx": 0.012,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0006"
+     }
+    },
+    {
+     "t": "text",
+     "text": "PRESS START",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.823,
+     "w": 0.66,
+     "size": 0.058,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "ls": 0.12,
+     "h": 0.04907692307692308
+    },
+    {
+     "t": "star",
+     "x": 0.1,
+     "y": 0.66,
+     "r": 0.025,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.9,
+     "y": 0.2,
+     "r": 0.03,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.86,
+     "y": 0.69,
+     "r": 0.018,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.13,
+     "y": 0.15,
+     "r": 0.018,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a"
+    }
+   ]
+  },
+  {
+   "id": "nature-wild-free-badge",
+   "name": "Wild & Free Mountain Badge",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Bebas Neue",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "nature",
+    "mountain",
+    "outdoor",
+    "hiking",
+    "camping",
+    "adventure",
+    "badge"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#10342e",
+    "a": "#e8743b",
+    "b": "#ffd98a",
+    "soft": "#d8ecd9"
+   },
+   "variants": [
+    {
+     "name": "Alpine Sunrise",
+     "theme": {
+      "ink": "#10342e",
+      "a": "#e8743b",
+      "b": "#ffd98a",
+      "soft": "#d8ecd9",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Glacier",
+     "theme": {
+      "ink": "#0c2a44",
+      "a": "#2f8fd0",
+      "b": "#bfe6f7",
+      "soft": "#e1f2fa",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Redwood",
+     "theme": {
+      "ink": "#3a1c10",
+      "a": "#c7522a",
+      "b": "#f2c46d",
+      "soft": "#f4dec2",
+      "bg": "#fff8ea"
+     },
+     "fonts": [
+      "Anton",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Twilight",
+     "theme": {
+      "ink": "#1c1240",
+      "a": "#7a52e0",
+      "b": "#ffb36b",
+      "soft": "#e4dcfa",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#111111",
+      "a": "#6f6f6f",
+      "b": "#dcdcdc",
+      "soft": "#efefef",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.1,
+     "y": 0.055,
+     "w": 0.8,
+     "h": 0.6769,
+     "fill": "$ink",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0005"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.3935,
+     "w": 0.8,
+     "h": 0.4115,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.13,
+     "y": 0.08,
+     "w": 0.74,
+     "h": 0.6262,
+     "fill": {
+      "grad": [
+       "$soft",
+       "$b"
+      ],
+      "angle": 180
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.13,
+     "y": 0.3931,
+     "w": 0.74,
+     "h": 0.3869,
+     "fill": {
+      "grad": [
+       "$soft",
+       "$b"
+      ],
+      "angle": 180
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.535,
+     "y": 0.1681,
+     "w": 0.17,
+     "h": 0.1438,
+     "fill": "$a"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.13,
+       0.78
+      ],
+      [
+       0.35,
+       0.4
+      ],
+      [
+       0.6,
+       0.78
+      ]
+     ],
+     "fill": "$ink"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.35,
+       0.4
+      ],
+      [
+       0.4,
+       0.485
+      ],
+      [
+       0.36,
+       0.46
+      ],
+      [
+       0.32,
+       0.49
+      ],
+      [
+       0.3,
+       0.47
+      ]
+     ],
+     "fill": "$bg"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.4,
+       0.78
+      ],
+      [
+       0.66,
+       0.47
+      ],
+      [
+       0.87,
+       0.78
+      ]
+     ],
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.66,
+       0.47
+      ],
+      [
+       0.7,
+       0.53
+      ],
+      [
+       0.66,
+       0.51
+      ],
+      [
+       0.62,
+       0.54
+      ]
+     ],
+     "fill": "$bg"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.2,
+       0.6299999999999999
+      ],
+      [
+       0.2315,
+       0.7
+      ],
+      [
+       0.1685,
+       0.7
+      ]
+     ],
+     "fill": "$ink",
+     "stroke": "$bg",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.193,
+     "y": 0.7,
+     "w": 0.014,
+     "h": 0.025,
+     "fill": "$ink"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.27,
+       0.63
+      ],
+      [
+       0.3105,
+       0.72
+      ],
+      [
+       0.2295,
+       0.72
+      ]
+     ],
+     "fill": "$ink",
+     "stroke": "$bg",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.263,
+     "y": 0.72,
+     "w": 0.014,
+     "h": 0.025,
+     "fill": "$ink"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.78,
+       0.6299999999999999
+      ],
+      [
+       0.8115,
+       0.7
+      ],
+      [
+       0.7485,
+       0.7
+      ]
+     ],
+     "fill": "$ink",
+     "stroke": "$bg",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.773,
+     "y": 0.7,
+     "w": 0.014,
+     "h": 0.025,
+     "fill": "$ink"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.72,
+       0.635
+      ],
+      [
+       0.7605,
+       0.725
+      ],
+      [
+       0.6795,
+       0.725
+      ]
+     ],
+     "fill": "$ink",
+     "stroke": "$bg",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.713,
+     "y": 0.725,
+     "w": 0.014,
+     "h": 0.025,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.13,
+     "y": 0.735,
+     "w": 0.74,
+     "h": 0.045,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.8,
+     "w": 0.8,
+     "h": 0.11,
+     "fill": "$a",
+     "rx": 0.012,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0005"
+     }
+    },
+    {
+     "t": "text",
+     "text": "WILD & FREE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.82,
+     "w": 0.76,
+     "size": 0.07,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "ls": 0.06,
+     "h": 0.05923076923076923
+    }
+   ]
+  },
+  {
+   "id": "band-midnight-echoes",
+   "name": "Band Tour Vinyl",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "music",
+    "band",
+    "tour",
+    "rock",
+    "vinyl",
+    "concert",
+    "merch"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#16122b",
+    "a": "#ff4d6d",
+    "b": "#ffc83d",
+    "soft": "#3a315e"
+   },
+   "variants": [
+    {
+     "name": "Stage Red",
+     "theme": {
+      "ink": "#16122b",
+      "a": "#ff4d6d",
+      "b": "#ffc83d",
+      "soft": "#3a315e",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Electric",
+     "theme": {
+      "ink": "#071a3a",
+      "a": "#2e7bff",
+      "b": "#5cf2d6",
+      "soft": "#1b3a73",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Indie Cream",
+     "theme": {
+      "ink": "#3b2a1e",
+      "a": "#c8643c",
+      "b": "#e9b872",
+      "soft": "#6b5242",
+      "bg": "#fff6e6"
+     },
+     "fonts": [
+      "Bebas Neue",
+      "Poppins"
+     ]
+    },
+    {
+     "name": "Purple Rain",
+     "theme": {
+      "ink": "#1e0a38",
+      "a": "#b44cff",
+      "b": "#ff7ad9",
+      "soft": "#44226e",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Black Metal",
+     "theme": {
+      "ink": "#0c0c0c",
+      "a": "#b7b7b7",
+      "b": "#ffffff",
+      "soft": "#3a3a3a",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.19,
+     "y": 0.0277,
+     "w": 0.62,
+     "h": 0.5246,
+     "fill": "$ink",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0006"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.22,
+     "y": 0.0531,
+     "w": 0.56,
+     "h": 0.4738,
+     "fill": "none",
+     "stroke": "$soft",
+     "sw": 0.003,
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.25,
+     "y": 0.0785,
+     "w": 0.5,
+     "h": 0.4231,
+     "fill": "none",
+     "stroke": "$soft",
+     "sw": 0.003,
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.28,
+     "y": 0.1038,
+     "w": 0.44,
+     "h": 0.3723,
+     "fill": "none",
+     "stroke": "$soft",
+     "sw": 0.003,
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.31,
+     "y": 0.1292,
+     "w": 0.38,
+     "h": 0.3215,
+     "fill": "none",
+     "stroke": "$soft",
+     "sw": 0.003,
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.365,
+     "y": 0.1758,
+     "w": 0.27,
+     "h": 0.2285,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 135
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4825,
+     "y": 0.2752,
+     "w": 0.035,
+     "h": 0.0296,
+     "fill": "$ink"
+    },
+    {
+     "t": "star",
+     "x": 0.15,
+     "y": 0.1,
+     "r": 0.045,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "star",
+     "x": 0.86,
+     "y": 0.5,
+     "r": 0.04,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "star",
+     "x": 0.13,
+     "y": 0.5,
+     "r": 0.025,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "text",
+     "text": "THE MIDNIGHT",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.52,
+     "w": 0.84,
+     "size": 0.12,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "h": 0.10153846153846154,
+     "stroke": "$ink",
+     "sw": 0.012,
+     "ls": 0.01
+    },
+    {
+     "t": "text",
+     "text": "ECHOES",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.6,
+     "w": 0.84,
+     "size": 0.2,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "h": 0.16923076923076924,
+     "stroke": "$ink",
+     "sw": 0.014,
+     "shadow": {
+      "x": 0.008,
+      "y": 0.008,
+      "blur": 0,
+      "color": "$ink"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.8,
+     "w": 0.8,
+     "h": 0.095,
+     "fill": "$ink",
+     "rx": 0.012
+    },
+    {
+     "t": "icon",
+     "name": "music",
+     "x": 0.1325,
+     "y": 0.8242,
+     "size": 0.055,
+     "color": "$b",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "WORLD TOUR 2026",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.818,
+     "w": 0.62,
+     "size": 0.052,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 800,
+     "ls": 0.1
+    }
+   ]
+  },
+  {
+   "id": "gym-earn-it",
+   "name": "Gym Earn It",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "gym",
+    "fitness",
+    "workout",
+    "motivation",
+    "training",
+    "sport"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#12121a",
+    "a": "#ff5a1f",
+    "b": "#ffd400",
+    "soft": "#f2f2f2"
+   },
+   "variants": [
+    {
+     "name": "Blood Orange",
+     "theme": {
+      "ink": "#12121a",
+      "a": "#ff5a1f",
+      "b": "#ffd400",
+      "soft": "#f2f2f2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Volt",
+     "theme": {
+      "ink": "#0d140a",
+      "a": "#c6ff1a",
+      "b": "#00e0a4",
+      "soft": "#ecffc2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Electric Blue",
+     "theme": {
+      "ink": "#07163d",
+      "a": "#1e90ff",
+      "b": "#6af3ff",
+      "soft": "#dcecff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Crimson",
+     "theme": {
+      "ink": "#1a0808",
+      "a": "#e5132b",
+      "b": "#ff9d00",
+      "soft": "#ffe0dc",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#0a0a0a",
+      "a": "#9d9d9d",
+      "b": "#e5e5e5",
+      "soft": "#e0e0e0",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.2,
+       0.08
+      ],
+      [
+       0.94,
+       0.08
+      ],
+      [
+       0.8,
+       0.8
+      ],
+      [
+       0.06,
+       0.8
+      ]
+     ],
+     "fill": "$ink",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0006"
+     }
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.235,
+       0.105
+      ],
+      [
+       0.905,
+       0.105
+      ],
+      [
+       0.775,
+       0.775
+      ],
+      [
+       0.1,
+       0.775
+      ]
+     ],
+     "fill": "none",
+     "stroke": "$a",
+     "sw": 0.005
+    },
+    {
+     "t": "ellipse",
+     "x": 0.425,
+     "y": 0.1065,
+     "w": 0.15,
+     "h": 0.1269,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "flame",
+     "x": 0.455,
+     "y": 0.1319,
+     "size": 0.09,
+     "color": "$bg",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "EARN",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.285,
+     "w": 0.74,
+     "size": 0.27,
+     "font": "d",
+     "align": "center",
+     "fill": "$bg",
+     "h": 0.22846153846153847,
+     "rot": -6
+    },
+    {
+     "t": "text",
+     "text": "IT.",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.46,
+     "w": 0.74,
+     "size": 0.27,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "h": 0.22846153846153847,
+     "rot": -6,
+     "stroke": "$ink",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.84,
+     "w": 0.8,
+     "h": 0.075,
+     "fill": "$a",
+     "rx": 0.01,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0005"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SWEAT · SUFFER · SUCCEED",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.851,
+     "w": 0.76,
+     "size": 0.042,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 800,
+     "ls": 0.1
+    },
+    {
+     "t": "graphic",
+     "name": "Lightning",
+     "x": 0.79,
+     "y": 0.14,
+     "w": 0.1,
+     "pal": [
+      "$b",
+      "$a",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Lightning",
+     "x": 0.13,
+     "y": 0.62,
+     "w": 0.08,
+     "pal": [
+      "$b",
+      "$a",
+      "$bg"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kids-little-explorer",
+   "name": "Kids Little Explorer",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Chewy",
+    "Fredoka"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "kids",
+    "children",
+    "fun",
+    "boys",
+    "girls",
+    "adventure",
+    "cute"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#1f2f6b",
+    "a": "#ff6b4a",
+    "b": "#ffd23f",
+    "soft": "#d6ecff"
+   },
+   "variants": [
+    {
+     "name": "Sunny",
+     "theme": {
+      "ink": "#1f2f6b",
+      "a": "#ff6b4a",
+      "b": "#ffd23f",
+      "soft": "#d6ecff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Pinkie",
+     "theme": {
+      "ink": "#5a1f4a",
+      "a": "#ff4fa3",
+      "b": "#ffd23f",
+      "soft": "#ffe0f0",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Jungle",
+     "theme": {
+      "ink": "#0f4a2b",
+      "a": "#1fa85a",
+      "b": "#ffd23f",
+      "soft": "#d9f5df",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Grape",
+     "theme": {
+      "ink": "#3b1a78",
+      "a": "#8f5bff",
+      "b": "#ffa8e0",
+      "soft": "#e7dcff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "ink": "#07406b",
+      "a": "#169bd6",
+      "b": "#ffe066",
+      "soft": "#d4f0fb",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Blob",
+     "x": 0.04,
+     "y": 0.06,
+     "w": 0.92,
+     "pal": [
+      "$soft",
+      "$soft",
+      "$soft"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0002"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4,
+     "y": 0.1154,
+     "w": 0.2,
+     "h": 0.1692,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.008
+    },
+    {
+     "t": "ellipse",
+     "x": 0.442,
+     "y": 0.174,
+     "w": 0.026,
+     "h": 0.022,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.532,
+     "y": 0.174,
+     "w": 0.026,
+     "h": 0.022,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.455,
+     "y": 0.2,
+     "w": 0.09,
+     "h": 0.04,
+     "fill": "$ink",
+     "stroke": "$ink",
+     "sw": 0.004
+    },
+    {
+     "t": "graphic",
+     "name": "Rainbow cloud",
+     "x": 0.66,
+     "y": 0.1,
+     "w": 0.24,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.1,
+     "y": 0.1,
+     "w": 0.18,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "Little",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.33,
+     "w": 0.8,
+     "size": 0.17,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "h": 0.14384615384615385,
+     "stroke": "$ink",
+     "sw": 0.012
+    },
+    {
+     "t": "text",
+     "text": "Explorer",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.46,
+     "w": 0.84,
+     "size": 0.21,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "h": 0.17769230769230768,
+     "stroke": "$ink",
+     "sw": 0
+    },
+    {
+     "t": "rect",
+     "x": 0.19,
+     "y": 0.71,
+     "w": 0.62,
+     "h": 0.075,
+     "fill": "$a",
+     "rx": 0.037,
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0003"
+     }
+    },
+    {
+     "t": "text",
+     "text": "ADVENTURE LEVEL: MAX",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7255,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 800,
+     "ls": 0.08
+    },
+    {
+     "t": "graphic",
+     "name": "Confetti",
+     "x": 0.15,
+     "y": 0.8,
+     "w": 0.7,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ]
+    },
+    {
+     "t": "star",
+     "x": 0.14,
+     "y": 0.52,
+     "r": 0.03,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "star",
+     "x": 0.87,
+     "y": 0.55,
+     "r": 0.035,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$a",
+     "stroke": "$ink",
+     "sw": 0.005
+    }
+   ]
+  },
+  {
+   "id": "bachelorette-bride-tribe",
+   "name": "Bride Tribe Bachelorette",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Great Vibes",
+    "Montserrat"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "bachelorette",
+    "bride",
+    "wedding",
+    "party",
+    "script",
+    "gold",
+    "hen party"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#4a2a35",
+    "a": "#d4577e",
+    "b": "#d9a441",
+    "soft": "#fde8ee"
+   },
+   "variants": [
+    {
+     "name": "Blush & Gold",
+     "theme": {
+      "ink": "#4a2a35",
+      "a": "#d4577e",
+      "b": "#d9a441",
+      "soft": "#fde8ee",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Hot Pink Disco",
+     "theme": {
+      "ink": "#4a0f3a",
+      "a": "#ff2e93",
+      "b": "#ffc2e6",
+      "soft": "#ffd9ee",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Sage Garden",
+     "theme": {
+      "ink": "#243a2f",
+      "a": "#6f9a7c",
+      "b": "#d9a441",
+      "soft": "#e5efe3",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Black & Gold",
+     "theme": {
+      "ink": "#111111",
+      "a": "#c79a2e",
+      "b": "#f1d98a",
+      "soft": "#2a2a2a",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Lilac Luxe",
+     "theme": {
+      "ink": "#2f1a52",
+      "a": "#8f64e0",
+      "b": "#e0b0ff",
+      "soft": "#ece2fc",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.08,
+     "y": 0.1046,
+     "w": 0.84,
+     "h": 0.7108,
+     "fill": "$soft",
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0002"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.08,
+     "y": 0.1046,
+     "w": 0.84,
+     "h": 0.7108,
+     "fill": "none",
+     "stroke": "$a",
+     "sw": 0.008
+    },
+    {
+     "t": "ellipse",
+     "x": 0.11,
+     "y": 0.13,
+     "w": 0.78,
+     "h": 0.66,
+     "fill": "none",
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "icon",
+     "name": "crown",
+     "x": 0.435,
+     "y": 0.115,
+     "size": 0.13,
+     "color": "$b",
+     "sw": 1.8
+    },
+    {
+     "t": "text",
+     "text": "bride",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.24,
+     "w": 0.78,
+     "size": 0.3,
+     "font": "d",
+     "align": "center",
+     "fill": "$a",
+     "stroke": "$bg",
+     "sw": 0,
+     "h": 0.25384615384615383
+    },
+    {
+     "t": "text",
+     "text": "TRIBE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.5,
+     "w": 0.76,
+     "size": 0.17,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 800,
+     "ls": 0.14,
+     "h": 0.14384615384615385
+    },
+    {
+     "t": "rect",
+     "x": 0.28,
+     "y": 0.675,
+     "w": 0.44,
+     "h": 0.006,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "BACHELORETTE · GOA 2026",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7,
+     "w": 0.7,
+     "size": 0.032,
+     "font": "b",
+     "align": "center",
+     "fill": "$ink",
+     "weight": 700,
+     "ls": 0.14
+    },
+    {
+     "t": "text",
+     "text": "last fling before the ring",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.745,
+     "w": 0.7,
+     "size": 0.05,
+     "font": "d",
+     "align": "center",
+     "fill": "$a"
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.085,
+     "y": 0.2,
+     "w": 0.15,
+     "pal": [
+      "$b",
+      "$a",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.79,
+     "y": 0.6,
+     "w": 0.14,
+     "pal": [
+      "$b",
+      "$a",
+      "$bg"
+     ]
+    },
+    {
+     "t": "star",
+     "x": 0.82,
+     "y": 0.2,
+     "r": 0.028,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.18,
+     "y": 0.66,
+     "r": 0.02,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b"
+    }
+   ]
+  },
+  {
+   "id": "self-gift-birthday-me",
+   "name": "Happy Birthday To Me",
+   "cat": "tshirt",
+   "product": "T-shirt front",
+   "bg": "transparent",
+   "fonts": [
+    "Pacifico",
+    "Poppins"
+   ],
+   "tags": [
+    "dtf",
+    "t-shirt",
+    "birthday",
+    "self gift",
+    "treat yourself",
+    "party",
+    "typography",
+    "gift"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#3b1a4f",
+    "a": "#f0447a",
+    "b": "#ffc233",
+    "soft": "#ffe3ec"
+   },
+   "variants": [
+    {
+     "name": "Party Pink",
+     "theme": {
+      "ink": "#3b1a4f",
+      "a": "#f0447a",
+      "b": "#ffc233",
+      "soft": "#ffe3ec",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Gold Rush",
+     "theme": {
+      "ink": "#33250a",
+      "a": "#d99a00",
+      "b": "#ffd966",
+      "soft": "#fff0c2",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Aqua Pop",
+     "theme": {
+      "ink": "#0b3b4a",
+      "a": "#12a6c8",
+      "b": "#ff9fd0",
+      "soft": "#d4f3fb",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Lilac Pop",
+     "theme": {
+      "ink": "#2e1a5a",
+      "a": "#8b5cf6",
+      "b": "#ffb3e0",
+      "soft": "#ece2ff",
+      "bg": "#ffffff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "ink": "#111111",
+      "a": "#555555",
+      "b": "#bbbbbb",
+      "soft": "#e6e6e6",
+      "bg": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Blob",
+     "x": 0.03,
+     "y": 0.05,
+     "w": 0.94,
+     "pal": [
+      "$soft",
+      "$soft",
+      "$soft"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.006,
+      "blur": 0.012,
+      "color": "#0002"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "party-popper",
+     "x": 0.43,
+     "y": 0.1108,
+     "size": 0.14,
+     "color": "$a",
+     "sw": 1.8
+    },
+    {
+     "t": "text",
+     "text": "happy",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.26,
+     "w": 0.7,
+     "size": 0.15,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "h": 0.12692307692307692
+    },
+    {
+     "t": "text",
+     "text": "BIRTHDAY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.38,
+     "w": 0.8,
+     "size": 0.17,
+     "font": "b",
+     "align": "center",
+     "fill": "$a",
+     "weight": 900,
+     "ls": 0.02,
+     "h": 0.14384615384615385
+    },
+    {
+     "t": "text",
+     "text": "to me",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.56,
+     "w": 0.7,
+     "size": 0.2,
+     "font": "d",
+     "align": "center",
+     "fill": "$ink",
+     "h": 0.16923076923076924
+    },
+    {
+     "t": "rect",
+     "x": 0.2,
+     "y": 0.775,
+     "w": 0.6,
+     "h": 0.07,
+     "fill": "$ink",
+     "rx": 0.035
+    },
+    {
+     "t": "text",
+     "text": "TREAT YOURSELF · YOU EARNED IT",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.795,
+     "w": 0.58,
+     "size": 0.03,
+     "font": "b",
+     "align": "center",
+     "fill": "$bg",
+     "weight": 700,
+     "ls": 0.08
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.1,
+     "y": 0.7,
+     "w": 0.16,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.76,
+     "y": 0.3,
+     "w": 0.16,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ]
+    },
+    {
+     "t": "star",
+     "x": 0.15,
+     "y": 0.33,
+     "r": 0.03,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "star",
+     "x": 0.86,
+     "y": 0.68,
+     "r": 0.025,
+     "n": 4,
+     "inner": 0.28,
+     "fill": "$b",
+     "stroke": "$ink",
+     "sw": 0.005
+    }
+   ]
+  }
+ ]
+}
