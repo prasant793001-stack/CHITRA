@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* Validates hand-made template specs (data/templates/*.json). Usage: node tools/validate-templates.mjs [file.json ...]   (no args = every file in data/templates/index.json)
    Errors fail the run; warnings are design-quality hints (contrast, overflow, tiny text, off-page layers). */
-import fs from 'node:fs'; import path from 'node:path';
-const root = path.join(path.dirname(new URL(import.meta.url).pathname), '..'), rd = f => fs.readFileSync(path.join(root, f), 'utf8');
+import { fileURLToPath } from 'node:url'; import fs from 'node:fs'; import path from 'node:path';
+const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..'), rd = f => fs.readFileSync(path.join(root, f), 'utf8');
 const fonts = new Set([...rd('fonts.js').matchAll(/\['([^']+)', '(?:Sans|Serif|Display|Script|Handwriting|Mono|Arabic|Hindi)'/g)].map(m => m[1]));
 const cats = new Set([...rd('templates.js').split('const CAT_LABEL = ')[1].split('};')[0].matchAll(/(\w+): '/g)].map(m => m[1]));
 const app = rd('app.js'), prods = {};

@@ -4,9 +4,9 @@
  * Output: mockups/*.jpg (+ _t thumbnails) and data/mockups/index.json entries with a proposed print area (quad) per product.
  * Then run  node tools/mockup-sheet.mjs /tmp/m.png  and LOOK at it: adjust any quad by hand in index.json (fractions of the photo), or delete bad photos.
  * Keys come from the environment only and are never written to disk. Resizing uses sharp, else Pillow (tools/resize.py). */
-import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process';
+import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process'; import { fileURLToPath } from 'node:url';
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d; };
-const PEX = process.env.PEXELS_KEY, PIX = process.env.PIXABAY_KEY, OUT = arg('out', '.'), PER = +arg('per', 4); const here = path.dirname(new URL(import.meta.url).pathname);
+const PEX = process.env.PEXELS_KEY, PIX = process.env.PIXABAY_KEY, OUT = arg('out', '.'), PER = +arg('per', 4); const here = path.dirname(fileURLToPath(import.meta.url));
 if (!PEX && !PIX) { console.error('Set PEXELS_KEY and/or PIXABAY_KEY'); process.exit(1); }
 const PRODUCTS = [ // kind, label, search, proposed quad (fractions), curve
   ['shirt', 'T-shirt', 'blank white t-shirt mockup', [[.34, .28], [.66, .28], [.66, .56], [.34, .56]], 0], ['hoodie', 'Hoodie', 'blank hoodie mockup', [[.35, .36], [.65, .36], [.65, .6], [.35, .6]], 0],
