@@ -198,6 +198,18 @@ module.exports = [
     ok('choosing a ready-made mockup loads its photo and print area', !!q.base && q.kind === 'mug' && q.quad.length === 4, JSON.stringify(q.quad && q.quad[0]));
     await p.evaluate(() => { document.getElementById('pmStudio').hidden = true; });
   } },
+  { name: 'mobile bottom sheets close by handle, swipe or switching', only: 'mobile', run: async (p, ok) => {
+    await p.evaluate(async () => { await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); chitra.addText('heading'); }); await p.waitForTimeout(700);
+    const st = () => p.evaluate(() => ({ open: document.body.classList.contains('sheet-open'), focus: document.querySelector('#inspector').dataset.focus || null }));
+    await p.tap('#ctxBar [data-key=font]'); await p.waitForTimeout(350); ok('tapping Font opens its sheet', (await st()).focus === 'font');
+    await p.tap('#ctxBar [data-key=colour]'); await p.waitForTimeout(350); const s2 = await st(); ok('choosing another option replaces the first (only one sheet)', s2.open && s2.focus === 'colour', JSON.stringify(s2));
+    await p.tap('#inspector .sheet-head'); await p.waitForTimeout(350); ok('tapping the handle / title bar closes the sheet', !(await st()).open);
+    await p.tap('#ctxBar [data-key=effects]'); await p.waitForTimeout(350); const hb = await p.locator('#inspector .sheet-head').boundingBox();
+    await p.mouse.move(hb.x + hb.width / 2, hb.y + 10); await p.mouse.down(); await p.mouse.move(hb.x + hb.width / 2, hb.y + 120, { steps: 6 }); await p.mouse.up(); await p.waitForTimeout(350);
+    ok('swiping the sheet down closes it', !(await st()).open);
+    await p.tap('#ctxBar [data-key=font]'); await p.waitForTimeout(300); await p.tap('#ctxBar [data-key=dup]'); await p.waitForTimeout(400); ok('picking an action (Duplicate) tucks the open sheet away', !(await st()).open);
+    const hs = await p.evaluate(() => fabric.Object.prototype.cornerSize); ok('selection handles are slim on phones', hs <= 18, hs);
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);

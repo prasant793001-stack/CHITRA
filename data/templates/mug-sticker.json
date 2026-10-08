@@ -1,0 +1,5459 @@
+{
+ "templates": [
+  {
+   "id": "mug-monogram-name",
+   "name": "Monogram Name Mug",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 90
+   },
+   "fonts": [
+    "Playfair Display",
+    "Poppins"
+   ],
+   "tags": [
+    "name",
+    "monogram",
+    "personalised",
+    "gift",
+    "initial"
+   ],
+   "theme": {
+    "bg": "#fff4ef",
+    "soft": "#ffd9cf",
+    "ink": "#3a1f2b",
+    "a": "#e85d75",
+    "b": "#ffb36b"
+   },
+   "variants": [
+    {
+     "name": "Blush",
+     "theme": {}
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#14183a",
+      "soft": "#232a5c",
+      "ink": "#f4f1ff",
+      "a": "#7c5cff",
+      "b": "#ff8fb8"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#eef3e8",
+      "soft": "#d3e2c8",
+      "ink": "#24392c",
+      "a": "#3f7d58",
+      "b": "#d9a441"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#f1f1f1",
+      "soft": "#dadada",
+      "ink": "#111111",
+      "a": "#111111",
+      "b": "#6a6a6a"
+     },
+     "fonts": [
+      "Abril Fatface",
+      "Montserrat"
+     ]
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": -0.1909,
+     "y": 0,
+     "w": 0.4242,
+     "h": 1,
+     "fill": "$soft",
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7636,
+     "y": 0,
+     "w": 0.4242,
+     "h": 1,
+     "fill": "$soft",
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1358,
+     "y": 0.14,
+     "w": 0.3055,
+     "h": 0.72,
+     "stroke": "$ink",
+     "sw": 0.006
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1612,
+     "y": 0.2,
+     "w": 0.2545,
+     "h": 0.6,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 135
+     },
+     "shadow": {
+      "y": 0.02,
+      "blur": 0.04,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "M",
+     "x": 0.2885,
+     "anchor": "c",
+     "y": 0.21,
+     "w": 0.2121,
+     "size": 0.5,
+     "align": "center",
+     "font": "d",
+     "fill": "$bg"
+    },
+    {
+     "t": "star",
+     "x": 0.4158,
+     "y": 0.2,
+     "r": 0.035,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.1612,
+     "y": 0.84,
+     "r": 0.025,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Meera",
+     "x": 0.5091,
+     "y": 0.22,
+     "w": 0.3733,
+     "size": 0.27,
+     "align": "left",
+     "font": "d",
+     "italic": true,
+     "fill": "$ink",
+     "h": 0.4
+    },
+    {
+     "t": "rect",
+     "x": 0.5176,
+     "y": 0.62,
+     "w": 0.2121,
+     "h": 0.012,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "DREAMER · DOER",
+     "x": 0.5176,
+     "y": 0.69,
+     "w": 0.3606,
+     "size": 0.05,
+     "align": "left",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "upper": true,
+     "ls": 0.16
+    },
+    {
+     "t": "icon",
+     "name": "sparkles",
+     "x": 0.8039,
+     "y": 0.705,
+     "size": 0.11,
+     "color": "$a",
+     "sw": 1.8
+    }
+   ]
+  },
+  {
+   "id": "mug-big-quote",
+   "name": "Big Quote Typography",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "quote",
+    "motivation",
+    "typography",
+    "inspiration"
+   ],
+   "theme": {
+    "bg": "#fff1dc",
+    "ink": "#1d1d1d",
+    "a": "#e4472b",
+    "b": "#f5b83d",
+    "soft": "#f6d9a8"
+   },
+   "variants": [
+    {
+     "name": "Cream",
+     "theme": {}
+    },
+    {
+     "name": "Ink Night",
+     "theme": {
+      "bg": "#101524",
+      "ink": "#f5f1e8",
+      "a": "#ffcc33",
+      "b": "#ff6b6b",
+      "soft": "#252c47"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#ffd6e0",
+      "ink": "#3b0f2a",
+      "a": "#d6246e",
+      "b": "#ff8fab",
+      "soft": "#ffb8c9"
+     }
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "bg": "#0d4a73",
+      "ink": "#ffffff",
+      "a": "#ffd166",
+      "b": "#4cc9f0",
+      "soft": "#176a9e"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#1f3d2b",
+      "ink": "#f2ead3",
+      "a": "#f2a900",
+      "b": "#8bc17a",
+      "soft": "#2e5a3f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "text",
+     "text": "“",
+     "x": 0.2121,
+     "anchor": "c",
+     "y": -0.276,
+     "w": 0.3818,
+     "size": 1.6,
+     "align": "center",
+     "font": "Playfair Display",
+     "fill": "$soft"
+    },
+    {
+     "t": "text",
+     "text": "”",
+     "x": 0.9333,
+     "anchor": "c",
+     "y": -0.096,
+     "w": 0.3818,
+     "size": 1.6,
+     "align": "center",
+     "font": "Playfair Display",
+     "fill": "$soft"
+    },
+    {
+     "t": "text",
+     "text": "DO IT WITH",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.1462,
+     "w": 0.5091,
+     "size": 0.105,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$ink",
+     "ls": 0.3
+    },
+    {
+     "t": "rect",
+     "x": 0.1909,
+     "y": 0.195,
+     "w": 0.1018,
+     "h": 0.012,
+     "fill": "$b"
+    },
+    {
+     "t": "rect",
+     "x": 0.7085,
+     "y": 0.195,
+     "w": 0.1018,
+     "h": 0.012,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "PASSION",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.27,
+     "w": 0.7212,
+     "size": 0.46,
+     "align": "center",
+     "font": "d",
+     "fill": "$a",
+     "lh": 1,
+     "shadow": {
+      "x": 0.012,
+      "y": 0.014,
+      "blur": 0,
+      "color": "$ink"
+     },
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "OR NOT AT ALL.",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7412,
+     "w": 0.6364,
+     "size": 0.105,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$ink",
+     "ls": 0.3
+    },
+    {
+     "t": "star",
+     "x": 0.1909,
+     "y": 0.8,
+     "r": 0.028,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.8061,
+     "y": 0.8,
+     "r": 0.028,
+     "fill": "$b"
+    }
+   ]
+  },
+  {
+   "id": "mug-floral-garden",
+   "name": "Floral Garden Wrap",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Pacifico",
+    "Poppins"
+   ],
+   "tags": [
+    "floral",
+    "flowers",
+    "botanical",
+    "pattern",
+    "mom",
+    "spring"
+   ],
+   "theme": {
+    "bg": "#fff8ee",
+    "ink": "#4a2c2a",
+    "a": "#e0455f",
+    "b": "#ffb347",
+    "soft": "#ffe3d6",
+    "leaf": "#7fb069"
+   },
+   "variants": [
+    {
+     "name": "Peach",
+     "theme": {}
+    },
+    {
+     "name": "Lavender",
+     "theme": {
+      "bg": "#f1ebff",
+      "ink": "#2e2250",
+      "a": "#9b6bff",
+      "b": "#ff8fc7",
+      "soft": "#d9ccff",
+      "leaf": "#6fae9a"
+     }
+    },
+    {
+     "name": "Navy Bloom",
+     "theme": {
+      "bg": "#182848",
+      "ink": "#fdf3e7",
+      "a": "#ff8fa3",
+      "b": "#ffd27a",
+      "soft": "#324a7d",
+      "leaf": "#5fb49c"
+     }
+    },
+    {
+     "name": "Meadow",
+     "theme": {
+      "bg": "#eaf4df",
+      "ink": "#243a1f",
+      "a": "#3e9b5e",
+      "b": "#f2c744",
+      "soft": "#cfe6b8",
+      "leaf": "#4f8a3c"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.1636,
+     "y": 0.4435,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 161,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.1978,
+     "y": 0.4618,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 16,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.2625,
+     "y": 0.7798,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 147,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.4193,
+     "y": 0.4505,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 168,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.1733,
+     "y": 0.8077,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 101,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.0954,
+     "y": 0.3309,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 257,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.9207,
+     "y": 0.9083,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 137,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.7993,
+     "y": 0.2772,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 298,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.7434,
+     "y": -0.1244,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 30,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.8476,
+     "y": 1.0245,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 265,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.8916,
+     "y": 0.8719,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 200,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.7516,
+     "y": 0.7455,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 85,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.2382,
+     "y": 0.9892,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 287,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.6238,
+     "y": -0.1395,
+     "w": 0.1273,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 70,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": -0.0042,
+     "y": 0.01,
+     "w": 0.1782,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "rot": 0
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.1771,
+     "y": 0.4522,
+     "w": 0.2121,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "rot": 23
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.1288,
+     "y": 0.4079,
+     "w": 0.1273,
+     "pal": [
+      "$soft",
+      "$a",
+      "$b"
+     ],
+     "rot": 46
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.3626,
+     "y": 0.032,
+     "w": 0.1103,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "rot": 69
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.1082,
+     "y": 0.7553,
+     "w": 0.1273,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "rot": 92
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.2798,
+     "y": 0.062,
+     "w": 0.1018,
+     "pal": [
+      "$soft",
+      "$a",
+      "$b"
+     ],
+     "rot": 115
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.9439,
+     "y": 0.817,
+     "w": 0.1952,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "rot": 138
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 1.052,
+     "y": 0.4164,
+     "w": 0.1867,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "rot": 161
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.7975,
+     "y": 0.3494,
+     "w": 0.1188,
+     "pal": [
+      "$soft",
+      "$a",
+      "$b"
+     ],
+     "rot": 184
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 1.0036,
+     "y": 1.0517,
+     "w": 0.1273,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "rot": 207
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.8629,
+     "y": 0.7331,
+     "w": 0.1103,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "rot": 230
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.5997,
+     "y": 1.0823,
+     "w": 0.1103,
+     "pal": [
+      "$soft",
+      "$a",
+      "$b"
+     ],
+     "rot": 253
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.3352,
+     "y": 1.019,
+     "w": 0.0848,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "rot": 276
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.4938,
+     "y": 0.139,
+     "w": 0.0848,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "rot": 299
+    },
+    {
+     "t": "rect",
+     "x": 0.2121,
+     "y": 0.2,
+     "w": 0.577,
+     "h": 0.6,
+     "fill": "$bg",
+     "rx": 0.3,
+     "shadow": {
+      "y": 0.015,
+      "blur": 0.04,
+      "color": "rgba(0,0,0,.2)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.2291,
+     "y": 0.24,
+     "w": 0.543,
+     "h": 0.52,
+     "stroke": "$a",
+     "sw": 0.006,
+     "rx": 0.26
+    },
+    {
+     "t": "text",
+     "text": "hello,",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.306,
+     "w": 0.4667,
+     "size": 0.15,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.04
+    },
+    {
+     "t": "text",
+     "text": "sunshine",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.485,
+     "w": 0.5091,
+     "size": 0.23,
+     "align": "center",
+     "font": "Pacifico",
+     "fill": "$a",
+     "lh": 1,
+     "weight": 400
+    }
+   ]
+  },
+  {
+   "id": "mug-retro-sunburst",
+   "name": "Retro Sunburst Stripes",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Bowlby One",
+    "Poppins"
+   ],
+   "tags": [
+    "retro",
+    "70s",
+    "sunburst",
+    "stripes",
+    "vibes"
+   ],
+   "theme": {
+    "bg": "#ffe2b8",
+    "ink": "#3b1d12",
+    "a": "#e8542f",
+    "b": "#f7a928",
+    "soft": "#fff2da"
+   },
+   "variants": [
+    {
+     "name": "Sunset",
+     "theme": {}
+    },
+    {
+     "name": "Grape Soda",
+     "theme": {
+      "bg": "#f1d9ff",
+      "ink": "#2a0f55",
+      "a": "#8f2bff",
+      "b": "#ff5ca8",
+      "soft": "#fbeaff"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#cdf1ec",
+      "ink": "#0b3a4a",
+      "a": "#12a596",
+      "b": "#ffb938",
+      "soft": "#effcf9"
+     }
+    },
+    {
+     "name": "Night Drive",
+     "theme": {
+      "bg": "#1b1030",
+      "ink": "#fff1e0",
+      "a": "#ff4f81",
+      "b": "#ffb347",
+      "soft": "#3a2260"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.097,
+     "y": -0.48,
+     "w": 0.8061,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "opacity": 0.85
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3473,
+     "y": 0.11,
+     "w": 0.3055,
+     "h": 0.72,
+     "fill": {
+      "grad": [
+       "$b",
+       "$a"
+      ],
+      "angle": 180
+     },
+     "shadow": {
+      "y": 0.02,
+      "blur": 0.05,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.7,
+     "w": 0.9999,
+     "h": 0.06,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.78,
+     "w": 0.9999,
+     "h": 0.05,
+     "fill": "$b"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.855,
+     "w": 0.9999,
+     "h": 0.04,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.92,
+     "w": 0.9999,
+     "h": 0.025,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "GOOD VIBES",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.29,
+     "w": 0.6788,
+     "size": 0.22,
+     "align": "center",
+     "font": "d",
+     "fill": "$soft",
+     "stroke": "$ink",
+     "sw": 0.018,
+     "ls": 0.02,
+     "lh": 1,
+     "shadow": {
+      "x": 0.01,
+      "y": 0.02,
+      "blur": 0,
+      "color": "$ink"
+     },
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.3303,
+     "y": 0.545,
+     "w": 0.3394,
+     "h": 0.085,
+     "fill": "$ink",
+     "rx": 0.0425
+    },
+    {
+     "t": "text",
+     "text": "SUNNY DAYS ONLY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.564,
+     "w": 0.3309,
+     "size": 0.042,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$soft",
+     "ls": 0.3
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.9999,
+     "h": 0.05,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.07,
+     "w": 0.9999,
+     "h": 0.02,
+     "fill": "$a"
+    }
+   ]
+  },
+  {
+   "id": "mug-dad-legend",
+   "name": "Dad Hero Gift Mug",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Alfa Slab One",
+    "Poppins"
+   ],
+   "tags": [
+    "dad",
+    "father",
+    "fathers day",
+    "gift",
+    "hero"
+   ],
+   "theme": {
+    "bg": "#f4ead5",
+    "ink": "#26323c",
+    "a": "#d7502d",
+    "b": "#f2a93b",
+    "soft": "#e7d6b3"
+   },
+   "variants": [
+    {
+     "name": "Workshop",
+     "theme": {}
+    },
+    {
+     "name": "Navy",
+     "theme": {
+      "bg": "#12263f",
+      "ink": "#f6f1e7",
+      "a": "#f2b134",
+      "b": "#e4572e",
+      "soft": "#1f3a5c"
+     }
+    },
+    {
+     "name": "Olive",
+     "theme": {
+      "bg": "#e6e8d4",
+      "ink": "#2c3320",
+      "a": "#6b7d2e",
+      "b": "#c9922b",
+      "soft": "#cfd5b0"
+     }
+    },
+    {
+     "name": "Charcoal",
+     "theme": {
+      "bg": "#1c1c1e",
+      "ink": "#f2f2f2",
+      "a": "#e63946",
+      "b": "#ffb703",
+      "soft": "#333336"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.0594,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.9405,
+     "y": 0,
+     "w": 0.0594,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.0594,
+     "y": 0,
+     "w": 0.0127,
+     "h": 1,
+     "fill": "$b"
+    },
+    {
+     "t": "rect",
+     "x": 0.9278,
+     "y": 0,
+     "w": 0.0127,
+     "h": 1,
+     "fill": "$b"
+    },
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.1103,
+     "y": 0.04,
+     "w": 0.3903,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "shadow": {
+      "y": 0.02,
+      "blur": 0.04,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1655,
+     "y": 0.17,
+     "w": 0.28,
+     "h": 0.66,
+     "fill": "$bg"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1824,
+     "y": 0.21,
+     "w": 0.2461,
+     "h": 0.58,
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "text",
+     "text": "NO. 1",
+     "x": 0.3055,
+     "anchor": "c",
+     "y": 0.2664,
+     "w": 0.2121,
+     "size": 0.06,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$a",
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "DAD",
+     "x": 0.3055,
+     "anchor": "c",
+     "y": 0.39,
+     "w": 0.2376,
+     "size": 0.22,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "EST. 2014",
+     "x": 0.3055,
+     "anchor": "c",
+     "y": 0.672,
+     "w": 0.2121,
+     "size": 0.05,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "HERO.",
+     "x": 0.56,
+     "y": 0.15,
+     "w": 0.3309,
+     "size": 0.15,
+     "align": "left",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "FIXER.",
+     "x": 0.56,
+     "y": 0.31,
+     "w": 0.3309,
+     "size": 0.15,
+     "align": "left",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "LEGEND.",
+     "x": 0.56,
+     "y": 0.47,
+     "w": 0.3309,
+     "size": 0.15,
+     "align": "left",
+     "font": "d",
+     "fill": "$a",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.5685,
+     "y": 0.72,
+     "w": 0.1697,
+     "h": 0.01,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "Teller of questionable jokes.\nKeeper of the good tools.",
+     "x": 0.5685,
+     "y": 0.77,
+     "w": 0.3139,
+     "size": 0.04,
+     "align": "left",
+     "font": "b",
+     "weight": 500,
+     "fill": "$ink"
+    }
+   ]
+  },
+  {
+   "id": "mug-gamer-grid",
+   "name": "Gamer Neon Grid",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 180
+   },
+   "fonts": [
+    "Russo One",
+    "Poppins"
+   ],
+   "tags": [
+    "gamer",
+    "gaming",
+    "tech",
+    "neon",
+    "esports",
+    "gift"
+   ],
+   "theme": {
+    "bg": "#0d0b1e",
+    "ink": "#f0eaff",
+    "a": "#a15cff",
+    "b": "#2ee6c8",
+    "soft": "#1e1840"
+   },
+   "variants": [
+    {
+     "name": "Neon Violet",
+     "theme": {}
+    },
+    {
+     "name": "Cyber Lime",
+     "theme": {
+      "bg": "#0b130d",
+      "ink": "#eaffe0",
+      "a": "#7dff3a",
+      "b": "#ffe14a",
+      "soft": "#14261a"
+     }
+    },
+    {
+     "name": "Arcade Red",
+     "theme": {
+      "bg": "#160a0e",
+      "ink": "#fff0f0",
+      "a": "#ff3355",
+      "b": "#ffd23f",
+      "soft": "#2b1219"
+     }
+    },
+    {
+     "name": "Ice Blue",
+     "theme": {
+      "bg": "#071a2b",
+      "ink": "#e8f6ff",
+      "a": "#3db8ff",
+      "b": "#ff7ad9",
+      "soft": "#0f3050"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0,
+     "x2": 0,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.0848,
+     "y1": 0,
+     "x2": 0.0848,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.1697,
+     "y1": 0,
+     "x2": 0.1697,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.2545,
+     "y1": 0,
+     "x2": 0.2545,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.3394,
+     "y1": 0,
+     "x2": 0.3394,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.4242,
+     "y1": 0,
+     "x2": 0.4242,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.5091,
+     "y1": 0,
+     "x2": 0.5091,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.5939,
+     "y1": 0,
+     "x2": 0.5939,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.6788,
+     "y1": 0,
+     "x2": 0.6788,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.7636,
+     "y1": 0,
+     "x2": 0.7636,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.8485,
+     "y1": 0,
+     "x2": 0.8485,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0.9333,
+     "y1": 0,
+     "x2": 0.9333,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 1.0182,
+     "y1": 0,
+     "x2": 1.0182,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0,
+     "x2": 0.9999,
+     "y2": 0,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.2,
+     "x2": 0.9999,
+     "y2": 0.2,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.4,
+     "x2": 0.9999,
+     "y2": 0.4,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6,
+     "x2": 0.9999,
+     "y2": 0.6,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.8,
+     "x2": 0.9999,
+     "y2": 0.8,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 1,
+     "x2": 0.9999,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.18
+    },
+    {
+     "t": "rect",
+     "x": 0.1442,
+     "y": 0.2,
+     "w": 0.0255,
+     "h": 0.06,
+     "fill": "$b",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.1782,
+     "y": 0.78,
+     "w": 0.017,
+     "h": 0.04,
+     "fill": "$a",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.8697,
+     "y": 0.18,
+     "w": 0.0212,
+     "h": 0.05,
+     "fill": "$a",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.8485,
+     "y": 0.85,
+     "w": 0.0297,
+     "h": 0.07,
+     "fill": "$b",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.4242,
+     "y": 0.1,
+     "w": 0.0148,
+     "h": 0.035,
+     "fill": "$b",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.4242,
+     "y": 0.9,
+     "w": 0.0148,
+     "h": 0.035,
+     "fill": "$a",
+     "opacity": 0.9
+    },
+    {
+     "t": "rect",
+     "x": 0.1273,
+     "y": 0.2,
+     "w": 0.3903,
+     "h": 0.6,
+     "fill": "$soft",
+     "rx": 0.08,
+     "stroke": "$a",
+     "sw": 0.008,
+     "shadow": {
+      "blur": 0.06,
+      "color": "$a"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "gamepad-2",
+     "x": 0.2164,
+     "y": 0.25,
+     "size": 0.5,
+     "color": "$ink",
+     "sw": 1.6,
+     "shadow": {
+      "blur": 0.04,
+      "color": "$a"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SLEEP.",
+     "x": 0.5855,
+     "y": 0.17,
+     "w": 0.297,
+     "size": 0.165,
+     "align": "left",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "GAME.",
+     "x": 0.5855,
+     "y": 0.35,
+     "w": 0.297,
+     "size": 0.165,
+     "align": "left",
+     "font": "d",
+     "fill": "$a",
+     "lh": 1,
+     "shadow": {
+      "blur": 0.04,
+      "color": "$a"
+     },
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "REPEAT.",
+     "x": 0.5855,
+     "y": 0.53,
+     "w": 0.297,
+     "size": 0.165,
+     "align": "left",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "PLAYER 1 · LEVEL 99 · ONLINE",
+     "x": 0.5855,
+     "y": 0.77,
+     "w": 0.297,
+     "size": 0.034,
+     "align": "left",
+     "font": "Space Mono",
+     "weight": 700,
+     "fill": "$b",
+     "ls": 0.06
+    }
+   ]
+  },
+  {
+   "id": "mug-affirmation-glow",
+   "name": "Positive Affirmation",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 180
+   },
+   "fonts": [
+    "DM Serif Display",
+    "Poppins"
+   ],
+   "tags": [
+    "affirmation",
+    "positive",
+    "self care",
+    "mindful",
+    "quote"
+   ],
+   "theme": {
+    "bg": "#fff3ea",
+    "ink": "#42263b",
+    "a": "#f08a5d",
+    "b": "#b83b5e",
+    "soft": "#ffd8c2"
+   },
+   "variants": [
+    {
+     "name": "Peach",
+     "theme": {}
+    },
+    {
+     "name": "Lilac",
+     "theme": {
+      "bg": "#f1eaff",
+      "ink": "#2f2257",
+      "a": "#8e6bff",
+      "b": "#c9327c",
+      "soft": "#d9ccff"
+     }
+    },
+    {
+     "name": "Mint",
+     "theme": {
+      "bg": "#e6f6ee",
+      "ink": "#173f35",
+      "a": "#2fa37f",
+      "b": "#b0690f",
+      "soft": "#c3e8d7"
+     }
+    },
+    {
+     "name": "Dusk",
+     "theme": {
+      "bg": "#2a2150",
+      "ink": "#fdf1e7",
+      "a": "#ffa07a",
+      "b": "#ff7eb6",
+      "soft": "#403476"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0,
+     "y": 0.02,
+     "w": 0.3394,
+     "h": 0.96,
+     "fill": "$soft",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6618,
+     "y": 0.02,
+     "w": 0.3394,
+     "h": 0.96,
+     "fill": "$soft",
+     "opacity": 0.7
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.1315,
+     "y": 0.35,
+     "w": 0.1273,
+     "pal": [
+      "$a",
+      "$b",
+      "$a"
+     ],
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.7424,
+     "y": 0.35,
+     "w": 0.1273,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "opacity": 0.9
+    },
+    {
+     "t": "text",
+     "text": "TODAY, I AM",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.1864,
+     "w": 0.4242,
+     "size": 0.06,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.35
+    },
+    {
+     "t": "text",
+     "text": "enough.",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.35,
+     "w": 0.5515,
+     "size": 0.3,
+     "align": "center",
+     "font": "d",
+     "fill": "$b",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.3939,
+     "y": 0.73,
+     "w": 0.2121,
+     "h": 0.008,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "growing  ·  glowing  ·  becoming",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7892,
+     "w": 0.5515,
+     "size": 0.055,
+     "align": "center",
+     "font": "b",
+     "weight": 500,
+     "italic": true,
+     "fill": "$ink",
+     "ls": 0.04
+    }
+   ]
+  },
+  {
+   "id": "mug-memphis-pop",
+   "name": "Memphis Pop Pattern",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Lilita One",
+    "Poppins"
+   ],
+   "tags": [
+    "memphis",
+    "geometric",
+    "80s",
+    "pattern",
+    "pop",
+    "fun"
+   ],
+   "theme": {
+    "bg": "#fff6d9",
+    "ink": "#1f1d36",
+    "a": "#ff5c8a",
+    "b": "#2ec4b6",
+    "soft": "#ffd166"
+   },
+   "variants": [
+    {
+     "name": "Pop",
+     "theme": {}
+    },
+    {
+     "name": "Midnight Pop",
+     "theme": {
+      "bg": "#1f1d36",
+      "ink": "#fff6d9",
+      "a": "#ff5c8a",
+      "b": "#38e0cf",
+      "soft": "#ffd166"
+     }
+    },
+    {
+     "name": "Pastel",
+     "theme": {
+      "bg": "#fdeff4",
+      "ink": "#3b2a54",
+      "a": "#b48cf2",
+      "b": "#74d3c4",
+      "soft": "#ffc2d4"
+     }
+    },
+    {
+     "name": "Tangerine",
+     "theme": {
+      "bg": "#ffe9d6",
+      "ink": "#27223a",
+      "a": "#ff7a3d",
+      "b": "#3d6bff",
+      "soft": "#ffd0a8"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.019,
+     "y": 0.0961,
+     "w": 0.2545,
+     "pal": [
+      "$b",
+      "$a",
+      "$ink"
+     ],
+     "rot": -20
+    },
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.0488,
+     "y": 0.5514,
+     "w": 0.2545,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "rot": -8
+    },
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.7084,
+     "y": -0.0433,
+     "w": 0.2545,
+     "pal": [
+      "$b",
+      "$a",
+      "$ink"
+     ],
+     "rot": 4
+    },
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.7156,
+     "y": 0.4349,
+     "w": 0.2545,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "rot": 16
+    },
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.4619,
+     "y": -0.1846,
+     "w": 0.1697,
+     "pal": [
+      "$b",
+      "$a",
+      "$ink"
+     ],
+     "rot": 28
+    },
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.4852,
+     "y": 0.662,
+     "w": 0.1697,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "rot": 40
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0042,
+     "y": 0.11,
+     "w": 0.0764,
+     "h": 0.18,
+     "fill": "$a"
+    },
+    {
+     "t": "ellipse",
+     "x": -0.0085,
+     "y": 0.56,
+     "w": 0.1188,
+     "h": 0.28,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9079,
+     "y": 0.19,
+     "w": 0.0933,
+     "h": 0.22,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9333,
+     "y": 0.72,
+     "w": 0.0679,
+     "h": 0.16,
+     "fill": "$a"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2758,
+     "y": 0.45,
+     "w": 0.0424,
+     "h": 0.1,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7,
+     "y": 0.45,
+     "w": 0.0424,
+     "h": 0.1,
+     "fill": "$a"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.0509,
+       0.88
+      ],
+      [
+       0.1358,
+       0.88
+      ],
+      [
+       0.0933,
+       0.7
+      ]
+     ],
+     "fill": "$b"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.8909,
+       0.12
+      ],
+      [
+       0.9758,
+       0.12
+      ],
+      [
+       0.9333,
+       0.28
+      ]
+     ],
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.263,
+     "y": 0.3,
+     "w": 0.5091,
+     "h": 0.42,
+     "fill": "$a",
+     "rx": 0.06,
+     "rot": -2
+    },
+    {
+     "t": "rect",
+     "x": 0.2461,
+     "y": 0.26,
+     "w": 0.5091,
+     "h": 0.42,
+     "fill": "$ink",
+     "rx": 0.06,
+     "rot": -2,
+     "shadow": {
+      "x": 0.015,
+      "y": 0.02,
+      "blur": 0,
+      "color": "$b"
+     }
+    },
+    {
+     "t": "text",
+     "text": "STAY CURIOUS",
+     "x": 0.5006,
+     "anchor": "c",
+     "y": 0.385,
+     "w": 0.4752,
+     "size": 0.14,
+     "align": "center",
+     "font": "d",
+     "fill": "$bg",
+     "rot": -2,
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "ask · build · repeat",
+     "x": 0.5006,
+     "anchor": "c",
+     "y": 0.572,
+     "w": 0.4242,
+     "size": 0.05,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$bg",
+     "ls": 0.18,
+     "upper": true,
+     "rot": -2,
+     "opacity": 0.85
+    }
+   ]
+  },
+  {
+   "id": "mug-night-mountains",
+   "name": "Night Sky Mountains",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 180
+   },
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "mountains",
+    "night sky",
+    "travel",
+    "adventure",
+    "hiking",
+    "panorama"
+   ],
+   "theme": {
+    "bg": "#0b1635",
+    "soft": "#274a86",
+    "star": "#ffffff",
+    "moon": "#fff1c4",
+    "m1": "#1c3a73",
+    "m2": "#142a57",
+    "m3": "#0b1a3a",
+    "tree": "#061026",
+    "ink": "#fff"
+   },
+   "variants": [
+    {
+     "name": "Midnight",
+     "theme": {}
+    },
+    {
+     "name": "Dusk Purple",
+     "theme": {
+      "bg": "#1b1040",
+      "soft": "#a24d9a",
+      "moon": "#ffd9e8",
+      "m1": "#4a2a7a",
+      "m2": "#331c5c",
+      "m3": "#1f1040",
+      "tree": "#12082a"
+     }
+    },
+    {
+     "name": "Ember Dawn",
+     "theme": {
+      "bg": "#3a1c4d",
+      "soft": "#ff9a6c",
+      "moon": "#fff4d6",
+      "star": "#ffe9d1",
+      "m1": "#7a3a63",
+      "m2": "#4f2551",
+      "m3": "#2c1438",
+      "tree": "#1a0b24"
+     }
+    },
+    {
+     "name": "Pine Night",
+     "theme": {
+      "bg": "#071f1e",
+      "soft": "#1e6b5c",
+      "moon": "#eaffd9",
+      "m1": "#14504a",
+      "m2": "#0d3a37",
+      "m3": "#062321",
+      "tree": "#03130f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "star",
+     "x": 0.576,
+     "y": 0.3565,
+     "r": 0.006162349624634883,
+     "fill": "$star",
+     "opacity": 0.6305070619240902,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.8869,
+     "y": 0.2611,
+     "r": 0.007162808765267399,
+     "fill": "$star",
+     "opacity": 0.7663458924583839,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.959,
+     "y": 0.1603,
+     "r": 0.016816934890494184,
+     "fill": "$star",
+     "opacity": 0.41123522678913327,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7174,
+     "y": 0.404,
+     "r": 0.017391172902375074,
+     "fill": "$star",
+     "opacity": 0.572148510893876,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.1667,
+     "y": 0.3998,
+     "r": 0.017375782789371807,
+     "fill": "$star",
+     "opacity": 0.8390670485976464,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.9997,
+     "y": 0.4003,
+     "r": 0.011177310679656133,
+     "fill": "$star",
+     "opacity": 0.5530296490308967,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.6155,
+     "y": 0.012,
+     "r": 0.017422977268427134,
+     "fill": "$star",
+     "opacity": 0.8989475227421837,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3517,
+     "y": 0.4371,
+     "r": 0.006015469416983179,
+     "fill": "$star",
+     "opacity": 0.7997245618140905,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.9511,
+     "y": 0.2749,
+     "r": 0.014150539200823074,
+     "fill": "$star",
+     "opacity": 0.7056174116700968,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.853,
+     "y": 0.2169,
+     "r": 0.01713107495341966,
+     "fill": "$star",
+     "opacity": 0.9988371062087068,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.4254,
+     "y": 0.4056,
+     "r": 0.012093336512378108,
+     "fill": "$star",
+     "opacity": 0.5353381769430536,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.0479,
+     "y": 0.026,
+     "r": 0.0159266559676857,
+     "fill": "$star",
+     "opacity": 0.465342444677531,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3508,
+     "y": 0.2755,
+     "r": 0.010519882608447169,
+     "fill": "$star",
+     "opacity": 0.6833500085786683,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.106,
+     "y": 0.1895,
+     "r": 0.008094536568082188,
+     "fill": "$star",
+     "opacity": 0.7438049878663406,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.5507,
+     "y": 0.4625,
+     "r": 0.007181635888843628,
+     "fill": "$star",
+     "opacity": 0.9877191897424493,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.994,
+     "y": 0.3871,
+     "r": 0.01278172395321621,
+     "fill": "$star",
+     "opacity": 0.6217240852404964,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.8611,
+     "y": 0.323,
+     "r": 0.012026992893790358,
+     "fill": "$star",
+     "opacity": 0.5834782967266992,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.5329,
+     "y": 0.1283,
+     "r": 0.01754987993629178,
+     "fill": "$star",
+     "opacity": 0.7416044627975693,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.9103,
+     "y": 0.0735,
+     "r": 0.007912033037241565,
+     "fill": "$star",
+     "opacity": 0.9769628459480418,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.6909,
+     "y": 0.1441,
+     "r": 0.015917555964513476,
+     "fill": "$star",
+     "opacity": 0.6181547788987657,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.8789,
+     "y": 0.2416,
+     "r": 0.012107620314745056,
+     "fill": "$star",
+     "opacity": 0.5387314960075223,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.1004,
+     "y": 0.3991,
+     "r": 0.016480106457360137,
+     "fill": "$star",
+     "opacity": 0.557461442592303,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7574,
+     "y": 0.1701,
+     "r": 0.016341715737405102,
+     "fill": "$star",
+     "opacity": 0.6608199283763859,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.0009,
+     "y": 0.0102,
+     "r": 0.0063959473261590806,
+     "fill": "$star",
+     "opacity": 0.7343355377830265,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.2956,
+     "y": 0.404,
+     "r": 0.009802443519142664,
+     "fill": "$star",
+     "opacity": 0.7834113115367531,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.9898,
+     "y": 0.2465,
+     "r": 0.015082767403257437,
+     "fill": "$star",
+     "opacity": 0.5035873273869917,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.6536,
+     "y": 0.2474,
+     "r": 0.008927540890373075,
+     "fill": "$star",
+     "opacity": 0.5589872250142448,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.4971,
+     "y": 0.3114,
+     "r": 0.01150863425876416,
+     "fill": "$star",
+     "opacity": 0.5807993524618444,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.4912,
+     "y": 0.2547,
+     "r": 0.007411290296079261,
+     "fill": "$star",
+     "opacity": 0.7778003102065065,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.8163,
+     "y": 0.2482,
+     "r": 0.012720209830775955,
+     "fill": "$star",
+     "opacity": 0.5283312925735169,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7733,
+     "y": 0.1868,
+     "r": 0.007252029782744139,
+     "fill": "$star",
+     "opacity": 0.7432279290367048,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3863,
+     "y": 0.0987,
+     "r": 0.012140956954164877,
+     "fill": "$star",
+     "opacity": 0.9531764324536438,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3938,
+     "y": 0.0819,
+     "r": 0.01605569141640127,
+     "fill": "$star",
+     "opacity": 0.9002817728092344,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7262,
+     "y": 0.1204,
+     "r": 0.009389470401867047,
+     "fill": "$star",
+     "opacity": 0.541452208972281,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3121,
+     "y": 0.4592,
+     "r": 0.014297658521820633,
+     "fill": "$star",
+     "opacity": 0.7373388119681453,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.4223,
+     "y": 0.2567,
+     "r": 0.011316886153685342,
+     "fill": "$star",
+     "opacity": 0.8452792494768646,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.0139,
+     "y": 0.3921,
+     "r": 0.015380390596287506,
+     "fill": "$star",
+     "opacity": 0.41123759020643197,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7836,
+     "y": 0.2431,
+     "r": 0.0133762182758079,
+     "fill": "$star",
+     "opacity": 0.405028075168388,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.8447,
+     "y": 0.4877,
+     "r": 0.01678068548942948,
+     "fill": "$star",
+     "opacity": 0.5490510420636512,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.1681,
+     "y": 0.1839,
+     "r": 0.01170619252031026,
+     "fill": "$star",
+     "opacity": 0.9988844427274933,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.7513,
+     "y": 0.2347,
+     "r": 0.008206627368091898,
+     "fill": "$star",
+     "opacity": 0.7393087760262698,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.6043,
+     "y": 0.4966,
+     "r": 0.009771346244854548,
+     "fill": "$star",
+     "opacity": 0.45081686351952,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.465,
+     "y": 0.4801,
+     "r": 0.015991602311838233,
+     "fill": "$star",
+     "opacity": 0.44300275325914973,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.5788,
+     "y": 0.3621,
+     "r": 0.016303205971747267,
+     "fill": "$star",
+     "opacity": 0.6991383578158628,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.3639,
+     "y": 0.0912,
+     "r": 0.016940197856603282,
+     "fill": "$star",
+     "opacity": 0.795268796568396,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "star",
+     "x": 0.1378,
+     "y": 0.2772,
+     "r": 0.010126596458315196,
+     "fill": "$star",
+     "opacity": 0.7853337451747311,
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6873,
+     "y": 0.1,
+     "w": 0.1697,
+     "h": 0.4,
+     "fill": "$moon",
+     "opacity": 0.18
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7127,
+     "y": 0.16,
+     "w": 0.1188,
+     "h": 0.28,
+     "fill": "$moon",
+     "shadow": {
+      "blur": 0.08,
+      "color": "$moon"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7382,
+     "y": 0.23,
+     "w": 0.0255,
+     "h": 0.06,
+     "fill": "$soft",
+     "opacity": 0.18
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7848,
+     "y": 0.32,
+     "w": 0.017,
+     "h": 0.04,
+     "fill": "$soft",
+     "opacity": 0.18
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.7
+      ],
+      [
+       0.1273,
+       0.52
+      ],
+      [
+       0.2333,
+       0.64
+      ],
+      [
+       0.403,
+       0.4
+      ],
+      [
+       0.5515,
+       0.62
+      ],
+      [
+       0.6788,
+       0.5
+      ],
+      [
+       0.8273,
+       0.66
+      ],
+      [
+       0.9999,
+       0.5
+      ],
+      [
+       0.9999,
+       1
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "fill": "$m1"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.8
+      ],
+      [
+       0.1697,
+       0.62
+      ],
+      [
+       0.3182,
+       0.78
+      ],
+      [
+       0.4879,
+       0.58
+      ],
+      [
+       0.6576,
+       0.78
+      ],
+      [
+       0.8061,
+       0.66
+      ],
+      [
+       0.9999,
+       0.82
+      ],
+      [
+       0.9999,
+       1
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "fill": "$m2"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.92
+      ],
+      [
+       0.2121,
+       0.78
+      ],
+      [
+       0.3818,
+       0.9
+      ],
+      [
+       0.5939,
+       0.8
+      ],
+      [
+       0.8061,
+       0.92
+      ],
+      [
+       0.9999,
+       0.84
+      ],
+      [
+       0.9999,
+       1
+      ],
+      [
+       0,
+       1
+      ]
+     ],
+     "fill": "$m3"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.0848,
+       0.78
+      ],
+      [
+       0.0686,
+       0.9
+      ],
+      [
+       0.1011,
+       0.9
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.0848,
+       0.8064
+      ],
+      [
+       0.0645,
+       0.876
+      ],
+      [
+       0.1052,
+       0.876
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.1442,
+       0.83
+      ],
+      [
+       0.1307,
+       0.93
+      ],
+      [
+       0.1578,
+       0.93
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.1442,
+       0.852
+      ],
+      [
+       0.1273,
+       0.91
+      ],
+      [
+       0.1612,
+       0.91
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.2121,
+       0.72
+      ],
+      [
+       0.1931,
+       0.86
+      ],
+      [
+       0.2311,
+       0.86
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.2121,
+       0.7508
+      ],
+      [
+       0.1884,
+       0.832
+      ],
+      [
+       0.2359,
+       0.832
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.7636,
+       0.8
+      ],
+      [
+       0.7473,
+       0.92
+      ],
+      [
+       0.7799,
+       0.92
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.7636,
+       0.8264
+      ],
+      [
+       0.7433,
+       0.896
+      ],
+      [
+       0.784,
+       0.896
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.84,
+       0.75
+      ],
+      [
+       0.8196,
+       0.9
+      ],
+      [
+       0.8604,
+       0.9
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.84,
+       0.783
+      ],
+      [
+       0.8145,
+       0.87
+      ],
+      [
+       0.8655,
+       0.87
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.9333,
+       0.76
+      ],
+      [
+       0.917,
+       0.88
+      ],
+      [
+       0.9496,
+       0.88
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.9333,
+       0.7864
+      ],
+      [
+       0.913,
+       0.856
+      ],
+      [
+       0.9537,
+       0.856
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.543,
+       0.89
+      ],
+      [
+       0.5322,
+       0.97
+      ],
+      [
+       0.5539,
+       0.97
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.543,
+       0.9076
+      ],
+      [
+       0.5295,
+       0.954
+      ],
+      [
+       0.5566,
+       0.954
+      ]
+     ],
+     "fill": "$tree"
+    },
+    {
+     "t": "text",
+     "text": "WANDER OFTEN",
+     "x": 0.1782,
+     "y": 0.14,
+     "w": 0.5515,
+     "size": 0.14,
+     "align": "left",
+     "font": "d",
+     "fill": "$star",
+     "ls": 0.08,
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "get lost on purpose.",
+     "x": 0.1867,
+     "y": 0.31,
+     "w": 0.4242,
+     "size": 0.06,
+     "align": "left",
+     "font": "b",
+     "weight": 500,
+     "italic": true,
+     "fill": "$moon"
+    }
+   ]
+  },
+  {
+   "id": "mug-bold-slogan",
+   "name": "Bold Two-Line Slogan",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "slogan",
+    "bold",
+    "typography",
+    "motivation",
+    "streetwear"
+   ],
+   "theme": {
+    "bg": "#ffd23f",
+    "ink": "#151515",
+    "a": "#ff4b2b",
+    "b": "#ffffff",
+    "soft": "#ffb800"
+   },
+   "variants": [
+    {
+     "name": "Yolk",
+     "theme": {}
+    },
+    {
+     "name": "Cobalt",
+     "theme": {
+      "bg": "#1d4ed8",
+      "ink": "#ffffff",
+      "a": "#ffd23f",
+      "b": "#0b2a7a",
+      "soft": "#2a5fee"
+     }
+    },
+    {
+     "name": "Bubblegum",
+     "theme": {
+      "bg": "#ff9ec7",
+      "ink": "#2b0a2f",
+      "a": "#ffffff",
+      "b": "#8f2bff",
+      "soft": "#ff7bb3"
+     }
+    },
+    {
+     "name": "Noir",
+     "theme": {
+      "bg": "#111111",
+      "ink": "#f4f1ea",
+      "a": "#ff4b2b",
+      "b": "#f4f1ea",
+      "soft": "#222222"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.0424,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.9575,
+     "y": 0,
+     "w": 0.0424,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.0594,
+     "y": 0,
+     "w": 0.0085,
+     "h": 1,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "rect",
+     "x": 0.9333,
+     "y": 0,
+     "w": 0.0085,
+     "h": 1,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "text",
+     "text": "MAKE IT\nHAPPEN.",
+     "x": 0.5106,
+     "anchor": "c",
+     "y": 0.167,
+     "w": 0.7212,
+     "size": 0.34,
+     "align": "center",
+     "font": "d",
+     "fill": "$a",
+     "lh": 0.95,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "MAKE IT\nHAPPEN.",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.142,
+     "w": 0.7212,
+     "size": 0.34,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.95,
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.2667,
+     "y": 0.835,
+     "w": 0.4667,
+     "h": 0.1,
+     "fill": "$ink",
+     "rx": 0.05
+    },
+    {
+     "t": "text",
+     "text": "SMALL STEPS · BIG DAYS",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.8626,
+     "w": 0.4242,
+     "size": 0.04,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$bg",
+     "ls": 0.2
+    }
+   ]
+  },
+  {
+   "id": "mug-worlds-best-teacher",
+   "name": "World's Best Teacher",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Alfa Slab One",
+    "Poppins"
+   ],
+   "tags": [
+    "teacher",
+    "worlds best",
+    "badge",
+    "gift",
+    "school",
+    "appreciation"
+   ],
+   "theme": {
+    "bg": "#16355f",
+    "ink": "#16355f",
+    "a": "#f4b41a",
+    "b": "#ffdd77",
+    "soft": "#fff8e6"
+   },
+   "variants": [
+    {
+     "name": "Navy Gold",
+     "theme": {}
+    },
+    {
+     "name": "Crimson",
+     "theme": {
+      "bg": "#6d1020",
+      "ink": "#6d1020",
+      "a": "#f4b41a",
+      "b": "#ffdd77",
+      "soft": "#fff3e0"
+     }
+    },
+    {
+     "name": "Chalkboard",
+     "theme": {
+      "bg": "#1f3b34",
+      "ink": "#1f3b34",
+      "a": "#f2c14e",
+      "b": "#ffe7a3",
+      "soft": "#f6f3e4"
+     }
+    },
+    {
+     "name": "Plum",
+     "theme": {
+      "bg": "#3d1a5c",
+      "ink": "#3d1a5c",
+      "a": "#ff9ec7",
+      "b": "#ffd4e6",
+      "soft": "#fff1f7"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "star",
+     "x": 0.1782,
+     "y": 0.34,
+     "r": 0.03,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.1782,
+     "y": 0.5,
+     "r": 0.041999999999999996,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.1782,
+     "y": 0.66,
+     "r": 0.03,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.823,
+     "y": 0.34,
+     "r": 0.03,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.823,
+     "y": 0.5,
+     "r": 0.041999999999999996,
+     "fill": "$a"
+    },
+    {
+     "t": "star",
+     "x": 0.823,
+     "y": 0.66,
+     "r": 0.03,
+     "fill": "$a"
+    },
+    {
+     "t": "line",
+     "x1": 0.0636,
+     "y1": 0.15,
+     "x2": 0.0636,
+     "y2": 0.85,
+     "stroke": "$a",
+     "sw": 0.006,
+     "dash": [
+      0.02,
+      0.02
+     ],
+     "opacity": 0.6
+    },
+    {
+     "t": "line",
+     "x1": 0.9333,
+     "y1": 0.15,
+     "x2": 0.9333,
+     "y2": 0.85,
+     "stroke": "$a",
+     "sw": 0.006,
+     "dash": [
+      0.02,
+      0.02
+     ],
+     "opacity": 0.6
+    },
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.3388,
+     "y": 0.03,
+     "w": 0.3224,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "shadow": {
+      "y": 0.02,
+      "blur": 0.04,
+      "color": "rgba(0,0,0,.35)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3833,
+     "y": 0.135,
+     "w": 0.2333,
+     "h": 0.55,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3961,
+     "y": 0.165,
+     "w": 0.2079,
+     "h": 0.49,
+     "stroke": "$ink",
+     "sw": 0.005
+    },
+    {
+     "t": "text",
+     "text": "WORLD'S",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.2564,
+     "w": 0.2545,
+     "size": 0.06,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$ink",
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "BEST",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.345,
+     "w": 0.2545,
+     "size": 0.17,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "graphic",
+     "name": "Ribbon banner",
+     "x": 0.2455,
+     "y": 0.56,
+     "w": 0.5091,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "shadow": {
+      "y": 0.015,
+      "blur": 0.03,
+      "color": "rgba(0,0,0,.35)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "TEACHER",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7275,
+     "w": 0.3182,
+     "size": 0.095,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "ls": 0.12,
+     "lh": 1,
+     "weight": 400
+    }
+   ]
+  },
+  {
+   "id": "mug-minimal-breathe",
+   "name": "Minimal Line Icon",
+   "cat": "mug",
+   "product": "11 oz mug wrap",
+   "bg": "$bg",
+   "fonts": [
+    "Cormorant Garamond",
+    "Montserrat"
+   ],
+   "tags": [
+    "minimal",
+    "line icon",
+    "calm",
+    "zen",
+    "simple",
+    "wellness"
+   ],
+   "theme": {
+    "bg": "#f4efe6",
+    "ink": "#2b2a28",
+    "a": "#8a6f4d",
+    "soft": "#e3d9c6"
+   },
+   "variants": [
+    {
+     "name": "Linen",
+     "theme": {}
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#e7ede3",
+      "ink": "#223329",
+      "a": "#4f7a5c",
+      "soft": "#cfdcc9"
+     }
+    },
+    {
+     "name": "Charcoal",
+     "theme": {
+      "bg": "#232323",
+      "ink": "#f2eee7",
+      "a": "#c9a96e",
+      "soft": "#3a3a3a"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#f8e8e4",
+      "ink": "#4a2b30",
+      "a": "#b5656e",
+      "soft": "#efcfc8"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.1909,
+     "y": 0.17,
+     "w": 0.28,
+     "h": 0.66,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1655,
+     "y": 0.11,
+     "w": 0.3309,
+     "h": 0.78,
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "icon",
+     "name": "leaf",
+     "x": 0.2418,
+     "y": 0.29,
+     "size": 0.42,
+     "color": "$ink",
+     "sw": 0.9
+    },
+    {
+     "t": "line",
+     "x1": 0.5515,
+     "y1": 0.22,
+     "x2": 0.5515,
+     "y2": 0.78,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "breathe",
+     "x": 0.6152,
+     "y": 0.3,
+     "w": 0.297,
+     "size": 0.2,
+     "align": "left",
+     "font": "d",
+     "weight": 500,
+     "italic": true,
+     "fill": "$ink",
+     "lh": 1
+    },
+    {
+     "t": "text",
+     "text": "SLOW DOWN.\nYOU ARE DOING FINE.",
+     "x": 0.6194,
+     "y": 0.58,
+     "w": 0.263,
+     "size": 0.042,
+     "align": "left",
+     "font": "b",
+     "weight": 500,
+     "fill": "$ink",
+     "ls": 0.12,
+     "lh": 1.5,
+     "opacity": 0.8
+    }
+   ]
+  },
+  {
+   "id": "stk-handmade-seal",
+   "name": "Handmade With Love Seal",
+   "cat": "sticker",
+   "product": "Label / sticker 3×3 in",
+   "bg": "transparent",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "handmade",
+    "small business",
+    "packaging",
+    "seal",
+    "sticker",
+    "label",
+    "die-cut"
+   ],
+   "theme": {
+    "bg": "#fff6f0",
+    "ink": "#5a1230",
+    "a": "#e0457b",
+    "b": "#ff9a62",
+    "soft": "#ffe1d6"
+   },
+   "variants": [
+    {
+     "name": "Berry",
+     "theme": {}
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#f3f7ee",
+      "ink": "#1f3a2a",
+      "a": "#3f8a5f",
+      "b": "#d6a64a",
+      "soft": "#dbead0"
+     }
+    },
+    {
+     "name": "Navy Gold",
+     "theme": {
+      "bg": "#fff9e8",
+      "ink": "#14284b",
+      "a": "#14284b",
+      "b": "#e5a823",
+      "soft": "#f6e7b8"
+     }
+    },
+    {
+     "name": "Lilac",
+     "theme": {
+      "bg": "#f7f1ff",
+      "ink": "#33205a",
+      "a": "#8f63f0",
+      "b": "#f08ac2",
+      "soft": "#e5d6ff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.01,
+     "y": 0.01,
+     "w": 0.98,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    },
+    {
+     "t": "ellipse",
+     "x": 0.13,
+     "y": 0.13,
+     "w": 0.74,
+     "h": 0.74,
+     "fill": "$bg"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.165,
+     "y": 0.165,
+     "w": 0.67,
+     "h": 0.67,
+     "stroke": "$a",
+     "sw": 0.008,
+     "dash": [
+      0.02,
+      0.014
+     ]
+    },
+    {
+     "t": "text",
+     "text": "HANDMADE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.31,
+     "w": 0.62,
+     "size": 0.12,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "ls": 0.05,
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "with love",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.485,
+     "w": 0.55,
+     "size": 0.13,
+     "align": "center",
+     "font": "Pacifico",
+     "fill": "$a",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "icon",
+     "name": "heart",
+     "x": 0.45,
+     "y": 0.66,
+     "size": 0.1,
+     "color": "$a",
+     "sw": 2.4
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.235,
+     "r": 0.025,
+     "fill": "$b"
+    }
+   ]
+  },
+  {
+   "id": "stk-thank-you-ribbon",
+   "name": "Thank You Ribbon",
+   "cat": "sticker",
+   "product": "Label / sticker 3×3 in",
+   "bg": "transparent",
+   "fonts": [
+    "Lilita One",
+    "Poppins"
+   ],
+   "tags": [
+    "thank you",
+    "order",
+    "small shop",
+    "ribbon",
+    "sticker",
+    "label",
+    "die-cut"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#2b1a4d",
+    "a": "#6d4aff",
+    "b": "#ff7ab6",
+    "soft": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Violet",
+     "theme": {}
+    },
+    {
+     "name": "Sunny",
+     "theme": {
+      "ink": "#3b2300",
+      "a": "#f59e0b",
+      "b": "#ef4444",
+      "soft": "#fff7e0",
+      "bg": "#fff7e0"
+     }
+    },
+    {
+     "name": "Teal",
+     "theme": {
+      "ink": "#052f33",
+      "a": "#0f9d8f",
+      "b": "#3b82f6",
+      "soft": "#e5fbf7",
+      "bg": "#e5fbf7"
+     }
+    },
+    {
+     "name": "Rose",
+     "theme": {
+      "ink": "#4a0f26",
+      "a": "#e11d63",
+      "b": "#ff8a5c",
+      "soft": "#fff0f4",
+      "bg": "#fff0f4"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.07,
+     "y": -0.01,
+     "w": 0.86,
+     "h": 0.86,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 150
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.115,
+     "y": 0.035,
+     "w": 0.77,
+     "h": 0.77,
+     "stroke": "$soft",
+     "sw": 0.01,
+     "dash": [
+      0.03,
+      0.02
+     ],
+     "opacity": 0.8
+    },
+    {
+     "t": "text",
+     "text": "THANK\nYOU",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.191,
+     "w": 0.7,
+     "size": 0.22,
+     "align": "center",
+     "font": "d",
+     "fill": "$soft",
+     "lh": 0.95,
+     "shadow": {
+      "y": 0.012,
+      "blur": 0.015,
+      "color": "rgba(0,0,0,.3)"
+     },
+     "weight": 400
+    },
+    {
+     "t": "graphic",
+     "name": "Ribbon banner",
+     "x": 0.02,
+     "y": 0.622,
+     "w": 0.96,
+     "pal": [
+      "$ink",
+      "$ink",
+      "$soft"
+     ],
+     "shadow": {
+      "y": 0.012,
+      "blur": 0.02,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SMALL SHOP LOVE",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7598,
+     "w": 0.6,
+     "size": 0.045,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$soft",
+     "ls": 0.1
+    }
+   ]
+  },
+  {
+   "id": "stk-small-batch-label",
+   "name": "Small Batch Label",
+   "cat": "sticker",
+   "product": "Label / sticker 3×3 in",
+   "bg": "transparent",
+   "fonts": [
+    "DM Serif Display",
+    "Poppins"
+   ],
+   "tags": [
+    "candle",
+    "label",
+    "small batch",
+    "product",
+    "packaging",
+    "sticker",
+    "label",
+    "die-cut"
+   ],
+   "theme": {
+    "bg": "#fbf6ec",
+    "ink": "#2e2a22",
+    "a": "#9a5b34",
+    "b": "#d9b779",
+    "soft": "#efe3cc"
+   },
+   "variants": [
+    {
+     "name": "Kraft",
+     "theme": {}
+    },
+    {
+     "name": "Pine",
+     "theme": {
+      "bg": "#eaf2ea",
+      "ink": "#18372b",
+      "a": "#2f6f55",
+      "b": "#c9a64a",
+      "soft": "#cde1d2"
+     }
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#1d2540",
+      "ink": "#f3ecd9",
+      "a": "#e9c46a",
+      "b": "#8ea4d6",
+      "soft": "#2e3960"
+     }
+    },
+    {
+     "name": "Rosewood",
+     "theme": {
+      "bg": "#fbeeee",
+      "ink": "#4a1e26",
+      "a": "#b4435a",
+      "b": "#e5a2a8",
+      "soft": "#f5d4d6"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.05,
+     "y": 0.13,
+     "w": 0.9,
+     "h": 0.74,
+     "fill": "$bg",
+     "rx": 0.12,
+     "stroke": "$ink",
+     "sw": 0.026
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.18,
+     "w": 0.8,
+     "h": 0.64,
+     "stroke": "$a",
+     "sw": 0.008,
+     "rx": 0.08
+    },
+    {
+     "t": "text",
+     "text": "HAND-POURED",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.2575,
+     "w": 0.7,
+     "size": 0.058,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$a",
+     "ls": 0.24
+    },
+    {
+     "t": "text",
+     "text": "Cedar\n& Rain",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.3243,
+     "w": 0.7,
+     "size": 0.185,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.95,
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.27,
+     "y": 0.69,
+     "w": 0.46,
+     "h": 0.085,
+     "fill": "$a",
+     "rx": 0.0425
+    },
+    {
+     "t": "text",
+     "text": "BATCH No. 07",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.7101,
+     "w": 0.44,
+     "size": 0.04,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$bg",
+     "ls": 0.18
+    }
+   ]
+  },
+  {
+   "id": "stk-good-vibes-burst",
+   "name": "Good Vibes Starburst",
+   "cat": "sticker",
+   "product": "Label / sticker 3×3 in",
+   "bg": "transparent",
+   "fonts": [
+    "Lilita One",
+    "Poppins"
+   ],
+   "tags": [
+    "good vibes",
+    "positive",
+    "burst",
+    "fun",
+    "laptop sticker",
+    "sticker",
+    "label",
+    "die-cut"
+   ],
+   "theme": {
+    "bg": "#fff6c7",
+    "ink": "#2b1b00",
+    "a": "#ff5a36",
+    "b": "#ffc81e",
+    "soft": "#fff6c7"
+   },
+   "variants": [
+    {
+     "name": "Sunny",
+     "theme": {}
+    },
+    {
+     "name": "Bubblegum",
+     "theme": {
+      "bg": "#fff0f7",
+      "ink": "#3a0f3d",
+      "a": "#ff4fa3",
+      "b": "#9b5cff",
+      "soft": "#fff0f7"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#e6fbff",
+      "ink": "#06303d",
+      "a": "#00a6c0",
+      "b": "#3a7bff",
+      "soft": "#e6fbff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#ffffff",
+      "ink": "#111111",
+      "a": "#111111",
+      "b": "#6d6d6d",
+      "soft": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.01,
+     "y": 0.01,
+     "w": 0.98,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "GOOD",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.25,
+     "w": 0.62,
+     "size": 0.2,
+     "align": "center",
+     "font": "d",
+     "fill": "$soft",
+     "stroke": "$ink",
+     "sw": 0.02,
+     "lh": 1,
+     "ls": 0.02,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "VIBES",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.45,
+     "w": 0.7,
+     "size": 0.2,
+     "align": "center",
+     "font": "d",
+     "fill": "$soft",
+     "stroke": "$ink",
+     "sw": 0.02,
+     "lh": 1,
+     "ls": 0.02,
+     "weight": 400
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.68,
+     "w": 0.4,
+     "h": 0.075,
+     "fill": "$ink",
+     "rx": 0.0375
+    },
+    {
+     "t": "text",
+     "text": "ONLY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.6923,
+     "w": 0.3,
+     "size": 0.045,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$soft",
+     "ls": 0.3
+    }
+   ]
+  },
+  {
+   "id": "stk-hello-name-tag",
+   "name": "Hello Name Tag",
+   "cat": "sticker",
+   "product": "Label / sticker 3×3 in",
+   "bg": "transparent",
+   "fonts": [
+    "Caveat",
+    "Poppins"
+   ],
+   "tags": [
+    "name tag",
+    "hello",
+    "label",
+    "school",
+    "event",
+    "sticker",
+    "label",
+    "die-cut"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#1b2a4a",
+    "a": "#e63946",
+    "soft": "#fff8f0"
+   },
+   "variants": [
+    {
+     "name": "Classic Red",
+     "theme": {}
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "a": "#0077b6",
+      "ink": "#0b2540"
+     }
+    },
+    {
+     "name": "Grass",
+     "theme": {
+      "a": "#2f9e55",
+      "ink": "#10331d"
+     }
+    },
+    {
+     "name": "Plum",
+     "theme": {
+      "a": "#7b2cbf",
+      "ink": "#2a0f45"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.04,
+     "y": 0.1,
+     "w": 0.92,
+     "h": 0.8,
+     "fill": "$bg",
+     "rx": 0.1,
+     "stroke": "$a",
+     "sw": 0.026
+    },
+    {
+     "t": "rect",
+     "x": 0.04,
+     "y": 0.1,
+     "w": 0.92,
+     "h": 0.3,
+     "fill": "$a",
+     "rx": 0.1
+    },
+    {
+     "t": "rect",
+     "x": 0.04,
+     "y": 0.3,
+     "w": 0.92,
+     "h": 0.1,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "HELLO",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.1584,
+     "w": 0.8,
+     "size": 0.11,
+     "align": "center",
+     "font": "b",
+     "weight": 800,
+     "fill": "$bg",
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "my name is",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.3014,
+     "w": 0.6,
+     "size": 0.06,
+     "align": "center",
+     "font": "b",
+     "weight": 500,
+     "fill": "$bg",
+     "ls": 0.1
+    },
+    {
+     "t": "text",
+     "text": "Priya",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.49,
+     "w": 0.8,
+     "size": 0.26,
+     "align": "center",
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "lh": 1,
+     "h": 0.3
+    },
+    {
+     "t": "line",
+     "x1": 0.2,
+     "y1": 0.8,
+     "x2": 0.8,
+     "y2": 0.8,
+     "stroke": "$ink",
+     "sw": 0.006,
+     "opacity": 0.4
+    }
+   ]
+  },
+  {
+   "id": "coaster-family-monogram",
+   "name": "Family Monogram Coaster",
+   "cat": "merch",
+   "product": "Coaster",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Montserrat"
+   ],
+   "tags": [
+    "monogram",
+    "family",
+    "housewarming",
+    "name",
+    "personalised",
+    "coaster",
+    "home"
+   ],
+   "theme": {
+    "bg": "#f7efe2",
+    "ink": "#2b2a3a",
+    "a": "#c0663a",
+    "b": "#e6b566",
+    "soft": "#ead9bc"
+   },
+   "variants": [
+    {
+     "name": "Terracotta",
+     "theme": {}
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#182038",
+      "ink": "#f6ecd6",
+      "a": "#e9b44c",
+      "b": "#7f93d1",
+      "soft": "#26335a"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#e9efe3",
+      "ink": "#1f3328",
+      "a": "#4f7d5e",
+      "b": "#d1a850",
+      "soft": "#d0dec6"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#fbe9e7",
+      "ink": "#4a2230",
+      "a": "#c05777",
+      "b": "#f2a7a7",
+      "soft": "#f5d0cd"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.02,
+     "y": 0.02,
+     "w": 0.96,
+     "pal": [
+      "$soft",
+      "$b",
+      "$soft"
+     ],
+     "opacity": 0.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.06,
+     "y": 0.06,
+     "w": 0.88,
+     "h": 0.88,
+     "stroke": "$a",
+     "sw": 0.012
+    },
+    {
+     "t": "ellipse",
+     "x": 0.095,
+     "y": 0.095,
+     "w": 0.81,
+     "h": 0.81,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "ellipse",
+     "x": 0.27,
+     "y": 0.17,
+     "w": 0.46,
+     "h": 0.46,
+     "fill": "$bg",
+     "stroke": "$soft",
+     "sw": 0.01
+    },
+    {
+     "t": "text",
+     "text": "K",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.205,
+     "w": 0.4,
+     "size": 0.38,
+     "align": "center",
+     "font": "d",
+     "fill": "$a",
+     "lh": 1
+    },
+    {
+     "t": "text",
+     "text": "THE KAPOORS",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.6853,
+     "w": 0.62,
+     "size": 0.062,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$ink",
+     "ls": 0.14
+    },
+    {
+     "t": "rect",
+     "x": 0.42,
+     "y": 0.78,
+     "w": 0.16,
+     "h": 0.006,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "EST. 2019",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.8148,
+     "w": 0.4,
+     "size": 0.036,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.25
+    }
+   ]
+  },
+  {
+   "id": "coaster-home-sweet-home",
+   "name": "Home Sweet Home Coaster",
+   "cat": "merch",
+   "product": "Coaster",
+   "bg": "$bg",
+   "fonts": [
+    "Abril Fatface",
+    "Poppins"
+   ],
+   "tags": [
+    "home",
+    "housewarming",
+    "welcome",
+    "cosy",
+    "decor",
+    "coaster",
+    "home"
+   ],
+   "theme": {
+    "bg": "#fdf1e1",
+    "ink": "#3b2a24",
+    "a": "#d9534f",
+    "b": "#f0a35e",
+    "soft": "#f6dcc0",
+    "leaf": "#6f9f6a"
+   },
+   "variants": [
+    {
+     "name": "Hearth",
+     "theme": {}
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#e7f5f3",
+      "ink": "#0f3b43",
+      "a": "#12918a",
+      "b": "#f2b134",
+      "soft": "#c6e8e3",
+      "leaf": "#4b9a7a"
+     }
+    },
+    {
+     "name": "Navy",
+     "theme": {
+      "bg": "#1b2b4b",
+      "ink": "#fdf1e1",
+      "a": "#f4a261",
+      "b": "#e76f51",
+      "soft": "#2b3f68",
+      "leaf": "#6fb08a"
+     }
+    },
+    {
+     "name": "Lavender",
+     "theme": {
+      "bg": "#f2ecfb",
+      "ink": "#34255a",
+      "a": "#8561d9",
+      "b": "#ef8fb3",
+      "soft": "#ddd0f5",
+      "leaf": "#6aa89a"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.06,
+     "y": 0.06,
+     "w": 0.88,
+     "h": 0.88,
+     "stroke": "$a",
+     "sw": 0.012,
+     "rx": 0.08
+    },
+    {
+     "t": "rect",
+     "x": 0.095,
+     "y": 0.095,
+     "w": 0.81,
+     "h": 0.81,
+     "stroke": "$a",
+     "sw": 0.004,
+     "rx": 0.06
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.343,
+     "y": 0.0739,
+     "w": 0.16,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": 60
+    },
+    {
+     "t": "graphic",
+     "name": "Leaf sprig",
+     "x": 0.7702,
+     "y": 0.9296,
+     "w": 0.12,
+     "pal": [
+      "$leaf",
+      "$leaf",
+      "$leaf"
+     ],
+     "rot": -120
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.12,
+     "y": 0.74,
+     "w": 0.16,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Flower",
+     "x": 0.72,
+     "y": 0.12,
+     "w": 0.16,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ]
+    },
+    {
+     "t": "ellipse",
+     "x": 0.38,
+     "y": 0.18,
+     "w": 0.24,
+     "h": 0.24,
+     "fill": "$soft"
+    },
+    {
+     "t": "icon",
+     "name": "house",
+     "x": 0.415,
+     "y": 0.215,
+     "size": 0.17,
+     "color": "$a",
+     "sw": 1.8
+    },
+    {
+     "t": "text",
+     "text": "HOME",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.43,
+     "w": 0.7,
+     "size": 0.22,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "ls": 0.02,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "sweet home",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.665,
+     "w": 0.7,
+     "size": 0.11,
+     "align": "center",
+     "font": "Pacifico",
+     "fill": "$a",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "WHERE LIFE BEGINS",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.8193,
+     "w": 0.52,
+     "size": 0.028,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.3
+    }
+   ]
+  },
+  {
+   "id": "orn-first-christmas",
+   "name": "Our First Christmas",
+   "cat": "merch",
+   "product": "Round ornament",
+   "bg": "transparent",
+   "fonts": [
+    "Pacifico",
+    "Montserrat"
+   ],
+   "tags": [
+    "christmas",
+    "first christmas",
+    "couple",
+    "family",
+    "holiday",
+    "keepsake",
+    "ornament",
+    "round",
+    "festive"
+   ],
+   "theme": {
+    "bg": "#0f3d2e",
+    "ink": "#fff6e0",
+    "a": "#e63946",
+    "b": "#f4c95d",
+    "soft": "#1c5b44"
+   },
+   "variants": [
+    {
+     "name": "Evergreen",
+     "theme": {}
+    },
+    {
+     "name": "Cranberry",
+     "theme": {
+      "bg": "#6b1530",
+      "ink": "#fff2e8",
+      "a": "#f4c95d",
+      "b": "#ffb4a2",
+      "soft": "#8a2342"
+     }
+    },
+    {
+     "name": "Winter Blue",
+     "theme": {
+      "bg": "#17325c",
+      "ink": "#f2f8ff",
+      "a": "#9ad1ff",
+      "b": "#ffd88a",
+      "soft": "#264a82"
+     }
+    },
+    {
+     "name": "Blush Snow",
+     "theme": {
+      "bg": "#fbe6e6",
+      "ink": "#5a1f2e",
+      "a": "#c8374f",
+      "b": "#a8741b",
+      "soft": "#f6cfcf"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.01,
+     "y": 0.01,
+     "w": 0.98,
+     "h": 0.98,
+     "fill": {
+      "grad": [
+       "$soft",
+       "$bg"
+      ],
+      "angle": 180
+     },
+     "shadow": {
+      "y": 0.01,
+      "blur": 0.02,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.06,
+     "y": 0.06,
+     "w": 0.88,
+     "h": 0.88,
+     "stroke": "$b",
+     "sw": 0.008,
+     "dash": [
+      0.02,
+      0.016
+     ]
+    },
+    {
+     "t": "ellipse",
+     "x": 0.47,
+     "y": 0.085,
+     "w": 0.06,
+     "h": 0.06,
+     "stroke": "$ink",
+     "sw": 0.008
+    },
+    {
+     "t": "star",
+     "x": 0.885,
+     "y": 0.5,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.8719,
+     "y": 0.5996,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.8334,
+     "y": 0.6925,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.7722,
+     "y": 0.7722,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.6925,
+     "y": 0.8334,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.5996,
+     "y": 0.8719,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.885,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.4004,
+     "y": 0.8719,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.3075,
+     "y": 0.8334,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.2278,
+     "y": 0.7722,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.1666,
+     "y": 0.6925,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.1281,
+     "y": 0.5996,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.115,
+     "y": 0.5,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.1281,
+     "y": 0.4004,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.1666,
+     "y": 0.3075,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.2278,
+     "y": 0.2278,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.3075,
+     "y": 0.1666,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.4004,
+     "y": 0.1281,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.115,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.5996,
+     "y": 0.1281,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.6925,
+     "y": 0.1666,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.7722,
+     "y": 0.2278,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.8334,
+     "y": 0.3075,
+     "r": 0.018,
+     "fill": "$b",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "star",
+     "x": 0.8719,
+     "y": 0.4004,
+     "r": 0.011,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.4
+    },
+    {
+     "t": "text",
+     "text": "OUR FIRST",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.3065,
+     "w": 0.5,
+     "size": 0.042,
+     "align": "center",
+     "font": "b",
+     "weight": 700,
+     "fill": "$b",
+     "ls": 0.35
+    },
+    {
+     "t": "text",
+     "text": "Christmas",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.405,
+     "w": 0.62,
+     "size": 0.15,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "weight": 400
+    },
+    {
+     "t": "line",
+     "x1": 0.34,
+     "y1": 0.6,
+     "x2": 0.66,
+     "y2": 0.6,
+     "stroke": "$b",
+     "sw": 0.005
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.6,
+     "r": 0.022,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "TOGETHER 2026",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.671,
+     "w": 0.4,
+     "size": 0.034,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$ink",
+     "ls": 0.2
+    },
+    {
+     "t": "star",
+     "x": 0.3,
+     "y": 0.33,
+     "r": 0.014,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.7,
+     "y": 0.33,
+     "r": 0.014,
+     "fill": "$b"
+    }
+   ]
+  },
+  {
+   "id": "orn-shubh-diwali",
+   "name": "Shubh Diwali Ornament",
+   "cat": "merch",
+   "product": "Round ornament",
+   "bg": "transparent",
+   "fonts": [
+    "Rozha One",
+    "Montserrat"
+   ],
+   "tags": [
+    "diwali",
+    "deepavali",
+    "festival of lights",
+    "indian",
+    "festive",
+    "gift",
+    "ornament",
+    "round",
+    "festive"
+   ],
+   "theme": {
+    "bg": "#5b0f2e",
+    "ink": "#fff1d6",
+    "a": "#ff8a1f",
+    "b": "#ffd166",
+    "soft": "#7d1d44"
+   },
+   "variants": [
+    {
+     "name": "Royal Maroon",
+     "theme": {}
+    },
+    {
+     "name": "Midnight Indigo",
+     "theme": {
+      "bg": "#14194d",
+      "ink": "#fff4dc",
+      "a": "#ff9f1c",
+      "b": "#ffd9a0",
+      "soft": "#232c7a"
+     }
+    },
+    {
+     "name": "Emerald",
+     "theme": {
+      "bg": "#0a4a3b",
+      "ink": "#fff3d6",
+      "a": "#ffb627",
+      "b": "#ffe08a",
+      "soft": "#12705a"
+     }
+    },
+    {
+     "name": "Saffron",
+     "theme": {
+      "bg": "#ff9a1f",
+      "ink": "#4a1200",
+      "a": "#fff1d0",
+      "b": "#7a1d00",
+      "soft": "#ffb347"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.01,
+     "y": 0.01,
+     "w": 0.98,
+     "h": 0.98,
+     "fill": {
+      "grad": [
+       "$soft",
+       "$bg"
+      ],
+      "angle": 180
+     },
+     "shadow": {
+      "y": 0.01,
+      "blur": 0.02,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.47,
+     "y": 0.085,
+     "w": 0.06,
+     "h": 0.06,
+     "stroke": "$ink",
+     "sw": 0.008
+    },
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.04,
+     "y": 0.04,
+     "w": 0.92,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "opacity": 0.2
+    },
+    {
+     "t": "ellipse",
+     "x": 0.917,
+     "y": 0.482,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9131,
+     "y": 0.5858,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8739,
+     "y": 0.6707,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8291,
+     "y": 0.7602,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7532,
+     "y": 0.8221,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6777,
+     "y": 0.8809,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5788,
+     "y": 0.9061,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.489,
+     "y": 0.924,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3852,
+     "y": 0.9061,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3003,
+     "y": 0.8809,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2108,
+     "y": 0.8221,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1489,
+     "y": 0.7602,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0901,
+     "y": 0.6707,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0649,
+     "y": 0.5858,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.047,
+     "y": 0.482,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0649,
+     "y": 0.3922,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0901,
+     "y": 0.2933,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1489,
+     "y": 0.2178,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2108,
+     "y": 0.1419,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3003,
+     "y": 0.0971,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3852,
+     "y": 0.0579,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.489,
+     "y": 0.054,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5788,
+     "y": 0.0579,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6777,
+     "y": 0.0971,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7532,
+     "y": 0.1419,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8291,
+     "y": 0.2178,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8739,
+     "y": 0.2933,
+     "w": 0.036,
+     "h": 0.036,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9131,
+     "y": 0.3922,
+     "w": 0.022,
+     "h": 0.022,
+     "fill": "$b"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.36,
+     "y": 0.22,
+     "w": 0.28,
+     "h": 0.28,
+     "fill": "$soft",
+     "stroke": "$b",
+     "sw": 0.006
+    },
+    {
+     "t": "icon",
+     "name": "flame",
+     "x": 0.39,
+     "y": 0.25,
+     "size": 0.22,
+     "color": "$b",
+     "sw": 1.8,
+     "shadow": {
+      "blur": 0.05,
+      "color": "$b"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SHUBH\nDIWALI",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.4972,
+     "w": 0.72,
+     "size": 0.14,
+     "align": "center",
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1.02,
+     "ls": 0.03,
+     "weight": 400
+    },
+    {
+     "t": "text",
+     "text": "LIGHT · LOVE · JOY",
+     "x": 0.5,
+     "anchor": "c",
+     "y": 0.8021,
+     "w": 0.5,
+     "size": 0.032,
+     "align": "center",
+     "font": "b",
+     "weight": 600,
+     "fill": "$b",
+     "ls": 0.3
+    },
+    {
+     "t": "star",
+     "x": 0.2,
+     "y": 0.42,
+     "r": 0.028,
+     "fill": "$b"
+    },
+    {
+     "t": "star",
+     "x": 0.8,
+     "y": 0.42,
+     "r": 0.028,
+     "fill": "$b"
+    }
+   ]
+  }
+ ]
+}

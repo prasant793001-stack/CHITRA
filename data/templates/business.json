@@ -1,0 +1,8095 @@
+{
+ "templates": [
+  {
+   "pro": false,
+   "id": "bizcard-modern-split",
+   "name": "Modern Split Card",
+   "cat": "card",
+   "product": "Business card",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "business card",
+    "modern",
+    "designer",
+    "studio",
+    "monogram"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#14213d",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "soft": "#e8f0ff",
+    "mute": "#52627f"
+   },
+   "variants": [
+    {
+     "name": "Azure"
+    },
+    {
+     "name": "Coral",
+     "theme": {
+      "ink": "#2b1520",
+      "a": "#e11d48",
+      "b": "#f97316",
+      "soft": "#ffe9e6",
+      "mute": "#6b4852"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "ink": "#0f2e27",
+      "a": "#047857",
+      "b": "#0d9488",
+      "soft": "#dff5ec",
+      "mute": "#476259"
+     }
+    },
+    {
+     "name": "Night",
+     "theme": {
+      "bg": "#0f172a",
+      "ink": "#f1f5f9",
+      "a": "#818cf8",
+      "b": "#a855f7",
+      "soft": "#1e293b",
+      "mute": "#9aa7bd"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.37,
+     "h": 1,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 150
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": -0.1985,
+     "y": 0.58,
+     "w": 0.4571,
+     "h": 0.8,
+     "fill": "#ffffff",
+     "opacity": 0.12
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1857,
+     "y": -0.18,
+     "w": 0.2286,
+     "h": 0.4,
+     "fill": "#ffffff",
+     "opacity": 0.12
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0593,
+     "y": 0.18,
+     "w": 0.2514,
+     "h": 0.44,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.012,
+     "opacity": 0.9
+    },
+    {
+     "t": "text",
+     "text": "AM",
+     "x": 0.185,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.3,
+     "w": 0.3,
+     "size": 0.17,
+     "font": "d",
+     "weight": 700,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "MEHTA STUDIO",
+     "x": 0.185,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.78,
+     "w": 0.34,
+     "size": 0.046,
+     "font": "b",
+     "fill": "#ffffff",
+     "weight": 600,
+     "ls": 0.2
+    },
+    {
+     "t": "text",
+     "text": "Aarav Mehta",
+     "x": 0.42,
+     "y": 0.13,
+     "w": 0.55,
+     "size": 0.15,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "h": 0.2
+    },
+    {
+     "t": "text",
+     "text": "Brand & Packaging Designer",
+     "x": 0.42,
+     "y": 0.355,
+     "w": 0.55,
+     "size": 0.066,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    },
+    {
+     "t": "rect",
+     "x": 0.42,
+     "y": 0.49,
+     "w": 0.1,
+     "h": 0.014,
+     "fill": "$b"
+    },
+    {
+     "t": "icon",
+     "name": "phone",
+     "x": 0.42,
+     "y": 0.5988,
+     "size": 0.075,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "+91 98765 43210",
+     "x": 0.4818,
+     "y": 0.6,
+     "w": 0.5,
+     "size": 0.06,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "mail",
+     "x": 0.42,
+     "y": 0.7238,
+     "size": 0.075,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "aarav@mehtastudio.in",
+     "x": 0.4818,
+     "y": 0.725,
+     "w": 0.5,
+     "size": 0.06,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "globe",
+     "x": 0.42,
+     "y": 0.8488,
+     "size": 0.075,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "mehtastudio.in",
+     "x": 0.4818,
+     "y": 0.85,
+     "w": 0.5,
+     "size": 0.06,
+     "font": "b",
+     "fill": "$ink"
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "bizcard-minimal-line",
+   "name": "Minimal Line Card",
+   "cat": "card",
+   "product": "Business card",
+   "bg": "$bg",
+   "fonts": [
+    "DM Sans",
+    "DM Sans"
+   ],
+   "tags": [
+    "business card",
+    "minimal",
+    "clean",
+    "consultant"
+   ],
+   "theme": {
+    "bg": "#fafaf7",
+    "ink": "#161616",
+    "a": "#ff5a36",
+    "b": "#ffb199",
+    "soft": "#ececE6",
+    "mute": "#6a6a66"
+   },
+   "variants": [
+    {
+     "name": "Paper"
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#eef2ea",
+      "ink": "#1f2d1f",
+      "a": "#4d7c3a",
+      "b": "#a9c79a",
+      "soft": "#d9e2d3",
+      "mute": "#58695a"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#fdf0ee",
+      "ink": "#3a1f24",
+      "a": "#d6456b",
+      "b": "#f0a6b8",
+      "soft": "#f6d9d9",
+      "mute": "#7a5a60"
+     }
+    },
+    {
+     "name": "Ink",
+     "theme": {
+      "bg": "#121212",
+      "ink": "#f5f5f5",
+      "a": "#d9ff3f",
+      "b": "#6c7a2a",
+      "soft": "#262626",
+      "mute": "#a1a1a1"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.7629,
+     "y": 0.13,
+     "w": 0.1943,
+     "h": 0.34,
+     "fill": "$a"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7115,
+     "y": 0.04,
+     "w": 0.2971,
+     "h": 0.52,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.006,
+     "opacity": 0.6
+    },
+    {
+     "t": "ellipse",
+     "x": 0.66,
+     "y": -0.05,
+     "w": 0.4,
+     "h": 0.7,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.004,
+     "opacity": 0.3
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.06,
+     "w": 0.022,
+     "h": 0.012,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Nisha Kulkarni",
+     "x": 0.08,
+     "y": 0.17,
+     "w": 0.55,
+     "size": 0.125,
+     "font": "d",
+     "weight": 500,
+     "fill": "$ink",
+     "h": 0.17
+    },
+    {
+     "t": "text",
+     "text": "Independent Business Consultant",
+     "x": 0.08,
+     "y": 0.37,
+     "w": 0.55,
+     "size": 0.058,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.08,
+     "y1": 0.55,
+     "x2": 0.92,
+     "y2": 0.55,
+     "stroke": "$soft",
+     "sw": 0.006
+    },
+    {
+     "t": "icon",
+     "name": "phone",
+     "x": 0.08,
+     "y": 0.6289,
+     "size": 0.07,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "+91 99870 12345",
+     "x": 0.1376,
+     "y": 0.63,
+     "w": 0.6,
+     "size": 0.056,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "mail",
+     "x": 0.08,
+     "y": 0.7439,
+     "size": 0.07,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "nisha@kulkarni-advisory.com",
+     "x": 0.1376,
+     "y": 0.745,
+     "w": 0.6,
+     "size": 0.056,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "map-pin",
+     "x": 0.08,
+     "y": 0.8589,
+     "size": 0.07,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "14 Residency Road, Pune 411001",
+     "x": 0.1376,
+     "y": 0.86,
+     "w": 0.6,
+     "size": 0.056,
+     "font": "b",
+     "fill": "$ink"
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "bizcard-bold-stripe",
+   "name": "Bold Stripe Card",
+   "cat": "card",
+   "product": "Business card",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Montserrat"
+   ],
+   "tags": [
+    "business card",
+    "bold",
+    "contractor",
+    "fitness",
+    "trade"
+   ],
+   "theme": {
+    "bg": "#0e0e10",
+    "ink": "#ffffff",
+    "a": "#c6ff00",
+    "b": "#8aa800",
+    "soft": "#1d1d21",
+    "mute": "#b4b4bb"
+   },
+   "variants": [
+    {
+     "name": "Volt"
+    },
+    {
+     "name": "Hot Pink",
+     "theme": {
+      "bg": "#1a0b2e",
+      "a": "#ff3d81",
+      "b": "#a3194f",
+      "soft": "#2a1647",
+      "mute": "#c4b5d8"
+     }
+    },
+    {
+     "name": "Sun",
+     "theme": {
+      "bg": "#ffd60a",
+      "ink": "#111111",
+      "a": "#111111",
+      "b": "#b89600",
+      "soft": "#f2c800",
+      "mute": "#3b3200"
+     }
+    },
+    {
+     "name": "Cobalt",
+     "theme": {
+      "bg": "#1d3fff",
+      "ink": "#ffffff",
+      "a": "#ffe14d",
+      "b": "#9fb0ff",
+      "soft": "#2b4bff",
+      "mute": "#dfe4ff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.68,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       0.5,
+       1
+      ]
+     ],
+     "fill": "$soft"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.8,
+       0
+      ],
+      [
+       1,
+       0
+      ],
+      [
+       1,
+       1
+      ],
+      [
+       0.62,
+       1
+      ]
+     ],
+     "fill": "$a",
+     "opacity": 0.95
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.025,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "RAVI\nSHETTY",
+     "x": 0.09,
+     "y": 0.07,
+     "w": 0.5,
+     "size": 0.2,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.92,
+     "h": 0.4
+    },
+    {
+     "t": "text",
+     "text": "PERSONAL TRAINER",
+     "x": 0.09,
+     "y": 0.5,
+     "w": 0.5,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.16
+    },
+    {
+     "t": "icon",
+     "name": "phone",
+     "x": 0.09,
+     "y": 0.6389,
+     "size": 0.0675,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "+91 98111 20456",
+     "x": 0.1456,
+     "y": 0.64,
+     "w": 0.45,
+     "size": 0.054,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "mail",
+     "x": 0.09,
+     "y": 0.7489,
+     "size": 0.0675,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "ravi@shettyfit.in",
+     "x": 0.1456,
+     "y": 0.75,
+     "w": 0.45,
+     "size": 0.054,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "icon",
+     "name": "globe",
+     "x": 0.09,
+     "y": 0.8589,
+     "size": 0.0675,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "shettyfit.in",
+     "x": 0.1456,
+     "y": 0.86,
+     "w": 0.45,
+     "size": 0.054,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "star",
+     "x": 0.9,
+     "y": 0.2,
+     "r": 0.1,
+     "fill": "$bg",
+     "n": 4,
+     "inner": 0.35
+    },
+    {
+     "t": "icon",
+     "name": "zap",
+     "x": 0.855,
+     "y": 0.62,
+     "size": 0.17,
+     "color": "$bg"
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "bizcard-elegant-frame",
+   "name": "Elegant Frame Card",
+   "cat": "card",
+   "product": "Business card",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Lato"
+   ],
+   "tags": [
+    "business card",
+    "elegant",
+    "luxury",
+    "boutique",
+    "gold"
+   ],
+   "theme": {
+    "bg": "#f8f2e8",
+    "ink": "#2b2118",
+    "a": "#a8803f",
+    "b": "#d9bd8a",
+    "soft": "#efe4d0",
+    "mute": "#6e5f4e"
+   },
+   "variants": [
+    {
+     "name": "Ivory Gold"
+    },
+    {
+     "name": "Navy",
+     "theme": {
+      "bg": "#14213d",
+      "ink": "#f4efe6",
+      "a": "#d4af6a",
+      "b": "#8c7444",
+      "soft": "#1d2d52",
+      "mute": "#b9b4a6"
+     }
+    },
+    {
+     "name": "Rose",
+     "theme": {
+      "bg": "#f6e7e4",
+      "ink": "#4a2a2f",
+      "a": "#a85d69",
+      "b": "#d9a5ab",
+      "soft": "#ecd2cf",
+      "mute": "#7d5a5e"
+     }
+    },
+    {
+     "name": "Emerald",
+     "theme": {
+      "bg": "#0f3d33",
+      "ink": "#f1ece0",
+      "a": "#d9b872",
+      "b": "#8f7a46",
+      "soft": "#164a3e",
+      "mute": "#bdc9bf"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.03,
+     "y": 0.06,
+     "w": 0.94,
+     "h": 0.88,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.008
+    },
+    {
+     "t": "rect",
+     "x": 0.043,
+     "y": 0.1,
+     "w": 0.914,
+     "h": 0.8,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "icon",
+     "name": "gem",
+     "x": 0.4775,
+     "y": 0.14,
+     "size": 0.1,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Isabella Fernandes",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.3,
+     "w": 0.8,
+     "size": 0.12,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.16
+    },
+    {
+     "t": "text",
+     "text": "FOUNDER · ATELIER FERNANDES",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.49,
+     "w": 0.8,
+     "size": 0.045,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.22
+    },
+    {
+     "t": "line",
+     "x1": 0.34,
+     "y1": 0.6,
+     "x2": 0.46,
+     "y2": 0.6,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.6,
+     "r": 0.03,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.3
+    },
+    {
+     "t": "line",
+     "x1": 0.54,
+     "y1": 0.6,
+     "x2": 0.66,
+     "y2": 0.6,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "+91 98200 45678   ·   isabella@atelierfernandes.com",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.68,
+     "w": 0.84,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "atelierfernandes.com",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.79,
+     "w": 0.8,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$mute",
+     "italic": true
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "cert-achievement-classic",
+   "name": "Classic Achievement Certificate",
+   "cat": "cert",
+   "product": "Certificate",
+   "bg": "$bg",
+   "fonts": [
+    "Cinzel",
+    "Lato"
+   ],
+   "tags": [
+    "certificate",
+    "achievement",
+    "award",
+    "classic",
+    "gold"
+   ],
+   "theme": {
+    "bg": "#fbf7ee",
+    "ink": "#1b2a49",
+    "a": "#b08a3e",
+    "b": "#e6cf94",
+    "soft": "#f1e8d2",
+    "mute": "#5a5f6e"
+   },
+   "variants": [
+    {
+     "name": "Navy Gold"
+    },
+    {
+     "name": "Emerald",
+     "theme": {
+      "bg": "#f6f8f2",
+      "ink": "#12392e",
+      "a": "#a8873d",
+      "b": "#dccb94",
+      "soft": "#e4ecdc",
+      "mute": "#4f6157"
+     }
+    },
+    {
+     "name": "Burgundy",
+     "theme": {
+      "bg": "#fbf4f0",
+      "ink": "#4a1220",
+      "a": "#b4863f",
+      "b": "#e0c694",
+      "soft": "#f0e0d6",
+      "mute": "#6e5058"
+     }
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#10182c",
+      "ink": "#f6efdc",
+      "a": "#d4af6a",
+      "b": "#7e6a3e",
+      "soft": "#1a2542",
+      "mute": "#b8b4a6"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.03,
+     "y": 0.04,
+     "w": 0.94,
+     "h": 0.92,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.012
+    },
+    {
+     "t": "rect",
+     "x": 0.043,
+     "y": 0.065,
+     "w": 0.914,
+     "h": 0.87,
+     "fill": "transparent",
+     "stroke": "$ink",
+     "sw": 0.003
+    },
+    {
+     "t": "star",
+     "x": 0.043,
+     "y": 0.065,
+     "r": 0.03,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.3
+    },
+    {
+     "t": "star",
+     "x": 0.957,
+     "y": 0.065,
+     "r": 0.03,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.3
+    },
+    {
+     "t": "star",
+     "x": 0.043,
+     "y": 0.935,
+     "r": 0.03,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.3
+    },
+    {
+     "t": "star",
+     "x": 0.957,
+     "y": 0.935,
+     "r": 0.03,
+     "fill": "$a",
+     "n": 4,
+     "inner": 0.3
+    },
+    {
+     "t": "text",
+     "text": "CERTIFICATE",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.13,
+     "w": 0.8,
+     "size": 0.095,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "ls": 0.06
+    },
+    {
+     "t": "text",
+     "text": "OF ACHIEVEMENT",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.27,
+     "w": 0.6,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.4
+    },
+    {
+     "t": "graphic",
+     "name": "Divider",
+     "x": 0.473,
+     "y": 0.32,
+     "w": 0.0541,
+     "pal": [
+      "$a",
+      "$b",
+      "$a"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "This certificate is proudly presented to",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.405,
+     "w": 0.7,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$mute",
+     "italic": true
+    },
+    {
+     "t": "text",
+     "text": "Priya Raghavan",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.455,
+     "w": 0.8,
+     "size": 0.13,
+     "font": "Great Vibes",
+     "fill": "$ink",
+     "h": 0.17
+    },
+    {
+     "t": "line",
+     "x1": 0.27,
+     "y1": 0.64,
+     "x2": 0.73,
+     "y2": 0.64,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "in recognition of outstanding performance and dedication,\nnamed Top Regional Sales Performer, FY 2025–26.",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.665,
+     "w": 0.8,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.5
+    },
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.4382,
+     "y": 0.765,
+     "w": 0.1236,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.008,
+      "blur": 0.015,
+      "color": "#00000040"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "award",
+     "x": 0.4807,
+     "y": 0.82,
+     "size": 0.05,
+     "color": "$bg"
+    },
+    {
+     "t": "text",
+     "text": "Meera Kapoor",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.79,
+     "w": 0.24,
+     "size": 0.05,
+     "font": "Dancing Script",
+     "fill": "$ink"
+    },
+    {
+     "t": "line",
+     "x1": 0.11,
+     "y1": 0.865,
+     "x2": 0.35,
+     "y2": 0.865,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Managing Director",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.879,
+     "w": 0.29,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    },
+    {
+     "t": "line",
+     "x1": 0.65,
+     "y1": 0.865,
+     "x2": 0.89,
+     "y2": 0.865,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Date · 14 March 2026",
+     "x": 0.77,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.879,
+     "w": 0.29,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "cert-completion-modern",
+   "name": "Modern Completion Certificate",
+   "cat": "cert",
+   "product": "Certificate",
+   "bg": "$bg",
+   "fonts": [
+    "DM Serif Display",
+    "Montserrat"
+   ],
+   "tags": [
+    "certificate",
+    "completion",
+    "course",
+    "training",
+    "modern"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#13243b",
+    "a": "#0e7490",
+    "b": "#2563eb",
+    "soft": "#e6f2f6",
+    "mute": "#4f6275"
+   },
+   "variants": [
+    {
+     "name": "Teal"
+    },
+    {
+     "name": "Indigo",
+     "theme": {
+      "ink": "#1b1747",
+      "a": "#4338ca",
+      "b": "#7c3aed",
+      "soft": "#ebe9fb",
+      "mute": "#58567a"
+     }
+    },
+    {
+     "name": "Sunset",
+     "theme": {
+      "bg": "#fffaf5",
+      "ink": "#3a1a10",
+      "a": "#c2410c",
+      "b": "#db2777",
+      "soft": "#fde8dc",
+      "mute": "#7a5648"
+     }
+    },
+    {
+     "name": "Graphite",
+     "theme": {
+      "bg": "#f4f4f5",
+      "ink": "#18181b",
+      "a": "#27272a",
+      "b": "#52525b",
+      "soft": "#e4e4e7",
+      "mute": "#52525b"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.28,
+     "h": 1,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 160
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Half rings",
+     "x": -0.1532,
+     "y": 0.7,
+     "w": 0.3864,
+     "pal": [
+      "#ffffff",
+      "#ffffff",
+      "#ffffff"
+     ],
+     "opacity": 0.18
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0396,
+     "y": 0.21,
+     "w": 0.2009,
+     "h": 0.26,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.006,
+     "opacity": 0.7
+    },
+    {
+     "t": "icon",
+     "name": "graduation-cap",
+     "x": 0.0859,
+     "y": 0.27,
+     "size": 0.14,
+     "color": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "2026",
+     "x": 0.14,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.58,
+     "w": 0.2,
+     "size": 0.06,
+     "font": "d",
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "COHORT · BATCH 07",
+     "x": 0.14,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.67,
+     "w": 0.25,
+     "size": 0.022,
+     "font": "b",
+     "fill": "#ffffff",
+     "ls": 0.18,
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "CERTIFICATE",
+     "x": 0.34,
+     "y": 0.1,
+     "w": 0.6,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.4
+    },
+    {
+     "t": "text",
+     "text": "of Completion",
+     "x": 0.34,
+     "y": 0.15,
+     "w": 0.5,
+     "size": 0.09,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.17
+    },
+    {
+     "t": "rect",
+     "x": 0.34,
+     "y": 0.34,
+     "w": 0.08,
+     "h": 0.008,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "This is to certify that",
+     "x": 0.34,
+     "y": 0.39,
+     "w": 0.6,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "Rohan Deshmukh",
+     "x": 0.34,
+     "y": 0.435,
+     "w": 0.62,
+     "size": 0.085,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.12
+    },
+    {
+     "t": "text",
+     "text": "has successfully completed the 40-hour programme\nDigital Marketing Foundations\nand passed with distinction.",
+     "x": 0.34,
+     "y": 0.6,
+     "w": 0.6,
+     "size": 0.027,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.55
+    },
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.8398,
+     "y": 0.075,
+     "w": 0.1005,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.008,
+      "blur": 0.012,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "badge-check",
+     "x": 0.8707,
+     "y": 0.115,
+     "size": 0.05,
+     "color": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "Anita Rao",
+     "x": 0.46,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.805,
+     "w": 0.24,
+     "size": 0.05,
+     "font": "Dancing Script",
+     "fill": "$ink"
+    },
+    {
+     "t": "line",
+     "x1": 0.34,
+     "y1": 0.88,
+     "x2": 0.58,
+     "y2": 0.88,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Programme Lead",
+     "x": 0.46,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.894,
+     "w": 0.29,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    },
+    {
+     "t": "line",
+     "x1": 0.68,
+     "y1": 0.88,
+     "x2": 0.9,
+     "y2": 0.88,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Issued · 02 Feb 2026",
+     "x": 0.79,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.894,
+     "w": 0.27,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "cert-appreciation-warm",
+   "name": "Warm Appreciation Certificate",
+   "cat": "cert",
+   "product": "Certificate",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Nunito"
+   ],
+   "tags": [
+    "certificate",
+    "appreciation",
+    "thank you",
+    "volunteer",
+    "recognition"
+   ],
+   "theme": {
+    "bg": "#fff7f0",
+    "ink": "#4a2230",
+    "a": "#d9546e",
+    "b": "#f59e6b",
+    "soft": "#fde3d6",
+    "mute": "#7a5560"
+   },
+   "variants": [
+    {
+     "name": "Rose"
+    },
+    {
+     "name": "Sky",
+     "theme": {
+      "bg": "#f3f9ff",
+      "ink": "#12315a",
+      "a": "#2f7de1",
+      "b": "#3cc3d9",
+      "soft": "#d9ebfb",
+      "mute": "#51698a"
+     }
+    },
+    {
+     "name": "Meadow",
+     "theme": {
+      "bg": "#f6faf1",
+      "ink": "#1f3d28",
+      "a": "#3f9b5b",
+      "b": "#9bd06a",
+      "soft": "#dcebd0",
+      "mute": "#546b5a"
+     }
+    },
+    {
+     "name": "Plum",
+     "theme": {
+      "bg": "#fbf5fb",
+      "ink": "#3d1a4a",
+      "a": "#8e3cc2",
+      "b": "#e05aa6",
+      "soft": "#efdcf1",
+      "mute": "#6f5679"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Waves",
+     "x": 0,
+     "y": 0.84,
+     "w": 1,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "opacity": 0.45
+    },
+    {
+     "t": "rect",
+     "x": 0.03,
+     "y": 0.05,
+     "w": 0.94,
+     "h": 0.9,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.006,
+     "rx": 0.02,
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Laurel wreath",
+     "x": 0.4228,
+     "y": 0.1,
+     "w": 0.1545,
+     "pal": [
+      "$a",
+      "$b",
+      "$a"
+     ]
+    },
+    {
+     "t": "icon",
+     "name": "heart",
+     "x": 0.473,
+     "y": 0.165,
+     "size": 0.07,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "CERTIFICATE",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.33,
+     "w": 0.7,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.4
+    },
+    {
+     "t": "text",
+     "text": "of Appreciation",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.38,
+     "w": 0.9,
+     "size": 0.11,
+     "font": "d",
+     "italic": true,
+     "fill": "$ink",
+     "h": 0.14
+    },
+    {
+     "t": "text",
+     "text": "With heartfelt thanks, this certificate is presented to",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.52,
+     "w": 0.8,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "Kavita Menon",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.565,
+     "w": 0.8,
+     "size": 0.12,
+     "font": "Dancing Script",
+     "weight": 700,
+     "fill": "$a",
+     "h": 0.15
+    },
+    {
+     "t": "text",
+     "text": "for four years of generous volunteering and mentoring\nyoung learners at every community event we hosted.",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.71,
+     "w": 0.8,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.5
+    },
+    {
+     "t": "text",
+     "text": "Suresh Iyer",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.79,
+     "w": 0.22,
+     "size": 0.05,
+     "font": "Dancing Script",
+     "fill": "$ink"
+    },
+    {
+     "t": "line",
+     "x1": 0.12,
+     "y1": 0.865,
+     "x2": 0.34,
+     "y2": 0.865,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Programme Director",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.879,
+     "w": 0.27,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    },
+    {
+     "t": "line",
+     "x1": 0.66,
+     "y1": 0.865,
+     "x2": 0.88,
+     "y2": 0.865,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Greenleaf Community Trust",
+     "x": 0.77,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.879,
+     "w": 0.27,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "cert-best-employee-bold",
+   "name": "Best Employee Certificate",
+   "cat": "cert",
+   "product": "Certificate",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$bg2"
+    ],
+    "angle": 160
+   },
+   "fonts": [
+    "Bebas Neue",
+    "Montserrat"
+   ],
+   "tags": [
+    "certificate",
+    "employee of the year",
+    "best employee",
+    "award",
+    "corporate"
+   ],
+   "theme": {
+    "bg": "#0e1a33",
+    "bg2": "#16294f",
+    "ink": "#ffffff",
+    "a": "#e5b94e",
+    "b": "#9a7a2a",
+    "soft": "#1c3060",
+    "mute": "#b8c2dc"
+   },
+   "variants": [
+    {
+     "name": "Navy Gold"
+    },
+    {
+     "name": "Charcoal",
+     "theme": {
+      "bg": "#141414",
+      "bg2": "#262626",
+      "a": "#f0c75e",
+      "b": "#8f7428",
+      "soft": "#2e2e2e",
+      "mute": "#bcbcbc"
+     }
+    },
+    {
+     "name": "Crimson",
+     "theme": {
+      "bg": "#3a0a14",
+      "bg2": "#5c1424",
+      "a": "#f2c978",
+      "b": "#9a7230",
+      "soft": "#6b1c2e",
+      "mute": "#e8c6cc"
+     }
+    },
+    {
+     "name": "Pine",
+     "theme": {
+      "bg": "#0b2a24",
+      "bg2": "#134438",
+      "a": "#e8c872",
+      "b": "#8f7b3c",
+      "soft": "#1a5446",
+      "mute": "#bcd6cd"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.0363,
+     "y": -0.2,
+     "w": 0.9273,
+     "h": 1.2,
+     "fill": "$soft",
+     "opacity": 0.45
+    },
+    {
+     "t": "rect",
+     "x": 0.03,
+     "y": 0.045,
+     "w": 0.94,
+     "h": 0.91,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.01
+    },
+    {
+     "t": "rect",
+     "x": 0.043,
+     "y": 0.07,
+     "w": 0.914,
+     "h": 0.86,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.6
+    },
+    {
+     "t": "icon",
+     "name": "crown",
+     "x": 0.4614,
+     "y": 0.1,
+     "size": 0.1,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "EMPLOYEE OF THE YEAR · 2026",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.235,
+     "w": 0.8,
+     "size": 0.032,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "BEST EMPLOYEE",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.29,
+     "w": 0.8,
+     "size": 0.14,
+     "font": "d",
+     "fill": "$ink",
+     "weight": 400
+    },
+    {
+     "t": "line",
+     "x1": 0.22,
+     "y1": 0.54,
+     "x2": 0.42,
+     "y2": 0.54,
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.54,
+     "r": 0.02,
+     "fill": "$a",
+     "n": 5
+    },
+    {
+     "t": "line",
+     "x1": 0.58,
+     "y1": 0.54,
+     "x2": 0.78,
+     "y2": 0.54,
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "PRESENTED TO",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.575,
+     "w": 0.4,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.4
+    },
+    {
+     "t": "text",
+     "text": "Arjun Nambiar",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.61,
+     "w": 0.8,
+     "size": 0.08,
+     "font": "Playfair Display",
+     "italic": true,
+     "fill": "$ink",
+     "h": 0.11
+    },
+    {
+     "t": "text",
+     "text": "for exceptional leadership, reliability and customer care throughout the year",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.72,
+     "w": 0.8,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "R. Banerjee",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.825,
+     "w": 0.22,
+     "size": 0.05,
+     "font": "Dancing Script",
+     "fill": "$ink"
+    },
+    {
+     "t": "line",
+     "x1": 0.12,
+     "y1": 0.9,
+     "x2": 0.34,
+     "y2": 0.9,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "General Manager",
+     "x": 0.23,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.914,
+     "w": 0.27,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    },
+    {
+     "t": "line",
+     "x1": 0.66,
+     "y1": 0.9,
+     "x2": 0.88,
+     "y2": 0.9,
+     "stroke": "$ink",
+     "sw": 0.003,
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "Date · 20 Dec 2026",
+     "x": 0.77,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.914,
+     "w": 0.27,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$mute",
+     "ls": 0.12,
+     "upper": true,
+     "weight": 600
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.4343,
+     "y": 0.735,
+     "w": 0.1314,
+     "pal": [
+      "$a",
+      "$b",
+      "$bg"
+     ],
+     "shadow": {
+      "x": 0,
+      "y": 0.01,
+      "blur": 0.015,
+      "color": "#00000066"
+     }
+    },
+    {
+     "t": "text",
+     "text": "#1",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.785,
+     "w": 0.12,
+     "size": 0.07,
+     "font": "d",
+     "fill": "$bg"
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "menu-salon-services",
+   "name": "Salon Service Menu",
+   "cat": "menu",
+   "product": "Menu",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Poppins"
+   ],
+   "tags": [
+    "salon",
+    "price list",
+    "service menu",
+    "beauty",
+    "hair"
+   ],
+   "theme": {
+    "bg": "#fdf3f1",
+    "ink": "#3b2230",
+    "a": "#c2587a",
+    "b": "#f3b7b0",
+    "soft": "#f0d6d6",
+    "mute": "#7a5a64"
+   },
+   "variants": [
+    {
+     "name": "Blush"
+    },
+    {
+     "name": "Noir",
+     "theme": {
+      "bg": "#17151a",
+      "ink": "#f4ece6",
+      "a": "#d9b072",
+      "b": "#6d5636",
+      "soft": "#35303a",
+      "mute": "#b3a9a6"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#f1f4ee",
+      "ink": "#25362b",
+      "a": "#5f8a64",
+      "b": "#b6cdb0",
+      "soft": "#d9e3d5",
+      "mute": "#58695c"
+     }
+    },
+    {
+     "name": "Lilac",
+     "theme": {
+      "bg": "#f6f1fb",
+      "ink": "#2f2148",
+      "a": "#7b4bc4",
+      "b": "#d6c0f0",
+      "soft": "#e1d5f2",
+      "mute": "#675a82"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.73,
+     "y": -0.0966,
+     "w": 0.5,
+     "h": 0.1932,
+     "fill": "$b",
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": -0.25,
+     "y": 0.9034,
+     "w": 0.5,
+     "h": 0.1932,
+     "fill": "$b",
+     "opacity": 0.4
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4,
+     "y": 0.0364,
+     "w": 0.2,
+     "h": 0.0773,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "scissors",
+     "x": 0.455,
+     "y": 0.0576,
+     "size": 0.09,
+     "color": "$bg"
+    },
+    {
+     "t": "text",
+     "text": "VELVET & CO.",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.135,
+     "w": 0.8,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.35
+    },
+    {
+     "t": "text",
+     "text": "Service Menu",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.165,
+     "w": 0.9,
+     "size": 0.105,
+     "font": "d",
+     "italic": true,
+     "fill": "$ink",
+     "h": 0.07
+    },
+    {
+     "t": "text",
+     "text": "Hair studio · Mehrauli Road",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.225,
+     "w": 0.8,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "HAIR",
+     "x": 0.1,
+     "y": 0.275,
+     "w": 0.4,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Women's cut & style",
+     "x": 0.1,
+     "y": 0.31,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$45",
+     "x": 0.54,
+     "y": 0.31,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.3421,
+     "x2": 0.9,
+     "y2": 0.3421,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Men's cut",
+     "x": 0.1,
+     "y": 0.366,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$25",
+     "x": 0.54,
+     "y": 0.366,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.3981,
+     "x2": 0.9,
+     "y2": 0.3981,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Blow-dry & finish",
+     "x": 0.1,
+     "y": 0.422,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$30",
+     "x": 0.54,
+     "y": 0.422,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.4541,
+     "x2": 0.9,
+     "y2": 0.4541,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Updo for occasions",
+     "x": 0.1,
+     "y": 0.478,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$70",
+     "x": 0.54,
+     "y": 0.478,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.5101,
+     "x2": 0.9,
+     "y2": 0.5101,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "COLOUR",
+     "x": 0.1,
+     "y": 0.54,
+     "w": 0.4,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Root touch-up",
+     "x": 0.1,
+     "y": 0.575,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$65",
+     "x": 0.54,
+     "y": 0.575,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.6071,
+     "x2": 0.9,
+     "y2": 0.6071,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Global colour",
+     "x": 0.1,
+     "y": 0.631,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$95",
+     "x": 0.54,
+     "y": 0.631,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.6631,
+     "x2": 0.9,
+     "y2": 0.6631,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Balayage",
+     "x": 0.1,
+     "y": 0.687,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$160",
+     "x": 0.54,
+     "y": 0.687,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.7191,
+     "x2": 0.9,
+     "y2": 0.7191,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "TREATMENTS",
+     "x": 0.1,
+     "y": 0.74,
+     "w": 0.5,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Keratin smoothing",
+     "x": 0.1,
+     "y": 0.775,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$140",
+     "x": 0.54,
+     "y": 0.775,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.8071,
+     "x2": 0.9,
+     "y2": 0.8071,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Scalp spa ritual",
+     "x": 0.1,
+     "y": 0.831,
+     "w": 0.56,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$55",
+     "x": 0.54,
+     "y": 0.831,
+     "w": 0.36,
+     "size": 0.052,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.8631,
+     "x2": 0.9,
+     "y2": 0.8631,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.9,
+     "x2": 0.9,
+     "y2": 0.9,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Book your chair  ·  +91 98200 11122\nvelvetandco.in",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.915,
+     "w": 0.8,
+     "size": 0.037,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.45
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "menu-printshop-pricelist",
+   "name": "Print Shop Price List",
+   "cat": "menu",
+   "product": "Menu",
+   "bg": "$bg",
+   "fonts": [
+    "Bebas Neue",
+    "Inter"
+   ],
+   "tags": [
+    "print shop",
+    "price list",
+    "service menu",
+    "copy centre",
+    "rate card"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#121826",
+    "a": "#e11d74",
+    "b": "#06b6d4",
+    "soft": "#e5e7ee",
+    "mute": "#5b6477",
+    "y": "#fbbf24"
+   },
+   "variants": [
+    {
+     "name": "CMYK"
+    },
+    {
+     "name": "Kraft",
+     "theme": {
+      "bg": "#efe3cf",
+      "ink": "#2c2218",
+      "a": "#b4451f",
+      "b": "#2f7f79",
+      "soft": "#dccdb2",
+      "mute": "#675844",
+      "y": "#d8a026"
+     }
+    },
+    {
+     "name": "Night Press",
+     "theme": {
+      "bg": "#10141f",
+      "ink": "#f2f5fb",
+      "a": "#ff4d94",
+      "b": "#35d7f0",
+      "soft": "#2a3146",
+      "mute": "#a5afc6",
+      "y": "#ffd24a"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#f3f3f3",
+      "ink": "#111111",
+      "a": "#111111",
+      "b": "#555555",
+      "soft": "#d6d6d6",
+      "mute": "#555555",
+      "y": "#999999"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.2,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0,
+     "w": 0.1,
+     "h": 0.02,
+     "fill": "$a"
+    },
+    {
+     "t": "rect",
+     "x": 0.2,
+     "y": 0,
+     "w": 0.1,
+     "h": 0.02,
+     "fill": "$b"
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0,
+     "w": 0.1,
+     "h": 0.02,
+     "fill": "$y"
+    },
+    {
+     "t": "rect",
+     "x": 0.4,
+     "y": 0,
+     "w": 0.1,
+     "h": 0.02,
+     "fill": "$bg"
+    },
+    {
+     "t": "icon",
+     "name": "printer",
+     "x": 0.1,
+     "y": 0.055,
+     "size": 0.1,
+     "color": "$y"
+    },
+    {
+     "t": "text",
+     "text": "PRESSLINE PRINT CO.",
+     "x": 0.29,
+     "y": 0.058,
+     "w": 0.62,
+     "size": 0.043,
+     "font": "b",
+     "fill": "$bg",
+     "weight": 800,
+     "ls": 0.14
+    },
+    {
+     "t": "text",
+     "text": "PRICE LIST",
+     "x": 0.1,
+     "y": 0.095,
+     "w": 0.8,
+     "size": 0.17,
+     "font": "d",
+     "fill": "$bg"
+    },
+    {
+     "t": "text",
+     "text": "Rates valid from January 2026 · GST extra",
+     "x": 0.1,
+     "y": 0.225,
+     "w": 0.8,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "PRINT",
+     "x": 0.1,
+     "y": 0.275,
+     "w": 0.4,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Business cards · 100",
+     "x": 0.1,
+     "y": 0.315,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$18",
+     "x": 0.54,
+     "y": 0.315,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Matte or gloss, 350 gsm",
+     "x": 0.1,
+     "y": 0.3397,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.3585,
+     "x2": 0.9,
+     "y2": 0.3585,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Flyers A5 · 250 pcs",
+     "x": 0.1,
+     "y": 0.389,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$42",
+     "x": 0.54,
+     "y": 0.389,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Double-sided, 130 gsm",
+     "x": 0.1,
+     "y": 0.4137,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.4325,
+     "x2": 0.9,
+     "y2": 0.4325,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Posters A2 · each",
+     "x": 0.1,
+     "y": 0.463,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$15",
+     "x": 0.54,
+     "y": 0.463,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Satin photo paper",
+     "x": 0.1,
+     "y": 0.4877,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.5065,
+     "x2": 0.9,
+     "y2": 0.5065,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "LARGE FORMAT",
+     "x": 0.1,
+     "y": 0.56,
+     "w": 0.7,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$b",
+     "weight": 800,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Vinyl banner · 2×6 ft",
+     "x": 0.1,
+     "y": 0.6,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$48",
+     "x": 0.54,
+     "y": 0.6,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$b",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Eyelets and hems included",
+     "x": 0.1,
+     "y": 0.6247,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.6435,
+     "x2": 0.9,
+     "y2": 0.6435,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "Custom mug · 11 oz",
+     "x": 0.1,
+     "y": 0.674,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$12",
+     "x": 0.54,
+     "y": 0.674,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$b",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Full-colour wrap",
+     "x": 0.1,
+     "y": 0.6987,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.7175,
+     "x2": 0.9,
+     "y2": 0.7175,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "DTF T-shirt print",
+     "x": 0.1,
+     "y": 0.748,
+     "w": 0.56,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "$16",
+     "x": 0.54,
+     "y": 0.748,
+     "w": 0.36,
+     "size": 0.05,
+     "font": "b",
+     "fill": "$b",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Up to A3, wash-tested",
+     "x": 0.1,
+     "y": 0.7727,
+     "w": 0.68,
+     "size": 0.033,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.1,
+     "y1": 0.7915,
+     "x2": 0.9,
+     "y2": 0.7915,
+     "stroke": "$soft",
+     "sw": 0.004
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.84,
+     "w": 0.8,
+     "h": 0.095,
+     "fill": "$a",
+     "rx": 0.02
+    },
+    {
+     "t": "text",
+     "text": "Free design check on every order",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.862,
+     "w": 0.74,
+     "size": 0.042,
+     "font": "b",
+     "fill": "#ffffff",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "+91 98765 00123  ·  pressline.in",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.955,
+     "w": 0.8,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "menu-carwash-packages",
+   "name": "Car Wash Packages",
+   "cat": "menu",
+   "product": "Menu",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$bg2"
+    ],
+    "angle": 180
+   },
+   "fonts": [
+    "Lilita One",
+    "Nunito"
+   ],
+   "tags": [
+    "car wash",
+    "detailing",
+    "price list",
+    "packages",
+    "auto spa"
+   ],
+   "theme": {
+    "bg": "#e8f6ff",
+    "bg2": "#ffffff",
+    "ink": "#0b2b4a",
+    "a": "#0284c7",
+    "b": "#22d3ee",
+    "soft": "#cfe8f7",
+    "mute": "#46647e"
+   },
+   "variants": [
+    {
+     "name": "Splash"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0a1426",
+      "bg2": "#12264a",
+      "ink": "#eaf4ff",
+      "a": "#38bdf8",
+      "b": "#22d3ee",
+      "soft": "#1d3560",
+      "mute": "#9fb7d3"
+     }
+    },
+    {
+     "name": "Citrus",
+     "theme": {
+      "bg": "#fff4d6",
+      "bg2": "#fffdf5",
+      "ink": "#3a2a05",
+      "a": "#d97706",
+      "b": "#facc15",
+      "soft": "#fbe5a6",
+      "mute": "#7a6430"
+     }
+    },
+    {
+     "name": "Lime",
+     "theme": {
+      "bg": "#e9f9e3",
+      "bg2": "#fbfff8",
+      "ink": "#16341a",
+      "a": "#3d9a2a",
+      "b": "#9be15d",
+      "soft": "#cdeec1",
+      "mute": "#4f6d52"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Waves",
+     "x": 0,
+     "y": 0.89,
+     "w": 1,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "opacity": 0.5
+    },
+    {
+     "t": "ellipse",
+     "x": 0.41,
+     "y": 0.0402,
+     "w": 0.18,
+     "h": 0.0695,
+     "fill": {
+      "grad": [
+       "$b",
+       "$a"
+      ],
+      "angle": 160
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0.01,
+      "blur": 0.02,
+      "color": "#0284c744"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "droplets",
+     "x": 0.455,
+     "y": 0.0576,
+     "size": 0.09,
+     "color": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "SPARKLE AUTO SPA",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.135,
+     "w": 0.8,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Wash Packages",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.162,
+     "w": 0.9,
+     "size": 0.12,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.07
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.255,
+     "w": 0.84,
+     "h": 0.17,
+     "fill": "$soft",
+     "rx": 0.03
+    },
+    {
+     "t": "text",
+     "text": "Express",
+     "x": 0.12,
+     "y": 0.27,
+     "w": 0.5,
+     "size": 0.075,
+     "font": "d",
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "$12",
+     "x": 0.62,
+     "y": 0.27,
+     "w": 0.26,
+     "size": 0.085,
+     "font": "d",
+     "fill": "$a",
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Exterior hand wash, rinse and\nquick towel dry. 15 minutes.",
+     "x": 0.12,
+     "y": 0.332,
+     "w": 0.76,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$mute",
+     "lh": 1.35
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.445,
+     "w": 0.84,
+     "h": 0.2,
+     "fill": {
+      "grad": [
+       "$a",
+       "$b"
+      ],
+      "angle": 120
+     },
+     "rx": 0.03,
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.025,
+      "color": "#0284c755"
+     }
+    },
+    {
+     "t": "text",
+     "text": "Classic",
+     "x": 0.12,
+     "y": 0.46,
+     "w": 0.5,
+     "size": 0.075,
+     "font": "d",
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "$22",
+     "x": 0.62,
+     "y": 0.46,
+     "w": 0.26,
+     "size": 0.085,
+     "font": "d",
+     "fill": "#ffffff",
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Express plus interior vacuum,\nwindows, tyre shine and dash wipe.",
+     "x": 0.12,
+     "y": 0.522,
+     "w": 0.76,
+     "size": 0.04,
+     "font": "b",
+     "fill": "#ffffff",
+     "lh": 1.35
+    },
+    {
+     "t": "rect",
+     "x": 0.15,
+     "y": 0.6,
+     "w": 0.4,
+     "h": 0.028,
+     "fill": "#ffffff",
+     "rx": 0.014
+    },
+    {
+     "t": "text",
+     "text": "MOST POPULAR",
+     "x": 0.15,
+     "y": 0.6035,
+     "w": 0.4,
+     "size": 0.027,
+     "font": "b",
+     "fill": "#0b2b4a",
+     "weight": 800,
+     "align": "center",
+     "ls": 0.12
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.665,
+     "w": 0.84,
+     "h": 0.17,
+     "fill": "$soft",
+     "rx": 0.03
+    },
+    {
+     "t": "text",
+     "text": "Full Detail",
+     "x": 0.12,
+     "y": 0.68,
+     "w": 0.5,
+     "size": 0.075,
+     "font": "d",
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "$75",
+     "x": 0.62,
+     "y": 0.68,
+     "w": 0.26,
+     "size": 0.085,
+     "font": "d",
+     "fill": "$a",
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "Clay bar, polish, wax, steam-cleaned\ninterior and engine bay rinse.",
+     "x": 0.12,
+     "y": 0.742,
+     "w": 0.76,
+     "size": 0.04,
+     "font": "b",
+     "fill": "$mute",
+     "lh": 1.35
+    },
+    {
+     "t": "text",
+     "text": "ADD-ONS",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.848,
+     "w": 0.6,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Ceramic coat $180  ·  Headlight restore $30",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.88,
+     "w": 0.86,
+     "size": 0.031,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Open daily 8 am – 8 pm  ·  +91 98765 22110",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.94,
+     "w": 0.84,
+     "size": 0.032,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "menu-event-programme",
+   "name": "Event Programme Schedule",
+   "cat": "menu",
+   "product": "Menu",
+   "bg": "$bg",
+   "fonts": [
+    "Cormorant Garamond",
+    "Montserrat"
+   ],
+   "tags": [
+    "programme",
+    "event schedule",
+    "agenda",
+    "conference",
+    "summit"
+   ],
+   "theme": {
+    "bg": "#14172b",
+    "ink": "#f5f1e6",
+    "a": "#e0b865",
+    "b": "#7d6a3a",
+    "soft": "#2a2f52",
+    "mute": "#b8b9cf"
+   },
+   "variants": [
+    {
+     "name": "Midnight Gold"
+    },
+    {
+     "name": "Ivory",
+     "theme": {
+      "bg": "#faf6ec",
+      "ink": "#22223b",
+      "a": "#a07a2e",
+      "b": "#d9c28a",
+      "soft": "#e9dfc8",
+      "mute": "#605f73"
+     }
+    },
+    {
+     "name": "Teal",
+     "theme": {
+      "bg": "#0c2f33",
+      "ink": "#eaf4f1",
+      "a": "#f0c36a",
+      "b": "#4aa3a0",
+      "soft": "#174549",
+      "mute": "#a8c6c3"
+     }
+    },
+    {
+     "name": "Rosewood",
+     "theme": {
+      "bg": "#2b1218",
+      "ink": "#f8ece6",
+      "a": "#e8b4a0",
+      "b": "#9a5a50",
+      "soft": "#431f28",
+      "mute": "#cfaeab"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.05,
+     "y": 0.03,
+     "w": 0.9,
+     "h": 0.94,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.006
+    },
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.1,
+     "y": -0.1545,
+     "w": 0.8,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "opacity": 0.18
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.09,
+     "r": 0.05,
+     "fill": "$a",
+     "n": 5
+    },
+    {
+     "t": "text",
+     "text": "ANNUAL INNOVATORS SUMMIT",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.14,
+     "w": 0.8,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Programme",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.17,
+     "w": 0.9,
+     "size": 0.14,
+     "font": "d",
+     "italic": true,
+     "fill": "$ink",
+     "h": 0.08
+    },
+    {
+     "t": "text",
+     "text": "Friday 17 October 2026 · Grand Hall",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.255,
+     "w": 0.8,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "line",
+     "x1": 0.28,
+     "y1": 0.3,
+     "x2": 0.72,
+     "y2": 0.3,
+     "stroke": "$a",
+     "sw": 0.004
+    },
+    {
+     "t": "text",
+     "text": "09:00",
+     "x": 0.11,
+     "y": 0.335,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.339,
+     "x2": 0.33,
+     "y2": 0.395,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Registration & welcome",
+     "x": 0.38,
+     "y": 0.333,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Foyer",
+     "x": 0.38,
+     "y": 0.365,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "10:00",
+     "x": 0.11,
+     "y": 0.416,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.42,
+     "x2": 0.33,
+     "y2": 0.476,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Opening keynote",
+     "x": 0.38,
+     "y": 0.414,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "The next decade of making",
+     "x": 0.38,
+     "y": 0.446,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "11:30",
+     "x": 0.11,
+     "y": 0.497,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.501,
+     "x2": 0.33,
+     "y2": 0.557,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Panel discussion",
+     "x": 0.38,
+     "y": 0.495,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Building in small cities",
+     "x": 0.38,
+     "y": 0.527,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "13:00",
+     "x": 0.11,
+     "y": 0.578,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.582,
+     "x2": 0.33,
+     "y2": 0.638,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Networking break",
+     "x": 0.38,
+     "y": 0.576,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Meet the founders",
+     "x": 0.38,
+     "y": 0.608,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "14:00",
+     "x": 0.11,
+     "y": 0.659,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.663,
+     "x2": 0.33,
+     "y2": 0.719,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Hands-on workshops",
+     "x": 0.38,
+     "y": 0.657,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Four parallel tracks",
+     "x": 0.38,
+     "y": 0.689,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "16:00",
+     "x": 0.11,
+     "y": 0.74,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.744,
+     "x2": 0.33,
+     "y2": 0.8,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Awards ceremony",
+     "x": 0.38,
+     "y": 0.738,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Innovator of the Year",
+     "x": 0.38,
+     "y": 0.77,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "17:30",
+     "x": 0.11,
+     "y": 0.821,
+     "w": 0.2,
+     "size": 0.05,
+     "font": "d",
+     "fill": "$a",
+     "weight": 700
+    },
+    {
+     "t": "line",
+     "x1": 0.33,
+     "y1": 0.825,
+     "x2": 0.33,
+     "y2": 0.881,
+     "stroke": "$b",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Closing remarks",
+     "x": 0.38,
+     "y": 0.819,
+     "w": 0.55,
+     "size": 0.044,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Vote of thanks",
+     "x": 0.38,
+     "y": 0.851,
+     "w": 0.55,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "Scan for speaker bios  ·  innovatorssummit.in",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.92,
+     "w": 0.8,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-title-split",
+   "name": "Deck · Title Slide",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "title"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.58,
+     "y": 0,
+     "w": 0.42,
+     "h": 1,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 150
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Half rings",
+     "x": 0.7028,
+     "y": 0.505,
+     "w": 0.5344,
+     "pal": [
+      "#ffffff",
+      "#ffffff",
+      "#ffffff"
+     ],
+     "opacity": 0.2
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6494,
+     "y": 0.11,
+     "w": 0.2813,
+     "h": 0.5,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.004,
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6944,
+     "y": 0.19,
+     "w": 0.1913,
+     "h": 0.34,
+     "fill": "#ffffff",
+     "opacity": 0.16
+    },
+    {
+     "t": "ellipse",
+     "x": 0.745,
+     "y": 0.28,
+     "w": 0.09,
+     "h": 0.16,
+     "fill": "#ffffff",
+     "shadow": {
+      "x": 0,
+      "y": 0.015,
+      "blur": 0.03,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "arrow-up-right",
+     "x": 0.7703,
+     "y": 0.325,
+     "size": 0.07,
+     "color": "$g1"
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.2,
+     "w": 0.05,
+     "h": 0.009,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "ANNUAL REVIEW  ·  FY 2026",
+     "x": 0.07,
+     "y": 0.235,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "Growth\nStrategy 2026",
+     "x": 0.07,
+     "y": 0.3,
+     "w": 0.55,
+     "size": 0.125,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "lh": 0.98,
+     "h": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Where we stand, where the market is moving\nand the four bets that will carry us forward.",
+     "x": 0.07,
+     "y": 0.62,
+     "w": 0.45,
+     "size": 0.032,
+     "font": "b",
+     "fill": "$mute",
+     "lh": 1.45
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0739,
+     "y": 0.7625,
+     "w": 0.0422,
+     "h": 0.075,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "MK",
+     "x": 0.095,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7835,
+     "w": 0.06,
+     "size": 0.027,
+     "font": "d",
+     "fill": "$on",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Meera Kapoor",
+     "x": 0.12,
+     "y": 0.775,
+     "w": 0.3,
+     "size": 0.031,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Chief Strategy Officer  ·  12 January 2026",
+     "x": 0.12,
+     "y": 0.815,
+     "w": 0.4,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-agenda-list",
+   "name": "Deck · Agenda",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "agenda"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.36,
+     "h": 1,
+     "fill": "$soft"
+    },
+    {
+     "t": "graphic",
+     "name": "Half rings",
+     "x": -0.1969,
+     "y": -0.35,
+     "w": 0.3938,
+     "pal": [
+      "$a",
+      "$a",
+      "$b"
+     ],
+     "opacity": 0.18
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.095,
+     "w": 0.04,
+     "h": 0.008,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "TODAY",
+     "x": 0.07,
+     "y": 0.115,
+     "w": 0.4,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "Agenda",
+     "x": 0.07,
+     "y": 0.16,
+     "w": 0.28,
+     "size": 0.12,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "h": 0.14
+    },
+    {
+     "t": "text",
+     "text": "Five topics, forty-five\nminutes, one clear plan.",
+     "x": 0.07,
+     "y": 0.34,
+     "w": 0.26,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$mute",
+     "lh": 1.45
+    },
+    {
+     "t": "icon",
+     "name": "clock",
+     "x": 0.07,
+     "y": 0.8,
+     "size": 0.05,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "45 minutes in total",
+     "x": 0.1094,
+     "y": 0.808,
+     "w": 0.25,
+     "size": 0.027,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4261,
+     "y": 0.1225,
+     "w": 0.0478,
+     "h": 0.085,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 140
+     }
+    },
+    {
+     "t": "text",
+     "text": "01",
+     "x": 0.45,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.1395,
+     "w": 0.08,
+     "size": 0.04,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Year in review",
+     "x": 0.5,
+     "y": 0.127,
+     "w": 0.36,
+     "size": 0.042,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "Results against the FY25 plan",
+     "x": 0.5,
+     "y": 0.185,
+     "w": 0.36,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "8 min",
+     "x": 0.82,
+     "y": 0.145,
+     "w": 0.11,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.25,
+     "x2": 0.93,
+     "y2": 0.25,
+     "stroke": "$soft",
+     "sw": 0.002
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4261,
+     "y": 0.2875,
+     "w": 0.0478,
+     "h": 0.085,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 140
+     }
+    },
+    {
+     "t": "text",
+     "text": "02",
+     "x": 0.45,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.3045,
+     "w": 0.08,
+     "size": 0.04,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Market opportunity",
+     "x": 0.5,
+     "y": 0.292,
+     "w": 0.36,
+     "size": 0.042,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "Three segments worth entering",
+     "x": 0.5,
+     "y": 0.35,
+     "w": 0.36,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "10 min",
+     "x": 0.82,
+     "y": 0.31,
+     "w": 0.11,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.415,
+     "x2": 0.93,
+     "y2": 0.415,
+     "stroke": "$soft",
+     "sw": 0.002
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4261,
+     "y": 0.4525,
+     "w": 0.0478,
+     "h": 0.085,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 140
+     }
+    },
+    {
+     "t": "text",
+     "text": "03",
+     "x": 0.45,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.4695,
+     "w": 0.08,
+     "size": 0.04,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Strategic priorities",
+     "x": 0.5,
+     "y": 0.457,
+     "w": 0.36,
+     "size": 0.042,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "Where we invest, and why",
+     "x": 0.5,
+     "y": 0.515,
+     "w": 0.36,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "12 min",
+     "x": 0.82,
+     "y": 0.475,
+     "w": 0.11,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.58,
+     "x2": 0.93,
+     "y2": 0.58,
+     "stroke": "$soft",
+     "sw": 0.002
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4261,
+     "y": 0.6175,
+     "w": 0.0478,
+     "h": 0.085,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 140
+     }
+    },
+    {
+     "t": "text",
+     "text": "04",
+     "x": 0.45,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.6345,
+     "w": 0.08,
+     "size": 0.04,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Roadmap & milestones",
+     "x": 0.5,
+     "y": 0.622,
+     "w": 0.36,
+     "size": 0.042,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "Quarter-by-quarter delivery plan",
+     "x": 0.5,
+     "y": 0.68,
+     "w": 0.36,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "8 min",
+     "x": 0.82,
+     "y": 0.64,
+     "w": 0.11,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.745,
+     "x2": 0.93,
+     "y2": 0.745,
+     "stroke": "$soft",
+     "sw": 0.002
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4261,
+     "y": 0.7825,
+     "w": 0.0478,
+     "h": 0.085,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 140
+     }
+    },
+    {
+     "t": "text",
+     "text": "05",
+     "x": 0.45,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7995,
+     "w": 0.08,
+     "size": 0.04,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Questions & next steps",
+     "x": 0.5,
+     "y": 0.787,
+     "w": 0.36,
+     "size": 0.042,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "text",
+     "text": "Open floor and owners",
+     "x": 0.5,
+     "y": 0.845,
+     "w": 0.36,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "7 min",
+     "x": 0.82,
+     "y": 0.805,
+     "w": 0.11,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "align": "right"
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  02",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-section-divider",
+   "name": "Deck · Section Divider",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": {
+    "grad": [
+     "$g1",
+     "$g2"
+    ],
+    "angle": 135
+   },
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "section",
+    "divider"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.4544,
+     "y": -0.15,
+     "w": 0.7313,
+     "h": 1.3,
+     "fill": "#ffffff",
+     "opacity": 0.08
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5669,
+     "y": 0.05,
+     "w": 0.5063,
+     "h": 0.9,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.004,
+     "opacity": 0.3
+    },
+    {
+     "t": "text",
+     "text": "02",
+     "x": 0.5,
+     "y": 0.06,
+     "w": 0.45,
+     "size": 0.62,
+     "font": "d",
+     "weight": 800,
+     "fill": "#ffffff",
+     "align": "right",
+     "opacity": 0.18,
+     "h": 0.75
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.34,
+     "w": 0.05,
+     "h": 0.009,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "SECTION TWO",
+     "x": 0.07,
+     "y": 0.37,
+     "w": 0.4,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Market\nOpportunity",
+     "x": 0.07,
+     "y": 0.43,
+     "w": 0.7,
+     "size": 0.14,
+     "font": "d",
+     "weight": 800,
+     "fill": "$on",
+     "lh": 0.98,
+     "h": 0.32
+    },
+    {
+     "t": "text",
+     "text": "Three segments, one clear winner.",
+     "x": 0.07,
+     "y": 0.8,
+     "w": 0.6,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$on",
+     "opacity": 0.9
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 0.85
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  03",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 0.85
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-big-numbers",
+   "name": "Deck · Big Number Stats",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "stats",
+    "numbers",
+    "kpi"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.095,
+     "w": 0.04,
+     "h": 0.008,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "FY25 AT A GLANCE",
+     "x": 0.07,
+     "y": 0.115,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "The year in four numbers",
+     "x": 0.07,
+     "y": 0.16,
+     "w": 0.86,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "h": 0.1
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.42,
+     "fill": "$soft",
+     "rx": 0.02
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.012,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 90
+     },
+     "rx": 0
+    },
+    {
+     "t": "icon",
+     "name": "users",
+     "x": 0.088,
+     "y": 0.43,
+     "size": 0.045,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "2.4M",
+     "x": 0.088,
+     "y": 0.53,
+     "w": 0.17,
+     "size": 0.088,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "h": 0.12
+    },
+    {
+     "t": "text",
+     "text": "Active users",
+     "x": 0.088,
+     "y": 0.675,
+     "w": 0.17,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "+31% year on year",
+     "x": 0.088,
+     "y": 0.73,
+     "w": 0.17,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    },
+    {
+     "t": "rect",
+     "x": 0.29,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.42,
+     "fill": "$soft",
+     "rx": 0.02
+    },
+    {
+     "t": "rect",
+     "x": 0.29,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.012,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 90
+     },
+     "rx": 0
+    },
+    {
+     "t": "icon",
+     "name": "receipt",
+     "x": 0.308,
+     "y": 0.43,
+     "size": 0.045,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "$12.6M",
+     "x": 0.308,
+     "y": 0.53,
+     "w": 0.17,
+     "size": 0.088,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "h": 0.12
+    },
+    {
+     "t": "text",
+     "text": "Annual revenue",
+     "x": 0.308,
+     "y": 0.675,
+     "w": 0.17,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "+22% vs FY24",
+     "x": 0.308,
+     "y": 0.73,
+     "w": 0.17,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    },
+    {
+     "t": "rect",
+     "x": 0.51,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.42,
+     "fill": "$soft",
+     "rx": 0.02
+    },
+    {
+     "t": "rect",
+     "x": 0.51,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.012,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 90
+     },
+     "rx": 0
+    },
+    {
+     "t": "icon",
+     "name": "heart-handshake",
+     "x": 0.528,
+     "y": 0.43,
+     "size": 0.045,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "94%",
+     "x": 0.528,
+     "y": 0.53,
+     "w": 0.17,
+     "size": 0.088,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "h": 0.12
+    },
+    {
+     "t": "text",
+     "text": "Retention",
+     "x": 0.528,
+     "y": 0.675,
+     "w": 0.17,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Best in category",
+     "x": 0.528,
+     "y": 0.73,
+     "w": 0.17,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    },
+    {
+     "t": "rect",
+     "x": 0.73,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.42,
+     "fill": "$soft",
+     "rx": 0.02
+    },
+    {
+     "t": "rect",
+     "x": 0.73,
+     "y": 0.38,
+     "w": 0.2,
+     "h": 0.012,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 90
+     },
+     "rx": 0
+    },
+    {
+     "t": "icon",
+     "name": "globe",
+     "x": 0.748,
+     "y": 0.43,
+     "size": 0.045,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "18",
+     "x": 0.748,
+     "y": 0.53,
+     "w": 0.17,
+     "size": 0.088,
+     "font": "d",
+     "weight": 800,
+     "fill": "$ink",
+     "h": 0.12
+    },
+    {
+     "t": "text",
+     "text": "New markets",
+     "x": 0.748,
+     "y": 0.675,
+     "w": 0.17,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Across 6 countries",
+     "x": 0.748,
+     "y": 0.73,
+     "w": 0.17,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 600
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 1
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  04",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-two-column",
+   "name": "Deck · Two Column",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "two column",
+    "compare"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.095,
+     "w": 0.04,
+     "h": 0.008,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "OUR POSITION",
+     "x": 0.07,
+     "y": 0.115,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "Today versus tomorrow",
+     "x": 0.07,
+     "y": 0.16,
+     "w": 0.86,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "h": 0.1
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.36,
+     "w": 0.41,
+     "h": 0.52,
+     "fill": "$soft",
+     "rx": 0.02
+    },
+    {
+     "t": "rect",
+     "x": 0.52,
+     "y": 0.36,
+     "w": 0.41,
+     "h": 0.52,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 135
+     },
+     "rx": 0.02,
+     "shadow": {
+      "x": 0,
+      "y": 0.015,
+      "blur": 0.03,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0789,
+     "y": 0.3925,
+     "w": 0.0422,
+     "h": 0.075,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "map-pin",
+     "x": 0.0888,
+     "y": 0.41,
+     "size": 0.04,
+     "color": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Where we are",
+     "x": 0.135,
+     "y": 0.4,
+     "w": 0.3,
+     "size": 0.038,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0955,
+     "y": 0.531,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Strong base in three metro regions",
+     "x": 0.118,
+     "y": 0.52,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0955,
+     "y": 0.631,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Repeat customers drive 70% of sales",
+     "x": 0.118,
+     "y": 0.62,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0955,
+     "y": 0.731,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Manual onboarding slows every launch",
+     "x": 0.118,
+     "y": 0.72,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5289,
+     "y": 0.3925,
+     "w": 0.0422,
+     "h": 0.075,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "icon",
+     "name": "flag",
+     "x": 0.5388,
+     "y": 0.41,
+     "size": 0.04,
+     "color": "$g1"
+    },
+    {
+     "t": "text",
+     "text": "Where we are heading",
+     "x": 0.585,
+     "y": 0.4,
+     "w": 0.33,
+     "size": 0.038,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5455,
+     "y": 0.531,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "Expand into six tier-two cities",
+     "x": 0.568,
+     "y": 0.52,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "lh": 1.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5455,
+     "y": 0.631,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "Self-serve onboarding in 10 minutes",
+     "x": 0.568,
+     "y": 0.62,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "lh": 1.3
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5455,
+     "y": 0.731,
+     "w": 0.009,
+     "h": 0.016,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "Partner channel for 30% of revenue",
+     "x": 0.568,
+     "y": 0.72,
+     "w": 0.34,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "lh": 1.3
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 1
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  05",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-quote",
+   "name": "Deck · Quote",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "quote",
+    "testimonial"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.012,
+     "h": 1,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 180
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6431,
+     "y": -0.17,
+     "w": 0.3938,
+     "h": 0.7,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8016,
+     "y": 0.725,
+     "w": 0.1969,
+     "h": 0.35,
+     "fill": "$soft",
+     "opacity": 0.7
+    },
+    {
+     "t": "text",
+     "text": "“",
+     "x": 0.07,
+     "y": 0.04,
+     "w": 0.2,
+     "size": 0.55,
+     "font": "Playfair Display",
+     "weight": 700,
+     "fill": "$a",
+     "h": 0.5
+    },
+    {
+     "t": "text",
+     "text": "The best strategy is the one your whole team can explain in a single sentence.",
+     "x": 0.07,
+     "y": 0.33,
+     "w": 0.72,
+     "size": 0.078,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "lh": 1.15,
+     "h": 0.36
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.74,
+     "w": 0.05,
+     "h": 0.009,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Meera Kapoor",
+     "x": 0.07,
+     "y": 0.77,
+     "w": 0.4,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Chief Strategy Officer, Orbit Partners",
+     "x": 0.07,
+     "y": 0.82,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 1
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  06",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-team-circles",
+   "name": "Deck · Team",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "team",
+    "people"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.095,
+     "w": 0.04,
+     "h": 0.008,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "THE PEOPLE BEHIND IT",
+     "x": 0.07,
+     "y": 0.115,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "Meet the leadership team",
+     "x": 0.07,
+     "y": 0.16,
+     "w": 0.86,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$ink",
+     "h": 0.1
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0931,
+     "y": 0.36,
+     "w": 0.1688,
+     "h": 0.3,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1015,
+     "y": 0.375,
+     "w": 0.1519,
+     "h": 0.27,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 120
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.02,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "text",
+     "text": "MK",
+     "x": 0.1775,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.463,
+     "w": 0.2,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Meera Kapoor",
+     "x": 0.1775,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7,
+     "w": 0.21,
+     "size": 0.032,
+     "font": "d",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Chief Strategy Officer",
+     "x": 0.1775,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.75,
+     "w": 0.21,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3081,
+     "y": 0.36,
+     "w": 0.1688,
+     "h": 0.3,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3165,
+     "y": 0.375,
+     "w": 0.1519,
+     "h": 0.27,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 160
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.02,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "text",
+     "text": "DO",
+     "x": 0.3925,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.463,
+     "w": 0.2,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Daniel Okafor",
+     "x": 0.3925,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7,
+     "w": 0.21,
+     "size": 0.032,
+     "font": "d",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Head of Product",
+     "x": 0.3925,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.75,
+     "w": 0.21,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5231,
+     "y": 0.36,
+     "w": 0.1688,
+     "h": 0.3,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5316,
+     "y": 0.375,
+     "w": 0.1519,
+     "h": 0.27,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 200
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.02,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SQ",
+     "x": 0.6075,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.463,
+     "w": 0.2,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Sana Qureshi",
+     "x": 0.6075,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7,
+     "w": 0.21,
+     "size": 0.032,
+     "font": "d",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Director, Growth",
+     "x": 0.6075,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.75,
+     "w": 0.21,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7381,
+     "y": 0.36,
+     "w": 0.1688,
+     "h": 0.3,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7466,
+     "y": 0.375,
+     "w": 0.1519,
+     "h": 0.27,
+     "fill": {
+      "grad": [
+       "$g1",
+       "$g2"
+      ],
+      "angle": 240
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.02,
+      "color": "#00000033"
+     }
+    },
+    {
+     "t": "text",
+     "text": "TR",
+     "x": 0.8225,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.463,
+     "w": 0.2,
+     "size": 0.075,
+     "font": "d",
+     "weight": 700,
+     "fill": "$on"
+    },
+    {
+     "t": "text",
+     "text": "Tomás Rivera",
+     "x": 0.8225,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.7,
+     "w": 0.21,
+     "size": 0.032,
+     "font": "d",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Head of Operations",
+     "x": 0.8225,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.75,
+     "w": 0.21,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute"
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 1
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  07",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 1
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "deck-thank-you",
+   "name": "Deck · Thank You",
+   "cat": "slides",
+   "product": "Presentation 16:9",
+   "bg": {
+    "grad": [
+     "$g1",
+     "$g2"
+    ],
+    "angle": 135
+   },
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "presentation",
+    "slides",
+    "business",
+    "thank you",
+    "contact",
+    "closing"
+   ],
+   "theme": {
+    "bg": "#f7f9fc",
+    "ink": "#101b33",
+    "a": "#2563eb",
+    "b": "#06b6d4",
+    "g1": "#1d4ed8",
+    "g2": "#0891b2",
+    "soft": "#e4ecf8",
+    "mute": "#556583",
+    "on": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Ocean"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#0d1022",
+      "ink": "#f2f3ff",
+      "a": "#8b8cff",
+      "b": "#f472b6",
+      "g1": "#4f46e5",
+      "g2": "#9333ea",
+      "soft": "#1a1f3d",
+      "mute": "#a4a9cc"
+     }
+    },
+    {
+     "name": "Sunrise",
+     "theme": {
+      "bg": "#fff8f1",
+      "ink": "#3a1a0c",
+      "a": "#dc4a1e",
+      "b": "#f59e0b",
+      "g1": "#dc2626",
+      "g2": "#c2410c",
+      "soft": "#fde8d6",
+      "mute": "#7b5a48"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#f2f8f4",
+      "ink": "#0f2f26",
+      "a": "#0f8a65",
+      "b": "#84cc16",
+      "g1": "#047857",
+      "g2": "#0f766e",
+      "soft": "#dcede3",
+      "mute": "#50695f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.6469,
+     "y": -0.33,
+     "w": 0.5063,
+     "h": 0.9,
+     "fill": "#ffffff",
+     "opacity": 0.09
+    },
+    {
+     "t": "ellipse",
+     "x": -0.105,
+     "y": 0.6,
+     "w": 0.45,
+     "h": 0.8,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.004,
+     "opacity": 0.3
+    },
+    {
+     "t": "ellipse",
+     "x": -0.2175,
+     "y": 0.4,
+     "w": 0.675,
+     "h": 1.2,
+     "fill": "transparent",
+     "stroke": "#ffffff",
+     "sw": 0.003,
+     "opacity": 0.2
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.17,
+     "w": 0.05,
+     "h": 0.009,
+     "fill": "#ffffff"
+    },
+    {
+     "t": "text",
+     "text": "LET’S KEEP IN TOUCH",
+     "x": 0.07,
+     "y": 0.2,
+     "w": 0.5,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Thank you",
+     "x": 0.07,
+     "y": 0.26,
+     "w": 0.8,
+     "size": 0.19,
+     "font": "d",
+     "weight": 800,
+     "fill": "$on",
+     "h": 0.24
+    },
+    {
+     "t": "text",
+     "text": "Questions, ideas and challenges are all welcome.",
+     "x": 0.07,
+     "y": 0.52,
+     "w": 0.7,
+     "size": 0.034,
+     "font": "b",
+     "fill": "$on",
+     "opacity": 0.92
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0725,
+     "y": 0.6585,
+     "w": 0.0309,
+     "h": 0.055,
+     "fill": "#ffffff",
+     "opacity": 0.2
+    },
+    {
+     "t": "icon",
+     "name": "mail",
+     "x": 0.0796,
+     "y": 0.671,
+     "size": 0.03,
+     "color": "$on"
+    },
+    {
+     "t": "text",
+     "text": "meera.kapoor@orbitpartners.com",
+     "x": 0.12,
+     "y": 0.664,
+     "w": 0.5,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "weight": 500
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0725,
+     "y": 0.7335,
+     "w": 0.0309,
+     "h": 0.055,
+     "fill": "#ffffff",
+     "opacity": 0.2
+    },
+    {
+     "t": "icon",
+     "name": "phone",
+     "x": 0.0796,
+     "y": 0.746,
+     "size": 0.03,
+     "color": "$on"
+    },
+    {
+     "t": "text",
+     "text": "+91 98765 43210",
+     "x": 0.12,
+     "y": 0.739,
+     "w": 0.5,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "weight": 500
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0725,
+     "y": 0.8085,
+     "w": 0.0309,
+     "h": 0.055,
+     "fill": "#ffffff",
+     "opacity": 0.2
+    },
+    {
+     "t": "icon",
+     "name": "globe",
+     "x": 0.0796,
+     "y": 0.821,
+     "size": 0.03,
+     "color": "$on"
+    },
+    {
+     "t": "text",
+     "text": "orbitpartners.com",
+     "x": 0.12,
+     "y": 0.814,
+     "w": 0.5,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$on",
+     "weight": 500
+    },
+    {
+     "t": "text",
+     "text": "ORBIT PARTNERS",
+     "x": 0.07,
+     "y": 0.935,
+     "w": 0.3,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 700,
+     "ls": 0.22,
+     "opacity": 0.85
+    },
+    {
+     "t": "text",
+     "text": "2026 GROWTH STRATEGY  ·  08",
+     "x": 0.6,
+     "y": 0.935,
+     "w": 0.33,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$on",
+     "weight": 600,
+     "ls": 0.14,
+     "align": "right",
+     "opacity": 0.85
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "wall-abstract-geo",
+   "name": "Abstract Geometry Wallpaper",
+   "cat": "wallpaper",
+   "product": "Desktop wallpaper",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$bg2"
+    ],
+    "angle": 135
+   },
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "wallpaper",
+    "abstract",
+    "gradient",
+    "geometric",
+    "desktop"
+   ],
+   "theme": {
+    "bg": "#1b1464",
+    "bg2": "#0b0b2e",
+    "a": "#ff4fa3",
+    "b": "#7c5cff",
+    "c": "#22d3ee",
+    "ink": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Aurora"
+    },
+    {
+     "name": "Dusk",
+     "theme": {
+      "bg": "#3a0f4a",
+      "bg2": "#12061f",
+      "a": "#ff7a59",
+      "b": "#f43f8e",
+      "c": "#ffd166"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#04364a",
+      "bg2": "#021a26",
+      "a": "#14d6b0",
+      "b": "#2f9bff",
+      "c": "#b6f0ff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#2a2a2e",
+      "bg2": "#0c0c0e",
+      "a": "#e4e4e7",
+      "b": "#71717a",
+      "c": "#a1a1aa"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.4988,
+     "y": -0.12,
+     "w": 0.5625,
+     "h": 1,
+     "fill": {
+      "grad": [
+       "$b",
+       "$a"
+      ],
+      "angle": 135
+     },
+     "opacity": 0.9,
+     "shadow": {
+      "x": 0,
+      "y": 0.04,
+      "blur": 0.08,
+      "color": "#00000066"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0256,
+     "y": 0.51,
+     "w": 0.3488,
+     "h": 0.62,
+     "fill": {
+      "grad": [
+       "$c",
+       "$b"
+      ],
+      "angle": 60
+     },
+     "opacity": 0.85
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4144,
+     "y": -0.27,
+     "w": 0.7313,
+     "h": 1.3,
+     "fill": "transparent",
+     "stroke": "$ink",
+     "sw": 0.002,
+     "opacity": 0.25
+    },
+    {
+     "t": "ellipse",
+     "x": 0.33,
+     "y": -0.42,
+     "w": 0.9,
+     "h": 1.6,
+     "fill": "transparent",
+     "stroke": "$ink",
+     "sw": 0.0015,
+     "opacity": 0.14
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.42,
+       0.12
+      ],
+      [
+       0.58,
+       0.46
+      ],
+      [
+       0.3,
+       0.4
+      ]
+     ],
+     "fill": "$a",
+     "opacity": 0.75,
+     "blend": "screen"
+    },
+    {
+     "t": "rect",
+     "x": 0.52,
+     "y": 0.64,
+     "w": 0.14,
+     "h": 0.25,
+     "fill": "transparent",
+     "stroke": "$ink",
+     "sw": 0.003,
+     "rx": 0.02,
+     "rot": 18,
+     "opacity": 0.55
+    },
+    {
+     "t": "rect",
+     "x": 0.1,
+     "y": 0.12,
+     "w": 0.09,
+     "h": 0.16,
+     "fill": "$c",
+     "rx": 0.03,
+     "rot": -14,
+     "opacity": 0.55,
+     "blend": "screen"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8663,
+     "y": 0.78,
+     "w": 0.0675,
+     "h": 0.12,
+     "fill": "$c",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.346,
+     "y": 0.175,
+     "w": 0.0281,
+     "h": 0.05,
+     "fill": "$ink",
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.5806,
+     "y": 0.09,
+     "w": 0.0788,
+     "pal": [
+      "$ink",
+      "$c",
+      "$a"
+     ],
+     "opacity": 0.8
+    },
+    {
+     "t": "graphic",
+     "name": "Halftone",
+     "x": 0.0838,
+     "y": 0.26,
+     "w": 0.1125,
+     "pal": [
+      "$ink",
+      "$ink",
+      "$ink"
+     ],
+     "opacity": 0.25
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "wall-minimal-quote",
+   "name": "Minimal Quote Wallpaper",
+   "cat": "wallpaper",
+   "product": "Desktop wallpaper",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Inter"
+   ],
+   "tags": [
+    "wallpaper",
+    "minimal",
+    "quote",
+    "motivation",
+    "desktop"
+   ],
+   "theme": {
+    "bg": "#f4efe6",
+    "ink": "#23201b",
+    "a": "#c6613f",
+    "b": "#d8cdb9",
+    "mute": "#7a7266"
+   },
+   "variants": [
+    {
+     "name": "Paper"
+    },
+    {
+     "name": "Charcoal",
+     "theme": {
+      "bg": "#1b1c1f",
+      "ink": "#f2efe9",
+      "a": "#e8a95b",
+      "b": "#3a3b40",
+      "mute": "#9a988f"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#dfe6da",
+      "ink": "#1f2b22",
+      "a": "#4d7c59",
+      "b": "#c3cfbd",
+      "mute": "#596a5c"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#f7e4e1",
+      "ink": "#3d2226",
+      "a": "#cc5b6e",
+      "b": "#ecc9c9",
+      "mute": "#7e5a5e"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.2188,
+     "y": 0,
+     "w": 0.5625,
+     "h": 1,
+     "fill": "$b",
+     "opacity": 0.35
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2806,
+     "y": 0.11,
+     "w": 0.4388,
+     "h": 0.78,
+     "fill": "transparent",
+     "stroke": "$b",
+     "sw": 0.002
+    },
+    {
+     "t": "rect",
+     "x": 0.4916,
+     "y": 0.2,
+     "w": 0.0169,
+     "h": 0.014,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Make it simple,\nbut significant.",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.33,
+     "w": 0.7,
+     "size": 0.115,
+     "font": "d",
+     "italic": true,
+     "fill": "$ink",
+     "lh": 1.12,
+     "h": 0.3
+    },
+    {
+     "t": "line",
+     "x1": 0.46,
+     "y1": 0.7,
+     "x2": 0.54,
+     "y2": 0.7,
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "A DESIGNER’S CREED",
+     "x": 0.5,
+     "anchor": "c",
+     "align": "center",
+     "y": 0.735,
+     "w": 0.5,
+     "size": 0.022,
+     "font": "b",
+     "fill": "$mute",
+     "weight": 600,
+     "ls": 0.4
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "wall-retro-sunset",
+   "name": "Retro Sunset Wallpaper",
+   "cat": "wallpaper",
+   "product": "Desktop wallpaper",
+   "bg": "$ground",
+   "fonts": [
+    "Bungee",
+    "Poppins"
+   ],
+   "tags": [
+    "wallpaper",
+    "retro",
+    "sunset",
+    "synthwave",
+    "80s",
+    "desktop"
+   ],
+   "theme": {
+    "bg": "#2b0a4e",
+    "ground": "#16052e",
+    "sky1": "#2b0a4e",
+    "sky2": "#ff5fa2",
+    "sun1": "#ffe14d",
+    "sun2": "#ff3d81",
+    "m1": "#3a0f66",
+    "m2": "#240845",
+    "grid": "#ff5fa2",
+    "ink": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Miami"
+    },
+    {
+     "name": "Desert",
+     "theme": {
+      "bg": "#3b1f2b",
+      "ground": "#21101a",
+      "sky1": "#3b1f2b",
+      "sky2": "#ff8a3d",
+      "sun1": "#ffe27a",
+      "sun2": "#ff5a36",
+      "m1": "#5a2a33",
+      "m2": "#33161f",
+      "grid": "#ff8a3d"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#052e3d",
+      "ground": "#031d27",
+      "sky1": "#052e3d",
+      "sky2": "#19c3b1",
+      "sun1": "#fff176",
+      "sun2": "#ff8a65",
+      "m1": "#0a4a5a",
+      "m2": "#063340",
+      "grid": "#19c3b1"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#18181b",
+      "ground": "#0b0b0d",
+      "sky1": "#18181b",
+      "sky2": "#71717a",
+      "sun1": "#fafafa",
+      "sun2": "#a1a1aa",
+      "m1": "#27272a",
+      "m2": "#131316",
+      "grid": "#a1a1aa"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.64,
+     "fill": {
+      "grad": [
+       "$sky1",
+       "$sky2"
+      ],
+      "angle": 180
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0189,
+     "y": 0.028,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6116,
+     "y": 0.1416,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2444,
+     "y": 0.2551,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8388,
+     "y": 0.0717,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4716,
+     "y": 0.1853,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1043,
+     "y": 0.2988,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6987,
+     "y": 0.1154,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3315,
+     "y": 0.229,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9243,
+     "y": 0.0426,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5587,
+     "y": 0.1591,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1914,
+     "y": 0.2727,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7842,
+     "y": 0.0863,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4186,
+     "y": 0.2028,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0514,
+     "y": 0.3164,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6441,
+     "y": 0.13,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2785,
+     "y": 0.2466,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8713,
+     "y": 0.0601,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5041,
+     "y": 0.1737,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1385,
+     "y": 0.2903,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7312,
+     "y": 0.1038,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.364,
+     "y": 0.2174,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9584,
+     "y": 0.034,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5912,
+     "y": 0.1475,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2239,
+     "y": 0.2611,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8184,
+     "y": 0.0777,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4511,
+     "y": 0.1913,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0839,
+     "y": 0.3048,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.6783,
+     "y": 0.1214,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3111,
+     "y": 0.235,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.9038,
+     "y": 0.0485,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.7
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3256,
+     "y": 0.11,
+     "w": 0.3488,
+     "h": 0.62,
+     "fill": {
+      "grad": [
+       "$sun1",
+       "$sun2"
+      ],
+      "angle": 180
+     },
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.1,
+      "color": "#ff3d8155"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.5,
+     "w": 0.4,
+     "h": 0.004,
+     "fill": "$sky2"
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.545,
+     "w": 0.4,
+     "h": 0.0085,
+     "fill": "$sky2"
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.58,
+     "w": 0.4,
+     "h": 0.013,
+     "fill": "$sky2"
+    },
+    {
+     "t": "rect",
+     "x": 0.3,
+     "y": 0.61,
+     "w": 0.4,
+     "h": 0.0175,
+     "fill": "$sky2"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.64
+      ],
+      [
+       0,
+       0.52
+      ],
+      [
+       0.1,
+       0.46
+      ],
+      [
+       0.19,
+       0.55
+      ],
+      [
+       0.27,
+       0.5
+      ],
+      [
+       0.36,
+       0.64
+      ]
+     ],
+     "fill": "$m1"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.62,
+       0.64
+      ],
+      [
+       0.72,
+       0.5
+      ],
+      [
+       0.8,
+       0.57
+      ],
+      [
+       0.89,
+       0.45
+      ],
+      [
+       1,
+       0.56
+      ],
+      [
+       1,
+       0.64
+      ]
+     ],
+     "fill": "$m1"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.64
+      ],
+      [
+       0,
+       0.58
+      ],
+      [
+       0.06,
+       0.55
+      ],
+      [
+       0.14,
+       0.64
+      ]
+     ],
+     "fill": "$m2"
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.84,
+       0.64
+      ],
+      [
+       0.93,
+       0.56
+      ],
+      [
+       1,
+       0.6
+      ],
+      [
+       1,
+       0.64
+      ]
+     ],
+     "fill": "$m2"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.64,
+     "w": 1,
+     "h": 0.36,
+     "fill": {
+      "grad": [
+       "$ground",
+       "$m1"
+      ],
+      "angle": 0
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.64,
+     "x2": 1,
+     "y2": 0.64,
+     "stroke": "$grid",
+     "sw": 0.004,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#ff5fa2"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6444,
+     "x2": 1,
+     "y2": 0.6444,
+     "stroke": "$grid",
+     "sw": 0.0022222222222222222,
+     "opacity": 0.39444444444444443
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6578,
+     "x2": 1,
+     "y2": 0.6578,
+     "stroke": "$grid",
+     "sw": 0.0024444444444444444,
+     "opacity": 0.4388888888888889
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.68,
+     "x2": 1,
+     "y2": 0.68,
+     "stroke": "$grid",
+     "sw": 0.0026666666666666666,
+     "opacity": 0.4833333333333333
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.7111,
+     "x2": 1,
+     "y2": 0.7111,
+     "stroke": "$grid",
+     "sw": 0.0028888888888888888,
+     "opacity": 0.5277777777777778
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.7511,
+     "x2": 1,
+     "y2": 0.7511,
+     "stroke": "$grid",
+     "sw": 0.0031111111111111114,
+     "opacity": 0.5722222222222222
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.8,
+     "x2": 1,
+     "y2": 0.8,
+     "stroke": "$grid",
+     "sw": 0.003333333333333333,
+     "opacity": 0.6166666666666667
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.8578,
+     "x2": 1,
+     "y2": 0.8578,
+     "stroke": "$grid",
+     "sw": 0.0035555555555555557,
+     "opacity": 0.6611111111111111
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.9244,
+     "x2": 1,
+     "y2": 0.9244,
+     "stroke": "$grid",
+     "sw": 0.0037777777777777775,
+     "opacity": 0.7055555555555555
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 1,
+     "x2": 1,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.004,
+     "opacity": 0.75
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": -0.46,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": -0.3,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": -0.14,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.02,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.18,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.34,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.5,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.66,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.82,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 0.98,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 1.14,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 1.3,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.64,
+     "x2": 1.46,
+     "y2": 1,
+     "stroke": "$grid",
+     "sw": 0.0025,
+     "opacity": 0.55
+    }
+   ]
+  },
+  {
+   "pro": false,
+   "id": "wall-neon-grid",
+   "name": "Neon Grid Wallpaper",
+   "cat": "wallpaper",
+   "product": "Desktop wallpaper",
+   "bg": "$bg",
+   "fonts": [
+    "Outfit",
+    "Inter"
+   ],
+   "tags": [
+    "wallpaper",
+    "neon",
+    "grid",
+    "cyber",
+    "gaming",
+    "desktop"
+   ],
+   "theme": {
+    "bg": "#07051a",
+    "glow": "#2a0b5c",
+    "a": "#22e5ff",
+    "b": "#ff2bd6",
+    "ink": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Cyber"
+    },
+    {
+     "name": "Matrix",
+     "theme": {
+      "bg": "#020d07",
+      "glow": "#06361a",
+      "a": "#39ff88",
+      "b": "#c8ff3d"
+     }
+    },
+    {
+     "name": "Inferno",
+     "theme": {
+      "bg": "#12040a",
+      "glow": "#4a0a1a",
+      "a": "#ff7a1a",
+      "b": "#ff2b5e"
+     }
+    },
+    {
+     "name": "Ultraviolet",
+     "theme": {
+      "bg": "#080621",
+      "glow": "#241070",
+      "a": "#8b7bff",
+      "b": "#3ea0ff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.2,
+     "w": 1,
+     "h": 0.5,
+     "fill": {
+      "grad": [
+       "$bg",
+       "$glow"
+      ],
+      "angle": 0
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3594,
+     "y": 0.25,
+     "w": 0.2813,
+     "h": 0.5,
+     "fill": "transparent",
+     "stroke": "$b",
+     "sw": 0.006,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.04,
+      "color": "#ff2bd6"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3988,
+     "y": 0.32,
+     "w": 0.2025,
+     "h": 0.36,
+     "fill": "transparent",
+     "stroke": "$a",
+     "sw": 0.003,
+     "opacity": 0.8,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.03,
+      "color": "#22e5ff"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0189,
+     "y": 0.038,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7429,
+     "y": 0.2649,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.507,
+     "y": 0.0918,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2727,
+     "y": 0.3218,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0367,
+     "y": 0.1487,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7608,
+     "y": 0.3756,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5265,
+     "y": 0.2055,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2906,
+     "y": 0.4324,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0546,
+     "y": 0.2594,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7803,
+     "y": 0.0893,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5444,
+     "y": 0.3162,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3084,
+     "y": 0.1431,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.0741,
+     "y": 0.373,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7982,
+     "y": 0.2,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5623,
+     "y": 0.4269,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.328,
+     "y": 0.2568,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.092,
+     "y": 0.0837,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8161,
+     "y": 0.3106,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5818,
+     "y": 0.1406,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3459,
+     "y": 0.3675,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1099,
+     "y": 0.1944,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8356,
+     "y": 0.4243,
+     "w": 0.0023,
+     "h": 0.004,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5997,
+     "y": 0.2512,
+     "w": 0.0034,
+     "h": 0.006,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "ellipse",
+     "x": 0.3637,
+     "y": 0.0782,
+     "w": 0.0045,
+     "h": 0.008,
+     "fill": "$ink",
+     "opacity": 0.8
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.62,
+     "w": 1,
+     "h": 0.38,
+     "fill": {
+      "grad": [
+       "$glow",
+       "$bg"
+      ],
+      "angle": 0
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.62,
+     "x2": 1,
+     "y2": 0.62,
+     "stroke": "$a",
+     "sw": 0.005,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.02,
+      "color": "#22e5ff"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.623,
+     "x2": 1,
+     "y2": 0.623,
+     "stroke": "$a",
+     "sw": 0.0023,
+     "opacity": 0.45,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6329,
+     "x2": 1,
+     "y2": 0.6329,
+     "stroke": "$a",
+     "sw": 0.0026,
+     "opacity": 0.5,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6503,
+     "x2": 1,
+     "y2": 0.6503,
+     "stroke": "$a",
+     "sw": 0.0029,
+     "opacity": 0.55,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.6755,
+     "x2": 1,
+     "y2": 0.6755,
+     "stroke": "$a",
+     "sw": 0.0032,
+     "opacity": 0.6000000000000001,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.7086,
+     "x2": 1,
+     "y2": 0.7086,
+     "stroke": "$a",
+     "sw": 0.0035,
+     "opacity": 0.65,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.75,
+     "x2": 1,
+     "y2": 0.75,
+     "stroke": "$a",
+     "sw": 0.0038,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.7997,
+     "x2": 1,
+     "y2": 0.7997,
+     "stroke": "$a",
+     "sw": 0.0040999999999999995,
+     "opacity": 0.75,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.8578,
+     "x2": 1,
+     "y2": 0.8578,
+     "stroke": "$a",
+     "sw": 0.0044,
+     "opacity": 0.8,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 0.9246,
+     "x2": 1,
+     "y2": 0.9246,
+     "stroke": "$a",
+     "sw": 0.0047,
+     "opacity": 0.8500000000000001,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0,
+     "y1": 1,
+     "x2": 1,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.005,
+     "opacity": 0.9,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.012,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": -0.4,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": -0.25,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": -0.1,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.05,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.2,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.35,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.5,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.65,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.8,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 0.95,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 1.1,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 1.25,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "line",
+     "x1": 0.5,
+     "y1": 0.62,
+     "x2": 1.4,
+     "y2": 1,
+     "stroke": "$a",
+     "sw": 0.0025,
+     "opacity": 0.7,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.01,
+      "color": "#22e5ff88"
+     }
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0,
+       0.62
+      ],
+      [
+       0.05,
+       0.56
+      ],
+      [
+       0.1,
+       0.6
+      ],
+      [
+       0.16,
+       0.5
+      ],
+      [
+       0.24,
+       0.62
+      ]
+     ],
+     "fill": "transparent",
+     "stroke": "$b",
+     "sw": 0.003,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.015,
+      "color": "#ff2bd6"
+     }
+    },
+    {
+     "t": "poly",
+     "pts": [
+      [
+       0.76,
+       0.62
+      ],
+      [
+       0.84,
+       0.5
+      ],
+      [
+       0.9,
+       0.57
+      ],
+      [
+       0.95,
+       0.53
+      ],
+      [
+       1,
+       0.62
+      ]
+     ],
+     "fill": "transparent",
+     "stroke": "$b",
+     "sw": 0.003,
+     "shadow": {
+      "x": 0,
+      "y": 0,
+      "blur": 0.015,
+      "color": "#ff2bd6"
+     }
+    }
+   ]
+  }
+ ]
+}

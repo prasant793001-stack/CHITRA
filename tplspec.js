@@ -47,6 +47,7 @@
       const id = `tp-${spec.id}${variants.length > 1 ? '-' + (vi + 1) : ''}`, th = { bg: '#ffffff', ink: '#111111', a: '#6d4aff', b: '#ffb703', soft: '#efeaff', alt: '#f6f3ff', ...(spec.theme || {}), ...(v.theme || {}) }, fonts = v.fonts || spec.fonts || ['Poppins', 'Inter'];
       const used = new Set(fonts); (spec.layers || []).forEach(L => { if (L.font && L.font !== 'd' && L.font !== 'b') used.add(L.font); });
       META[id] = { n: v.name ? `${spec.name} · ${v.name}` : spec.name, title: spec.name, cat: spec.cat, p: spec.product, t: `${spec.name} ${(spec.tags || []).join(' ')} ${v.name || ''} ${spec.cat}`.toLowerCase(), f: [...used], pro: spec.pro ?? vi % 4 === 3, gen: 1, hand: 1 };
+      if (spec.cat === 'mug') META[id].mockKind = 'mug'; else if (spec.cat === 'tshirt' && /^T-shirt/.test(spec.product)) META[id].mockKind = 'shirt'; // the grid shows them printed on a real-looking mug / tee
       TEMPLATES[id] = () => build(spec, th, fonts); loaded++;
     });
   }

@@ -1,0 +1,4806 @@
+{
+ "templates": [
+  {
+   "id": "social-launch-day",
+   "name": "Launch Day Announcement",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "launch",
+    "announcement",
+    "new",
+    "shop",
+    "opening"
+   ],
+   "theme": {
+    "bg": "#fff6e0",
+    "ink": "#1d1608",
+    "a": "#c4300d",
+    "b": "#ffbe0b",
+    "soft": "#ffe29a"
+   },
+   "variants": [
+    {
+     "name": "Sunny"
+    },
+    {
+     "name": "Night",
+     "theme": {
+      "bg": "#12122b",
+      "ink": "#f5f3ff",
+      "a": "#ff4fa3",
+      "b": "#7cf2ff",
+      "soft": "#26264d"
+     }
+    },
+    {
+     "name": "Blush",
+     "theme": {
+      "bg": "#ffe9ee",
+      "ink": "#3a1020",
+      "a": "#c7285f",
+      "b": "#ff9db8",
+      "soft": "#ffc9d6"
+     },
+     "fonts": [
+      "DM Serif Display",
+      "DM Sans"
+     ]
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#0f2e24",
+      "ink": "#effbe9",
+      "a": "#c9f24a",
+      "b": "#ffd166",
+      "soft": "#1f4a3a"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.5,
+     "y": -0.1574,
+     "w": 0.7037,
+     "h": 0.7037,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": -0.1111,
+     "y": 0.7037,
+     "w": 0.3889,
+     "h": 0.3889,
+     "fill": "$soft",
+     "opacity": 0.7
+    },
+    {
+     "t": "graphic",
+     "name": "Confetti",
+     "x": 0.6481,
+     "y": 0.6481,
+     "w": 0.3056,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ]
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.6667,
+     "y": 0.3796,
+     "w": 0.2315,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "rot": 8,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "NEW",
+     "x": 0.7824,
+     "y": 0.4611,
+     "w": 0.2222,
+     "size": 0.0685,
+     "font": "d",
+     "fill": "#1d1608",
+     "anchor": "c",
+     "align": "center",
+     "rot": 8
+    },
+    {
+     "t": "text",
+     "text": "LAUNCH DAY  ·  12 OCT",
+     "x": 0.0833,
+     "y": 0.1019,
+     "w": 0.5185,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$a",
+     "weight": 700,
+     "ls": 0.16
+    },
+    {
+     "t": "text",
+     "text": "THE WAIT\nIS OVER.",
+     "x": 0.0833,
+     "y": 0.1806,
+     "w": 0.7037,
+     "size": 0.1574,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.98,
+     "h": 0.4074
+    },
+    {
+     "t": "rect",
+     "x": 0.0833,
+     "y": 0.5759,
+     "w": 0.1019,
+     "h": 0.0093,
+     "fill": "$a",
+     "rx": 0.0046
+    },
+    {
+     "t": "text",
+     "text": "Custom mugs, tees & totes, made to order and shipped in 3 days.",
+     "x": 0.0833,
+     "y": 0.6204,
+     "w": 0.4815,
+     "size": 0.0333,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.35
+    },
+    {
+     "t": "rect",
+     "x": 0.0833,
+     "y": 0.787,
+     "w": 0.3333,
+     "h": 0.0889,
+     "fill": "$ink",
+     "rx": 0.0444,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0185,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SHOP THE LAUNCH",
+     "x": 0.25,
+     "y": 0.8148,
+     "w": 0.3148,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.1
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.463,
+     "y": 0.8185,
+     "w": 0.3889,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "id": "social-quote-card",
+   "name": "Serif Quote Card",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "DM Sans"
+   ],
+   "tags": [
+    "quote",
+    "inspiration",
+    "motivation",
+    "minimal"
+   ],
+   "theme": {
+    "bg": "#f4ece0",
+    "ink": "#2a1d14",
+    "a": "#9c4620",
+    "b": "#e9b872",
+    "soft": "#e7d6bd"
+   },
+   "variants": [
+    {
+     "name": "Clay"
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#101a33",
+      "ink": "#f2f5ff",
+      "a": "#7aa2ff",
+      "b": "#ffd27a",
+      "soft": "#1d2a50"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#e5eee4",
+      "ink": "#1a2d22",
+      "a": "#2f6b49",
+      "b": "#c9d96a",
+      "soft": "#cfe0cd"
+     }
+    },
+    {
+     "name": "Plum",
+     "theme": {
+      "bg": "#2b1236",
+      "ink": "#fbeeff",
+      "a": "#e879f9",
+      "b": "#ffb86b",
+      "soft": "#43205a"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.7222,
+     "y": 0.7222,
+     "w": 0.3056,
+     "h": 0.3056,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": -0.1204,
+     "y": -0.1204,
+     "w": 0.3056,
+     "h": 0.3056,
+     "fill": "$soft"
+    },
+    {
+     "t": "rect",
+     "x": 0.0556,
+     "y": 0.0556,
+     "w": 0.8889,
+     "h": 0.8889,
+     "fill": "rgba(0,0,0,0)",
+     "rx": 0.0074,
+     "stroke": "$a",
+     "sw": 0.0028
+    },
+    {
+     "t": "text",
+     "text": "“",
+     "x": 0.5,
+     "y": 0.0648,
+     "w": 0.3704,
+     "size": 0.3056,
+     "font": "d",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1
+    },
+    {
+     "t": "text",
+     "text": "Good design doesn’t shout.\nIt makes people lean in.",
+     "x": 0.5,
+     "y": 0.3519,
+     "w": 0.8333,
+     "size": 0.063,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1.22,
+     "h": 0.2778,
+     "italic": true
+    },
+    {
+     "t": "graphic",
+     "name": "Divider",
+     "x": 0.3611,
+     "y": 0.6806,
+     "w": 0.2778,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "STUDIO NOTES  ·  NO. 14",
+     "x": 0.5,
+     "y": 0.7731,
+     "w": 0.5185,
+     "size": 0.0222,
+     "font": "b",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.22
+    },
+    {
+     "t": "text",
+     "text": "@yourshop",
+     "x": 0.5,
+     "y": 0.8333,
+     "w": 0.463,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "opacity": 0.85
+    }
+   ]
+  },
+  {
+   "id": "social-review-card",
+   "name": "Five-Star Review Card",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": {
+    "grad": [
+     "$a",
+     "$b"
+    ],
+    "angle": 135
+   },
+   "fonts": [
+    "DM Serif Display",
+    "Poppins"
+   ],
+   "tags": [
+    "review",
+    "testimonial",
+    "stars",
+    "customer",
+    "social proof"
+   ],
+   "theme": {
+    "bg": "#ffffff",
+    "ink": "#1c1a2e",
+    "a": "#e24a1a",
+    "b": "#ffb347",
+    "soft": "#ffe9d6"
+   },
+   "variants": [
+    {
+     "name": "Sunrise"
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "bg": "#ffffff",
+      "ink": "#0d1b3a",
+      "a": "#2563eb",
+      "b": "#22d3ee",
+      "soft": "#dbeafe"
+     }
+    },
+    {
+     "name": "Orchid",
+     "theme": {
+      "bg": "#fff8ff",
+      "ink": "#2a0c3a",
+      "a": "#9333ea",
+      "b": "#ec4899",
+      "soft": "#f3dcff"
+     }
+    },
+    {
+     "name": "Mint",
+     "theme": {
+      "bg": "#fbfffb",
+      "ink": "#0b2e2a",
+      "a": "#0b7f74",
+      "b": "#65c97a",
+      "soft": "#d3f3e7"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": -0.1481,
+     "y": -0.1481,
+     "w": 0.4815,
+     "h": 0.4815,
+     "fill": "#ffffff",
+     "opacity": 0.18
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7037,
+     "y": 0.7407,
+     "w": 0.4259,
+     "h": 0.4259,
+     "fill": "#ffffff",
+     "opacity": 0.16
+    },
+    {
+     "t": "text",
+     "text": "FIVE-STAR REVIEWS FROM REAL CUSTOMERS",
+     "x": 0.5,
+     "y": 0.0889,
+     "w": 0.7037,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.2
+    },
+    {
+     "t": "rect",
+     "x": 0.0926,
+     "y": 0.1574,
+     "w": 0.8148,
+     "h": 0.7037,
+     "fill": "$bg",
+     "rx": 0.0407,
+     "shadow": {
+      "x": 0,
+      "y": 0.0222,
+      "blur": 0.0556,
+      "color": "rgba(0,0,0,.28)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.4352,
+     "y": 0.1,
+     "w": 0.1296,
+     "h": 0.1296,
+     "fill": "$a",
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0167,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "”",
+     "x": 0.5,
+     "y": 0.1185,
+     "w": 0.1296,
+     "size": 0.1389,
+     "font": "d",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1.3
+    },
+    {
+     "t": "star",
+     "x": 0.287,
+     "y": 0.3444,
+     "r": 0.0426,
+     "n": 5,
+     "inner": 0.5,
+     "fill": "#ffb703",
+     "stroke": "#e08f00",
+     "sw": 0.0037
+    },
+    {
+     "t": "star",
+     "x": 0.3935,
+     "y": 0.3444,
+     "r": 0.0426,
+     "n": 5,
+     "inner": 0.5,
+     "fill": "#ffb703",
+     "stroke": "#e08f00",
+     "sw": 0.0037
+    },
+    {
+     "t": "star",
+     "x": 0.5,
+     "y": 0.3444,
+     "r": 0.0426,
+     "n": 5,
+     "inner": 0.5,
+     "fill": "#ffb703",
+     "stroke": "#e08f00",
+     "sw": 0.0037
+    },
+    {
+     "t": "star",
+     "x": 0.6065,
+     "y": 0.3444,
+     "r": 0.0426,
+     "n": 5,
+     "inner": 0.5,
+     "fill": "#ffb703",
+     "stroke": "#e08f00",
+     "sw": 0.0037
+    },
+    {
+     "t": "star",
+     "x": 0.713,
+     "y": 0.3444,
+     "r": 0.0426,
+     "n": 5,
+     "inner": 0.5,
+     "fill": "#ffb703",
+     "stroke": "#e08f00",
+     "sw": 0.0037
+    },
+    {
+     "t": "text",
+     "text": "The mugs arrived in three days and the print is razor sharp. Ordering again for the whole team!",
+     "x": 0.5,
+     "y": 0.4167,
+     "w": 0.6852,
+     "size": 0.0444,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1.28,
+     "h": 0.2685
+    },
+    {
+     "t": "line",
+     "x1": 0.1852,
+     "y1": 0.7083,
+     "x2": 0.8148,
+     "y2": 0.7083,
+     "stroke": "$soft",
+     "sw": 0.0028
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1852,
+     "y": 0.7407,
+     "w": 0.0833,
+     "h": 0.0833,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "AK",
+     "x": 0.2269,
+     "y": 0.7639,
+     "w": 0.0833,
+     "size": 0.0315,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "Anika K.",
+     "x": 0.2963,
+     "y": 0.7463,
+     "w": 0.3704,
+     "size": 0.0333,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "icon",
+     "name": "badge-check",
+     "x": 0.2981,
+     "y": 0.787,
+     "size": 0.0315,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "Verified buyer",
+     "x": 0.3389,
+     "y": 0.788,
+     "w": 0.3519,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 500
+    },
+    {
+     "t": "text",
+     "text": "@yourshop",
+     "x": 0.5,
+     "y": 0.9028,
+     "w": 0.3704,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 600,
+     "ls": 0.1
+    }
+   ]
+  },
+  {
+   "id": "social-flash-sale",
+   "name": "Flash Sale 30% Off",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Montserrat"
+   ],
+   "tags": [
+    "sale",
+    "promo",
+    "discount",
+    "offer",
+    "flash"
+   ],
+   "theme": {
+    "bg": "#fff1e6",
+    "ink": "#1a1209",
+    "a": "#e8352a",
+    "b": "#ffc933",
+    "soft": "#ffd6b8"
+   },
+   "variants": [
+    {
+     "name": "Hot"
+    },
+    {
+     "name": "Neon",
+     "theme": {
+      "bg": "#0d0d1f",
+      "ink": "#ffffff",
+      "a": "#c026ff",
+      "b": "#2ef2e0",
+      "soft": "#25254a"
+     }
+    },
+    {
+     "name": "Cobalt",
+     "theme": {
+      "bg": "#e9f0ff",
+      "ink": "#0b1a4a",
+      "a": "#1d4ed8",
+      "b": "#ffb703",
+      "soft": "#c7d8ff"
+     }
+    },
+    {
+     "name": "Mono",
+     "theme": {
+      "bg": "#f3f3f1",
+      "ink": "#111111",
+      "a": "#111111",
+      "b": "#ffe14d",
+      "soft": "#dcdcd6"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.037,
+     "fill": "$ink"
+    },
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0.963,
+     "w": 1,
+     "h": 0.037,
+     "fill": "$ink"
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.713,
+     "y": 0.0648,
+     "w": 0.213,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "FLASH\nSALE",
+     "x": 0.0741,
+     "y": 0.0926,
+     "w": 0.5556,
+     "size": 0.1991,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.92,
+     "h": 0.4074
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5185,
+     "y": 0.3889,
+     "w": 0.3981,
+     "h": 0.3981,
+     "fill": "$a",
+     "shadow": {
+      "x": 0,
+      "y": 0.0167,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5407,
+     "y": 0.4111,
+     "w": 0.3537,
+     "h": 0.3537,
+     "fill": "rgba(0,0,0,0)",
+     "stroke": "#ffffff",
+     "sw": 0.0046
+    },
+    {
+     "t": "text",
+     "text": "30%",
+     "x": 0.7176,
+     "y": 0.5,
+     "w": 0.3056,
+     "size": 0.1389,
+     "font": "d",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "h": 0.1759
+    },
+    {
+     "t": "text",
+     "text": "OFF",
+     "x": 0.7176,
+     "y": 0.6574,
+     "w": 0.2778,
+     "size": 0.0556,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "Custom tees, mugs & totes.\nEnds Sunday midnight.",
+     "x": 0.0741,
+     "y": 0.5185,
+     "w": 0.4352,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 500,
+     "lh": 1.4
+    },
+    {
+     "t": "rect",
+     "x": 0.0741,
+     "y": 0.6898,
+     "w": 0.3889,
+     "h": 0.1389,
+     "fill": "rgba(0,0,0,0)",
+     "rx": 0.0185,
+     "stroke": "$ink",
+     "sw": 0.0046
+    },
+    {
+     "t": "text",
+     "text": "USE CODE",
+     "x": 0.2685,
+     "y": 0.7074,
+     "w": 0.3704,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "SAVE30",
+     "x": 0.2685,
+     "y": 0.7454,
+     "w": 0.3704,
+     "size": 0.0667,
+     "font": "d",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.5,
+     "y": 0.8843,
+     "w": 0.5556,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.12
+    }
+   ]
+  },
+  {
+   "id": "social-design-drop-mug",
+   "name": "New Design Drop Mug",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": "$bg",
+   "fonts": [
+    "Lilita One",
+    "Nunito"
+   ],
+   "tags": [
+    "new",
+    "drop",
+    "product",
+    "mug",
+    "showcase",
+    "collection"
+   ],
+   "theme": {
+    "bg": "#fff0f3",
+    "ink": "#2a0f1c",
+    "a": "#e0264b",
+    "b": "#ffb703",
+    "soft": "#ffd1da"
+   },
+   "variants": [
+    {
+     "name": "Rose"
+    },
+    {
+     "name": "Aqua",
+     "theme": {
+      "bg": "#e3fbf8",
+      "ink": "#06303a",
+      "a": "#087f86",
+      "b": "#ff8a5b",
+      "soft": "#b6efe9"
+     }
+    },
+    {
+     "name": "Grape",
+     "theme": {
+      "bg": "#f1eaff",
+      "ink": "#24104d",
+      "a": "#7c3aed",
+      "b": "#fb7185",
+      "soft": "#d9c9ff"
+     }
+    },
+    {
+     "name": "Dusk",
+     "theme": {
+      "bg": "#1d1b3a",
+      "ink": "#fdf4ff",
+      "a": "#ff7ab6",
+      "b": "#ffd166",
+      "soft": "#34316a"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": -0.1852,
+     "y": 0.5185,
+     "w": 0.5926,
+     "h": 0.5926,
+     "fill": "$soft"
+    },
+    {
+     "t": "rect",
+     "x": 0.0648,
+     "y": 0.0704,
+     "w": 0.1759,
+     "h": 0.0537,
+     "fill": "$b",
+     "rx": 0.0269
+    },
+    {
+     "t": "text",
+     "text": "OUT NOW",
+     "x": 0.1528,
+     "y": 0.0833,
+     "w": 0.1759,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "#2a0f1c",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.15
+    },
+    {
+     "t": "text",
+     "text": "NEW\nDESIGN\nDROP",
+     "x": 0.0648,
+     "y": 0.1574,
+     "w": 0.4167,
+     "size": 0.1185,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.98,
+     "h": 0.3889
+    },
+    {
+     "t": "rect",
+     "x": 0.0648,
+     "y": 0.5759,
+     "w": 0.0926,
+     "h": 0.0083,
+     "fill": "$a",
+     "rx": 0.0037
+    },
+    {
+     "t": "text",
+     "text": "The Sunrise Collection:\nmugs, tees & totes.",
+     "x": 0.0648,
+     "y": 0.6157,
+     "w": 0.3889,
+     "size": 0.0315,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "lh": 1.3
+    },
+    {
+     "t": "rect",
+     "x": 0.0648,
+     "y": 0.7685,
+     "w": 0.3056,
+     "h": 0.0778,
+     "fill": "$ink",
+     "rx": 0.0389
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.2176,
+     "y": 0.7898,
+     "w": 0.2963,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.04
+    },
+    {
+     "t": "rect",
+     "x": 0.4815,
+     "y": 0.1019,
+     "w": 0.4537,
+     "h": 0.7037,
+     "fill": "$b",
+     "rx": 0.0407,
+     "opacity": 0.9,
+     "rot": 4
+    },
+    {
+     "t": "mock",
+     "x": 0.463,
+     "y": 0.0926,
+     "w": 0.4537,
+     "h": 0.7315,
+     "kind": "mug",
+     "scene": "peach",
+     "color": "$a",
+     "art": 4,
+     "rx": 0.0407,
+     "shadow": {
+      "x": 0,
+      "y": 0.0204,
+      "blur": 0.0463,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Scallop seal",
+     "x": 0.7407,
+     "y": 0.713,
+     "w": 0.2037,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "rot": -8,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "from\n$14",
+     "x": 0.8426,
+     "y": 0.7667,
+     "w": 0.1481,
+     "size": 0.0407,
+     "font": "d",
+     "fill": "#2a0f1c",
+     "anchor": "c",
+     "align": "center",
+     "lh": 0.95,
+     "rot": -8
+    }
+   ]
+  },
+  {
+   "id": "social-tips-list",
+   "name": "3 Tips Checklist",
+   "cat": "social",
+   "product": "Instagram post",
+   "bg": "$bg",
+   "fonts": [
+    "Bebas Neue",
+    "DM Sans"
+   ],
+   "tags": [
+    "tips",
+    "how to",
+    "education",
+    "list",
+    "print"
+   ],
+   "theme": {
+    "bg": "#eef3ff",
+    "ink": "#10193a",
+    "a": "#3b5bff",
+    "b": "#ffcf3f",
+    "soft": "#ffffff"
+   },
+   "variants": [
+    {
+     "name": "Blueprint"
+    },
+    {
+     "name": "Charcoal",
+     "theme": {
+      "bg": "#1b1b1f",
+      "ink": "#f6f6f1",
+      "a": "#ffd23f",
+      "b": "#ff7a45",
+      "soft": "#2c2c33"
+     }
+    },
+    {
+     "name": "Peach",
+     "theme": {
+      "bg": "#fff0e6",
+      "ink": "#3b1608",
+      "a": "#b84407",
+      "b": "#ffb68a",
+      "soft": "#ffffff"
+     }
+    },
+    {
+     "name": "Teal",
+     "theme": {
+      "bg": "#e2f6f3",
+      "ink": "#06302c",
+      "a": "#0a7568",
+      "b": "#f5b83d",
+      "soft": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.0167,
+     "fill": "$a"
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.7407,
+     "y": 0.0556,
+     "w": 0.1852,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "opacity": 0.9
+    },
+    {
+     "t": "text",
+     "text": "PRINT TIPS  ·  SAVE THIS",
+     "x": 0.0741,
+     "y": 0.0778,
+     "w": 0.5556,
+     "size": 0.0222,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.2
+    },
+    {
+     "t": "text",
+     "text": "3 TIPS FOR\nSHARPER PRINTS",
+     "x": 0.0741,
+     "y": 0.1185,
+     "w": 0.8148,
+     "size": 0.1065,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.98,
+     "h": 0.2315
+    },
+    {
+     "t": "rect",
+     "x": 0.0741,
+     "y": 0.3704,
+     "w": 0.8519,
+     "h": 0.1389,
+     "fill": "$soft",
+     "rx": 0.0259,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0204,
+      "color": "rgba(0,0,0,.12)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1,
+     "y": 0.3935,
+     "w": 0.0926,
+     "h": 0.0926,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "1",
+     "x": 0.1463,
+     "y": 0.4046,
+     "w": 0.0926,
+     "size": 0.0611,
+     "font": "d",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "Design at 300 DPI",
+     "x": 0.2222,
+     "y": 0.3963,
+     "w": 0.6481,
+     "size": 0.0352,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Low-res art looks soft on mugs and tees.",
+     "x": 0.2222,
+     "y": 0.4444,
+     "w": 0.6667,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 400,
+     "h": 0.037
+    },
+    {
+     "t": "rect",
+     "x": 0.0741,
+     "y": 0.5324,
+     "w": 0.8519,
+     "h": 0.1389,
+     "fill": "$soft",
+     "rx": 0.0259,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0204,
+      "color": "rgba(0,0,0,.12)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1,
+     "y": 0.5556,
+     "w": 0.0926,
+     "h": 0.0926,
+     "fill": "$b"
+    },
+    {
+     "t": "text",
+     "text": "2",
+     "x": 0.1463,
+     "y": 0.5667,
+     "w": 0.0926,
+     "size": 0.0611,
+     "font": "d",
+     "fill": "#10193a",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "Leave a safe margin",
+     "x": 0.2222,
+     "y": 0.5583,
+     "w": 0.6481,
+     "size": 0.0352,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Keep text 6% away from every edge.",
+     "x": 0.2222,
+     "y": 0.6065,
+     "w": 0.6667,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 400,
+     "h": 0.037
+    },
+    {
+     "t": "rect",
+     "x": 0.0741,
+     "y": 0.6944,
+     "w": 0.8519,
+     "h": 0.1389,
+     "fill": "$soft",
+     "rx": 0.0259,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0204,
+      "color": "rgba(0,0,0,.12)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.1,
+     "y": 0.7176,
+     "w": 0.0926,
+     "h": 0.0926,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "3",
+     "x": 0.1463,
+     "y": 0.7287,
+     "w": 0.0926,
+     "size": 0.0611,
+     "font": "d",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "Test dark and light",
+     "x": 0.2222,
+     "y": 0.7204,
+     "w": 0.6481,
+     "size": 0.0352,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Check your art on both garment colours.",
+     "x": 0.2222,
+     "y": 0.7685,
+     "w": 0.6667,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 400,
+     "h": 0.037
+    },
+    {
+     "t": "text",
+     "text": "Follow @yourshop for more",
+     "x": 0.5,
+     "y": 0.8889,
+     "w": 0.6481,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 600,
+     "ls": 0.04
+    }
+   ]
+  },
+  {
+   "id": "portrait-hoodie-showcase",
+   "name": "Hoodie Showcase Ad",
+   "cat": "social",
+   "product": "Instagram portrait",
+   "bg": "$bg",
+   "fonts": [
+    "DM Serif Display",
+    "Poppins"
+   ],
+   "tags": [
+    "hoodie",
+    "showcase",
+    "merch",
+    "apparel",
+    "ad"
+   ],
+   "theme": {
+    "bg": "#b83a15",
+    "ink": "#fff3e8",
+    "a": "#ffd9b8",
+    "b": "#ffb703",
+    "soft": "#fff3e8"
+   },
+   "variants": [
+    {
+     "name": "Terracotta"
+    },
+    {
+     "name": "Ink",
+     "theme": {
+      "bg": "#14213d",
+      "ink": "#fff8ee",
+      "a": "#fca311",
+      "b": "#e5e5e5",
+      "soft": "#fff8ee"
+     }
+    },
+    {
+     "name": "Moss",
+     "theme": {
+      "bg": "#2f4a36",
+      "ink": "#f4f1de",
+      "a": "#e9c46a",
+      "b": "#b7d9a8",
+      "soft": "#f4f1de"
+     }
+    },
+    {
+     "name": "Lilac",
+     "theme": {
+      "bg": "#6a49c9",
+      "ink": "#ffffff",
+      "a": "#ffe27a",
+      "b": "#ffd1f0",
+      "soft": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.5926,
+     "y": -0.1333,
+     "w": 0.6481,
+     "h": 0.5185,
+     "fill": "$a",
+     "opacity": 0.18
+    },
+    {
+     "t": "ellipse",
+     "x": -0.1852,
+     "y": 0.6519,
+     "w": 0.5556,
+     "h": 0.4444,
+     "fill": "$a",
+     "opacity": 0.14
+    },
+    {
+     "t": "text",
+     "text": "HEAVYWEIGHT  ·  UNISEX  ·  PRINTED TO ORDER",
+     "x": 0.5,
+     "y": 0.0667,
+     "w": 0.8889,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$soft",
+     "anchor": "c",
+     "align": "center",
+     "weight": 600,
+     "ls": 0.18
+    },
+    {
+     "t": "text",
+     "text": "Wear the\nneighbourhood.",
+     "x": 0.5,
+     "y": 0.1037,
+     "w": 0.8704,
+     "size": 0.1093,
+     "font": "d",
+     "fill": "$soft",
+     "anchor": "c",
+     "align": "center",
+     "lh": 0.98,
+     "h": 0.1926
+    },
+    {
+     "t": "rect",
+     "x": 0.1389,
+     "y": 0.3481,
+     "w": 0.7222,
+     "h": 0.4741,
+     "fill": "$soft",
+     "rx": 0.0444,
+     "opacity": 0.25,
+     "rot": -3
+    },
+    {
+     "t": "mock",
+     "x": 0.1204,
+     "y": 0.3259,
+     "w": 0.7593,
+     "h": 0.5185,
+     "kind": "hoodie",
+     "scene": "sunlit",
+     "color": "$a",
+     "art": 4,
+     "rx": 0.0444,
+     "shadow": {
+      "x": 0,
+      "y": 0.0241,
+      "blur": 0.0556,
+      "color": "rgba(0,0,0,.35)"
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.713,
+     "y": 0.3037,
+     "w": 0.213,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "rot": 10,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "NEW",
+     "x": 0.8194,
+     "y": 0.3593,
+     "w": 0.1852,
+     "size": 0.0574,
+     "font": "d",
+     "fill": "#1c0f08",
+     "anchor": "c",
+     "align": "center",
+     "rot": 10
+    },
+    {
+     "t": "rect",
+     "x": 0.1389,
+     "y": 0.8815,
+     "w": 0.3704,
+     "h": 0.0622,
+     "fill": "$soft",
+     "rx": 0.0389
+    },
+    {
+     "t": "text",
+     "text": "Shop from $39",
+     "x": 0.3241,
+     "y": 0.8985,
+     "w": 0.3519,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.5556,
+     "y": 0.8993,
+     "w": 0.3148,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$soft",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "id": "portrait-custom-orders",
+   "name": "Custom Orders Open",
+   "cat": "social",
+   "product": "Instagram portrait",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "custom",
+    "orders",
+    "steps",
+    "how it works",
+    "announcement"
+   ],
+   "theme": {
+    "bg": "#fffaf0",
+    "ink": "#14213d",
+    "a": "#cf3f1d",
+    "b": "#ffc247",
+    "soft": "#ffe7bd"
+   },
+   "variants": [
+    {
+     "name": "Marigold"
+    },
+    {
+     "name": "Night",
+     "theme": {
+      "bg": "#0f1424",
+      "ink": "#f4f6ff",
+      "a": "#35e0c2",
+      "b": "#7a8cff",
+      "soft": "#222a47"
+     }
+    },
+    {
+     "name": "Rose",
+     "theme": {
+      "bg": "#fff0f5",
+      "ink": "#3b0f2a",
+      "a": "#c4255f",
+      "b": "#ffa6c9",
+      "soft": "#ffd0e2"
+     }
+    },
+    {
+     "name": "Moss",
+     "theme": {
+      "bg": "#eaf3e4",
+      "ink": "#1d3321",
+      "a": "#357a38",
+      "b": "#e8c547",
+      "soft": "#cde5c2"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.2963,
+     "fill": "$a"
+    },
+    {
+     "t": "graphic",
+     "name": "Halftone",
+     "x": 0.5926,
+     "y": 0.0148,
+     "w": 0.4259,
+     "pal": [
+      "$b",
+      "#ffffff",
+      "$soft"
+     ],
+     "opacity": 0.35
+    },
+    {
+     "t": "text",
+     "text": "NOW OPEN",
+     "x": 0.0833,
+     "y": 0.0578,
+     "w": 0.463,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$bg",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "CUSTOM ORDERS\nARE OPEN",
+     "x": 0.0833,
+     "y": 0.0919,
+     "w": 0.8333,
+     "size": 0.125,
+     "font": "d",
+     "fill": "$bg",
+     "lh": 0.95,
+     "h": 0.2074
+    },
+    {
+     "t": "line",
+     "x1": 0.1481,
+     "y1": 0.4296,
+     "x2": 0.1481,
+     "y2": 0.7259,
+     "stroke": "$a",
+     "sw": 0.0046,
+     "dash": [
+      0.012,
+      0.016
+     ]
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.3852,
+     "w": 0.1204,
+     "h": 0.0963,
+     "fill": "$a",
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0185,
+      "color": "rgba(0,0,0,.2)"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "palette",
+     "x": 0.1185,
+     "y": 0.4096,
+     "size": 0.0593,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Send us your idea",
+     "x": 0.25,
+     "y": 0.3911,
+     "w": 0.6852,
+     "size": 0.0407,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Photo, sketch or just a few words.",
+     "x": 0.25,
+     "y": 0.4356,
+     "w": 0.6852,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "h": 0.037
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.5444,
+     "w": 0.1204,
+     "h": 0.0963,
+     "fill": "$b",
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0185,
+      "color": "rgba(0,0,0,.2)"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "brush",
+     "x": 0.1185,
+     "y": 0.5689,
+     "size": 0.0593,
+     "color": "#14213d",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "We design a mock-up",
+     "x": 0.25,
+     "y": 0.5504,
+     "w": 0.6852,
+     "size": 0.0407,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Free proof within 24 hours.",
+     "x": 0.25,
+     "y": 0.5948,
+     "w": 0.6852,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "h": 0.037
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.7037,
+     "w": 0.1204,
+     "h": 0.0963,
+     "fill": "$a",
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0185,
+      "color": "rgba(0,0,0,.2)"
+     }
+    },
+    {
+     "t": "icon",
+     "name": "package",
+     "x": 0.1185,
+     "y": 0.7281,
+     "size": 0.0593,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Delivered in 5 days",
+     "x": 0.25,
+     "y": 0.7096,
+     "w": 0.6852,
+     "size": 0.0407,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800
+    },
+    {
+     "t": "text",
+     "text": "Printed, packed and shipped.",
+     "x": 0.25,
+     "y": 0.7541,
+     "w": 0.6852,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "h": 0.037
+    },
+    {
+     "t": "rect",
+     "x": 0.0833,
+     "y": 0.8741,
+     "w": 0.4815,
+     "h": 0.0711,
+     "fill": "$ink",
+     "rx": 0.0444,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0185,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "DM @yourshop to start",
+     "x": 0.3241,
+     "y": 0.8963,
+     "w": 0.463,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "No minimums",
+     "x": 0.6019,
+     "y": 0.8978,
+     "w": 0.3148,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "id": "portrait-bold-quote",
+   "name": "Bold Statement Quote",
+   "cat": "social",
+   "product": "Instagram portrait",
+   "bg": "$bg",
+   "fonts": [
+    "Abril Fatface",
+    "Montserrat"
+   ],
+   "tags": [
+    "quote",
+    "typography",
+    "motivation",
+    "bold",
+    "creative"
+   ],
+   "theme": {
+    "bg": "#ffd23f",
+    "ink": "#1a1400",
+    "a": "#ff4e1f",
+    "b": "#fff7d6",
+    "soft": "#ffe58a"
+   },
+   "variants": [
+    {
+     "name": "Sun"
+    },
+    {
+     "name": "Ink",
+     "theme": {
+      "bg": "#141414",
+      "ink": "#f7f2e8",
+      "a": "#ff5a36",
+      "b": "#f0c419",
+      "soft": "#262626"
+     }
+    },
+    {
+     "name": "Lagoon",
+     "theme": {
+      "bg": "#bff0e8",
+      "ink": "#04312d",
+      "a": "#00897b",
+      "b": "#ffffff",
+      "soft": "#99e3d8"
+     }
+    },
+    {
+     "name": "Bubblegum",
+     "theme": {
+      "bg": "#ffc4de",
+      "ink": "#3a0a26",
+      "a": "#e0287d",
+      "b": "#ffffff",
+      "soft": "#ffa2c8"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.5185,
+     "y": 0.6148,
+     "w": 0.6481,
+     "h": 0.5185,
+     "fill": "$soft"
+    },
+    {
+     "t": "graphic",
+     "name": "Brush stroke",
+     "x": 0.0741,
+     "y": 0.4815,
+     "w": 0.7593,
+     "pal": [
+      "$a",
+      "$a",
+      "$soft"
+     ],
+     "opacity": 0.95
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.713,
+     "y": 0.0963,
+     "w": 0.2222,
+     "pal": [
+      "$ink",
+      "$a",
+      "$soft"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "STUDIO NOTE #12",
+     "x": 0.0833,
+     "y": 0.0889,
+     "w": 0.5556,
+     "size": 0.0222,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "Make\nsomething\npeople keep.",
+     "x": 0.0833,
+     "y": 0.1481,
+     "w": 0.8333,
+     "size": 0.162,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.98,
+     "h": 0.4444
+    },
+    {
+     "t": "text",
+     "text": "Print it. Gift it. Use it daily.",
+     "x": 0.0833,
+     "y": 0.7407,
+     "w": 0.7407,
+     "size": 0.0352,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    },
+    {
+     "t": "line",
+     "x1": 0.0833,
+     "y1": 0.8148,
+     "x2": 0.9167,
+     "y2": 0.8148,
+     "stroke": "$ink",
+     "sw": 0.0028
+    },
+    {
+     "t": "text",
+     "text": "@yourshop",
+     "x": 0.0833,
+     "y": 0.8444,
+     "w": 0.3704,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800,
+     "ls": 0.06
+    },
+    {
+     "t": "icon",
+     "name": "arrow-right",
+     "x": 0.8333,
+     "y": 0.837,
+     "size": 0.0648,
+     "color": "$ink",
+     "sw": 2.5
+    }
+   ]
+  },
+  {
+   "id": "story-swipe-promo",
+   "name": "Swipe-Up Promo Story",
+   "cat": "story",
+   "product": "Story / Reel / TikTok",
+   "bg": {
+    "grad": [
+     "$a",
+     "$b"
+    ],
+    "angle": 160
+   },
+   "fonts": [
+    "Anton",
+    "Poppins"
+   ],
+   "tags": [
+    "story",
+    "swipe",
+    "promo",
+    "launch",
+    "collection"
+   ],
+   "theme": {
+    "bg": "#e0264b",
+    "ink": "#ffffff",
+    "a": "#e0264b",
+    "b": "#ff8a2c",
+    "soft": "#ffd9a8"
+   },
+   "variants": [
+    {
+     "name": "Sunset"
+    },
+    {
+     "name": "Ultraviolet",
+     "theme": {
+      "bg": "#6d28d9",
+      "ink": "#ffffff",
+      "a": "#6d28d9",
+      "b": "#d946a8",
+      "soft": "#f0c8ff"
+     }
+    },
+    {
+     "name": "Ocean",
+     "theme": {
+      "bg": "#0a52e0",
+      "ink": "#ffffff",
+      "a": "#0a52e0",
+      "b": "#0fa0b8",
+      "soft": "#bff4ff"
+     }
+    },
+    {
+     "name": "Ember",
+     "theme": {
+      "bg": "#c81e14",
+      "ink": "#ffffff",
+      "a": "#c81e14",
+      "b": "#e8600c",
+      "soft": "#ffd0a8"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": -0.2778,
+     "y": -0.1042,
+     "w": 0.8333,
+     "h": 0.4688,
+     "fill": "#ffffff",
+     "opacity": 0.08
+    },
+    {
+     "t": "ellipse",
+     "x": 0.463,
+     "y": 0.5729,
+     "w": 0.8333,
+     "h": 0.4688,
+     "fill": "#ffffff",
+     "opacity": 0.1
+    },
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.0833,
+     "y": 0.2917,
+     "w": 0.8333,
+     "pal": [
+      "#ffffff",
+      "$soft",
+      "$b"
+     ],
+     "opacity": 0.16
+    },
+    {
+     "t": "text",
+     "text": "THE AUTUMN DROP",
+     "x": 0.5,
+     "y": 0.1719,
+     "w": 0.8333,
+     "size": 0.0333,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "NEW\nMERCH\nJUST LANDED",
+     "x": 0.5,
+     "y": 0.2188,
+     "w": 0.8333,
+     "size": 0.1389,
+     "font": "d",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "lh": 0.95,
+     "h": 0.3229,
+     "shadow": {
+      "x": 0,
+      "y": 0.0074,
+      "blur": 0.0167,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.2315,
+     "y": 0.5677,
+     "w": 0.537,
+     "h": 0.099,
+     "fill": "#ffffff",
+     "rx": 0.0333,
+     "rot": -5,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "ellipse",
+     "x": 0.2593,
+     "y": 0.5833,
+     "w": 0.0278,
+     "h": 0.0156,
+     "fill": "$a",
+     "rot": -5
+    },
+    {
+     "t": "icon",
+     "name": "package",
+     "x": 0.2778,
+     "y": 0.599,
+     "size": 0.0833,
+     "color": "$a",
+     "sw": 2,
+     "rot": -5
+    },
+    {
+     "t": "text",
+     "text": "FREE SHIPPING\nOVER $50",
+     "x": 0.5556,
+     "y": 0.5927,
+     "w": 0.3704,
+     "size": 0.0389,
+     "font": "b",
+     "fill": "#1a1a2e",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "lh": 1.2,
+     "rot": -5
+    },
+    {
+     "t": "rect",
+     "x": 0.287,
+     "y": 0.75,
+     "w": 0.4259,
+     "h": 0.0521,
+     "fill": "#ffffff",
+     "rx": 0.0463,
+     "shadow": {
+      "x": 0,
+      "y": 0.0093,
+      "blur": 0.0222,
+      "color": "rgba(0,0,0,.28)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SWIPE UP",
+     "x": 0.463,
+     "y": 0.7656,
+     "w": 0.2778,
+     "size": 0.0315,
+     "font": "b",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.14
+    },
+    {
+     "t": "icon",
+     "name": "chevrons-up",
+     "x": 0.5926,
+     "y": 0.7646,
+     "size": 0.0407,
+     "color": "$a",
+     "sw": 3
+    }
+   ]
+  },
+  {
+   "id": "story-countdown",
+   "name": "Launch Countdown Story",
+   "cat": "story",
+   "product": "Story / Reel / TikTok",
+   "bg": "$bg",
+   "fonts": [
+    "Bebas Neue",
+    "DM Sans"
+   ],
+   "tags": [
+    "countdown",
+    "launch",
+    "story",
+    "reminder",
+    "coming soon"
+   ],
+   "theme": {
+    "bg": "#0e0b2b",
+    "ink": "#ffffff",
+    "a": "#d81b7a",
+    "b": "#ffd23f",
+    "soft": "#2a2560"
+   },
+   "variants": [
+    {
+     "name": "Midnight"
+    },
+    {
+     "name": "Daylight",
+     "theme": {
+      "bg": "#fff3dc",
+      "ink": "#23160a",
+      "a": "#d93a14",
+      "b": "#ffb703",
+      "soft": "#ffffff"
+     }
+    },
+    {
+     "name": "Mint",
+     "theme": {
+      "bg": "#d9f7ee",
+      "ink": "#05302a",
+      "a": "#0b8570",
+      "b": "#ff7a59",
+      "soft": "#ffffff"
+     }
+    },
+    {
+     "name": "Violet",
+     "theme": {
+      "bg": "#ede4ff",
+      "ink": "#241052",
+      "a": "#6d28ff",
+      "b": "#ff4fa3",
+      "soft": "#ffffff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.7037,
+     "y": 0.0365,
+     "w": 0.2037,
+     "pal": [
+      "$b",
+      "$a",
+      "$soft"
+     ],
+     "opacity": 0.9
+    },
+    {
+     "t": "graphic",
+     "name": "Rainbow cloud",
+     "x": -0.0556,
+     "y": 0.7188,
+     "w": 0.3704,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "opacity": 0.22
+    },
+    {
+     "t": "text",
+     "text": "DOORS OPEN FRIDAY  ·  9 AM",
+     "x": 0.5,
+     "y": 0.1771,
+     "w": 0.8333,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.22
+    },
+    {
+     "t": "text",
+     "text": "LAUNCHING\nIN",
+     "x": 0.5,
+     "y": 0.2083,
+     "w": 0.8333,
+     "size": 0.1991,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "lh": 0.92,
+     "h": 0.224
+    },
+    {
+     "t": "rect",
+     "x": 0.1019,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.1563,
+     "fill": "$soft",
+     "rx": 0.0333,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.0278,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.1019,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.0417,
+     "fill": "$a",
+     "rx": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.1019,
+     "y": 0.4583,
+     "w": 0.2315,
+     "h": 0.0208,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "DAYS",
+     "x": 0.2176,
+     "y": 0.449,
+     "w": 0.2222,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "02",
+     "x": 0.2176,
+     "y": 0.4818,
+     "w": 0.2222,
+     "size": 0.1574,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "rect",
+     "x": 0.3657,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.1563,
+     "fill": "$soft",
+     "rx": 0.0333,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.0278,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.3657,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.0417,
+     "fill": "$a",
+     "rx": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.3657,
+     "y": 0.4583,
+     "w": 0.2315,
+     "h": 0.0208,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "HRS",
+     "x": 0.4815,
+     "y": 0.449,
+     "w": 0.2222,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "14",
+     "x": 0.4815,
+     "y": 0.4818,
+     "w": 0.2222,
+     "size": 0.1574,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "rect",
+     "x": 0.6296,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.1563,
+     "fill": "$soft",
+     "rx": 0.0333,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.0278,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.6296,
+     "y": 0.4375,
+     "w": 0.2315,
+     "h": 0.0417,
+     "fill": "$a",
+     "rx": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.6296,
+     "y": 0.4583,
+     "w": 0.2315,
+     "h": 0.0208,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "MIN",
+     "x": 0.7454,
+     "y": 0.449,
+     "w": 0.2222,
+     "size": 0.0278,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "30",
+     "x": 0.7454,
+     "y": 0.4818,
+     "w": 0.2222,
+     "size": 0.1574,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "rect",
+     "x": 0.4074,
+     "y": 0.6719,
+     "w": 0.1852,
+     "h": 0.0042,
+     "fill": "$a",
+     "rx": 0.0037
+    },
+    {
+     "t": "text",
+     "text": "Our biggest collection yet. 24 new designs on mugs, tees and totes.",
+     "x": 0.5,
+     "y": 0.6927,
+     "w": 0.7407,
+     "size": 0.0333,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1.3,
+     "h": 0.0625
+    },
+    {
+     "t": "rect",
+     "x": 0.2315,
+     "y": 0.7708,
+     "w": 0.537,
+     "h": 0.05,
+     "fill": "$a",
+     "rx": 0.0444
+    },
+    {
+     "t": "icon",
+     "name": "bell",
+     "x": 0.2704,
+     "y": 0.7828,
+     "size": 0.0463,
+     "color": "#ffffff",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Tap to get a reminder",
+     "x": 0.5417,
+     "y": 0.7865,
+     "w": 0.4074,
+     "size": 0.0259,
+     "font": "b",
+     "fill": "#ffffff",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700
+    }
+   ]
+  },
+  {
+   "id": "story-quote",
+   "name": "Calm Quote Story",
+   "cat": "story",
+   "product": "Story / Reel / TikTok",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 180
+   },
+   "fonts": [
+    "Playfair Display",
+    "Poppins"
+   ],
+   "tags": [
+    "quote",
+    "story",
+    "inspiration",
+    "calm",
+    "mindful"
+   ],
+   "theme": {
+    "bg": "#fbeee3",
+    "ink": "#2e1a14",
+    "a": "#ad4524",
+    "b": "#f4c28b",
+    "soft": "#f7d9c1"
+   },
+   "variants": [
+    {
+     "name": "Peach"
+    },
+    {
+     "name": "Dusk",
+     "theme": {
+      "bg": "#2b2850",
+      "ink": "#fff5ec",
+      "a": "#ff9d6b",
+      "b": "#b9a8ff",
+      "soft": "#403c75"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#dfe9dc",
+      "ink": "#1c2e22",
+      "a": "#2f6a47",
+      "b": "#e6c06a",
+      "soft": "#c3d6c0"
+     }
+    },
+    {
+     "name": "Ink",
+     "theme": {
+      "bg": "#161616",
+      "ink": "#f6f1e7",
+      "a": "#e9b44c",
+      "b": "#c8553d",
+      "soft": "#2b2b2b"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.1759,
+     "y": 0.2917,
+     "w": 0.6481,
+     "h": 0.3646,
+     "fill": "$b",
+     "opacity": 0.35
+    },
+    {
+     "t": "ellipse",
+     "x": -0.1481,
+     "y": 0.6563,
+     "w": 0.4815,
+     "h": 0.2708,
+     "fill": "$a",
+     "opacity": 0.22
+    },
+    {
+     "t": "ellipse",
+     "x": 0.7037,
+     "y": 0.1302,
+     "w": 0.2593,
+     "h": 0.1458,
+     "fill": "$a",
+     "opacity": 0.2
+    },
+    {
+     "t": "text",
+     "text": "“",
+     "x": 0.5,
+     "y": 0.1563,
+     "w": 0.2778,
+     "size": 0.2778,
+     "font": "d",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1
+    },
+    {
+     "t": "text",
+     "text": "Done is better\nthan perfect.\nPrint it anyway.",
+     "x": 0.5,
+     "y": 0.3333,
+     "w": 0.8333,
+     "size": 0.0889,
+     "font": "d",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "lh": 1.15,
+     "h": 0.25,
+     "italic": true
+    },
+    {
+     "t": "graphic",
+     "name": "Divider",
+     "x": 0.3611,
+     "y": 0.6302,
+     "w": 0.2778,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "MONDAY MOTIVATION",
+     "x": 0.5,
+     "y": 0.6927,
+     "w": 0.7407,
+     "size": 0.0241,
+     "font": "b",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.3
+    },
+    {
+     "t": "text",
+     "text": "@yourshop",
+     "x": 0.5,
+     "y": 0.7214,
+     "w": 0.5556,
+     "size": 0.0296,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 500
+    }
+   ]
+  },
+  {
+   "id": "story-order-now",
+   "name": "Order Now Tote Story",
+   "cat": "story",
+   "product": "Story / Reel / TikTok",
+   "bg": "$bg",
+   "fonts": [
+    "Lilita One",
+    "Nunito"
+   ],
+   "tags": [
+    "order",
+    "tote",
+    "story",
+    "showcase",
+    "product",
+    "custom"
+   ],
+   "theme": {
+    "bg": "#ffe45e",
+    "ink": "#161200",
+    "a": "#e8481a",
+    "b": "#ffffff",
+    "soft": "#fff2a8"
+   },
+   "variants": [
+    {
+     "name": "Lemon"
+    },
+    {
+     "name": "Sky",
+     "theme": {
+      "bg": "#bfe3ff",
+      "ink": "#08243f",
+      "a": "#1f6feb",
+      "b": "#ffffff",
+      "soft": "#e1f1ff"
+     }
+    },
+    {
+     "name": "Pink",
+     "theme": {
+      "bg": "#ffc2dc",
+      "ink": "#3a0a24",
+      "a": "#d11568",
+      "b": "#ffffff",
+      "soft": "#ffe0ee"
+     }
+    },
+    {
+     "name": "Mint",
+     "theme": {
+      "bg": "#b6f0d8",
+      "ink": "#073324",
+      "a": "#0b8a60",
+      "b": "#ffffff",
+      "soft": "#dff8ec"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Memphis set",
+     "x": 0.5926,
+     "y": 0.0313,
+     "w": 0.3519,
+     "pal": [
+      "$a",
+      "$ink",
+      "$b"
+     ],
+     "opacity": 0.9
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5185,
+     "y": 0.1354,
+     "w": 0.6481,
+     "h": 0.3646,
+     "fill": "$soft"
+    },
+    {
+     "t": "text",
+     "text": "ORDER\nNOW!",
+     "x": 0.0833,
+     "y": 0.151,
+     "w": 0.6481,
+     "size": 0.1574,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.9,
+     "h": 0.1875
+    },
+    {
+     "t": "rect",
+     "x": 0.213,
+     "y": 0.3854,
+     "w": 0.5926,
+     "h": 0.2917,
+     "fill": "$a",
+     "rx": 0.05,
+     "rot": -5
+    },
+    {
+     "t": "mock",
+     "x": 0.1944,
+     "y": 0.375,
+     "w": 0.5926,
+     "h": 0.2917,
+     "kind": "tote",
+     "scene": "kraft",
+     "color": "#ffffff",
+     "art": 6,
+     "rx": 0.05,
+     "shadow": {
+      "x": 0,
+      "y": 0.0204,
+      "blur": 0.0463,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.6296,
+     "y": 0.3333,
+     "w": 0.2778,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "rot": 12,
+     "shadow": {
+      "x": 0,
+      "y": 0.013,
+      "blur": 0.037,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "FROM\n$12",
+     "x": 0.7685,
+     "y": 0.3828,
+     "w": 0.1852,
+     "size": 0.05,
+     "font": "d",
+     "fill": "#161200",
+     "anchor": "c",
+     "align": "center",
+     "lh": 0.95,
+     "rot": 12
+    },
+    {
+     "t": "text",
+     "text": "Custom tote bags. No minimum order.",
+     "x": 0.5,
+     "y": 0.7188,
+     "w": 0.8333,
+     "size": 0.037,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "h": 0.0521
+    },
+    {
+     "t": "rect",
+     "x": 0.2407,
+     "y": 0.7708,
+     "w": 0.5185,
+     "h": 0.0469,
+     "fill": "$ink",
+     "rx": 0.0417
+    },
+    {
+     "t": "text",
+     "text": "DM @yourshop",
+     "x": 0.5,
+     "y": 0.7833,
+     "w": 0.463,
+     "size": 0.0296,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.06
+    }
+   ]
+  },
+  {
+   "id": "pin-gift-ideas",
+   "name": "Gift Ideas List Pin",
+   "cat": "pinterest",
+   "product": "Pinterest pin",
+   "bg": "$bg",
+   "fonts": [
+    "Playfair Display",
+    "Poppins"
+   ],
+   "tags": [
+    "gift",
+    "ideas",
+    "list",
+    "personalised",
+    "pinterest"
+   ],
+   "theme": {
+    "bg": "#fbf1e6",
+    "ink": "#2b1b13",
+    "a": "#a33808",
+    "b": "#f2b45e",
+    "soft": "#f2dcc2"
+   },
+   "variants": [
+    {
+     "name": "Terracotta"
+    },
+    {
+     "name": "Navy",
+     "theme": {
+      "bg": "#13203d",
+      "ink": "#f7f2e6",
+      "a": "#f4b942",
+      "b": "#7aa2f7",
+      "soft": "#233459"
+     }
+    },
+    {
+     "name": "Rose",
+     "theme": {
+      "bg": "#fde9ee",
+      "ink": "#3d1020",
+      "a": "#a81b43",
+      "b": "#f4a3b8",
+      "soft": "#f7cdd8"
+     }
+    },
+    {
+     "name": "Sage",
+     "theme": {
+      "bg": "#e7efe3",
+      "ink": "#1e2f22",
+      "a": "#33604a",
+      "b": "#d9b44a",
+      "soft": "#cfdec8"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.56,
+     "y": -0.1333,
+     "w": 0.7,
+     "h": 0.4667,
+     "fill": "$soft"
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.7,
+     "y": 0.06,
+     "w": 0.22,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    },
+    {
+     "t": "text",
+     "text": "GIFT GUIDE",
+     "x": 0.08,
+     "y": 0.0667,
+     "w": 0.5,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.28
+    },
+    {
+     "t": "text",
+     "text": "10 Gifts\nThey’ll Actually\nUse",
+     "x": 0.08,
+     "y": 0.1067,
+     "w": 0.84,
+     "size": 0.118,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "h": 0.28
+    },
+    {
+     "t": "text",
+     "text": "All personalised. All under $25.",
+     "x": 0.08,
+     "y": 0.3733,
+     "w": 0.84,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 500,
+     "h": 0.0333,
+     "italic": true
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.4267,
+     "w": 0.84,
+     "h": 0.072,
+     "fill": "$soft",
+     "rx": 0.054
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.432,
+     "w": 0.092,
+     "h": 0.0613,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "gift",
+     "x": 0.112,
+     "y": 0.448,
+     "size": 0.044,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Name mugs",
+     "x": 0.21,
+     "y": 0.4467,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "01",
+     "x": 0.78,
+     "y": 0.4507,
+     "w": 0.1,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "align": "right",
+     "weight": 800
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.512,
+     "w": 0.84,
+     "h": 0.072,
+     "fill": "$soft",
+     "rx": 0.054
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.5173,
+     "w": 0.092,
+     "h": 0.0613,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "shopping-bag",
+     "x": 0.112,
+     "y": 0.5333,
+     "size": 0.044,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Initial tote bags",
+     "x": 0.21,
+     "y": 0.532,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "02",
+     "x": 0.78,
+     "y": 0.536,
+     "w": 0.1,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "align": "right",
+     "weight": 800
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.5973,
+     "w": 0.84,
+     "h": 0.072,
+     "fill": "$soft",
+     "rx": 0.054
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.6027,
+     "w": 0.092,
+     "h": 0.0613,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "book-open",
+     "x": 0.112,
+     "y": 0.6187,
+     "size": 0.044,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Custom notebooks",
+     "x": 0.21,
+     "y": 0.6173,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "03",
+     "x": 0.78,
+     "y": 0.6213,
+     "w": 0.1,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "align": "right",
+     "weight": 800
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.6827,
+     "w": 0.84,
+     "h": 0.072,
+     "fill": "$soft",
+     "rx": 0.054
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.688,
+     "w": 0.092,
+     "h": 0.0613,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "shirt",
+     "x": 0.112,
+     "y": 0.704,
+     "size": 0.044,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Matching family tees",
+     "x": 0.21,
+     "y": 0.7027,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "04",
+     "x": 0.78,
+     "y": 0.7067,
+     "w": 0.1,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "align": "right",
+     "weight": 800
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.768,
+     "w": 0.84,
+     "h": 0.072,
+     "fill": "$soft",
+     "rx": 0.054
+    },
+    {
+     "t": "ellipse",
+     "x": 0.088,
+     "y": 0.7733,
+     "w": 0.092,
+     "h": 0.0613,
+     "fill": "$a"
+    },
+    {
+     "t": "icon",
+     "name": "heart",
+     "x": 0.112,
+     "y": 0.7893,
+     "size": 0.044,
+     "color": "$bg",
+     "sw": 2
+    },
+    {
+     "t": "text",
+     "text": "Photo keepsakes",
+     "x": 0.21,
+     "y": 0.788,
+     "w": 0.6,
+     "size": 0.038,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    },
+    {
+     "t": "text",
+     "text": "05",
+     "x": 0.78,
+     "y": 0.792,
+     "w": 0.1,
+     "size": 0.03,
+     "font": "b",
+     "fill": "$a",
+     "align": "right",
+     "weight": 800
+    },
+    {
+     "t": "line",
+     "x1": 0.08,
+     "y1": 0.8633,
+     "x2": 0.92,
+     "y2": 0.8633,
+     "stroke": "$a",
+     "sw": 0.003
+    },
+    {
+     "t": "text",
+     "text": "Save for later  →  yourshop.com",
+     "x": 0.5,
+     "y": 0.8787,
+     "w": 0.84,
+     "size": 0.032,
+     "font": "b",
+     "fill": "$ink",
+     "anchor": "c",
+     "align": "center",
+     "weight": 700,
+     "ls": 0.04
+    },
+    {
+     "t": "text",
+     "text": "+ 5 more inside",
+     "x": 0.5,
+     "y": 0.9233,
+     "w": 0.7,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "anchor": "c",
+     "align": "center",
+     "weight": 600,
+     "ls": 0.2,
+     "upper": true
+    }
+   ]
+  },
+  {
+   "id": "pin-print-mistakes",
+   "name": "5 Mistakes Checklist Pin",
+   "cat": "pinterest",
+   "product": "Pinterest pin",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Inter"
+   ],
+   "tags": [
+    "mistakes",
+    "tips",
+    "checklist",
+    "print",
+    "education"
+   ],
+   "theme": {
+    "bg": "#1a1a2e",
+    "ink": "#ffffff",
+    "a": "#ff5a5f",
+    "b": "#ffd166",
+    "soft": "#2c2c4d"
+   },
+   "variants": [
+    {
+     "name": "Alert"
+    },
+    {
+     "name": "Paper",
+     "theme": {
+      "bg": "#fffdf5",
+      "ink": "#161616",
+      "a": "#e0262d",
+      "b": "#ffd23f",
+      "soft": "#f1ead5"
+     }
+    },
+    {
+     "name": "Cobalt",
+     "theme": {
+      "bg": "#0b2a7a",
+      "ink": "#ffffff",
+      "a": "#ffd23f",
+      "b": "#6ee7f9",
+      "soft": "#1c3f9e"
+     }
+    },
+    {
+     "name": "Forest",
+     "theme": {
+      "bg": "#12362a",
+      "ink": "#f4fbef",
+      "a": "#ff7a59",
+      "b": "#d6f06b",
+      "soft": "#1e4d3c"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 1,
+     "h": 0.024,
+     "fill": "$b"
+    },
+    {
+     "t": "graphic",
+     "name": "Lightning",
+     "x": 0.76,
+     "y": 0.06,
+     "w": 0.17,
+     "pal": [
+      "$b",
+      "$a",
+      "$ink"
+     ],
+     "rot": 10
+    },
+    {
+     "t": "text",
+     "text": "BEFORE YOU PRESS PRINT",
+     "x": 0.07,
+     "y": 0.0667,
+     "w": 0.7,
+     "size": 0.026,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.2
+    },
+    {
+     "t": "text",
+     "text": "5 PRINT\nMISTAKES",
+     "x": 0.07,
+     "y": 0.1,
+     "w": 0.86,
+     "size": 0.18,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.95,
+     "h": 0.2533
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.3467,
+     "w": 0.13,
+     "h": 0.0053,
+     "fill": "$a",
+     "rx": 0.004
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.3733,
+     "w": 0.86,
+     "h": 0.0787,
+     "fill": "$soft",
+     "rx": 0.024
+    },
+    {
+     "t": "icon",
+     "name": "circle-x",
+     "x": 0.098,
+     "y": 0.3927,
+     "size": 0.06,
+     "color": "$a",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Using low-resolution images",
+     "x": 0.19,
+     "y": 0.3973,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "h": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.468,
+     "w": 0.86,
+     "h": 0.0787,
+     "fill": "$soft",
+     "rx": 0.024
+    },
+    {
+     "t": "icon",
+     "name": "circle-x",
+     "x": 0.098,
+     "y": 0.4873,
+     "size": 0.06,
+     "color": "$a",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Text too close to the edge",
+     "x": 0.19,
+     "y": 0.492,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "h": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.5627,
+     "w": 0.86,
+     "h": 0.0787,
+     "fill": "$soft",
+     "rx": 0.024
+    },
+    {
+     "t": "icon",
+     "name": "circle-x",
+     "x": 0.098,
+     "y": 0.582,
+     "size": 0.06,
+     "color": "$a",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Skipping a colour proof",
+     "x": 0.19,
+     "y": 0.5867,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "h": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.6573,
+     "w": 0.86,
+     "h": 0.0787,
+     "fill": "$soft",
+     "rx": 0.024
+    },
+    {
+     "t": "icon",
+     "name": "circle-x",
+     "x": 0.098,
+     "y": 0.6767,
+     "size": 0.06,
+     "color": "$a",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Ignoring the bleed area",
+     "x": 0.19,
+     "y": 0.6813,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "h": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.752,
+     "w": 0.86,
+     "h": 0.0787,
+     "fill": "$soft",
+     "rx": 0.024
+    },
+    {
+     "t": "icon",
+     "name": "circle-x",
+     "x": 0.098,
+     "y": 0.7713,
+     "size": 0.06,
+     "color": "$a",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "Wrong file format",
+     "x": 0.19,
+     "y": 0.776,
+     "w": 0.7,
+     "size": 0.036,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700,
+     "h": 0.0333
+    },
+    {
+     "t": "rect",
+     "x": 0.07,
+     "y": 0.87,
+     "w": 0.86,
+     "h": 0.0733,
+     "fill": "$b",
+     "rx": 0.055,
+     "shadow": {
+      "x": 0,
+      "y": 0.008,
+      "blur": 0.02,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "Get the free checklist at yourshop.com",
+     "x": 0.5,
+     "y": 0.8933,
+     "w": 0.8,
+     "size": 0.03,
+     "font": "b",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "h": 0.0333
+    }
+   ]
+  },
+  {
+   "id": "pin-mug-inspiration",
+   "name": "Mug Inspiration Pin",
+   "cat": "pinterest",
+   "product": "Pinterest pin",
+   "bg": "$bg",
+   "fonts": [
+    "DM Serif Display",
+    "DM Sans"
+   ],
+   "tags": [
+    "inspiration",
+    "mug",
+    "ideas",
+    "collage",
+    "moodboard"
+   ],
+   "theme": {
+    "bg": "#f3ece4",
+    "ink": "#2a2118",
+    "a": "#8f4a0b",
+    "b": "#e8b04b",
+    "soft": "#e4d5c2"
+   },
+   "variants": [
+    {
+     "name": "Oat"
+    },
+    {
+     "name": "Lavender",
+     "theme": {
+      "bg": "#ece7fa",
+      "ink": "#241a4a",
+      "a": "#6540c8",
+      "b": "#f2a1c9",
+      "soft": "#d9cff5"
+     }
+    },
+    {
+     "name": "Sea",
+     "theme": {
+      "bg": "#dff1f0",
+      "ink": "#0a3036",
+      "a": "#096868",
+      "b": "#f4a259",
+      "soft": "#bfe3e1"
+     }
+    },
+    {
+     "name": "Noir",
+     "theme": {
+      "bg": "#1c1c1e",
+      "ink": "#f5f0e6",
+      "a": "#e8b04b",
+      "b": "#d4694a",
+      "soft": "#2e2e31"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": -0.2,
+     "y": -0.1067,
+     "w": 0.7,
+     "h": 0.4667,
+     "fill": "$soft"
+    },
+    {
+     "t": "text",
+     "text": "MOODBOARD  ·  VOL. 07",
+     "x": 0.08,
+     "y": 0.06,
+     "w": 0.7,
+     "size": 0.024,
+     "font": "b",
+     "fill": "$a",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "Desk-side\ninspiration",
+     "x": 0.08,
+     "y": 0.0933,
+     "w": 0.84,
+     "size": 0.13,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "h": 0.2
+    },
+    {
+     "t": "mock",
+     "x": 0.08,
+     "y": 0.3133,
+     "w": 0.56,
+     "h": 0.4667,
+     "kind": "mug",
+     "scene": "marble",
+     "color": "$a",
+     "art": 2,
+     "rx": 0.04,
+     "shadow": {
+      "x": 0,
+      "y": 0.02,
+      "blur": 0.044,
+      "color": "rgba(0,0,0,.28)"
+     }
+    },
+    {
+     "t": "mock",
+     "x": 0.67,
+     "y": 0.3133,
+     "w": 0.25,
+     "h": 0.22,
+     "kind": "notebook",
+     "scene": "linen",
+     "color": "$b",
+     "art": 5,
+     "rx": 0.032,
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.03,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "mock",
+     "x": 0.67,
+     "y": 0.5533,
+     "w": 0.25,
+     "h": 0.2267,
+     "kind": "pillow",
+     "scene": "paper",
+     "color": "$soft",
+     "art": 1,
+     "rx": 0.032,
+     "shadow": {
+      "x": 0,
+      "y": 0.012,
+      "blur": 0.03,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.52,
+     "y": 0.7,
+     "w": 0.2,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "rot": -10,
+     "shadow": {
+      "x": 0,
+      "y": 0.014,
+      "blur": 0.04,
+      "color": "rgba(0,0,0,.25)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "NEW",
+     "x": 0.62,
+     "y": 0.7367,
+     "w": 0.16,
+     "size": 0.048,
+     "font": "d",
+     "fill": "#2a2118",
+     "anchor": "c",
+     "align": "center",
+     "rot": -10
+    },
+    {
+     "t": "text",
+     "text": "Mugs, notebooks & cushions that make a workspace yours.",
+     "x": 0.08,
+     "y": 0.82,
+     "w": 0.64,
+     "size": 0.032,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 500,
+     "lh": 1.3,
+     "h": 0.0667
+    },
+    {
+     "t": "rect",
+     "x": 0.08,
+     "y": 0.9,
+     "w": 0.48,
+     "h": 0.056,
+     "fill": "$ink",
+     "rx": 0.042
+    },
+    {
+     "t": "text",
+     "text": "SAVE THIS PIN",
+     "x": 0.32,
+     "y": 0.916,
+     "w": 0.44,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.14
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.6,
+     "y": 0.9173,
+     "w": 0.34,
+     "size": 0.028,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 700
+    }
+   ]
+  },
+  {
+   "id": "yt-mug-secrets",
+   "name": "Mug Design Secrets",
+   "cat": "youtube",
+   "product": "YouTube thumbnail",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "Montserrat"
+   ],
+   "tags": [
+    "youtube",
+    "thumbnail",
+    "mug",
+    "design",
+    "tutorial"
+   ],
+   "theme": {
+    "bg": "#ffd400",
+    "ink": "#0a0a0a",
+    "a": "#e8101a",
+    "b": "#ffffff",
+    "soft": "#ffe766"
+   },
+   "variants": [
+    {
+     "name": "Yellow Pop"
+    },
+    {
+     "name": "Cyan Blast",
+     "theme": {
+      "bg": "#14c8ff",
+      "ink": "#0a0a14",
+      "a": "#ff2d6f",
+      "b": "#ffffff",
+      "soft": "#7fe4ff"
+     }
+    },
+    {
+     "name": "Night Neon",
+     "theme": {
+      "bg": "#120a2e",
+      "ink": "#ffffff",
+      "a": "#ff2d95",
+      "b": "#d5ff3a",
+      "soft": "#2a1b5a"
+     }
+    },
+    {
+     "name": "Red Alert",
+     "theme": {
+      "bg": "#d90f1e",
+      "ink": "#ffffff",
+      "a": "#ffd400",
+      "b": "#0a0a0a",
+      "soft": "#ff5a63"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": -0.0781,
+     "y": -0.4167,
+     "w": 0.7031,
+     "pal": [
+      "$soft",
+      "$bg",
+      "$a"
+     ],
+     "opacity": 0.55
+    },
+    {
+     "t": "ellipse",
+     "x": 0.5469,
+     "y": 0.0556,
+     "w": 0.5,
+     "h": 0.8889,
+     "fill": "$ink",
+     "opacity": 0.12
+    },
+    {
+     "t": "rect",
+     "x": 0.5781,
+     "y": 0.0972,
+     "w": 0.375,
+     "h": 0.8333,
+     "fill": "$b",
+     "rx": 0.05,
+     "rot": 4,
+     "shadow": {
+      "x": 0,
+      "y": 0.0194,
+      "blur": 0.0333,
+      "color": "rgba(0,0,0,.4)"
+     }
+    },
+    {
+     "t": "mock",
+     "x": 0.5859,
+     "y": 0.1111,
+     "w": 0.3594,
+     "h": 0.8056,
+     "kind": "mug",
+     "scene": "studio",
+     "color": "$a",
+     "art": 7,
+     "rx": 0.0417,
+     "rot": 4
+    },
+    {
+     "t": "text",
+     "text": "MUG",
+     "x": 0.0391,
+     "y": 0.0417,
+     "w": 0.5469,
+     "size": 0.2917,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.3333,
+     "stroke": "$b",
+     "sw": 0.0194
+    },
+    {
+     "t": "text",
+     "text": "DESIGN",
+     "x": 0.0391,
+     "y": 0.3264,
+     "w": 0.5469,
+     "size": 0.2917,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.3333,
+     "stroke": "$b",
+     "sw": 0.0194
+    },
+    {
+     "t": "text",
+     "text": "SECRETS",
+     "x": 0.0391,
+     "y": 0.6111,
+     "w": 0.5938,
+     "size": 0.2917,
+     "font": "d",
+     "fill": "$a",
+     "h": 0.3333,
+     "stroke": "$b",
+     "sw": 0.0194
+    }
+   ]
+  },
+  {
+   "id": "yt-sell-more-shirts",
+   "name": "Sell More Shirts",
+   "cat": "youtube",
+   "product": "YouTube thumbnail",
+   "bg": {
+    "grad": [
+     "$bg",
+     "$soft"
+    ],
+    "angle": 135
+   },
+   "fonts": [
+    "Bungee",
+    "Poppins"
+   ],
+   "tags": [
+    "youtube",
+    "thumbnail",
+    "business",
+    "shirts",
+    "sell"
+   ],
+   "theme": {
+    "bg": "#1b0b4d",
+    "ink": "#ffffff",
+    "a": "#ffe600",
+    "b": "#ff3d81",
+    "soft": "#3a1d8f"
+   },
+   "variants": [
+    {
+     "name": "Electric"
+    },
+    {
+     "name": "Money",
+     "theme": {
+      "bg": "#062a1d",
+      "ink": "#ffffff",
+      "a": "#b6ff3b",
+      "b": "#ffe14d",
+      "soft": "#0e5a3e"
+     }
+    },
+    {
+     "name": "Hot",
+     "theme": {
+      "bg": "#ff3d2e",
+      "ink": "#ffffff",
+      "a": "#ffe600",
+      "b": "#ffffff",
+      "soft": "#ff7a5a"
+     }
+    },
+    {
+     "name": "Sky",
+     "theme": {
+      "bg": "#0b4bff",
+      "ink": "#ffffff",
+      "a": "#ffe14d",
+      "b": "#00e0ff",
+      "soft": "#3f78ff"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Halftone",
+     "x": 0.5938,
+     "y": -0.1111,
+     "w": 0.4844,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ],
+     "opacity": 0.35
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": 0.75,
+     "y": 0.0139,
+     "w": 0.2188,
+     "pal": [
+      "$a",
+      "$b",
+      "$a"
+     ],
+     "rot": 12,
+     "shadow": {
+      "x": 0,
+      "y": 0.0139,
+      "blur": 0.0278,
+      "color": "rgba(0,0,0,.4)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "3X",
+     "x": 0.8594,
+     "y": 0.1111,
+     "w": 0.1875,
+     "size": 0.1389,
+     "font": "d",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center",
+     "rot": 12
+    },
+    {
+     "t": "mock",
+     "x": 0.6094,
+     "y": 0.4028,
+     "w": 0.3281,
+     "h": 0.5556,
+     "kind": "shirt",
+     "scene": "concrete",
+     "color": "$ink",
+     "art": 8,
+     "rx": 0.0417,
+     "shadow": {
+      "x": 0,
+      "y": 0.0194,
+      "blur": 0.0389,
+      "color": "rgba(0,0,0,.45)"
+     }
+    },
+    {
+     "t": "text",
+     "text": "SELL",
+     "x": 0.0391,
+     "y": 0.0556,
+     "w": 0.5469,
+     "size": 0.2778,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.3056,
+     "stroke": "#0a0a14",
+     "sw": 0.0194
+    },
+    {
+     "t": "text",
+     "text": "MORE",
+     "x": 0.0391,
+     "y": 0.3264,
+     "w": 0.5469,
+     "size": 0.2778,
+     "font": "d",
+     "fill": "$a",
+     "h": 0.3056,
+     "stroke": "#0a0a14",
+     "sw": 0.0194
+    },
+    {
+     "t": "text",
+     "text": "SHIRTS",
+     "x": 0.0391,
+     "y": 0.5972,
+     "w": 0.5625,
+     "size": 0.2778,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.3056,
+     "stroke": "#0a0a14",
+     "sw": 0.0194
+    },
+    {
+     "t": "rect",
+     "x": 0.0391,
+     "y": 0.8958,
+     "w": 0.3359,
+     "h": 0.0778,
+     "fill": "$b",
+     "rx": 0.0389
+    },
+    {
+     "t": "text",
+     "text": "REAL STORE TEARDOWN",
+     "x": 0.207,
+     "y": 0.9111,
+     "w": 0.3281,
+     "size": 0.0389,
+     "font": "b",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.08
+    },
+    {
+     "t": "graphic",
+     "name": "Lightning",
+     "x": 0.5,
+     "y": 0.0417,
+     "w": 0.0938,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ],
+     "rot": -12
+    }
+   ]
+  },
+  {
+   "id": "yt-five-mistakes",
+   "name": "5 Design Mistakes",
+   "cat": "youtube",
+   "product": "YouTube thumbnail",
+   "bg": "$bg",
+   "fonts": [
+    "Lilita One",
+    "Nunito"
+   ],
+   "tags": [
+    "youtube",
+    "thumbnail",
+    "mistakes",
+    "design",
+    "tips",
+    "list"
+   ],
+   "theme": {
+    "bg": "#0b0b0f",
+    "ink": "#ffffff",
+    "a": "#ff2e3b",
+    "b": "#ffd60a",
+    "soft": "#26262e"
+   },
+   "variants": [
+    {
+     "name": "Danger"
+    },
+    {
+     "name": "Lime",
+     "theme": {
+      "bg": "#0a1a0f",
+      "ink": "#ffffff",
+      "a": "#b8ff2c",
+      "b": "#ff4d6d",
+      "soft": "#15351f"
+     }
+    },
+    {
+     "name": "Ice",
+     "theme": {
+      "bg": "#08213a",
+      "ink": "#ffffff",
+      "a": "#35d0ff",
+      "b": "#ffd60a",
+      "soft": "#12406a"
+     }
+    },
+    {
+     "name": "Violet",
+     "theme": {
+      "bg": "#1a0b33",
+      "ink": "#ffffff",
+      "a": "#c084ff",
+      "b": "#ffd60a",
+      "soft": "#331866"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "graphic",
+     "name": "Sunburst",
+     "x": 0.1563,
+     "y": -0.4167,
+     "w": 0.7031,
+     "pal": [
+      "$soft",
+      "$bg",
+      "$a"
+     ],
+     "opacity": 0.6
+    },
+    {
+     "t": "text",
+     "text": "5",
+     "x": 0.0469,
+     "y": -0.0556,
+     "w": 0.3906,
+     "size": 0.8611,
+     "font": "d",
+     "fill": "$a",
+     "h": 0.8889,
+     "stroke": "#000000",
+     "sw": 0.025
+    },
+    {
+     "t": "text",
+     "text": "DESIGN",
+     "x": 0.3672,
+     "y": 0.1667,
+     "w": 0.625,
+     "size": 0.2639,
+     "font": "d",
+     "fill": "$ink",
+     "h": 0.2917,
+     "stroke": "#000000",
+     "sw": 0.0222
+    },
+    {
+     "t": "text",
+     "text": "MISTAKES",
+     "x": 0.3281,
+     "y": 0.4167,
+     "w": 0.6641,
+     "size": 0.2639,
+     "font": "d",
+     "fill": "$b",
+     "h": 0.2917,
+     "stroke": "#000000",
+     "sw": 0.0222
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8125,
+     "y": 0.6667,
+     "w": 0.1328,
+     "h": 0.2361,
+     "fill": "$a",
+     "stroke": "#000000",
+     "sw": 0.0139
+    },
+    {
+     "t": "icon",
+     "name": "x",
+     "x": 0.8344,
+     "y": 0.7056,
+     "size": 0.1583,
+     "color": "#ffffff",
+     "sw": 3.2
+    },
+    {
+     "t": "text",
+     "text": "STOP DOING THIS",
+     "x": 0.3438,
+     "y": 0.8056,
+     "w": 0.4375,
+     "size": 0.0722,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 800,
+     "ls": 0.05,
+     "stroke": "#000000",
+     "sw": 0.0111
+    }
+   ]
+  },
+  {
+   "id": "fb-grand-opening",
+   "name": "Grand Opening Post",
+   "cat": "social",
+   "product": "Facebook post",
+   "bg": "$bg",
+   "fonts": [
+    "Bebas Neue",
+    "Poppins"
+   ],
+   "tags": [
+    "opening",
+    "announcement",
+    "shop",
+    "facebook",
+    "event"
+   ],
+   "theme": {
+    "bg": "#1f2a6b",
+    "ink": "#ffffff",
+    "a": "#ffb703",
+    "b": "#ff5d8f",
+    "soft": "#2f3d94"
+   },
+   "variants": [
+    {
+     "name": "Indigo"
+    },
+    {
+     "name": "Citrus",
+     "theme": {
+      "bg": "#fff3d6",
+      "ink": "#2b1704",
+      "a": "#d9550f",
+      "b": "#ffc233",
+      "soft": "#ffe3a3"
+     }
+    },
+    {
+     "name": "Pine",
+     "theme": {
+      "bg": "#12372e",
+      "ink": "#f1fbf4",
+      "a": "#f2c14e",
+      "b": "#7ed6a8",
+      "soft": "#1f5646"
+     }
+    },
+    {
+     "name": "Berry",
+     "theme": {
+      "bg": "#4a0f3a",
+      "ink": "#fff0f8",
+      "a": "#ff8bc2",
+      "b": "#ffd36e",
+      "soft": "#6c1f56"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "ellipse",
+     "x": 0.6333,
+     "y": -0.3175,
+     "w": 0.5833,
+     "h": 1.1111,
+     "fill": "$soft"
+    },
+    {
+     "t": "ellipse",
+     "x": 0.8167,
+     "y": 0.4762,
+     "w": 0.4167,
+     "h": 0.7937,
+     "fill": "$soft",
+     "opacity": 0.6
+    },
+    {
+     "t": "graphic",
+     "name": "Confetti",
+     "x": 0.5333,
+     "y": 0.0635,
+     "w": 0.35,
+     "pal": [
+      "$a",
+      "$b",
+      "$ink"
+     ]
+    },
+    {
+     "t": "rect",
+     "x": 0.0583,
+     "y": 0.127,
+     "w": 0.25,
+     "h": 0.0857,
+     "fill": "$a",
+     "rx": 0.0429
+    },
+    {
+     "t": "text",
+     "text": "YOU’RE INVITED",
+     "x": 0.1833,
+     "y": 0.146,
+     "w": 0.25,
+     "size": 0.0381,
+     "font": "b",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.14
+    },
+    {
+     "t": "text",
+     "text": "GRAND\nOPENING",
+     "x": 0.0583,
+     "y": 0.254,
+     "w": 0.5333,
+     "size": 0.2222,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 0.92,
+     "h": 0.4603
+    },
+    {
+     "t": "text",
+     "text": "Custom print studio. Come see the machines, meet the team and grab a free tote.",
+     "x": 0.0583,
+     "y": 0.746,
+     "w": 0.4667,
+     "size": 0.0413,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.35,
+     "h": 0.127
+    },
+    {
+     "t": "rect",
+     "x": 0.65,
+     "y": 0.1905,
+     "w": 0.275,
+     "h": 0.619,
+     "fill": "#ffffff",
+     "rx": 0.0444,
+     "shadow": {
+      "x": 0,
+      "y": 0.0222,
+      "blur": 0.0476,
+      "color": "rgba(0,0,0,.3)"
+     }
+    },
+    {
+     "t": "rect",
+     "x": 0.65,
+     "y": 0.1905,
+     "w": 0.275,
+     "h": 0.1587,
+     "fill": "$a",
+     "rx": 0.0444
+    },
+    {
+     "t": "rect",
+     "x": 0.65,
+     "y": 0.2857,
+     "w": 0.275,
+     "h": 0.0635,
+     "fill": "$a"
+    },
+    {
+     "t": "text",
+     "text": "SAT",
+     "x": 0.7875,
+     "y": 0.2222,
+     "w": 0.25,
+     "size": 0.0889,
+     "font": "d",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "19",
+     "x": 0.7875,
+     "y": 0.3571,
+     "w": 0.25,
+     "size": 0.2381,
+     "font": "d",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center"
+    },
+    {
+     "t": "text",
+     "text": "OCTOBER · 10 AM",
+     "x": 0.7875,
+     "y": 0.627,
+     "w": 0.25,
+     "size": 0.0349,
+     "font": "b",
+     "fill": "#14142b",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.1
+    },
+    {
+     "t": "icon",
+     "name": "map-pin",
+     "x": 0.65,
+     "y": 0.8571,
+     "size": 0.0571,
+     "color": "$a"
+    },
+    {
+     "t": "text",
+     "text": "12 Market Lane, yourtown",
+     "x": 0.69,
+     "y": 0.8603,
+     "w": 0.3167,
+     "size": 0.0349,
+     "font": "b",
+     "fill": "$ink",
+     "weight": 600
+    }
+   ]
+  },
+  {
+   "id": "fb-holiday-deadline",
+   "name": "Order-By Deadline Post",
+   "cat": "social",
+   "product": "Facebook post",
+   "bg": "$bg",
+   "fonts": [
+    "Anton",
+    "DM Sans"
+   ],
+   "tags": [
+    "deadline",
+    "holiday",
+    "order",
+    "shipping",
+    "facebook",
+    "reminder"
+   ],
+   "theme": {
+    "bg": "#fff4e8",
+    "ink": "#1c1008",
+    "a": "#d62839",
+    "b": "#ffb703",
+    "soft": "#ffe0c2"
+   },
+   "variants": [
+    {
+     "name": "Festive"
+    },
+    {
+     "name": "Frost",
+     "theme": {
+      "bg": "#e8f4ff",
+      "ink": "#08243f",
+      "a": "#1d6fe8",
+      "b": "#7fd1ff",
+      "soft": "#c9e5ff"
+     }
+    },
+    {
+     "name": "Evergreen",
+     "theme": {
+      "bg": "#0f3a2c",
+      "ink": "#f6f3e6",
+      "a": "#f2c14e",
+      "b": "#e86a5a",
+      "soft": "#1b5a45"
+     }
+    },
+    {
+     "name": "Midnight",
+     "theme": {
+      "bg": "#14122e",
+      "ink": "#fff8f0",
+      "a": "#ff7a59",
+      "b": "#ffd166",
+      "soft": "#25224f"
+     }
+    }
+   ],
+   "layers": [
+    {
+     "t": "rect",
+     "x": 0,
+     "y": 0,
+     "w": 0.35,
+     "h": 1,
+     "fill": "$a"
+    },
+    {
+     "t": "graphic",
+     "name": "Starburst badge",
+     "x": -0.05,
+     "y": 0.2381,
+     "w": 0.4667,
+     "pal": [
+      "$b",
+      "$a",
+      "$b"
+     ],
+     "opacity": 0.35
+    },
+    {
+     "t": "icon",
+     "name": "clock",
+     "x": 0.0917,
+     "y": 0.1429,
+     "size": 0.3175,
+     "color": "$bg",
+     "sw": 1.6
+    },
+    {
+     "t": "text",
+     "text": "ORDER BY",
+     "x": 0.175,
+     "y": 0.5397,
+     "w": 0.3167,
+     "size": 0.0635,
+     "font": "b",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "weight": 800,
+     "ls": 0.25
+    },
+    {
+     "t": "text",
+     "text": "DEC 10",
+     "x": 0.175,
+     "y": 0.619,
+     "w": 0.3333,
+     "size": 0.1905,
+     "font": "d",
+     "fill": "$bg",
+     "anchor": "c",
+     "align": "center",
+     "h": 0.2222
+    },
+    {
+     "t": "text",
+     "text": "Holiday orders\nclose soon.",
+     "x": 0.3917,
+     "y": 0.1429,
+     "w": 0.5833,
+     "size": 0.1714,
+     "font": "d",
+     "fill": "$ink",
+     "lh": 1,
+     "h": 0.4127
+    },
+    {
+     "t": "rect",
+     "x": 0.3917,
+     "y": 0.5476,
+     "w": 0.0917,
+     "h": 0.0127,
+     "fill": "$a",
+     "rx": 0.0063
+    },
+    {
+     "t": "text",
+     "text": "Personalised mugs, tees and totes ordered by the 10th arrive before the 24th.",
+     "x": 0.3917,
+     "y": 0.6032,
+     "w": 0.5,
+     "size": 0.0444,
+     "font": "b",
+     "fill": "$ink",
+     "lh": 1.4,
+     "h": 0.1746
+    },
+    {
+     "t": "rect",
+     "x": 0.3917,
+     "y": 0.8016,
+     "w": 0.2833,
+     "h": 0.1238,
+     "fill": "$ink",
+     "rx": 0.0619
+    },
+    {
+     "t": "icon",
+     "name": "gift",
+     "x": 0.4183,
+     "y": 0.8349,
+     "size": 0.0571,
+     "color": "$bg",
+     "sw": 2.2
+    },
+    {
+     "t": "text",
+     "text": "yourshop.com",
+     "x": 0.4667,
+     "y": 0.8365,
+     "w": 0.2083,
+     "size": 0.0444,
+     "font": "b",
+     "fill": "$bg",
+     "weight": 700
+    },
+    {
+     "t": "graphic",
+     "name": "Sparkles",
+     "x": 0.7583,
+     "y": 0.6032,
+     "w": 0.1917,
+     "pal": [
+      "$a",
+      "$b",
+      "$soft"
+     ]
+    }
+   ]
+  }
+ ]
+}

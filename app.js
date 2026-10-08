@@ -1215,7 +1215,7 @@
   const mobileQ = matchMedia('(max-width:800px)'), isCoarse = matchMedia('(pointer:coarse)').matches;
   const isMobile = () => mobileQ.matches;
   if (isCoarse) { // fat-finger friendly handles, no drag-selection box (empty-space drag pans instead)
-    fabric.Object.prototype.set({ cornerSize: 26, touchCornerSize: 52, padding: 8, borderScaleFactor: 3 });
+    fabric.Object.prototype.set({ cornerSize: 17, touchCornerSize: 48, padding: 6, borderScaleFactor: 1.6 });
     canvas.selection = false; canvas.targetFindTolerance = 14;
   }
   const stageEl = $('#stage'), wrapEl = $('#canvasWrap');
@@ -1337,7 +1337,7 @@
     if (!t || !isMobile()) { bar.hidden = true; ctxKey = null; if (!t && document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); sheetLayout(false); } return; }
     if (ctxKey !== t) {
       ctxKey = t; bar.innerHTML = CTX[t].map(([i, n, kind, key]) => `<button data-kind="${kind}" data-key="${key}" class="${key === 'del' ? 'danger' : ''}"><span class="cx">${ico(i, 22)}</span>${n}</button>`).join('');
-      $$('#ctxBar button').forEach(b => b.onclick = () => b.dataset.kind === 'focus' ? openFocus(b.dataset.key) : (ACTS[b.dataset.key] || chitra.extraActs?.[b.dataset.key])?.());
+      $$('#ctxBar button').forEach(b => b.onclick = () => { if (b.dataset.kind === 'focus') return openFocus(b.dataset.key); closeSheets(); (ACTS[b.dataset.key] || chitra.extraActs?.[b.dataset.key])?.(); }); // picking an action tucks the open panel away
       bar.scrollLeft = 0; $('#inspector').removeAttribute('data-focus'); if (document.body.classList.contains('sheet-open')) { document.body.classList.remove('sheet-open'); sheetLayout(false); }
     }
     bar.hidden = false;
@@ -1358,6 +1358,17 @@
     if (o && lastTap.o === o && now - lastTap.t < 380 && Math.hypot(p.x - lastTap.x, p.y - lastTap.y) < 24) { lastTap = { t: 0, o: null, x: 0, y: 0 }; setTimeout(() => editObject(o), 0); }
     else lastTap = { t: now, o, x: p.x, y: p.y };
   });
+  /* bottom sheets: tap the handle / title bar, or swipe it down, to close (no need to press the same button again) */
+  function dragClose(el, sheet, close) {
+    let y0 = null, moved = false; el.style.touchAction = 'none';
+    el.addEventListener('pointerdown', e => { if (e.target.closest('button,input,select')) return; y0 = e.clientY; moved = false; try { el.setPointerCapture(e.pointerId); } catch { } });
+    el.addEventListener('pointermove', e => { if (y0 == null) return; const dy = Math.max(0, e.clientY - y0); if (dy > 6) moved = true; sheet.style.transition = 'none'; sheet.style.transform = `translateY(${dy}px)`; });
+    const reset = () => { sheet.style.transition = ''; sheet.style.transform = ''; };
+    el.addEventListener('pointerup', e => { if (y0 == null) return; const dy = e.clientY - y0; y0 = null; reset(); if (dy > 50) close(); });
+    el.addEventListener('pointercancel', () => { y0 = null; reset(); });
+    el.addEventListener('click', e => { if (e.target.closest('button,input,select')) return; if (moved) { moved = false; return; } close(); }); // a plain tap closes on the CLICK, so the tap can't fall through to the canvas underneath
+  }
+  dragClose($('.sheet-head'), $('#inspector'), () => $('#sheetClose').click()); dragClose($('#flyout .grabber'), $('#flyout'), closeSheets);
   $('#sheetClose').onclick = () => { $('#tab-design').hidden = false; $('#tab-layers').hidden = true; document.body.classList.remove('sheet-open'); $('#inspector').removeAttribute('data-focus'); setCtxActive(null); sheetLayout(false); };
   mobileQ.addEventListener?.('change', () => { updateCtx(); fit(); });
 
