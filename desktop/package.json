@@ -1,0 +1,26 @@
+{
+  "name": "chitra-studio",
+  "productName": "Chitra Studio",
+  "version": "4.1.0",
+  "description": "Print-ready design studio for DTF and sublimation",
+  "author": "Chitra Studio",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "prepare-app": "node prepare.js",
+    "start": "node prepare.js && electron .",
+    "build": "node prepare.js && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "studio.chitra.desktop",
+    "productName": "Chitra Studio",
+    "files": ["main.js", "preload.js", "app/**/*", "build/icon.ico"],
+    "directories": { "output": "dist", "buildResources": "build" },
+    "win": { "target": [{ "target": "nsis", "arch": ["x64"] }], "icon": "build/icon.ico" },
+    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true, "createStartMenuShortcut": true, "shortcutName": "Chitra Studio", "installerIcon": "build/icon.ico", "uninstallerIcon": "build/icon.ico" }
+  }
+}
