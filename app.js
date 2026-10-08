@@ -130,6 +130,16 @@
     if (action) { const b = document.createElement('button'); b.className = 'tact'; b.textContent = action.label; b.onclick = () => { action.fn(); kill(); }; t.appendChild(b); }
     $('#toasts').appendChild(t); setTimeout(kill, action ? 6000 : 2400);
   }
+  /* in-app confirmation sheet (replaces the browser's confirm() box): resolves true / false */
+  function ask(title, text = '', ok = 'Delete', danger = true) {
+    return new Promise(res => {
+      const m = document.createElement('div'); m.className = 'modal'; m.setAttribute('role', 'alertdialog'); m.setAttribute('aria-modal', 'true');
+      m.innerHTML = `<div class="sheet small ask"><h2></h2><p class="tip"></p><div class="ask-btns"><button class="btn" data-n>Cancel</button><button class="${danger ? 'btn danger-solid' : 'cta'}" data-y></button></div></div>`;
+      $('h2', m).textContent = title; $('p', m).textContent = text; $('[data-y]', m).textContent = ok; document.body.appendChild(m);
+      const done = v => { m.remove(); document.removeEventListener('keydown', key, true); res(v); }, key = e => { if (e.key === 'Escape') { e.stopPropagation(); done(false); } else if (e.key === 'Enter') { e.stopPropagation(); done(true); } };
+      $('[data-n]', m).onclick = () => done(false); $('[data-y]', m).onclick = () => done(true); m.addEventListener('mousedown', e => { if (e.target === m) done(false); }); document.addEventListener('keydown', key, true); $('[data-y]', m).focus();
+    });
+  }
   function confetti(x = innerWidth / 2, y = innerHeight / 3, n = 150) {
     const c = $('#confetti'); c.width = innerWidth; c.height = innerHeight; const g = c.getContext('2d');
     const cols = ['#6d4aff', '#ffc42e', '#1fb26b', '#b5dd2f', '#8a6bff', '#14b8a6'];
@@ -852,6 +862,7 @@
     if (!o) return;
     const arch = isArch(o), fillV = arch ? o.archData.fill : o.fill, strokeV = arch ? o.archData.stroke : o.stroke;
     $('#textSec').hidden = !(isText(o) || arch); $('#imageSec').hidden = !isImage(o); $('#archSec').hidden = !arch;
+    $$('#propsBody [data-s=colour], #propsBody [data-s=outline]').forEach(d => { d.hidden = isImage(o); }); // a photo has no fill / outline: lead with its own tools
     $('#fill').value = toHex(typeof fillV === 'string' ? fillV : '#000000'); $('#ftColor').value = $('#fill').value;
     $('#stroke').value = toHex(strokeV || '#000000');
     $('#strokeWidth').value = (arch ? o.archData.strokeWidth : o.strokeWidth) || 0;
@@ -1175,9 +1186,9 @@
     loadPage(cur + 1, () => { history.busy = true; if (th) themedObjects(kind, th).forEach(o => canvas.add(o)); history.busy = false; canvas.discardActiveObject(); canvas.renderAll(); commit(); renderPages(); });
     toast(th ? 'Page added in your design’s style' : 'Blank page added', '📄');
   }
-  function deletePage() {
+  async function deletePage() {
     if (pages.length < 2) return toast('A design needs at least one page', '☝️');
-    if (!confirm('Delete this page?')) return;
+    if (!(await ask('Delete this page?', 'You can undo with Ctrl+Z only until you switch pages.', 'Delete page'))) return;
     pages.splice(cur, 1); cur = Math.min(cur, pages.length - 1); loadPage(cur);
   }
   function renderPages() {
@@ -1481,7 +1492,7 @@
     addCommand: (n, run) => extraCmds.push([n, run]),
     kit: { get W() { return W; }, get H() { return H; }, get B() { return B; }, u, clearAll, shadow }, ico, setProp, SHAPES, BACKDROPS, addBackdrop, EMOJI, isArch, prodIconName, editObject, downloadCredits, collectCredits, flushCommit, fontsReady, kv, store, uid, newDocument, openProject, showHome, showEditor, saveNow, EXTRA, snapshot, parseSnap, expand, TEMPLATE_META, renderTemplateThumb, productByName, PRODUCTS, dim, inches, openPicker, loadTemplate, fit, thumb, cardThumb, savePage, loadPage, renderPages, FONTS, PICKER_TABS, chooseProduct,
     get pages() { return pages; }, get cur() { return cur; }, get projectId() { return projectId; }, get isCoarse() { return isCoarse; },
-    $, $$, pick, toast, confetti, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
+    $, $$, pick, toast, confetti, ask, commit, refreshProps, place, active, isImage, isText, applyFilters, DEFAULT_ADJ, renderDesign, addImageFromURL,
     history, get dpi() { return DPI; }, get W() { return W; }, get H() { return H; }, get zoom() { return zoom; }, get guide() { return guide; }, u,
   };
   window.chitra = api; document.dispatchEvent(new CustomEvent('chitra:ready'));

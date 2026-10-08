@@ -14,7 +14,8 @@ const code = r.j.devCode;
 r = await call('/auth/verify', { method: 'POST', body: { email: 'ann@example.com', code: '000000' } }); ok('wrong code refused', r.s === 400);
 r = await call('/auth/verify', { method: 'POST', body: { email: 'ann@example.com', code } }); ok('right code signs in', r.s === 200 && r.j.token, JSON.stringify(r)); const token = r.j.token;
 r = await call('/auth/verify', { method: 'POST', body: { email: 'ann@example.com', code } }); ok('code is single-use', r.s === 400);
-r = await call('/me', { token }); ok('/me works with token', r.s === 200 && r.j.plan === 'free' && r.j.email === 'ann@example.com');
+r = await call('/me', { token }); ok('/me works with token', r.s === 200 && r.j.email === 'ann@example.com');
+ok('first sign-in starts a 7-day free trial automatically', r.j.plan === 'trial' && Math.abs(r.j.trialEndsAt - (Date.now() + 7 * 864e5)) < 60000, JSON.stringify(r.j));
 r = await call('/me', { token: token.slice(0, -2) + 'xx' }); ok('tampered token rejected', r.s === 401);
 r = await call('/projects/abc123', { method: 'PUT', token, body: { name: 'Mug design', pages: [] } }); ok('save project', r.s === 200 && r.j.name === 'Mug design');
 r = await call('/projects/abc123', { token }); ok('load project', r.s === 200 && r.j.name === 'Mug design');
@@ -22,6 +23,11 @@ r = await call('/projects', { token }); ok('list projects', r.s === 200 && r.j.i
 r = await call('/projects/../x', { method: 'PUT', token, body: '{}' }); ok('path traversal refused', r.s !== 200);
 r = await call('/projects/bad id', { method: 'PUT', token, body: '{}' }); ok('bad id refused', r.s !== 200);
 r = await call('/projects/abc124', { method: 'PUT', token, body: 'not json' }); ok('bad json refused', r.s === 400);
+for (let i = 0; i < 4; i++) await call('/projects/t' + i + 'xyz', { method: 'PUT', token, body: { name: 'trial' + i } });
+r = await call('/projects/t9xyz', { method: 'PUT', token, body: { name: 'extra' } }); ok('trial users get the full design allowance', r.s === 200);
+for (const k of [...store.keys()].filter(k => /^(p|m):ann@example.com:(t\dxyz)$/.test(k))) store.delete(k); store.delete('p:ann@example.com:t9xyz'); store.delete('m:ann@example.com:t9xyz');
+store.set('user:ann@example.com', JSON.stringify({ plan: 'free', trialEnds: Date.now() - 1000 })); // the trial ends
+r = await call('/me', { token }); ok('after 7 days the plan falls back to free', r.j.plan === 'free' && r.j.trialUsed === true, JSON.stringify(r.j));
 for (let i = 0; i < 4; i++) await call('/projects/p' + i + 'xyz', { method: 'PUT', token, body: { name: 'n' + i } });
 r = await call('/projects/overlimit', { method: 'PUT', token, body: { name: 'six' } }); ok('free plan limited to 5 designs', r.s === 402, JSON.stringify(r));
 r = await call('/projects/abc123', { method: 'PUT', token, body: { name: 'Renamed' } }); ok('existing design can still be updated at the limit', r.s === 200);
@@ -39,8 +45,13 @@ r = await call('/projects/overlimit', { method: 'PUT', token, body: { name: 'six
 const old = Math.floor(Date.now() / 1000) - 4000, sig2 = crypto.createHmac('sha256', 'whsec_test').update(`${old}.${evt}`).digest('hex');
 r = await call('/billing/webhook', { method: 'POST', body: evt, headers: { 'stripe-signature': `t=${old},v1=${sig2}` } }); ok('replayed (old) webhook refused', r.s === 400);
 const del = JSON.stringify({ type: 'customer.subscription.deleted', data: { object: { customer: 'cus_1' } } }), s3 = crypto.createHmac('sha256', 'whsec_test').update(`${t}.${del}`).digest('hex');
+const upd = JSON.stringify({ type: 'customer.subscription.updated', data: { object: { customer: 'cus_1', status: 'canceled' } } }), s4 = crypto.createHmac('sha256', 'whsec_test').update(`${t}.${upd}`).digest('hex');
+await call('/billing/webhook', { method: 'POST', body: upd, headers: { 'stripe-signature': `t=${t},v1=${s4}` } }); r = await call('/me', { token }); ok('subscription.updated(canceled) downgrades', r.j.plan === 'free');
+await call('/billing/webhook', { method: 'POST', body: evt, headers: { 'stripe-signature': `t=${t},v1=${sig}` } });
 await call('/billing/webhook', { method: 'POST', body: del, headers: { 'stripe-signature': `t=${t},v1=${s3}` } }); r = await call('/me', { token }); ok('cancellation downgrades to free', r.j.plan === 'free');
-r = await call('/billing/checkout', { method: 'POST', token, body: { plan: 'pro' } }); ok('checkout says not configured (no keys)', r.s === 503);
+r = await call('/billing/checkout', { method: 'POST', token, body: { plan: 'year' } }); ok('checkout says not configured (no keys)', r.s === 503);
+r = await call('/billing/portal', { method: 'POST', token }); ok('portal needs a subscription', r.s === 404);
+r = await call('/auth/google', { method: 'POST', body: { credential: 'x' } }); ok('google sign-in reports not configured', r.s === 503);
 r = await call('/projects', { method: 'OPTIONS' }); ok('CORS preflight', r.s === 204 && r.h.get('access-control-allow-origin') === 'https://x.test');
 // approval links
 const tiny = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';

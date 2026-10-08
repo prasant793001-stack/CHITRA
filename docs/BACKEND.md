@@ -32,3 +32,12 @@ Deploy `worker/photos-proxy.js` the same way and set `photoProxy` in `config.js`
 
 ## What is stored
 Designs are stored as JSON per user in Cloudflare KV (limit 25 MB per design, the app refuses larger ones). Approval links keep one JPEG + comments for 30 days. Delete a design in the app and it stays in the cloud until you remove it from `/projects/:id` (DELETE) - wire that to the Delete button before launch if you want it automatic.
+
+## Subscription, trial and Google sign-in ($6.99 / month · $69 / year · 7 days free)
+Everything below is free to run for a start (Cloudflare Workers + KV free tier). You do **not** need a "duck server": DuckDNS is only a free sub-domain name for a server you run yourself, and the Worker already has a free `*.workers.dev` address (or point your own domain at it).
+
+1. **Worker**: deploy `worker/api.js` (docs above). Variables: `SESSION_SECRET`, `ALLOWED_ORIGIN`, `APP_URL`, `RESEND_KEY`+`MAIL_FROM` (email codes), `GOOGLE_CLIENT_ID`, `STRIPE_KEY`, `STRIPE_WEBHOOK_SECRET`, `PRICE_MONTH`, `PRICE_YEAR`.
+2. **7-day trial**: automatic. The first sign-in of every email starts it on the server (no card). Afterwards the account falls back to Free until a plan is bought.
+3. **Google sign-in** (Google Cloud, free): console.cloud.google.com → APIs & Services → Credentials → OAuth client ID → *Web application* → add your site URL under *Authorised JavaScript origins*. Put the client id in `config.js` (`googleClientId`) and in the Worker variable `GOOGLE_CLIENT_ID`.
+4. **Payments**: Stripe → create two recurring prices ($6.99/month, $69/year) and put their ids in `PRICE_MONTH` / `PRICE_YEAR`; add a webhook to `https://<worker>/billing/webhook` for `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`. Enable the Customer Portal so people can cancel or switch plan (the app's "Manage subscription" button opens it).
+5. In `config.js` set `apiUrl` to the Worker address and `gating: true`.

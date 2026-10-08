@@ -12,19 +12,25 @@
     const j = await r.json().catch(() => ({})); if (!r.ok) { const e = new Error(j.error || `Error ${r.status}`); e.status = r.status; throw e; } return j;
   }
   cloud.api = api;
-  const setPlan = p => { ls.set('chitra.plan', p || 'free'); document.dispatchEvent(new Event('chitra:plan')); };
+  const setPlan = (p, info = {}) => { ls.set('chitra.plan', p === 'trial' ? 'pro' : (p || 'free')); ls.set('chitra.trial', p === 'trial' ? '1' : null); ls.set('chitra.trialEnds', info.trialEndsAt || null); ls.set('chitra.interval', info.interval || null); document.dispatchEvent(new Event('chitra:plan')); paintAccount(); };
 
   /* ---------- sign-in dialog ---------- */
   const m = Object.assign(document.createElement('div'), { className: 'modal', id: 'authModal', hidden: true }); m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true');
   m.innerHTML = `<div class="sheet small"><button class="x" aria-label="Close">${ico('x', 18)}</button><h2>Sign in to Chitra</h2><p class="tip" id="auHint">We'll email you a 6-digit code — no password needed. Your designs then follow you to every device.</p>
     <form id="auForm"><input id="auEmail" type="email" placeholder="you@example.com" autocomplete="email" required><input id="auCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" autocomplete="one-time-code" hidden><button class="cta wide" id="auGo">Email me a code</button></form><p class="tip err" id="auErr"></p></div>`;
+  if (CFG.googleClientId) { // one-tap Google sign-in (free); the ID token is verified by the server
+    const box = Object.assign(document.createElement('div'), { id: 'auGoogle', style: 'display:flex;justify-content:center;margin:12px 0 4px' }); $('#auForm', m).after(box);
+    const sc = Object.assign(document.createElement('script'), { src: 'https://accounts.google.com/gsi/client', async: true, onload: () => {
+      window.google.accounts.id.initialize({ client_id: CFG.googleClientId, callback: async resp => { try { const r = await api('/auth/google', { method: 'POST', body: { credential: resp.credential } }); ls.set('chitra.token', r.token); ls.set('chitra.email', r.email); setPlan(r.plan, r); m.hidden = true; toast(r.plan === 'trial' ? 'Welcome! Your 7-day free trial is on' : 'Signed in', ''); pull(); } catch (err) { $('#auErr').textContent = err.message; } } });
+      window.google.accounts.id.renderButton(box, { theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', width: 280 }); } }); document.head.appendChild(sc);
+  }
   document.body.appendChild(m); $('.x', m).onclick = () => { m.hidden = true; }; m.addEventListener('mousedown', e => { if (e.target === m) m.hidden = true; });
   let stage = 'email';
   $('#auForm').onsubmit = async e => {
     e.preventDefault(); const em = $('#auEmail').value.trim(), btn = $('#auGo'); $('#auErr').textContent = ''; btn.disabled = true;
     try {
       if (stage === 'email') { const r = await api('/auth/start', { method: 'POST', body: { email: em } }); stage = 'code'; $('#auCode').hidden = false; $('#auCode').focus(); btn.textContent = 'Sign in'; $('#auHint').textContent = `Code sent to ${em}. Check your inbox (and spam).`; if (r.devCode) $('#auCode').value = r.devCode; }
-      else { const r = await api('/auth/verify', { method: 'POST', body: { email: em, code: $('#auCode').value.trim() } }); ls.set('chitra.token', r.token); ls.set('chitra.email', r.email); setPlan(r.plan); m.hidden = true; stage = 'email'; $('#auCode').hidden = true; $('#auCode').value = ''; btn.textContent = 'Email me a code'; paintAccount(); toast(`Signed in as ${r.email}`, ''); pull(); }
+      else { const r = await api('/auth/verify', { method: 'POST', body: { email: em, code: $('#auCode').value.trim() } }); ls.set('chitra.token', r.token); ls.set('chitra.email', r.email); setPlan(r.plan, r); if (r.plan === 'trial') toast(`Welcome! Your 7-day free trial is on — everything is unlocked`, ''); m.hidden = true; stage = 'email'; $('#auCode').hidden = true; $('#auCode').value = ''; btn.textContent = 'Email me a code'; paintAccount(); toast(`Signed in as ${r.email}`, ''); pull(); }
     } catch (err) { $('#auErr').textContent = err.message || 'Something went wrong'; } finally { btn.disabled = false; }
   };
   function signOut(silent) { ls.set('chitra.token', null); ls.set('chitra.email', null); setPlan('free'); paintAccount(); if (!silent) toast('Signed out', ''); }
@@ -32,8 +38,8 @@
 
   /* ---------- account button ---------- */
   const btn = Object.assign(document.createElement('button'), { className: 'btn acct-btn', id: 'acctBtn' }); $('.hm-top .spacer')?.after(btn);
-  function paintAccount() { btn.innerHTML = cloud.signedIn ? `<span class="avatar">${(cloud.email || '?')[0].toUpperCase()}</span><span>${cloud.email}</span>` : `${ico('users', 16)}<span>Sign in</span>`; btn.title = cloud.signedIn ? 'Click to sign out' : 'Sign in to sync your designs'; }
-  btn.onclick = () => { if (cloud.signedIn) { if (confirm(`Sign out of ${cloud.email}? Designs stay on this device.`)) signOut(); } else cloud.signIn(); }; paintAccount();
+  function paintAccount() { const left = ls.get('chitra.trial') ? Math.max(0, Math.ceil(((+ls.get('chitra.trialEnds') || 0) - Date.now()) / 864e5)) : null; btn.innerHTML = cloud.signedIn ? `<span class="avatar">${(cloud.email || '?')[0].toUpperCase()}</span><span>${cloud.email}</span>${left != null ? `<em class="trial-pill">Trial · ${left}d left</em>` : ''}` : `${ico('users', 16)}<span>Sign in</span>`; btn.title = cloud.signedIn ? 'Click to sign out' : 'Sign in to sync your designs'; }
+  btn.onclick = async () => { if (cloud.signedIn) { if (await C.ask(`Sign out of ${cloud.email}?`, 'Designs stay on this device.', 'Sign out', false)) signOut(); } else cloud.signIn(); }; paintAccount();
 
   /* ---------- sync ---------- */
   let pushT = null, busy = false;
@@ -50,14 +56,14 @@
       const { items } = await api('/projects'), local = await C.store.list(); let n = 0;
       for (const r of items) { const l = local.find(x => x.id === r.id); if (l && l.updated >= (r.updated || 0)) continue; const raw = await api('/projects/' + r.id); await kv.set('proj:' + r.id, JSON.stringify(raw)); await C.store.saveMeta({ id: r.id, name: r.name || raw.name || 'Untitled', updated: r.updated || Date.now(), thumb: l?.thumb || null, w: 0, h: 0, dpi: 300, product: '', pages: (raw.pages || []).length }); n++; }
       if (n) { document.dispatchEvent(new CustomEvent('chitra:home')); toast(`${n} design${n > 1 ? 's' : ''} synced from your account`, ''); }
-      const me = await api('/me'); setPlan(me.plan); setStatus('ok');
+      const me = await api('/me'); setPlan(me.plan, me); setStatus('ok');
     } catch (e) { setStatus('err'); } finally { busy = false; }
   }
   const setStatus = s => { btn.dataset.sync = s; };
   document.addEventListener('chitra:home', () => { pull(); });
   addEventListener('online', () => { pull(); push().catch(() => { }); });
   if (cloud.signedIn) pull();
-  if (/[?&]paid=1/.test(location.search)) { setTimeout(async () => { try { const me = await api('/me'); setPlan(me.plan); toast('Thank you! Your plan is now ' + me.plan.toUpperCase(), ''); C.confetti(); } catch { } history.replaceState(null, '', location.pathname); }, 800); }
+  if (/[?&]paid=1/.test(location.search)) { setTimeout(async () => { try { const me = await api('/me'); setPlan(me.plan, me); toast('Thank you! Your plan is now ' + me.plan.toUpperCase(), ''); C.confetti(); } catch { } history.replaceState(null, '', location.pathname); }, 800); }
 
 
   /* ---------- customer approval links ---------- */

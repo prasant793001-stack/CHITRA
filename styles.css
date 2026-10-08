@@ -427,7 +427,7 @@ h4 small{text-transform:none;letter-spacing:0;font-weight:500;margin-left:6px}
   body{overflow:hidden}
   #app{height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
   .topbar{padding:7px 8px;gap:4px;overflow-x:auto;scrollbar-width:none}.topbar::-webkit-scrollbar{display:none}
-  .logo-btn b,.project-name,#cmdk,#saveProject,label[for=openProject],#mockupBtn,#proBtn,.p-text small{display:none}
+  .logo-btn b,.project-name,#cmdk,#saveProject,label[for=openProject],#mockupBtn,#qrBtn,#proBtn,.p-text small{display:none}
   .only-mobile{display:inline-flex;flex:none}
   .product-btn{padding:4px 8px 4px 4px;flex:none}.p-text b{font-size:13px;max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .cta{padding:8px 12px;font-size:13px;flex:none}.group,#rotateDoc{flex:none}.ibtn{width:34px;height:34px}
@@ -712,3 +712,16 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
   [data-panel=templates] .studio-tools{order:5;margin-top:10px}
   [data-panel=templates] .tip{order:6}
 }
+
+.trial-pill{font-style:normal;font-size:10.5px;font-weight:800;background:#ede7ff;color:#4a24c9;border-radius:99px;padding:2px 8px;margin-left:6px;white-space:nowrap}
+
+/* inspector: the controls that belong to the selected thing come first */
+#propsBody:not([hidden]){display:flex;flex-direction:column}
+#propsBody>section{order:5}
+#propsBody>#slotSec{order:0}#propsBody>#textSec,#propsBody>#archSec{order:1}#propsBody>#imageSec{order:1}
+#propsBody [hidden]{display:none!important}
+
+.p-text{min-width:0;max-width:200px}.p-text b,.p-text small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.ask{text-align:left}.ask h2{margin:0 0 6px;font:800 19px "Plus Jakarta Sans",system-ui,sans-serif}.ask-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.btn.danger-solid{background:#d92d4a;border-color:#d92d4a;color:#fff}.btn.danger-solid:hover{background:#b9203a;border-color:#b9203a}

@@ -169,10 +169,10 @@
   function buildLayout(def) { slots().forEach(s => canvas.remove(s)); def.slots.forEach(s => canvas.add(makeSlot(s, 300))); slots().forEach(s => canvas.sendToBack(s)); canvas.requestRenderAll(); }
   async function useBuiltin(def, asNew) {
     const [w, h] = SHEETS[def.sheet];
-    if (asNew) { await C.newDocument({ w, h, dpi: 300, guide: 'paper', template: 'blank', name: def.name }); buildLayout(def); canvas.renderAll(); C.commit(); toast('Layout ready — drop your photos in', def.icon); return; }
-    if (canvas.getObjects().length && !confirm('Replace this page with the layout?')) return;
+    if (asNew) { await C.newDocument({ w, h, dpi: 300, guide: 'paper', template: 'blank', name: def.name }); buildLayout(def); canvas.renderAll(); C.commit(); toast('Layout ready — drop your photos in', def.icon); const tab = document.querySelector('#rail [data-tab=layouts]'); if (tab && !tab.classList.contains('on')) tab.click(); return; }
+    const had = canvas.getObjects().length;
     C.history.busy = true; canvas.clear(); canvas.backgroundColor = '#ffffff'; C.history.busy = false; C.setSize(w, h, true, 'paper', 300); buildLayout(def); C.commit();
-    toast('Layout applied — drop your photos in', def.icon);
+    toast('Layout applied — drop your photos in', def.icon, had ? { label: 'Undo', fn: C.undo } : undefined);
   }
   // thumbnail of a layout (sheet with labelled print areas)
   function layoutThumb(def, width = 260) {
@@ -200,11 +200,10 @@
   async function useMine(id, asNew) {
     const raw = await kv.get('layout:' + id), meta = (await listMine()).find(x => x.id === id); if (!raw || !meta) return toast('Could not open that layout', '⚠️');
     if (asNew) { await C.newDocument({ w: meta.w, h: meta.h, dpi: meta.dpi, guide: 'paper', layoutJson: raw, name: meta.name }); toast('Layout loaded', 'printer'); return; }
-    if (canvas.getObjects().length && !confirm('Replace this page with your saved layout?')) return;
-    const d = C.parseSnap(raw); C.history.busy = true; C.setSize(d.W, d.H, false, 'paper', d.dpi);
-    canvas.loadFromJSON(d.canvas, () => { C.history.busy = false; canvas.renderAll(); C.commit(); toast('Layout applied', 'printer'); });
+    const had = canvas.getObjects().length; const d = C.parseSnap(raw); C.history.busy = true; C.setSize(d.W, d.H, false, 'paper', d.dpi);
+    canvas.loadFromJSON(d.canvas, () => { C.history.busy = false; canvas.renderAll(); C.commit(); toast('Layout applied', 'printer', had ? { label: 'Undo', fn: C.undo } : undefined); });
   }
-  async function deleteMine(id) { if (!confirm('Delete this saved layout?')) return; await kv.del('layout:' + id); await kv.set('layoutIndex', (await listMine()).filter(x => x.id !== id)); document.dispatchEvent(new CustomEvent('chitra:layouts')); renderMine(); }
+  async function deleteMine(id) { if (!(await C.ask('Delete this saved layout?', 'This cannot be undone.', 'Delete'))) return; await kv.del('layout:' + id); await kv.set('layoutIndex', (await listMine()).filter(x => x.id !== id)); document.dispatchEvent(new CustomEvent('chitra:layouts')); renderMine(); }
   $('#layoutSave').onclick = () => { $('#layoutName').value = ''; $('#layoutModal').hidden = false; $('#layoutName').focus(); };
   $('#layoutGo').onclick = async () => { const n = $('#layoutName').value.trim() || 'My layout'; $('#layoutModal').hidden = true; await saveLayout(n, $('#layoutKeepImg').checked); toast(`“${n}” saved to My layouts`, '💾'); };
 

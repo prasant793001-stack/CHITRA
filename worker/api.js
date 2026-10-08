@@ -1,13 +1,18 @@
 /* Chitra Studio – account, cloud-save and billing API (Cloudflare Worker + KV).
    Bindings: KV namespace  DATA.   Secrets/vars: SESSION_SECRET, ALLOWED_ORIGIN, RESEND_KEY, MAIL_FROM,
-   STRIPE_KEY, STRIPE_WEBHOOK_SECRET, PRICE_PRO, PRICE_BIZ, APP_URL.  (see docs/BACKEND.md)  */
+   STRIPE_KEY, STRIPE_WEBHOOK_SECRET, PRICE_MONTH ($6.99/mo), PRICE_YEAR ($69/yr), GOOGLE_CLIENT_ID, APP_URL.  (see docs/BACKEND.md)  */
 const enc = new TextEncoder(), dec = new TextDecoder();
 const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
 const hmac = async (secret, data) => crypto.subtle.sign('HMAC', await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']), enc.encode(data));
 const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
 const FREE_LIMIT = 5, MAX_BODY = 20 * 1024 * 1024;
-const PLAN_LIMITS = { free: FREE_LIMIT, pro: 1000, biz: 5000 };
+const PLAN_LIMITS = { free: FREE_LIMIT, trial: 1000, pro: 1000, biz: 5000 };
+const TRIAL_DAYS = 7;
+/* the plan a user effectively has right now: paid > automatic 7-day trial > free */
+const effPlan = u => (u.plan === 'pro' || u.plan === 'biz') ? u.plan : (u.trialEnds && u.trialEnds > Date.now() ? 'trial' : 'free');
+const planInfo = u => ({ plan: effPlan(u), trialEndsAt: effPlan(u) === 'trial' ? u.trialEnds : null, trialUsed: !!u.trialEnds, interval: u.interval || null });
+async function signInUser(env, email) { const u = await getUser(env, email); if (!u.trialEnds) u.trialEnds = Date.now() + TRIAL_DAYS * 864e5; await putUser(env, email, u); return { token: await makeToken(env, email), email, ...planInfo(u) }; } // first ever sign-in starts the free trial automatically (no card)
 
 const cors = env => ({ 'access-control-allow-origin': env.ALLOWED_ORIGIN || '*', 'access-control-allow-headers': 'authorization,content-type', 'access-control-allow-methods': 'GET,PUT,POST,DELETE,OPTIONS', 'vary': 'origin' });
 const json = (env, o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', ...cors(env) } });
@@ -49,6 +54,9 @@ export default {
         const raw = await req.text(); if (!(await stripeVerify(env, req, raw))) return json(env, { error: 'bad signature' }, 400);
         const ev = JSON.parse(raw), o = ev.data?.object || {};
         if (ev.type === 'checkout.session.completed') { const email = (o.client_reference_id || o.customer_details?.email || '').toLowerCase(), plan = o.metadata?.plan === 'biz' ? 'biz' : 'pro'; if (email) { const u = await getUser(env, email); await putUser(env, email, { ...u, plan, customer: o.customer }); if (o.customer) await env.DATA.put(`cust:${o.customer}`, email); } }
+        if (ev.type === 'customer.subscription.updated') { // cancelled, unpaid or reactivated from Stripe's own portal
+          const email = await env.DATA.get(`cust:${o.customer}`); if (email) { const u = await getUser(env, email), on = ['active', 'trialing', 'past_due'].includes(o.status); await putUser(env, email, { ...u, plan: on ? 'pro' : 'free', interval: o.items?.data?.[0]?.price?.recurring?.interval === 'year' ? 'year' : (u.interval || 'month') }); }
+        }
         if (ev.type === 'customer.subscription.deleted') { const email = await env.DATA.get(`cust:${o.customer}`); if (email) { const u = await getUser(env, email); await putUser(env, email, { ...u, plan: 'free' }); } }
         return json(env, { received: true });
       }
@@ -89,12 +97,21 @@ export default {
         if (!rec) return json(env, { error: 'Code expired — request a new one' }, 400);
         if (rec.tries >= 5) { await env.DATA.delete(`code:${e}`); return json(env, { error: 'Too many wrong codes' }, 429); }
         if (!safeEq(rec.h, hex(await hmac(env.SESSION_SECRET, code + e)))) { await env.DATA.put(`code:${e}`, JSON.stringify({ ...rec, tries: rec.tries + 1 }), { expirationTtl: 600 }); return json(env, { error: 'That code is not right' }, 400); }
-        await env.DATA.delete(`code:${e}`); const u = await getUser(env, e); await putUser(env, e, u); return json(env, { token: await makeToken(env, e), email: e, plan: u.plan });
+        await env.DATA.delete(`code:${e}`); return json(env, await signInUser(env, e));
+      }
+
+      /* ---- sign in with Google (free, one tap): the browser sends Google's ID token, we verify it with Google ---- */
+      if (path === '/auth/google' && req.method === 'POST') {
+        if (!env.GOOGLE_CLIENT_ID) return json(env, { error: 'Google sign-in is not configured yet' }, 503);
+        const { credential } = await req.json().catch(() => ({})); if (typeof credential !== 'string' || credential.length > 4000) return json(env, { error: 'bad token' }, 400);
+        const r = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(credential)), g = await r.json().catch(() => ({}));
+        if (!r.ok || g.aud !== env.GOOGLE_CLIENT_ID || String(g.email_verified) !== 'true' || !validEmail(g.email)) return json(env, { error: 'Google sign-in failed' }, 401);
+        return json(env, await signInUser(env, g.email.toLowerCase()));
       }
 
       /* ---- everything below needs a signed-in user ---- */
       const email = await readToken(env, req); if (!email) return json(env, { error: 'Sign in required' }, 401);
-      if (path === '/me') { const u = await getUser(env, email); return json(env, { email, plan: u.plan }); }
+      if (path === '/me') { const u = await getUser(env, email); return json(env, { email, ...planInfo(u) }); }
 
       if (path === '/projects' && req.method === 'GET') { const l = await env.DATA.list({ prefix: `p:${email}:` }); return json(env, { items: await Promise.all(l.keys.map(async k => ({ id: k.name.split(':').pop(), ...(await env.DATA.get(`m:${k.name.slice(2)}`, { type: 'json' })) }))) }); }
       const pm = /^\/projects\/([^/]+)$/.exec(path);
@@ -105,7 +122,7 @@ export default {
         if (req.method === 'PUT') {
           const len = +req.headers.get('content-length') || 0; if (len > MAX_BODY) return json(env, { error: 'Design too large' }, 413);
           const body = await req.text(); if (body.length > MAX_BODY) return json(env, { error: 'Design too large' }, 413);
-          const exists = await env.DATA.get(key, { type: 'stream' }); if (!exists) { const u = await getUser(env, email), n = (await env.DATA.list({ prefix: `p:${email}:` })).keys.length; if (n >= (PLAN_LIMITS[u.plan] ?? FREE_LIMIT)) return json(env, { error: `Your plan allows ${PLAN_LIMITS[u.plan] ?? FREE_LIMIT} saved designs — upgrade for more` }, 402); }
+          const exists = await env.DATA.get(key, { type: 'stream' }); if (!exists) { const u = await getUser(env, email), n = (await env.DATA.list({ prefix: `p:${email}:` })).keys.length; if (n >= (PLAN_LIMITS[effPlan(u)] ?? FREE_LIMIT)) return json(env, { error: `Your plan allows ${PLAN_LIMITS[effPlan(u)] ?? FREE_LIMIT} saved designs — upgrade for more` }, 402); }
           let meta = {}; try { const o = JSON.parse(body); meta = { name: String(o.name || 'Untitled').slice(0, 80), updated: Date.now() }; } catch { return json(env, { error: 'bad json' }, 400); }
           await env.DATA.put(key, body); await env.DATA.put(`m:${email}:${id}`, JSON.stringify(meta)); return json(env, { ok: true, ...meta });
         }
@@ -119,8 +136,13 @@ export default {
         return json(env, { id });
       }
       if (path === '/billing/checkout' && req.method === 'POST') {
-        const { plan } = await req.json().catch(() => ({})), price = plan === 'biz' ? env.PRICE_BIZ : env.PRICE_PRO; if (!env.STRIPE_KEY || !price) return json(env, { error: 'Billing is not configured yet' }, 503);
-        const r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { authorization: `Bearer ${env.STRIPE_KEY}`, 'content-type': 'application/x-www-form-urlencoded' }, body: form({ mode: 'subscription', 'line_items[0][price]': price, 'line_items[0][quantity]': 1, success_url: `${env.APP_URL}?paid=1`, cancel_url: `${env.APP_URL}?paid=0`, client_reference_id: email, customer_email: email, 'metadata[plan]': plan === 'biz' ? 'biz' : 'pro', allow_promotion_codes: 'true' }) });
+        const { plan } = await req.json().catch(() => ({})), price = plan === 'year' ? env.PRICE_YEAR : (env.PRICE_MONTH || env.PRICE_PRO); if (!env.STRIPE_KEY || !price) return json(env, { error: 'Billing is not configured yet' }, 503);
+        const r = await fetch('https://api.stripe.com/v1/checkout/sessions', { method: 'POST', headers: { authorization: `Bearer ${env.STRIPE_KEY}`, 'content-type': 'application/x-www-form-urlencoded' }, body: form({ mode: 'subscription', 'line_items[0][price]': price, 'line_items[0][quantity]': 1, success_url: `${env.APP_URL}?paid=1`, cancel_url: `${env.APP_URL}?paid=0`, client_reference_id: email, customer_email: email, 'metadata[plan]': plan === 'year' ? 'year' : 'month', allow_promotion_codes: 'true' }) });
+        const s = await r.json(); return r.ok ? json(env, { url: s.url }) : json(env, { error: s.error?.message || 'Stripe error' }, 502);
+      }
+      if (path === '/billing/portal' && req.method === 'POST') { // Stripe's hosted page: update card, switch monthly/yearly, cancel
+        const u = await getUser(env, email); if (!env.STRIPE_KEY || !u.customer) return json(env, { error: 'No active subscription to manage' }, 404);
+        const r = await fetch('https://api.stripe.com/v1/billing_portal/sessions', { method: 'POST', headers: { authorization: `Bearer ${env.STRIPE_KEY}`, 'content-type': 'application/x-www-form-urlencoded' }, body: form({ customer: u.customer, return_url: env.APP_URL }) });
         const s = await r.json(); return r.ok ? json(env, { url: s.url }) : json(env, { error: s.error?.message || 'Stripe error' }, 502);
       }
       return json(env, { error: 'not found' }, 404);

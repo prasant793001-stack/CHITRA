@@ -56,19 +56,19 @@
     K.clearAll(P.bg);
     if (lay === 'hero') { // full-bleed scene, headline top, button bottom
       mock(0, 0, W, H); R(0, 0, W, H * 0.3, new fab.Gradient({ type: 'linear', gradientUnits: 'pixels', coords: { x1: 0, y1: 0, x2: 0, y2: H * 0.3 }, colorStops: [{ offset: 0, color: 'rgba(0,0,0,.45)' }, { offset: 1, color: 'rgba(0,0,0,0)' }] }));
-      T(h1.toUpperCase(), m, m, W - 2 * m, k * 0.095, { fill: '#ffffff', shadow: new fab.Shadow({ color: 'rgba(0,0,0,.35)', blur: k * 0.02 }) }); T(sub, m, m + k * 0.115, W - 2 * m, k * 0.032, { body: 1, fill: '#ffffff' });
+      const hd = T(h1.toUpperCase(), m, m, W - 2 * m, k * 0.095, { fill: '#ffffff', shadow: new fab.Shadow({ color: 'rgba(0,0,0,.35)', blur: k * 0.02 }) }); T(sub, m, hd.top + hd.height + k * 0.015, W - 2 * m, k * 0.032, { body: 1, fill: '#ffffff' });
       pill(m, H - m - k * 0.1, 'Order now', P.a, onCol(P.a), k * 0.032);
     } else if (lay === 'split') { // photo on top, colour block with copy below
       const ph = H * 0.66; mock(0, 0, W, ph); R(0, ph, W, H - ph, P.bg); R(m, ph + m * 0.8, k * 0.12, 6, P.a);
-      T(h1, m, ph + m * 1.2, W - 2 * m, k * 0.085); T(sub, m, ph + m * 1.2 + k * 0.105, W - 2 * m, k * 0.03, { body: 1, fill: P.ink, opacity: 0.8 }); pill(m, H - m - k * 0.075, 'Shop the collection', P.a, onCol(P.a), k * 0.026);
+      const hd = T(h1, m, ph + m * 1.2, W - 2 * m, k * 0.085); T(sub, m, hd.top + hd.height + k * 0.015, W - 2 * m, k * 0.03, { body: 1, fill: P.ink, opacity: 0.8 }); pill(m, H - m - k * 0.075, 'Shop the collection', P.a, onCol(P.a), k * 0.026);
     } else if (lay === 'banner') { // copy left, product right
       const pw = W * 0.52; R(0, 0, W, H, P.bg); mock(W - pw, 0, pw, H); R(W - pw - 4, 0, 4, H, P.a);
-      T(h1.toUpperCase(), m, H * 0.2, W - pw - 2 * m, k * 0.13, { fill: P.ink }); T(sub, m, H * 0.2 + k * 0.28, W - pw - 2 * m, k * 0.045, { body: 1, fill: P.ink, opacity: 0.8 }); pill(m, H - m * 1.8 - k * 0.06, 'Order today', P.a, onCol(P.a), k * 0.045);
+      const hd = T(h1.toUpperCase(), m, H * 0.16, W - pw - 2 * m, k * 0.11, { fill: P.ink }); T(sub, m, hd.top + hd.height + k * 0.025, W - pw - 2 * m, k * 0.04, { body: 1, fill: P.ink, opacity: 0.8 }); pill(m, H - m * 1.8 - k * 0.06, 'Order today', P.a, onCol(P.a), k * 0.045);
     } else if (lay === 'frame') { // framed card on colour field
       R(0, 0, W, H, P.bg); const f = k * 0.08, s = W - 2 * f; mock(f, f, s, s * 0.74, { rx: k * 0.03, shadow: 1 });
-      T(h1, f, f + s * 0.74 + k * 0.05, s, k * 0.08, {}); T(sub, f, f + s * 0.74 + k * 0.15, s * 0.7, k * 0.028, { body: 1, opacity: 0.75 }); pill(W - f - 200 - k * 0.05, H - f - k * 0.085, 'Shop', P.a, onCol(P.a), k * 0.03);
+      const hd = T(h1, f, f + s * 0.74 + k * 0.04, s, k * 0.07, {}); T(sub, f, hd.top + hd.height + k * 0.012, s * 0.7, k * 0.028, { body: 1, opacity: 0.75 }); pill(W - f - 200 - k * 0.05, H - f - k * 0.085, 'Shop', P.a, onCol(P.a), k * 0.03);
     } else if (lay === 'poster') { // tall Pinterest pin: big headline over the scene
-      const ph = H * 0.62; R(0, 0, W, H, P.bg); mock(0, H - ph, W, ph); T(h1.toUpperCase(), m, m, W - 2 * m, W * 0.14, { textAlign: 'center' }); T(sub, m, m + W * 0.30, W - 2 * m, W * 0.04, { body: 1, textAlign: 'center', opacity: 0.8 });
+      const ph = H * 0.62; R(0, 0, W, H, P.bg); mock(0, H - ph, W, ph); const hd = T(h1.toUpperCase(), m, m, W - 2 * m, W * 0.13, { textAlign: 'center' }); T(sub, m, hd.top + hd.height + W * 0.02, W - 2 * m, W * 0.04, { body: 1, textAlign: 'center', opacity: 0.8 });
       pill((W - (W * 0.34)) / 2, H - ph - W * 0.06, 'Shop now', P.a, onCol(P.a), W * 0.034);
     } else { // tall story
       R(0, 0, W, H, P.bg); mock(0, H * 0.2, W, H * 0.6); T(h1.toUpperCase(), m, H * 0.06, W - 2 * m, W * 0.13, { textAlign: 'center' }); T(sub, m, H * 0.82, W - 2 * m, W * 0.045, { body: 1, textAlign: 'center', opacity: 0.8 }); pill((W - W * 0.46) / 2, H * 0.9, 'Swipe up to shop', P.a, onCol(P.a), W * 0.036);

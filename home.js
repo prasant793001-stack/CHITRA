@@ -32,7 +32,7 @@
   }
   /* Thumbnails: rendered lazily, 4 at a time (network-bound), newest-visible first, so the cards you are looking at fill in first. */
   const waiting = [], inflight = {}; let running = 0;
-  const pump = () => { while (running < 4 && waiting.length) { const job = waiting.pop(); running++; job().finally(() => { running--; pump(); }); } };
+  const pump = () => { while (running < 4 && waiting.length) { const job = waiting.pop(); running++; job().finally(() => { running--; setTimeout(pump, 24); }); } }; // the short pause between thumbnails keeps scrolling and tapping smooth on phones
   async function makeThumb(name) {
     await C.fontsReady; if (cache[name]) return cache[name]; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}:${(meta.ph || []).join(',')}`; // photo ids in the key: a rebuilt library never shows stale thumbnails
     if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return hit; } } catch { } }
@@ -61,18 +61,20 @@
   /* ================= pro gating + pricing ================= */
   function guardPro(meta) { if (CFG.gating && meta?.pro && plan() === 'free') { openPricing(); return false; } return true; }
   function openPricing() {
-    const cur = plan(), sym = CFG.currency || '$';
-    $('#planGrid').innerHTML = (CFG.plans || []).map(p => `<div class="plan${p.id === 'pro' ? ' hot' : ''}${p.id === cur ? ' cur' : ''}">
+    const raw = plan(), cur = raw === 'pro' ? ((() => { try { return localStorage.getItem('chitra.interval'); } catch { return null; } })() || 'month') : raw, sym = CFG.currency || '$', tEnd = (() => { try { return +localStorage.getItem('chitra.trialEnds') || 0; } catch { return 0; } })();
+    $('#planGrid').innerHTML = (CFG.plans || []).map(p => `<div class="plan${p.badge ? ' hot' : ''}${p.id === cur ? ' cur' : ''}">
       ${p.badge ? `<em>${esc(p.badge)}</em>` : ''}<h3>${esc(p.name)}</h3><p class="blurb">${esc(p.blurb || '')}</p>
       <div class="price"><b>${p.price ? sym + p.price : 'Free'}</b><span>${p.price ? '/ ' + esc(p.per) : esc(p.per)}</span></div>
       <ul>${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
-      <button class="${p.id === 'pro' ? 'cta' : 'btn'} wide" data-plan="${p.id}">${p.id === cur ? 'Your plan' : p.price ? 'Choose ' + esc(p.name) : 'Use Free'}</button></div>`).join('');
-    $('#planNote').textContent = CFG.checkoutUrl ? 'Secure checkout opens in a new tab.' : 'Payments are not connected yet — "Choose" saves a local preview of the plan so you can see how it will feel.';
+      <button class="${p.badge ? 'cta' : 'btn'} wide" data-plan="${p.id}">${p.id === cur ? 'Your plan' : p.price ? (raw === 'trial' || raw === 'pro' ? 'Choose ' : 'Start free trial · ') + esc(p.name) : 'Use Free'}</button></div>`).join('');
+    $('#planNote').dataset.trial = raw === 'trial' ? Math.max(0, Math.ceil((tEnd - Date.now()) / 864e5)) : '';
+    $('#planNote').textContent = raw === 'trial' ? `Your free trial has ${Math.max(0, Math.ceil((tEnd - Date.now()) / 864e5))} day(s) left — everything is unlocked. Cancel any time.` : CFG.checkoutUrl ? 'Secure checkout opens in a new tab.' : 'Billing opens at launch — choosing a plan here only previews it; nothing is charged.';
+    if (raw === 'pro' && C.cloud?.signedIn) { const mb = Object.assign(document.createElement('button'), { className: 'btn wide', textContent: 'Manage subscription (card, switch plan, cancel)', style: 'grid-column:1/-1' }); mb.onclick = async () => { try { const r = await C.cloud.api('/billing/portal', { method: 'POST', body: {} }); location.href = r.url; } catch (e) { toast(e.message, ''); } }; $('#planGrid').appendChild(mb); }
     $$('#planGrid [data-plan]').forEach(b => b.onclick = () => {
       const id = b.dataset.plan;
       if (C.cloud?.enabled && id !== 'free') { C.cloud.checkout(id); return; }
       if (CFG.checkoutUrl && id !== 'free') { window.open(`${CFG.checkoutUrl}${CFG.checkoutUrl.includes('?') ? '&' : '?'}plan=${id}`, '_blank', 'noopener'); return; }
-      try { localStorage.setItem('chitra.plan', id); } catch { } toast(`${id === 'free' ? 'Free' : id === 'pro' ? 'Pro' : 'Business'} plan preview on`, '💎'); confetti(); openPricing();
+      try { localStorage.setItem('chitra.plan', id === 'free' ? 'free' : 'pro'); localStorage.setItem('chitra.interval', id); } catch { } toast(`${id === 'free' ? 'Free' : 'Pro'} plan preview on`, '💎'); confetti(); openPricing();
     });
     $('#pricing').hidden = false;
   }
@@ -126,7 +128,7 @@
       if (a === 'open') C.openProject(id);
       if (a === 'rename') { const cur = (await C.store.list()).find(x => x.id === id); const n = prompt('Rename design', cur?.name || ''); if (n) { await C.store.rename(id, n); renderRecent(); } }
       if (a === 'dup') { await C.store.duplicate(id); toast('Design duplicated', '⧉'); renderRecent(); }
-      if (a === 'del' && confirm('Delete this design? This cannot be undone.')) { await C.store.remove(id); renderRecent(); }
+      if (a === 'del' && await C.ask('Delete this design?', 'This cannot be undone.', 'Delete design')) { await C.store.remove(id); renderRecent(); }
     };
   }
   document.addEventListener('click', e => { if (!e.target.closest('.cardmenu') && !e.target.closest('[data-menu]')) $('.cardmenu')?.remove(); });
