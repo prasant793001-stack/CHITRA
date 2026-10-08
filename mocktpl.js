@@ -84,6 +84,7 @@
     TEMPLATES[id] = () => draw(spec);
   } }));
 
+  C.mockPicture = (kind, scene, color, i, P, fonts) => mockCanvas({ kind, scene, color, art: i }, { ink: '#111', a: '#6d4aff', b: '#ffb703', ...P }, fonts); // used by hand-made template specs (layer type "mock")
   { const old = { ...C.CAT_LABEL }; Object.keys(C.CAT_LABEL).forEach(k => delete C.CAT_LABEL[k]); Object.assign(C.CAT_LABEL, { mockup: 'Mock templates' }, old); } // first tab
   C.TPL_VERSION = C.TPL_VERSION + 'm1';
 

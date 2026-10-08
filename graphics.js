@@ -74,6 +74,8 @@
     draw(); const hook = v => { q = v.trim().toLowerCase(); shown = 60; draw(); }; C.__gxHook = hook; return hook;
   };
   C.GRAPHICS_COUNT = ALL.length;
+  C.GRAPHIC_NAMES = G.map(g => g[0]);
+  C.graphicSvg = (name, pal) => { const g = G.find(x => x[0] === name); if (!g) return null; const r = g[3](pal && pal.length >= 3 ? pal : PAL[0], rng(7)); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${r.vb[0]} ${r.vb[1]}" width="${r.vb[0]}" height="${r.vb[1]}">${r.body}</svg>`, vb: r.vb }; }; // used by hand-made template specs
 
   /* ---- Premium colour graphics: Microsoft Fluent Emoji 3D/flat (MIT), Google Noto (Apache-2.0), Circle Flags (MIT), Flat Color Icons (MIT), served by the free Iconify API ---- */
   const API = 'https://api.iconify.design', SETS = { graphics: 'fluent-emoji,fluent-emoji-flat,noto,flat-color-icons', stickers: 'fluent-emoji,noto,fluent-emoji-flat', flags: 'circle-flags,noto' };

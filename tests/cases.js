@@ -180,12 +180,18 @@ module.exports = [
     await p.evaluate(() => document.getElementById('pmAdd').click()); await p.waitForTimeout(1200);
     ok('Add to my design places the mockup picture on the page', await p.evaluate(n => chitra.canvas.getObjects().length === n + 1 && document.getElementById('pmStudio').hidden, n0));
   } },
+  { name: 'hand-made template specs (JSON builder)', only: 'desktop', run: async (p, ok) => {
+    const r = await p.evaluate(async () => { const hand = Object.keys(chitra.TEMPLATE_META).filter(id => chitra.TEMPLATE_META[id].hand); const id = hand[0]; if (!id) return { n: 0 };
+      await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName(chitra.TEMPLATE_META[id].p), template: id }); await new Promise(r => setTimeout(r, 800));
+      return { n: hand.length, objs: chitra.canvas.getObjects().length, first: chitra.listTemplates({})[0], isHand: !!chitra.TEMPLATE_META[chitra.listTemplates({})[0]].hand, cat: chitra.TEMPLATE_META[id].cat }; });
+    ok('hand-made templates are registered', r.n >= 8, r.n); ok('a hand-made template opens with layered content', r.objs >= 6, r.objs); ok('hand-made templates are listed first', r.isHand, r.first);
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
     const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('fixture catalog yields only topic-matched photographic templates (unique, not repeated)', n >= 15 && n <= 36 * 2.6, n);
-    const first = await q.evaluate(() => chitra.listTemplates({}).slice(0, 12).map(id => !!chitra.TEMPLATE_META[id].real)); ok('photographic designs are listed first', first.slice(0, 8).every(Boolean), first.join());
-    const cats = await q.evaluate(() => new Set(chitra.listTemplates({}).slice(0, 12).map(id => chitra.TEMPLATE_META[id].cat)).size); ok('"All" mixes categories', cats >= 6, cats);
+    const first = await q.evaluate(() => chitra.listTemplates({}).filter(id => !chitra.TEMPLATE_META[id].hand).slice(0, 12).map(id => !!chitra.TEMPLATE_META[id].real)); ok('photographic designs are listed first', first.slice(0, 8).every(Boolean), first.join());
+    const cats = await q.evaluate(() => new Set(chitra.listTemplates({}).filter(id => !chitra.TEMPLATE_META[id].hand).slice(0, 12).map(id => chitra.TEMPLATE_META[id].cat)).size); ok('"All" mixes categories', cats >= 6, cats);
     await q.evaluate(async () => { const id = chitra.listTemplates({}).find(i => chitra.TEMPLATE_META[i].real); await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1200);
     const r = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, credit: im?.credit?.by, text: chitra.canvas.getObjects().some(o => /textbox/.test(o.type)) }; }); ok('real template opens with a photo + live text', r.img && r.text && r.credit === 'Test Photographer', JSON.stringify(r));
     ok('credits file lists the photographer', (await q.evaluate(() => chitra.collectCredits().map(c => c.by))).includes('Test Photographer'));
@@ -201,7 +207,7 @@ module.exports = [
     await q.goto('http://localhost:8123/?nosplash&livetopics=14&livedelay=0'); ok('plaintext keys are detected', await q.evaluate(() => chitra.vault.state()) === 'plain');
     await q.waitForFunction(() => Object.values(chitra.TEMPLATE_META).some(m => m.real), null, { timeout: 40000 }).catch(() => { });
     const n = await q.evaluate(() => Object.values(chitra.TEMPLATE_META).filter(m => m.real).length); ok('library built from live search -> photographic templates (topic-matched only)', n >= 8, n);
-    await q.evaluate(async () => { const id = chitra.listTemplates({})[0]; await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1000);
+    await q.evaluate(async () => { const id = chitra.listTemplates({}).find(i => chitra.TEMPLATE_META[i].real); await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1000);
     const r1 = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, by: im?.credit?.by, site: im?.credit?.site }; }); ok('live template carries a photo with credit', r1.img && r1.by === 'Mock Photographer' && r1.site === 'Pixabay', JSON.stringify(r1));
     const cached = await q.evaluate(async () => (await chitra.kv.get('ibindex'))?.length || 0); ok('photos are cached on the device after first use', cached > 0, cached);
     await q.evaluate(() => chitra.vault.save({ pixabay: 'PLAINKEY-123', unsplash: 'UNS-KEY-9' }, 'secret1', false));
