@@ -296,4 +296,34 @@ module.exports = [
     await p.evaluate(async () => { const i = new Image(); i.src = 'tests/fixtures/photos/f03.jpg'; await new Promise(r => { i.onload = r; }); document.querySelector('#mkGrid [data-k=photo]').click(); const f = await (await fetch('tests/fixtures/photos/f03.jpg')).blob(); const dt = new DataTransfer(); dt.items.add(new File([f], 'p.jpg', { type: 'image/jpeg' })); const inp = document.querySelector('#mkFile'); inp.files = dt.files; inp.dispatchEvent(new Event('change')); }); await p.waitForTimeout(800);
     ok('own product photo mode works', await p.evaluate(() => !document.querySelector('#mkPhotoBox').hidden));
     await p.evaluate(() => document.querySelectorAll('.modal').forEach(m => m.hidden = true)); } },
+  { name: 'background removal never freezes the window (web worker)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    // a stand-in model that blocks its thread for 2 s: on the page thread that froze the app; in the worker the page keeps ticking
+    const FAKE = 'export default async function rb(blob, o) { const t = Date.now(); while (Date.now() - t < 2000) {} const bm = await createImageBitmap(blob), c = new OffscreenCanvas(bm.width, bm.height), g = c.getContext("2d"); g.drawImage(bm, 0, 0); const d = g.getImageData(0, 0, c.width, c.height); for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) d.data[(y * c.width + x) * 4 + 3] = Math.hypot(x - c.width / 2, y - c.height / 2) < c.width / 4 ? 255 : 0; g.putImageData(d, 0, 0); return c.convertToBlob({ type: "image/png" }); }';
+    await ctx.route(/cdn\.jsdelivr\.net\/npm\/@imgly/, r => r.fulfill({ status: 200, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' }, body: FAKE }));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(400);
+    await p.evaluate(() => new Promise(r => { const c = document.createElement('canvas'); c.width = 500; c.height = 400; const x = c.getContext('2d'); for (let i = 0; i < 500; i += 20) { x.fillStyle = `hsl(${i},70%,50%)`; x.fillRect(i, 0, 20, 400); } fabric.Image.fromURL(c.toDataURL('image/jpeg', 0.9), i => { i.scaleToWidth(700); chitra.place(i); r(); }); })); await p.waitForTimeout(300);
+    const r = await p.evaluate(async () => { let ticks = 0; const iv = setInterval(() => ticks++, 50); await chitra.removeBg(chitra.active(), { forceAI: true }); clearInterval(iv); const o = chitra.active(), e = o.getElement(), c = document.createElement('canvas'); c.width = e.naturalWidth || e.width; c.height = e.naturalHeight || e.height; const g = c.getContext('2d'); g.drawImage(e, 0, 0); return { ticks, corner: g.getImageData(2, 2, 1, 1).data[3], centre: g.getImageData(c.width / 2, c.height / 2, 1, 1).data[3] }; });
+    ok('the page keeps responding while the AI cuts out (2 passes x 2 s)', r.ticks >= 40, JSON.stringify(r));
+    ok('the worker result is applied (background gone, subject kept)', r.corner === 0 && r.centre === 255, JSON.stringify(r));
+    await ctx.unroute(/cdn\.jsdelivr\.net\/npm\/@imgly/);
+  } },
+  { name: 'desktop app routes Remove BG and Enhance to its AI engine', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const p2 = await ctx.newPage(); await p2.addInitScript(() => { // the bridge preload.js exposes in the Windows app, answered here by a stand-in
+      window.__aiCalls = [];
+      window.chitraDesktop = { isDesktop: true, ai: {
+        removeBackground: async (img, o, prog) => { window.__aiCalls.push(['bg', img.width, img.height]); prog && prog({ stage: 'Finding the subject on GPU (DirectML)…', pct: 10 }); const d = new Uint8ClampedArray(img.data); for (let y = 0; y < img.height; y++) for (let x = 0; x < img.width; x++) if (x < img.width / 2) d[(y * img.width + x) * 4 + 3] = 0; return { width: img.width, height: img.height, data: d, coverage: 0.5, device: 'GPU (DirectML)', ms: 800 }; },
+        upscale: async img => { window.__aiCalls.push(['up', img.width, img.height]); const W = img.width * 4, H = img.height * 4, d = new Uint8ClampedArray(W * H * 4).fill(200); return { width: W, height: H, data: d, device: 'GPU (DirectML)', ms: 1200 }; },
+      } };
+    });
+    await p2.goto((process.env.BASE || 'http://localhost:8123/') + '?nosplash'); await p2.waitForTimeout(1500);
+    await p2.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p2.waitForTimeout(400);
+    await p2.evaluate(() => new Promise(r => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const x = c.getContext('2d'), d = x.createImageData(400, 300); for (let i = 0; i < d.data.length; i += 4) { const n = (Math.random() * 120) | 0; d.data[i] = 60 + n; d.data[i + 1] = 120 + n / 2; d.data[i + 2] = 40 + n; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); x.fillStyle = '#c23'; x.beginPath(); x.arc(200, 150, 90, 0, 7); x.fill(); /* a subject on a textured, photo-like background */ fabric.Image.fromURL(c.toDataURL('image/jpeg', 0.9), i => { i.scaleToWidth(600); chitra.place(i); r(); }); })); await p2.waitForTimeout(300);
+    const bg = await p2.evaluate(async () => { await chitra.removeBg(chitra.active()); const o = chitra.active(), e = o.getElement(), c = document.createElement('canvas'); c.width = e.naturalWidth || e.width; c.height = e.naturalHeight || e.height; const g = c.getContext('2d'); g.drawImage(e, 0, 0); return { calls: window.__aiCalls.slice(), left: g.getImageData(5, c.height / 2, 1, 1).data[3], right: g.getImageData(c.width - 5, c.height / 2, 1, 1).data[3], toast: [...document.querySelectorAll('.toast .tm')].map(t => t.textContent).pop() }; });
+    ok('Remove BG uses the desktop AI and places its result', bg.calls[0]?.[0] === 'bg' && bg.left === 0 && bg.right === 255, JSON.stringify(bg));
+    ok('the result says which device did the work', /GPU \(DirectML\)/.test(bg.toast || ''), bg.toast);
+    const before = await p2.evaluate(() => chitra.active().width);
+    const up = await p2.evaluate(async () => { await chitra.enhance(chitra.active()); return { calls: window.__aiCalls.slice(), w: chitra.active().width, toast: [...document.querySelectorAll('.toast .tm')].map(t => t.textContent).pop() }; });
+    ok('Enhance uses the desktop AI upscaler (4x pixels, same size on the page)', up.calls.at(-1)?.[0] === 'up' && up.w === before * 4, JSON.stringify({ before, ...up }));
+    await p2.close();
+  } },
 ];

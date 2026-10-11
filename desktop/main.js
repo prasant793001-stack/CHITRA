@@ -79,6 +79,7 @@ function createWindow() {
 app.on('child-process-gone', (_e, d) => { log('child-process-gone', d); if (d.type === 'GPU' && GPU && d.reason !== 'clean-exit') setGpu(false); });
 
 app.whenReady().then(() => {
+  try { require('./ai/engine.js').setup(log); } catch (e) { log('AI engine unavailable', e); }
   log('ready; gpu:', app.getGPUFeatureStatus ? app.getGPUFeatureStatus() : 'n/a');
   serveApp();
   // exports (PNG, PDF, ZIP) ask where to save, starting in Pictures, like any Windows design app
