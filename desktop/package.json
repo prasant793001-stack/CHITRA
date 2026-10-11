@@ -63,7 +63,8 @@
         "from": "models",
         "to": "models",
         "filter": [
-          "realesrgan_x4plus.onnx"
+          "*.onnx",
+          "LICENSE-*"
         ]
       }
     ]

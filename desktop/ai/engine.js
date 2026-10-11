@@ -1,15 +1,16 @@
 /* Chitra AI engine — main-process side. Starts the AI worker in its own process, gets the models in place, and answers the window.
  *
- * Models (official files, checked by SHA-256 before use):
- *  - realesrgan_x4plus.onnx: shipped inside the installer (67 MB), converted from the official Real-ESRGAN release by tools/convert-realesrgan.py.
- *  - birefnet_general.onnx: 973 MB, downloaded once on first use from the BiRefNet authors' GitHub release, then kept in
- *    %APPDATA%\Chitra Studio\models. Nothing else is ever sent or fetched. */
+ * Models (checked by SHA-256 before use), downloaded once on first use and kept in %APPDATA%\Chitra Studio\models
+ * (a copy shipped with the installer is used instead when present). Nothing else is ever sent or fetched:
+ *  - birefnet_general.onnx, 973 MB: the BiRefNet authors' official GitHub release (MIT).
+ *  - realesrgan_x4plus.onnx, 67 MB: converted from the official Real-ESRGAN weights (BSD-3), from this project's repository. */
 const { app, utilityProcess, ipcMain, net } = require('electron');
 const path = require('node:path'), fs = require('node:fs'), crypto = require('node:crypto');
 
 const MODELS = {
   'birefnet_general.onnx': { url: 'https://github.com/ZhengPeng7/BiRefNet/releases/download/v1/BiRefNet-general-epoch_244.onnx', sha256: '58f621f00f5d756097615970a88a791584600dcf7c45b18a0a6267535a1ebd3c', bytes: 972666916, label: 'background remover AI' },
-  'realesrgan_x4plus.onnx': { bundled: true, sha256: '44dbcca6c91af21435e787e768528b44427693fabe54912c30d358db92f2f61d', bytes: 66901260, label: 'upscaler AI' },
+  // converted from the official Real-ESRGAN weights (BSD-3, tools/convert-realesrgan.py); pinned to the commit that added it, so the file can never change underneath
+  'realesrgan_x4plus.onnx': { url: 'https://github.com/prasant793001-stack/CHITRA/raw/a1bfcefa4439ee5f2d295931cbc87c5241182570/desktop/models/realesrgan_x4plus.onnx', sha256: '44dbcca6c91af21435e787e768528b44427693fabe54912c30d358db92f2f61d', bytes: 66901260, label: 'upscaler AI' },
 };
 
 let log = () => { }, child = null, seq = 0; const pending = new Map();
@@ -22,8 +23,9 @@ function sha256(file) { return new Promise((res, rej) => { const h = crypto.crea
 async function ensureModel(name, onProgress) {
   const m = MODELS[name], dir = userModels(), dest = path.join(dir, name); fs.mkdirSync(dir, { recursive: true });
   if (fs.existsSync(dest) && fs.statSync(dest).size === m.bytes) return dest; // size check every time, full hash on arrival
-  if (m.bundled) {
-    const src = path.join(bundledModels(), name); if (!fs.existsSync(src)) throw new Error(`The ${m.label} is missing from this install. Please reinstall Chitra Studio.`);
+  const shipped = path.join(bundledModels(), name);
+  if (fs.existsSync(shipped)) { // a copy that came with the installer: use it, no download
+    const src = shipped;
     fs.copyFileSync(src, dest + '.part'); if ((await sha256(dest + '.part')) !== m.sha256) { fs.rmSync(dest + '.part', { force: true }); throw new Error(`The ${m.label} file is damaged. Please reinstall Chitra Studio.`); }
     fs.renameSync(dest + '.part', dest); return dest;
   }
