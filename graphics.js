@@ -178,6 +178,6 @@
   };
   const tabsHtml = cur => `<div class="gx-tabs"><button data-m="a" class="${cur === 'a' ? 'on' : ''}">Premium art</button><button data-m="p" class="${cur === 'p' ? 'on' : ''}">Icons &amp; stickers</button><button data-m="b" class="${cur === 'b' ? 'on' : ''}">Basic shapes</button></div>`;
   const bindTabs = (view, fallback) => { $$('.gx-tabs [data-m]', view).forEach(b => { if (b.classList.contains('on')) return; b.onclick = () => { const m = b.dataset.m; C.__gxHook = null; if (m === 'a') C.artView(view, fallback); else if (m === 'p') C.premiumView(view, 'graphics', null, fallback); else builtinView(view, fallback); }; }); };
-  C.graphicsView = (view, fallback) => { const h = C.artView(view, fallback); return v => C.__gxHook && C.__gxHook(v); void h; };
+  C.graphicsView = (view, fallback) => { C.artView(view, fallback); return v => C.__gxHook && C.__gxHook(v); };
 
 })();
