@@ -268,6 +268,35 @@ module.exports = [
     ok('clicking a premium piece places a crisp image', await p.evaluate(() => { const o = chitra.canvas.getObjects(); return o.length === 1 && o[0].type === 'image' && o[0].width >= 1000; }));
     await p.evaluate(() => document.querySelector('#arPal [data-i="1"]').click()); await p.waitForTimeout(500); ok('colourways switch', await p.locator('#arPal .ar-sw.on').count() === 1);
   } },
+  { name: 'owner-only integrations (bridge + waiting for ComfyUI)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const fs = require('fs'), os = require('os'), path = require('path'), { spawn } = require('child_process'), dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bridge-'));
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'); fs.writeFileSync(path.join(dir, 'pizza-board-1.png'), png); fs.writeFileSync(path.join(dir, 'sunset.png'), png);
+    await p.evaluate(() => { chitra.vault.wipe(); }); await p.waitForTimeout(200);
+    ok('integrations are hidden for visitors', await p.evaluate(() => !document.documentElement.hasAttribute('data-owner') && getComputedStyle(document.getElementById('uplFolder')).display === 'none'));
+    const srv = spawn('node', ['tools/local-bridge/server.mjs'], { env: { ...process.env, BRIDGE_CONFIG: JSON.stringify({ port: 8799, folder: dir, allowOrigins: ['http://localhost:8123'] }) }, stdio: 'ignore' }); await new Promise(r => setTimeout(r, 1200));
+    try {
+      await ctx.route('https://api.openverse.org/**', r => r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ results: [{ id: 'o1', thumbnail: 'https://x/t.jpg', url: 'https://x/f.jpg', title: 'online', creator: 'z', foreign_landing_url: 'https://x' }], page_count: 1 }) }));
+      await p.evaluate(async () => { await chitra.vault.save({ bridgeUrl: 'http://127.0.0.1:8799' }, 'secret1', false); document.dispatchEvent(new Event('chitra:keys')); }); await p.waitForTimeout(300);
+      ok('owner mode shows the connected-folder tools', await p.evaluate(() => document.documentElement.hasAttribute('data-owner') && getComputedStyle(document.getElementById('uplFolder')).display !== 'none'));
+      const r = await p.evaluate(async () => { const x = await chitra.stock.search('pizza', { kind: 'photo' }); return { n: x.items.length, first: x.items[0] && x.items[0].site, t: x.items[0] && x.items[0].title }; });
+      ok('search lists your downloaded pictures first, matched by word', r.first === 'Pinterest' && /pizza/.test(r.t), JSON.stringify(r));
+      srv.kill(); await new Promise(r2 => setTimeout(r2, 400));
+      const pr = p.evaluate(async () => { const x = await chitra.stock.search('pizza', { kind: 'photo' }); return x.items.map(i => i.site); }); await p.waitForTimeout(1500);
+      ok('bridge not running -> "Please start" box with a 3-minute wait', await p.evaluate(() => { const w = document.querySelector('.wait'); return !!w && /Please start/.test(w.textContent) && /2:5\d|3:00/.test(document.getElementById('wtClock').textContent); }));
+      await p.evaluate(() => document.querySelector('.wait [data-o]').click()); const sites = await pr; ok('choosing the online option continues with online photos', sites.length >= 1 && !sites.includes('Pinterest'), JSON.stringify(sites));
+    } finally { try { srv.kill(); } catch { } await p.evaluate(() => { chitra.vault.wipe(); document.dispatchEvent(new Event('chitra:keys')); }); }
+  } },
+  { name: 'ComfyUI not running: asks the owner to start it and waits', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+    await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    await p.evaluate(async () => { chitra.vault.wipe(); await chitra.vault.save({ comfyUrl: 'http://127.0.0.1:8190' }, 'secret1', false); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(1500);
+    ok('a "Please start ComfyUI" box appears with the countdown', await p.evaluate(() => { const w = document.querySelector('.wait'); return !!w && /ComfyUI/.test(w.textContent) && /3:00|2:5\d/.test(document.getElementById('wtClock').textContent); }));
+    const n0 = await p.locator('#aiGrid [data-aih]').count(); await p.evaluate(() => document.querySelector('.wait [data-o]').click()); await p.waitForTimeout(7000);
+    ok('"use the online generator" still gives 3 new pictures', await p.locator('#aiGrid [data-aih]').count() >= Math.min(24, n0 + 3), n0);
+    await p.evaluate(() => { document.querySelector('#aiGo').click(); }); await p.waitForTimeout(800); await p.evaluate(() => document.querySelector('.wait [data-c]').click()); await p.waitForTimeout(500);
+    ok('Cancel stops without adding anything', await p.evaluate(() => !document.querySelector('.wait') && chitra.canvas.getObjects().length === 0));
+    await p.evaluate(() => chitra.vault.wipe());
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
@@ -277,7 +306,7 @@ module.exports = [
     await q.evaluate(async () => { const id = chitra.listTemplates({}).find(i => chitra.TEMPLATE_META[i].real); await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1200);
     const r = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, credit: im?.credit?.by, text: chitra.canvas.getObjects().some(o => /textbox/.test(o.type)) }; }); ok('real template opens with a photo + live text', r.img && r.text && r.credit === 'Test Photographer', JSON.stringify(r));
     ok('credits file lists the photographer', (await q.evaluate(() => chitra.collectCredits().map(c => c.by))).includes('Test Photographer'));
-    await q.waitForTimeout(2500); const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
+    for (let i = 0; i < 20; i++) { const n = await q.evaluate(() => { chitra.canvas.renderAll(); const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data, seen = new Set(); for (let k = 0; k < d.length; k += 400) seen.add((d[k] >> 5) + ',' + (d[k + 1] >> 5) + ',' + (d[k + 2] >> 5)); return seen.size; }); if (n > 12) break; await q.waitForTimeout(500); } const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
     await q.evaluate(() => chitra.showHome()); await q.waitForTimeout(500); await q.click('#hmCatTiles [data-ct=mug]'); await q.waitForTimeout(6000);
     const kinds = await q.evaluate(() => [...document.querySelectorAll('#hmTplGrid img[data-tpl].ready')].slice(0, 6).map(i => i.src.slice(0, 22))); ok('mug templates are shown on a realistic mug', kinds.length > 0 && kinds.every(k => k.startsWith('data:image/jpeg')), kinds.join(' | '));
     ok('no page errors in real-template flow', errs.length === 0, errs.join('|')); await q.close(); } },

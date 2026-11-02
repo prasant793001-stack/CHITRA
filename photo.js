@@ -238,7 +238,7 @@
         } catch (e) { job.done(); console.warn(e); toast(e.message || 'The AI could not run', '⚠️', { label: 'Retry', fn: () => removeBg(o, opt) }); return; } finally { deskBusy = false; }
       }
       if (vault.state() === 'locked') await vault.ensure();
-      if (comfy.available()) { // owner: BiRefNet on your own GPU (best quality), falls back to the in-browser model if your PC is off
+      if (comfy.available() && (await comfy.ready('Use the in-browser model instead')) === 'ok') { // owner: BiRefNet on your own GPU (best quality), falls back to the in-browser model if your PC is off
         try { job.set('Cutting out on your PC (BiRefNet)…'); const blob = await comfy.removeBg(await canvasToBlob(src)), url = await blobToDataURL(blob), cov0 = await coverageOf(url);
           if (cov0 >= 0.02) { job.done(); await replaceImage(o, url, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 80); toast('Background removed (BiRefNet)', '✂️'); return; } } catch (e) { console.warn('ComfyUI cut-out failed, using the in-browser model', e); }
       }
@@ -423,6 +423,7 @@
       });
     },
   };
+  const bridgeUrl = () => String((KEYS && KEYS.bridgeUrl) || '').replace(/\/$/, '');
   function stockConfig() {
     const CFG = window.CHITRA_CONFIG || {}, sealed = CFG.sealedKeys || {}; let own = KEYS || {}; if (!KEYS && !vaultRec()) { try { own = JSON.parse(lsGet('chitra.keys') || '{}'); } catch { } }
     const pick = n => own[n] || (sealed[n] ? unseal(sealed[n]) : '');
@@ -445,8 +446,17 @@
     async unsplash(cfg, q, page) { const j = await getJSON(`https://api.unsplash.com/search/photos?query=${enc(q)}&page=${page}&per_page=24&client_id=${enc(cfg.unsplash)}`); return { items: j.results.map(NORM.unsplash), more: page < j.total_pages }; },
     async openverse(q, page) { const j = await getJSON(`https://api.openverse.org/v1/images/?q=${enc(q)}&page=${page}&page_size=24&license_type=commercial&mature=false`); return { items: j.results.map(NORM.openverse), more: page < j.page_count }; },
   };
+  /* owner's local bridge to Creator Downloader / Pinterest (tools/local-bridge): searched together with the online libraries */
+  async function bridgeSearch(q, page) {
+    const base = bridgeUrl(); if (!base) return null; const st = await waitForLocal('your Creator Downloader bridge', base, '/health', {}, { cloudLabel: 'Use online photos instead' }); if (st !== 'ok') return null;
+    const j = await getJSON(`${base}/search?q=${enc(q)}&page=${page}`); return { items: (j.items || []).map(x => ({ id: 'lb' + x.id, thumb: x.thumb, full: x.full || x.thumb, w: x.w, h: x.h, tags: x.title || '', by: x.by || 'Pinterest (your downloader)', site: 'Pinterest', link: x.link || '', title: x.title || q })), more: !!j.more };
+  }
   async function stockSearch(q, { page = 1, kind = 'photo' } = {}) {
     if (vault.state() === 'locked') await vault.ensure();
+    if (kind === 'photo' && bridgeUrl()) { const [mine, rest] = await Promise.all([bridgeSearch(q, page).catch(e => { console.warn('bridge', e); return null; }), stockSearchOnline(q, { page, kind }).catch(() => ({ items: [], more: false }))]); if (mine && mine.items.length) return { items: [...mine.items, ...rest.items], more: mine.more || rest.more }; return rest; }
+    return stockSearchOnline(q, { page, kind });
+  }
+  async function stockSearchOnline(q, { page = 1, kind = 'photo' } = {}) {
     const cfg = stockConfig();
     if (cfg.proxy) return getJSON(`${cfg.proxy}/search?q=${enc(q)}&page=${page}&kind=${kind}`); // keys live on the server, never in the browser
     const jobs = [];
@@ -479,14 +489,14 @@
     $('#admProxy').value = lsGet('chitra.proxy') || ''; $('#admPass').value = ''; $('#admRemember').checked = !!(await C.kv.get('vaultkey').catch(() => null));
     const have = n => (KEYS && KEYS[n]) || (st === 'plain' && (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}')[n]; } catch { return ''; } })());
     [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash'], ['admComfyToken', 'comfyToken']].forEach(([id, n]) => { $('#' + id).placeholder = have(n) ? 'saved - leave empty to keep' : 'paste key'; });
-    $('#admComfyUrl').value = (KEYS && KEYS.comfyUrl) || '';
+    $('#admComfyUrl').value = (KEYS && KEYS.comfyUrl) || ''; $('#admBridgeUrl').value = (KEYS && KEYS.bridgeUrl) || '';
     const c = stockConfig(); $('#admStatus').textContent = (st === 'plain' ? 'Your keys are stored UNENCRYPTED in this browser - choose a passphrase and press Save to lock them. ' : st === 'open' || st === 'locked' ? 'Keys are encrypted on this device. ' : 'No keys saved yet. ') + 'Active: ' + ([c.proxy && 'proxy', c.pixabay && 'Pixabay', c.pexels && 'Pexels', c.unsplash && 'Unsplash'].filter(Boolean).join(', ') || 'none (keyless fallback)');
     $('#adminModal').hidden = false;
   }
   $('#admSave').onclick = async () => {
     const prev = KEYS || (() => { try { return JSON.parse(lsGet('chitra.keys') || '{}'); } catch { return {}; } })(), keys = { ...prev };
     [['admPixabay', 'pixabay'], ['admPexels', 'pexels'], ['admUnsplash', 'unsplash'], ['admComfyToken', 'comfyToken']].forEach(([id, n]) => { const v = $('#' + id).value.trim(); if (v) keys[n] = v; });
-    { const cu = $('#admComfyUrl').value.trim(); if (cu) keys.comfyUrl = cu; else delete keys.comfyUrl; }
+    { const cu = $('#admComfyUrl').value.trim(); if (cu) keys.comfyUrl = cu; else delete keys.comfyUrl; const bu = $('#admBridgeUrl').value.trim(); if (bu) keys.bridgeUrl = bu; else delete keys.bridgeUrl; }
     try { localStorage.setItem('chitra.proxy', $('#admProxy').value.trim()); } catch { }
     if (Object.keys(keys).length) {
       const pass = $('#admPass').value; if (pass.length < 6) { $('#admStatus').textContent = 'Choose a passphrase of at least 6 characters to lock your keys.'; return; }
@@ -507,9 +517,33 @@
   $$('[data-ai]').forEach(b => b.onclick = () => { aiStyle = +b.dataset.ai; $$('[data-ai]').forEach(x => x.classList.toggle('on', x === b)); });
   /* ---- owner-only local AI: your own ComfyUI (Z-Image Turbo). URL + token live in the encrypted key vault, never in the code. Food / drink prompts always use the cloud generator instead. ---- */
   const FOOD_RE = /\b(food|foods|pizza|burger|fries|pasta|noodle|noodles|ramen|sushi|taco|tacos|burrito|sandwich|salad|soup|curry|biryani|rice|bread|cake|cupcake|cookie|biscuit|donut|doughnut|pastry|dessert|chocolate|candy|sweet|sweets|ice ?cream|fruit|fruits|apple|banana|mango|berry|strawberry|vegetable|vegetables|meat|steak|chicken|fish|egg|eggs|cheese|breakfast|lunch|dinner|snack|meal|dish|plate|bowl of|coffee|tea|milkshake|smoothie|juice|cocktail|beer|wine|drink|drinks|beverage|edible|cuisine|recipe|bbq|barbecue|grill|kebab|pie|waffle|pancake|honey|jam|butter|bakery|restaurant menu)\b/i;
+  /* ---- owner-only integrations (your ComfyUI, your downloader bridge): shown and used ONLY in a browser that holds the owner's encrypted keys ---- */
+  const isOwner = () => vault.state() !== 'none';
+  const markOwner = () => { try { isOwner() ? document.documentElement.setAttribute('data-owner', '1') : document.documentElement.removeAttribute('data-owner'); } catch { } };
+  markOwner(); document.addEventListener('chitra:keys', markOwner); C.isOwner = isOwner;
+  /* a local service (ComfyUI, the downloader bridge) is not running yet: wait up to 3 minutes for the owner to start it, then carry on automatically */
+  const waiting = {};
+  function waitForLocal(name, base, path, headers, { cloudLabel = 'Use the online service instead', mins = 3 } = {}) {
+    if (waiting[name]) return waiting[name];
+    const ping = async () => { try { const ac = new AbortController(), t = setTimeout(() => ac.abort(), 3000); const r = await fetch(base + path, { headers, signal: ac.signal }); clearTimeout(t); return r.status < 500; } catch { return false; } };
+    return waiting[name] = (async () => {
+      if (await ping()) return 'ok';
+      return new Promise(res => {
+        const m = document.createElement('div'); m.className = 'modal'; m.setAttribute('role', 'alertdialog'); m.setAttribute('aria-modal', 'true');
+        m.innerHTML = `<div class="sheet small ask wait"><div class="wait-ring"><i></i></div><h2></h2><p class="tip"></p><p class="wait-clock" id="wtClock"></p><div class="ask-btns"><button class="btn" data-c>Cancel</button><button class="btn" data-o>${cloudLabel}</button></div></div>`;
+        $('h2', m).textContent = `Please start ${name}`; $('.tip', m).textContent = `Chitra can't reach ${name} on this computer (${base}). Open it now — I'll keep checking for ${mins} minutes and continue automatically as soon as it is running.`;
+        document.body.appendChild(m); const end = Date.now() + mins * 60000; let done = false;
+        const fin = v => { if (done) return; done = true; clearInterval(iv); clearInterval(tk); m.remove(); res(v); };
+        const tick = () => { const left = Math.max(0, end - Date.now()), sec = Math.ceil(left / 1000); $('#wtClock', m).textContent = `Waiting… ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`; if (!left) fin('timeout'); };
+        const iv = setInterval(async () => { if (await ping()) { toast(`${name} is ready`, ''); fin('ok'); } }, 4000), tk = setInterval(tick, 500); tick();
+        $('[data-c]', m).onclick = () => fin('cancel'); $('[data-o]', m).onclick = () => fin('cloud');
+      });
+    })().finally(() => { delete waiting[name]; });
+  }
   const comfy = {
     cfg() { const k = KEYS || {}; return { url: String(k.comfyUrl || '').replace(/\/$/, ''), token: k.comfyToken || '' }; },
     available() { return !!this.cfg().url; },
+    ready(cloudLabel) { return waitForLocal('ComfyUI', this.cfg().url, '/system_stats', this.hdr(), { cloudLabel }); },
     hdr(json) { const { token } = this.cfg(); return { ...(json ? { 'content-type': 'application/json' } : {}), ...(token ? { Authorization: 'Bearer ' + token } : {}) }; },
     /* queue a workflow (API format) and wait for the picked output node's first image */
     async run(wf, outNode) {
@@ -535,7 +569,7 @@
     },
   };
   C.localAI = { comfy, isFood: t => FOOD_RE.test(t) };
-  C.aiImage = async (prompt, { w = 1024, h = 1024 } = {}) => { if (vault.state() === 'locked') await vault.ensure(); return comfy.available() ? comfy.generate(prompt, { w, h }) : cloudImage(prompt, w, h); }; // used by Photo mockups (food words are routed to Flux inside generate)
+  C.aiImage = async (prompt, { w = 1024, h = 1024 } = {}) => { if (vault.state() === 'locked') await vault.ensure(); const st = comfy.available() ? await comfy.ready('Use the online generator instead') : 'cloud'; if (st === 'cancel') throw new Error('cancelled'); return st === 'ok' ? comfy.generate(prompt, { w, h }) : cloudImage(prompt, w, h); }; // used by Photo mockups (food words are routed to Flux inside generate)
 
   /* ---- AI Art: 3 variations per prompt, kept in the left panel. Nothing goes on the canvas until the user clicks one. ---- */
   const VARIANTS = ['', ', alternative composition, different angle', ', close-up detail, fresh colour palette'];
@@ -555,7 +589,8 @@
   $('#aiGo').onclick = async () => {
     const prompt = $('#aiPrompt').value.trim(); if (!prompt) return toast('Describe your image first', '✍️');
     if (vault.state() === 'locked') await vault.ensure();
-    const [w, h] = $('#aiShape').value.split('x').map(Number), style = AI_STYLES[aiStyle][1], food = FOOD_RE.test(prompt), local = comfy.available();
+    const [w, h] = $('#aiShape').value.split('x').map(Number), style = AI_STYLES[aiStyle][1], food = FOOD_RE.test(prompt); let local = comfy.available();
+    if (local) { const st = await comfy.ready('Use the online generator instead'); if (st === 'cancel') return; if (st !== 'ok') local = false; }
     const ids = [0, 1, 2].map(i => 'p' + Date.now() + i); ids.forEach(id => aiHist.unshift({ id, pending: true })); renderAiGrid();
     const btn = $('#aiGo'); btn.disabled = true;
     if (comfy.available() && food) toast('Food prompt: using Flux on your PC (Z-Image is never used for food)', 'ℹ️');

@@ -22,7 +22,7 @@
 
   /* ---------- UI ---------- */
   const mine = document.createElement('div'); mine.id = 'uplMine'; mine.innerHTML = '<h4>Your uploads <button class="btn small" id="uplClear" hidden>Clear all</button></h4><div class="upl-grid" id="uplGrid"></div><p class="tip" id="uplNote"></p>';
-  const fol = document.createElement('div'); fol.id = 'uplFolder'; fol.innerHTML = `<h4>Downloads folder <small>Pinterest · Creator Downloader</small></h4><div class="row2"><button class="btn" id="folPick">${ico('folder-open', 16)} Connect folder</button><button class="btn" id="folRefresh" hidden>${ico('rotate-cw', 16)} Refresh</button></div><p class="tip" id="folNote">Choose the folder your downloader saves to. New downloads appear here the moment you come back to Chitra — click one to add it.</p><div class="upl-grid" id="folGrid"></div>`;
+  const fol = document.createElement('div'); fol.id = 'uplFolder'; fol.setAttribute('data-owner-only', ''); fol.innerHTML = `<h4>Downloads folder <small>Pinterest · Creator Downloader</small></h4><div class="row2"><button class="btn" id="folPick">${ico('folder-open', 16)} Connect folder</button><button class="btn" id="folRefresh" hidden>${ico('rotate-cw', 16)} Refresh</button></div><p class="tip" id="folNote">Choose the folder your downloader saves to. New downloads appear here the moment you come back to Chitra — click one to add it.</p><div class="upl-grid" id="folGrid"></div>`;
   panel.append(mine, fol);
 
   async function renderMine() {

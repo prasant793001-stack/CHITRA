@@ -1,0 +1,9 @@
+{
+  "port": 8787,
+  "provider": "folder",
+  "folder": "C:\\Users\\Prasa\\Downloads\\Creator Downloader",
+  "allowOrigins": ["https://prasant793001-stack.github.io"],
+
+  "_comment_command": "To let Chitra trigger fresh Pinterest downloads, use provider 'command' and your downloader's command line:",
+  "_example_command": { "provider": "command", "cmd": ["C:\\Program Files\\Creator Downloader\\CreatorDownloader.exe", "--search", "{q}", "--out", "{out}"], "commandTimeoutSec": 120 }
+}

@@ -764,3 +764,8 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .ar-grid{grid-template-columns:repeat(2,1fr)}.ar-grid .gfx-card canvas{width:100%;height:100%;object-fit:contain;border-radius:8px}
 .ar-pal{display:flex;gap:7px;margin:10px 0 4px;flex-wrap:wrap}.ar-sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 4px 10px rgba(0,0,0,.25);cursor:pointer;transition:transform .3s var(--spring2,ease)}
 .ar-sw:hover{transform:scale(1.15)}.ar-sw.on{border-color:#fff;transform:scale(1.12)}
+
+/* owner-only integrations are invisible to everyone else */
+html:not([data-owner]) [data-owner-only]{display:none!important}
+.wait{text-align:center}.wait h2{margin:10px 0 6px}.wait .ask-btns{justify-content:center}.wait-clock{font:800 22px "Plus Jakarta Sans",system-ui,sans-serif;margin:10px 0 0;letter-spacing:.02em}
+.wait-ring{width:56px;height:56px;margin:0 auto;border-radius:50%;border:4px solid rgba(154,123,255,.25);border-top-color:#9a7bff;animation:spin 1s linear infinite}
