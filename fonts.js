@@ -34,13 +34,18 @@
   const byName = Object.fromEntries(LIB.map(f => [f[0], f]));
 
   /* ---------- loading (one stylesheet per font, so a single bad name can never break the rest) ---------- */
-  const injected = new Set();
+  const injected = new Map();
+  // fonts ship with the app (fonts/, built by tools/bundle-fonts.mjs) so text is right offline and in the desktop app; Google Fonts only for anything not bundled
+  const LOCAL = fetch('fonts/index.json').then(r => (r.ok ? r.json() : {})).catch(() => ({}));
   function loadCss(name) {
-    if (injected.has(name)) return; injected.add(name);
-    const f = byName[name], l = document.createElement('link'); l.rel = 'stylesheet';
-    l.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g, '+')}${f && f[2] ? ':wght@400;700' : ''}&display=swap`; document.head.appendChild(l);
+    if (!injected.has(name)) injected.set(name, LOCAL.then(idx => new Promise(res => {
+      const f = byName[name], l = document.createElement('link'); l.rel = 'stylesheet'; l.onload = l.onerror = () => res();
+      l.href = idx[name] ? `fonts/${idx[name]}.css` : `https://fonts.googleapis.com/css2?family=${encodeURIComponent(name).replace(/%20/g, '+')}${f && f[2] ? ':wght@400;700' : ''}&display=swap`; document.head.appendChild(l);
+    })));
+    return injected.get(name);
   }
-  async function loadFont(name) { loadCss(name); try { await Promise.race([document.fonts.load(`40px "${name}"`), new Promise(r => setTimeout(r, 4000))]); } catch { } }
+  // the stylesheet must be in place before document.fonts.load, or it reports "loaded" for a face that does not exist yet
+  async function loadFont(name) { try { await Promise.race([loadCss(name).then(() => Promise.all([document.fonts.load(`40px "${name}"`), document.fonts.load(`bold 40px "${name}"`)])), new Promise(r => setTimeout(r, 4000))]); } catch { } }
   const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { loadCss(e.target.dataset.font); io.unobserve(e.target); } }), { rootMargin: '300px' }) : null;
 
   /* ---------- applying a font ---------- */

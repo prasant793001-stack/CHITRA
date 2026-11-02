@@ -9,20 +9,20 @@
  *  - Resizing uses `sharp` if installed, else Python Pillow (tools/resize.py), else keeps the original file.
  *  Output: photos/*.jpg  and  data/photos.json
  */
-import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url'; import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process';
 const arg = (n, d) => { const i = process.argv.indexOf('--' + n); return i > 0 ? process.argv[i + 1] : d; };
 const PIX = process.env.PIXABAY_KEY, UNS = process.env.UNSPLASH_KEY, OUT = arg('out', '.'), PER = +arg('per', 3), UMAX = +arg('unsplash-max', 45);
 const PIX_API = process.env.PIXABAY_API || 'https://pixabay.com/api/', UNS_API = process.env.UNSPLASH_API || 'https://api.unsplash.com';
 if (!PIX && !UNS) { console.error('Set PIXABAY_KEY and/or UNSPLASH_KEY in the environment.'); process.exit(1); }
 // topics + the "must" regex come from data/photo-topics.json (shared with the in-app live library) so a photo is only kept when its own tags prove it matches the topic
-const TJ = JSON.parse(fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname), '../data/photo-topics.json'), 'utf8')).topics.slice(0, +arg('topics', 999));
+const TJ = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '../data/photo-topics.json'), 'utf8')).topics.slice(0, +arg('topics', 999));
 const TOPICS = Object.fromEntries(TJ.map(t => [t.k, t.q])), MUST = Object.fromEntries(TJ.map(t => [t.k, new RegExp('\\b(' + t.must + ')', 'i')]));
 const SL = +(process.env.HARVEST_SLEEP_SCALE ?? 1), sleep = ms => new Promise(r => setTimeout(r, ms * SL));
 const get = async (url, opt) => { for (let i = 0; i < 3; i++) { try { const r = await fetch(url, opt); if (r.status === 429) { await sleep(8000 * (i + 1)); continue; } if (!r.ok) throw new Error(r.status + ' ' + url.split('?')[0]); return r; } catch (e) { if (i === 2) throw e; await sleep(1500); } } };
 fs.mkdirSync(path.join(OUT, 'photos'), { recursive: true }); fs.mkdirSync(path.join(OUT, 'data'), { recursive: true });
 const catPath = path.join(OUT, 'data/photos.json'); const cat = fs.existsSync(catPath) ? JSON.parse(fs.readFileSync(catPath, 'utf8')) : { v: 1, photos: [] };
 const have = new Set(cat.photos.map(p => p.id));
-const here = path.dirname(new URL(import.meta.url).pathname);
+const here = path.dirname(fileURLToPath(import.meta.url));
 
 async function resize(buf, file, max, q) {
   try { const sharp = (await import('sharp')).default; await sharp(buf).rotate().resize({ width: max, height: max, fit: 'inside', withoutEnlargement: true }).jpeg({ quality: q, mozjpeg: true }).toFile(file); return; } catch { }

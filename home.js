@@ -32,7 +32,7 @@
   }
   /* Thumbnails: rendered lazily, 4 at a time (network-bound), newest-visible first, so the cards you are looking at fill in first. */
   const waiting = [], inflight = {}; let running = 0;
-  const pump = () => { while (running < 4 && waiting.length) { const job = waiting.pop(); running++; job().finally(() => { running--; setTimeout(pump, 24); }); } }; // the short pause between thumbnails keeps scrolling and tapping smooth on phones
+  let cool = 0; const pump = () => { while (running < 4 && waiting.length && Date.now() >= cool) { const job = waiting.pop(), t0 = Date.now(); running++; job().finally(() => { running--; const d = Date.now() - t0; cool = Date.now() + Math.min(600, d * 2); setTimeout(pump, Math.max(24, Math.min(600, d * 2))); }); } }; // duty-cycle limiter: heavy thumbnails never hog the main thread, so the editor stays responsive // the short pause between thumbnails keeps scrolling and tapping smooth on phones
   async function makeThumb(name) {
     await C.fontsReady; if (cache[name]) return cache[name]; const meta = META[name], key = `tpl:${C.TPL_VERSION}:${name}:${(meta.ph || []).join(',')}`; // photo ids in the key: a rebuilt library never shows stale thumbnails
     if (meta.gen) { try { const hit = await C.kv.get(key); if (hit) { cache[name] = hit; return hit; } } catch { } }

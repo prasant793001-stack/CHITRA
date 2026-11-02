@@ -79,30 +79,48 @@
 
   /* ---- Premium colour graphics: Microsoft Fluent Emoji 3D/flat (MIT), Google Noto (Apache-2.0), Circle Flags (MIT), Flat Color Icons (MIT), served by the free Iconify API ---- */
   const API = 'https://api.iconify.design', SETS = { graphics: 'fluent-emoji,fluent-emoji-flat,noto,flat-color-icons', stickers: 'fluent-emoji,noto,fluent-emoji-flat', flags: 'circle-flags,noto' };
-  const CHIPS = { graphics: ['Food', 'Animals', 'Heart', 'Party', 'Travel', 'Nature', 'Sports', 'Music', 'Tech', 'Business', 'Weather', 'Flag', 'Fire', 'Star', 'Gift', 'Flower', 'Camera', 'Rocket', 'Crown', 'Sparkles'], stickers: ['Smile', 'Love', 'Party', 'Pizza', 'Coffee', 'Cat', 'Dog', 'Sun', 'Fire', 'Trophy', 'Gift', 'Cake', 'Balloon', 'Sparkles', 'Rainbow', 'Thumbs up'] };
+  /* Iconify matches icon NAMES, not topics ("animals" finds nothing), so each chip searches a set of concrete words and merges them. No food/drink chips (owner's rule). */
+  const CHIPS = {
+    graphics: [['Animals', 'cat dog lion tiger panda fox bird butterfly horse rabbit owl elephant'], ['Heart', 'heart'], ['Party', 'party balloon confetti gift sparkles fireworks'], ['Travel', 'airplane globe map luggage beach mountain train compass camping'], ['Nature', 'tree leaf flower palm cactus seedling sunflower mountain'], ['Sports', 'soccer basketball cricket tennis medal trophy bicycle'], ['Music', 'music guitar microphone headphone piano drum'], ['Tech', 'tech laptop robot computer'], ['Business', 'business briefcase chart money bank'], ['Weather', 'sun cloud rain snowflake rainbow lightning umbrella snowman'], ['Fire', 'fire'], ['Star', 'star'], ['Gift', 'gift'], ['Flower', 'flower rose tulip blossom sunflower hibiscus'], ['Camera', 'camera'], ['Rocket', 'rocket'], ['Crown', 'crown'], ['Sparkles', 'sparkles glowing dizzy star']],
+    stickers: [['Smile', 'smiling grinning laughing winking'], ['Love', 'love heart kiss'], ['Party', 'party balloon confetti fireworks'], ['Animals', 'cat dog panda fox rabbit owl'], ['Cat', 'cat'], ['Dog', 'dog'], ['Sun', 'sun'], ['Fire', 'fire'], ['Trophy', 'trophy medal'], ['Gift', 'gift'], ['Balloon', 'balloon'], ['Sparkles', 'sparkles glowing dizzy'], ['Rainbow', 'rainbow'], ['Star', 'star'], ['Music', 'music guitar microphone'], ['Thumbs up', 'thumbs']],
+  };
+  /* owner's rule: no food or drink graphics, even when a search would return them ("birthday" → birthday cake) */
+  const FOOD = new Set('food pizza burger hamburger cake cupcake shortcake coffee tea teacup teapot cup bread baguette cheese egg eggs fruit apple banana grapes melon watermelon cherries lemon lime peach pear tomato carrot corn pepper potato candy chocolate cookie doughnut donut cream rice noodles ramen sushi taco burrito sandwich fries meat poultry bacon steak salad soup stew curry dumpling bento beverage drink juice wine beer beers cocktail milk sake mate tumbler popcorn honey croissant bagel pancakes waffle kiwi avocado coconut mango pineapple strawberry olive onion garlic mushroom chestnut peanuts pretzel lollipop custard dango oden falafel flatbread fondue tamale butter salt cucumber broccoli eggplant ginger beans spoon fork chopsticks canned takeout lunch dinner breakfast meal clinking champagne bottle liquid leafy pita'.split(' '));
+  const isFood = id => { const n = id.split(':')[1] || ''; return /hot-dog|ice-cream|shaved-ice|^pie$|-pie$|^pie-(?!chart)/.test(n) || n.split('-').some(t => FOOD.has(t) || /berr(y|ies)$/.test(t)); };
+  let COUNTRY; // "india" → "in" from the browser's own country names (no hand-kept table); first code wins so "united kingdom" → gb, not the UK alias
+  const countryCode = text => { if (!COUNTRY) { COUNTRY = { usa: 'us', america: 'us', uk: 'gb', england: 'gb', britain: 'gb', uae: 'ae', emirates: 'ae' }; try { const dn = new Intl.DisplayNames(['en'], { type: 'region' }), A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for (const a of A) for (const b of A) { const c = a + b, nm = dn.of(c); const k = nm && nm.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); if (k && nm !== c && !COUNTRY[k]) COUNTRY[k] = c.toLowerCase(); } } catch { } }
+    const t = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\bflags?\b/g, ' ').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); return t && COUNTRY[t] || null; };
   C.premiumView = (view, kind, builtin) => {
-    let q = '', start = 0, token = 0, sets = SETS[kind] || SETS.graphics, flags = false;
+    let q = '', start = 0, token = 0, sets = SETS[kind] || SETS.graphics, flags = false, words = null;
     const draw = () => {
-      view.innerHTML = `<div class="gx-tabs"><button class="on" data-m="p">Premium</button>${builtin ? '<button data-m="b">Shapes &amp; decor</button>' : ''}</div><div class="chips" id="pxChips">${(CHIPS[kind] || CHIPS.graphics).map(c => `<button class="chip" data-q="${c}">${c}</button>`).join('')}<button class="chip" data-q="@flags">🏳️ Flags</button></div>
+      view.innerHTML = `<div class="gx-tabs"><button class="on" data-m="p">Premium</button>${builtin ? '<button data-m="b">Shapes &amp; decor</button>' : ''}</div><div class="chips" id="pxChips">${(CHIPS[kind] || CHIPS.graphics).map(([c, w]) => `<button class="chip" data-q="${c}" data-w="${w}">${c}</button>`).join('')}<button class="chip" data-q="@flags">🏳️ Flags</button></div>
         <div class="gfx-grid" id="pxGrid"></div><button id="pxMore" class="btn wide" hidden style="margin-top:10px">Load more</button><p class="tip" id="pxNote"></p>
         <p class="tip" style="font-size:11px">Colour graphics: Microsoft Fluent Emoji (MIT), Google Noto (Apache-2.0), Circle Flags &amp; Flat Color Icons (MIT), via Iconify.</p>`;
       $$('.gx-tabs [data-m=b]', view).forEach(b => b.onclick = () => builtin());
-      $$('#pxChips [data-q]', view).forEach(b => b.onclick = () => { flags = b.dataset.q === '@flags'; q = flags ? 'flag' : b.dataset.q; $('#elSearch').value = flags ? '' : q; $$('#pxChips .chip', view).forEach(x => x.classList.toggle('on', x === b)); run(true); });
+      $$('#pxChips [data-q]', view).forEach(b => b.onclick = () => { flags = b.dataset.q === '@flags'; q = flags ? 'flag' : b.dataset.q; words = flags ? null : b.dataset.w.split(' '); $('#elSearch').value = flags ? '' : q; $$('#pxChips .chip', view).forEach(x => x.classList.toggle('on', x === b)); run(true); });
       $('#pxMore', view).onclick = () => run(false);
     };
+    const search = async (query, limit, from, prefixes) => { const r = await fetch(`${API}/search?query=${encodeURIComponent(query)}&limit=${limit}&start=${from}&prefixes=${prefixes}`); if (!r.ok) throw new Error(r.status); return r.json(); };
     async function run(reset) {
       const grid = $('#pxGrid', view), more = $('#pxMore', view), note = $('#pxNote', view), my = ++token;
       if (reset) { start = 0; grid.innerHTML = '<p class="tip" style="grid-column:1/-1">Searching…</p>'; more.hidden = true; note.textContent = ''; }
       try {
-        const r = await fetch(`${API}/search?query=${encodeURIComponent(q || 'sparkles')}&limit=60&start=${start}&prefixes=${flags ? SETS.flags : sets}`); if (!r.ok) throw new Error(r.status); const j = await r.json(); if (my !== token) return;
-        if (reset) grid.innerHTML = ''; const icons = (j.icons || []);
-        if (!icons.length && reset) grid.innerHTML = '<p class="tip" style="grid-column:1/-1">No results. Try another word.</p>';
+        let icons, total = 0; const cc = !flags && !words && countryCode(q);
+        if (words) { // chip: several words merged, no paging
+          const lists = await Promise.all(words.map(w => search(w, words.length > 1 ? 12 : 60, 0, sets).then(j => j.icons || []).catch(() => null)));
+          if (lists.every(l => l === null)) throw new Error('graphics service unreachable'); icons = [...new Set(lists.flat().filter(Boolean))];
+        } else if (cc) { // a country: its flag(s) first, then anything else that matches the words
+          const j = await search(cc, 60, 0, 'circle-flags').catch(() => ({})); icons = [`circle-flags:${cc}`, ...(j.icons || []).filter(i => i.startsWith(`circle-flags:${cc}-`))];
+        } else { const j = await search(q || 'sparkles', 60, start, flags ? SETS.flags : sets); icons = j.icons || []; total = j.total || 0; }
+        if (my !== token) return; const got = icons.length; icons = icons.filter(id => !isFood(id));
+        if (reset) grid.innerHTML = '';
+        if (!icons.length && reset) grid.innerHTML = '<p class="tip" style="grid-column:1/-1">No results. Try another word — for flags, type the country name.</p>';
         icons.forEach(id => { const [pre, name] = id.split(':'), b = document.createElement('button'); b.className = 'gfx-card'; b.title = name.replace(/-/g, ' '); b.innerHTML = `<img loading="lazy" alt="" src="${API}/${pre}/${name}.svg?height=96">`; b.onclick = () => addPremium(pre, name); grid.appendChild(b); });
-        start += icons.length; more.hidden = start >= (j.total || 0);
-      } catch (e) { console.warn(e); if (my === token && reset) { grid.innerHTML = `<div class="empty-card retry"><b>Couldn't load graphics</b><small>${navigator.onLine ? 'The graphics service did not answer.' : 'You are offline — the built-in set still works.'}</small><button class="btn" id="pxRetry">Try again</button></div>`; $('#pxRetry', view).onclick = () => run(true); } }
+        start += got; more.hidden = !total || start >= total;
+      } catch (e) { console.warn(e); if (my === token && reset) { grid.innerHTML = `<div class="empty-card retry"><b>Couldn't load graphics</b><small>${navigator.onLine ? 'The graphics service did not answer.' : 'You are offline — the built-in set still works.'}</small><button class="btn" id="pxRetry">Try again</button></div>`; const rb = grid.querySelector('#pxRetry'); if (rb) rb.onclick = () => run(true); } }
     }
-    draw(); q = (CHIPS[kind] || CHIPS.graphics)[0]; $('#pxChips .chip', view)?.classList.add('on'); run(true);
-    const hook = v => { flags = false; q = v.trim() || q; run(true); }; C.__gxHook = hook; return v => C.__gxHook(v);
+    draw(); { const first = (CHIPS[kind] || CHIPS.graphics)[0]; q = first[0]; words = first[1].split(' '); } $('#pxChips .chip', view)?.classList.add('on'); run(true);
+    const hook = v => { flags = false; words = null; q = v.trim() || q; $$('#pxChips .chip', view).forEach(x => x.classList.remove('on')); run(true); }; C.__gxHook = hook; return v => C.__gxHook(v);
   };
   async function addPremium(pre, name) {
     try {

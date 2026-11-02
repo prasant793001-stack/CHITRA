@@ -104,7 +104,9 @@ module.exports = [
       await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' });
       const mk = outline => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, 400, 300); g.fillStyle = '#ff9933'; g.fillRect(60, 60, 280, 60); g.fillStyle = '#138808'; g.fillRect(60, 180, 280, 60); if (outline) { g.strokeStyle = '#999'; g.lineWidth = 3; g.strokeRect(60, 60, 280, 180); } g.strokeStyle = '#000080'; g.beginPath(); g.arc(200, 150, 20, 0, 7); g.stroke(); return c.toDataURL(); };
       const alphaAt = (o, fx, fy) => { const c = document.createElement('canvas'), el = o.getElement(); c.width = el.naturalWidth || el.width; c.height = el.naturalHeight || el.height; const g = c.getContext('2d'); g.drawImage(el, 0, 0); return g.getImageData(Math.round(c.width * fx), Math.round(c.height * fy), 1, 1).data[3]; };
+      const full = () => { const c = document.createElement('canvas'); c.width = 450; c.height = 300; const g = c.getContext('2d'); g.fillStyle = '#ff9933'; g.fillRect(0, 0, 450, 100); g.fillStyle = '#fff'; g.fillRect(0, 100, 450, 100); g.fillStyle = '#138808'; g.fillRect(0, 200, 450, 100); g.strokeStyle = '#000080'; g.lineWidth = 3; g.beginPath(); g.arc(225, 150, 40, 0, 7); g.stroke(); return c.toDataURL(); }; // a flag with no background at all
       const out = {};
+      chitra.canvas.clear(); await chitra.addImageFromURL(full()); await new Promise(r => setTimeout(r, 500)); { const o = chitra.canvas.getObjects().find(x => x.type === 'image'); chitra.canvas.setActiveObject(o); await chitra.removeBg(o); await new Promise(r => setTimeout(r, 800)); const im = chitra.canvas.getObjects().find(x => x.type === 'image'); out.fullBleed = { saffron: alphaAt(im, 0.1, 0.15), white: alphaAt(im, 0.1, 0.5), green: alphaAt(im, 0.9, 0.85), told: [...document.querySelectorAll('.toast .tm')].some(t => /no background to remove/.test(t.textContent)), offersAI: [...document.querySelectorAll('.toast .tact')].some(b => /Try AI anyway/.test(b.textContent)) }; }
       for (const [name, outline, opt] of [['outlined', true, {}], ['open', false, {}], ['openKeep', false, { keepWhites: true }]]) {
         chitra.canvas.clear(); await chitra.addImageFromURL(mk(outline)); await new Promise(r => setTimeout(r, 500)); const o = chitra.canvas.getObjects().find(x => x.type === 'image'); chitra.canvas.setActiveObject(o);
         await chitra.removeBg(o, opt); await new Promise(r => setTimeout(r, 800)); const im = chitra.canvas.getObjects().find(x => x.type === 'image');
@@ -114,14 +116,22 @@ module.exports = [
     });
     ok('white margin removed, orange kept (outlined flag)', r.outlined.corner === 0 && r.outlined.orange > 240, JSON.stringify(r.outlined));
     ok('white stripe inside an outlined flag is kept', r.outlined.band > 240, JSON.stringify(r.outlined));
+    ok('a flag that fills the picture is left whole (no background to remove)', r.fullBleed.saffron === 255 && r.fullBleed.white === 255 && r.fullBleed.green === 255 && r.fullBleed.told && r.fullBleed.offersAI, JSON.stringify(r.fullBleed));
     ok('"Keep white parts" restores an open white stripe', r.openKeep.band > 240 && r.openKeep.corner === 0, JSON.stringify(r.openKeep));
   } },
   { name: 'premium graphics (Iconify)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#f5b800"/><circle cx="11" cy="13" r="2" fill="#333"/><circle cx="21" cy="13" r="2" fill="#333"/></svg>';
-    await ctx.route('https://api.iconify.design/**', r => { const u = r.request().url(); if (u.includes('/search')) return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons: ['fluent-emoji:pizza', 'noto:cat-face', 'circle-flags:in'], total: 3 }) }); r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
+    const answers = { cat: ['noto:cat-face', 'fluent-emoji:pizza'], dog: ['noto:dog', 'noto:birthday-cake'], in: ['circle-flags:in', 'circle-flags:in-ka'] }; // Iconify matches icon names, one word at a time
+    await ctx.route('https://api.iconify.design/**', r => { const u = new URL(r.request().url()); if (u.pathname.endsWith('/search')) { const icons = answers[u.searchParams.get('query')] || []; return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons, total: icons.length }) }); } r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
     await p.click('#rail [data-tab=shapes]'); await p.evaluate(() => { document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(1200);
-    ok('premium graphics grid fills from the service', await p.locator('#pxGrid .gfx-card').count() === 3);
+    const titles = () => p.$$eval('#pxGrid .gfx-card', b => b.map(x => x.title));
+    const first = await titles(); ok('premium graphics open on Animals and merge several words', first.includes('cat face') && first.includes('dog'), first.join(','));
+    ok('food/drink graphics are filtered out (owner rule)', !first.some(t => /pizza|cake/.test(t)), first.join(','));
+    ok('no food chip in Graphics or Stickers', await p.evaluate(() => ![...document.querySelectorAll('#pxChips .chip')].some(c => /food|pizza|coffee|cake/i.test(c.textContent))));
+    await p.evaluate(() => chitra.__gxHook('India flag')); await p.waitForTimeout(800); const fl = await titles();
+    ok('typing a country name shows its flag first', fl[0] === 'in', fl.join(','));
+    await p.evaluate(() => document.querySelector('#pxChips [data-q=Animals]').click()); await p.waitForTimeout(800);
     await p.evaluate(() => document.querySelector('#pxGrid .gfx-card').click()); await p.waitForTimeout(800);
     ok('premium graphic is placed as a coloured vector', await p.evaluate(() => chitra.canvas.getObjects().length >= 1));
     await p.evaluate(() => document.querySelector('.gx-tabs [data-m=b]').click()); await p.waitForTimeout(300); ok('built-in tab still works', await p.locator('.gfx-card').count() > 20);
@@ -139,7 +149,8 @@ module.exports = [
   } },
   { name: 'AI art gallery, layers, blank pages, white canvas', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
-    await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    // like the live service: model=flux is pay-walled (402) for anonymous visitors, the default model is free
+    await ctx.route('https://image.pollinations.ai/**', r => r.request().url().includes('model=flux') ? r.fulfill({ status: 402, contentType: 'application/json', body: '{}' }) : r.fulfill({ status: 200, contentType: 'image/png', body: png }));
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('A3'), template: 'blank' })); await p.waitForTimeout(600);
     ok('paper sizes start pure white', await p.evaluate(() => chitra.canvas.backgroundColor === '#ffffff'), await p.evaluate(() => chitra.canvas.backgroundColor));
     await p.evaluate(() => { document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiCut').checked = false; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(3500);
@@ -239,7 +250,7 @@ module.exports = [
       if (u.pathname === '/upload/image') return r.fulfill({ status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({ name: 'up.png', subfolder: '', type: 'input' }) });
       if (u.pathname === '/view') return r.fulfill({ status: 200, contentType: 'image/png', headers: h, body: png }); r.fulfill({ status: 404, headers: h, body: '' }); });
     await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
-    await p.evaluate(async () => { localStorage.removeItem('chitra.vault'); await chitra.vault.save({ comfyUrl: 'http://127.0.0.1:8188' }, 'secret1', false); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); });
+    await p.evaluate(async () => { chitra.vault.wipe(); await chitra.vault.save({ comfyUrl: 'http://127.0.0.1:8188' }, 'secret1', false); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); });
     await p.evaluate(() => { document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiCut').checked = false; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(9000);
     ok('normal prompts use Z-Image on your PC', posted.length >= 3 && posted.every(w => w['57:27']), posted.length);
     const n1 = posted.length; await p.evaluate(() => { document.querySelector('#aiPrompt').value = 'fresh pizza on a table'; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(9000);
@@ -247,7 +258,7 @@ module.exports = [
     await p.evaluate(async () => { const c = document.createElement('canvas'); c.width = 120; c.height = 90; const g = c.getContext('2d'); for (let i = 0; i < 600; i++) { g.fillStyle = `hsl(${i * 37 % 360},70%,${30 + i % 40}%)`; g.fillRect((i * 53) % 120, (i * 29) % 90, 14, 14); } await new Promise(r => fabric.Image.fromURL(c.toDataURL(), i => { chitra.place(i); r(); })); }); await p.waitForTimeout(400);
     const n2 = posted.length; await p.evaluate(() => chitra.removeBg()); await p.waitForTimeout(5000);
     ok('background removal runs BiRefNet on your PC', posted.length === n2 + 1 && posted[n2]['19:13'] && posted[n2]['17'].inputs.image === 'up.png', JSON.stringify(Object.keys(posted[n2] || {})));
-    await p.evaluate(() => { localStorage.removeItem('chitra.vault'); });
+    await p.evaluate(() => chitra.vault.wipe());
   } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
@@ -324,4 +335,34 @@ module.exports = [
     await p.evaluate(async () => { const i = new Image(); i.src = 'tests/fixtures/photos/f03.jpg'; await new Promise(r => { i.onload = r; }); document.querySelector('#mkGrid [data-k=photo]').click(); const f = await (await fetch('tests/fixtures/photos/f03.jpg')).blob(); const dt = new DataTransfer(); dt.items.add(new File([f], 'p.jpg', { type: 'image/jpeg' })); const inp = document.querySelector('#mkFile'); inp.files = dt.files; inp.dispatchEvent(new Event('change')); }); await p.waitForTimeout(800);
     ok('own product photo mode works', await p.evaluate(() => !document.querySelector('#mkPhotoBox').hidden));
     await p.evaluate(() => document.querySelectorAll('.modal').forEach(m => m.hidden = true)); } },
+  { name: 'background removal never freezes the window (web worker)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    // a stand-in model that blocks its thread for 2 s: on the page thread that froze the app; in the worker the page keeps ticking
+    const FAKE = 'export default async function rb(blob, o) { const t = Date.now(); while (Date.now() - t < 2000) {} const bm = await createImageBitmap(blob), c = new OffscreenCanvas(bm.width, bm.height), g = c.getContext("2d"); g.drawImage(bm, 0, 0); const d = g.getImageData(0, 0, c.width, c.height); for (let y = 0; y < c.height; y++) for (let x = 0; x < c.width; x++) d.data[(y * c.width + x) * 4 + 3] = Math.hypot(x - c.width / 2, y - c.height / 2) < c.width / 4 ? 255 : 0; g.putImageData(d, 0, 0); return c.convertToBlob({ type: "image/png" }); }';
+    await ctx.route(/cdn\.jsdelivr\.net\/npm\/@imgly/, r => r.fulfill({ status: 200, contentType: 'text/javascript', headers: { 'access-control-allow-origin': '*' }, body: FAKE }));
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(400);
+    await p.evaluate(() => new Promise(r => { const c = document.createElement('canvas'); c.width = 500; c.height = 400; const x = c.getContext('2d'); for (let i = 0; i < 500; i += 20) { x.fillStyle = `hsl(${i},70%,50%)`; x.fillRect(i, 0, 20, 400); } fabric.Image.fromURL(c.toDataURL('image/jpeg', 0.9), i => { i.scaleToWidth(700); chitra.place(i); r(); }); })); await p.waitForTimeout(300);
+    const r = await p.evaluate(async () => { let ticks = 0; const iv = setInterval(() => ticks++, 50); await chitra.removeBg(chitra.active(), { forceAI: true }); clearInterval(iv); const o = chitra.active(), e = o.getElement(), c = document.createElement('canvas'); c.width = e.naturalWidth || e.width; c.height = e.naturalHeight || e.height; const g = c.getContext('2d'); g.drawImage(e, 0, 0); return { ticks, corner: g.getImageData(2, 2, 1, 1).data[3], centre: g.getImageData(c.width / 2, c.height / 2, 1, 1).data[3] }; });
+    ok('the page keeps responding while the AI cuts out (2 passes x 2 s)', r.ticks >= 40, JSON.stringify(r));
+    ok('the worker result is applied (background gone, subject kept)', r.corner === 0 && r.centre === 255, JSON.stringify(r));
+    await ctx.unroute(/cdn\.jsdelivr\.net\/npm\/@imgly/);
+  } },
+  { name: 'desktop app routes Remove BG and Enhance to its AI engine', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const p2 = await ctx.newPage(); await p2.addInitScript(() => { // the bridge preload.js exposes in the Windows app, answered here by a stand-in
+      window.__aiCalls = [];
+      window.chitraDesktop = { isDesktop: true, ai: {
+        removeBackground: async (img, o, prog) => { window.__aiCalls.push(['bg', img.width, img.height]); prog && prog({ stage: 'Finding the subject on GPU (DirectML)…', pct: 10 }); const d = new Uint8ClampedArray(img.data); for (let y = 0; y < img.height; y++) for (let x = 0; x < img.width; x++) if (x < img.width / 2) d[(y * img.width + x) * 4 + 3] = 0; return { width: img.width, height: img.height, data: d, coverage: 0.5, device: 'GPU (DirectML)', ms: 800 }; },
+        upscale: async img => { window.__aiCalls.push(['up', img.width, img.height]); const W = img.width * 4, H = img.height * 4, d = new Uint8ClampedArray(W * H * 4).fill(200); return { width: W, height: H, data: d, device: 'GPU (DirectML)', ms: 1200 }; },
+      } };
+    });
+    await p2.goto((process.env.BASE || 'http://localhost:8123/') + '?nosplash'); await p2.waitForTimeout(1500);
+    await p2.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p2.waitForTimeout(400);
+    await p2.evaluate(() => new Promise(r => { const c = document.createElement('canvas'); c.width = 400; c.height = 300; const x = c.getContext('2d'), d = x.createImageData(400, 300); for (let i = 0; i < d.data.length; i += 4) { const n = (Math.random() * 120) | 0; d.data[i] = 60 + n; d.data[i + 1] = 120 + n / 2; d.data[i + 2] = 40 + n; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); x.fillStyle = '#c23'; x.beginPath(); x.arc(200, 150, 90, 0, 7); x.fill(); /* a subject on a textured, photo-like background */ fabric.Image.fromURL(c.toDataURL('image/jpeg', 0.9), i => { i.scaleToWidth(600); chitra.place(i); r(); }); })); await p2.waitForTimeout(300);
+    const bg = await p2.evaluate(async () => { await chitra.removeBg(chitra.active()); const o = chitra.active(), e = o.getElement(), c = document.createElement('canvas'); c.width = e.naturalWidth || e.width; c.height = e.naturalHeight || e.height; const g = c.getContext('2d'); g.drawImage(e, 0, 0); return { calls: window.__aiCalls.slice(), left: g.getImageData(5, c.height / 2, 1, 1).data[3], right: g.getImageData(c.width - 5, c.height / 2, 1, 1).data[3], toast: [...document.querySelectorAll('.toast .tm')].map(t => t.textContent).pop() }; });
+    ok('Remove BG uses the desktop AI and places its result', bg.calls[0]?.[0] === 'bg' && bg.left === 0 && bg.right === 255, JSON.stringify(bg));
+    ok('the result says which device did the work', /GPU \(DirectML\)/.test(bg.toast || ''), bg.toast);
+    const before = await p2.evaluate(() => chitra.active().width);
+    const up = await p2.evaluate(async () => { await chitra.enhance(chitra.active()); return { calls: window.__aiCalls.slice(), w: chitra.active().width, toast: [...document.querySelectorAll('.toast .tm')].map(t => t.textContent).pop() }; });
+    ok('Enhance uses the desktop AI upscaler (4x pixels, same size on the page)', up.calls.at(-1)?.[0] === 'up' && up.w === before * 4, JSON.stringify({ before, ...up }));
+    await p2.close();
+  } },
 ];

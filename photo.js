@@ -27,6 +27,11 @@
     c.getContext('2d').drawImage(el, o.cropX || 0, o.cropY || 0, w, h, 0, 0, c.width, c.height);
     return c;
   }
+  /* ---- desktop app: professional AI on the user's own graphics card, in a separate process (the window never freezes) ---- */
+  const DESK = window.chitraDesktop && window.chitraDesktop.ai;
+  const toImage = c => { const d = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, c.width, c.height); return { width: c.width, height: c.height, data: d.data }; };
+  const fromImage = r => { const c = document.createElement('canvas'); c.width = r.width; c.height = r.height; c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(r.data.buffer || r.data, r.data.byteOffset || 0, r.width * r.height * 4), r.width, r.height), 0, 0); return c; };
+  let deskBusy = false; // one AI job at a time; a second click just says so instead of queueing silently
   function replaceImage(o, src, { sameScale = false, pristine = null } = {}) {
     return new Promise(resolve => {
       const url = typeof src === 'string' ? src : src.toDataURL('image/png'); // always a data URL: blob: links die on reload
@@ -49,7 +54,30 @@
 
   /* ================= AI background removal (+ flood-fill fallback) ================= */
   let imglyP = null;
-  const loadImgly = () => imglyP ||= import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm').then(m => ({ removeBackground: m.default || m.removeBackground, preload: m.preload }));
+  const IMGLY = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm';
+  /* The model runs in a Web Worker: on the page's own thread it froze the whole app for the length of the cut. Same API as the library
+     ({ removeBackground(blob, { model, output, progress }) → Blob }); falls back to the page thread if workers can't load the module. */
+  let aiWorker = null, aiSeq = 0; const aiJobs = new Map();
+  // a failed module load stays cached inside a worker, so after any failure start a fresh one (e.g. the first try was offline)
+  const resetWorker = () => { try { aiWorker && aiWorker.terminate(); } catch { } aiWorker = null; for (const [, j] of aiJobs) j.reject(new Error('AI worker restarted')); aiJobs.clear(); };
+  function workerModule() {
+    if (aiWorker !== null) return aiWorker;
+    try {
+      const src = `let m; self.onmessage = async e => { const { id, blob, opts } = e.data; try { m ||= await import('${IMGLY}'); const rb = m.default || m.removeBackground;
+        const out = await rb(blob, { ...opts, progress: (k, c, t) => { self.postMessage({ id, progress: [k, c, t] }); } }); self.postMessage({ id, blob: out }); } catch (err) { self.postMessage({ id, error: String(err && err.message || err) }); } };`;
+      aiWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })), { type: 'module' });
+      aiWorker.onmessage = e => { const j = aiJobs.get(e.data.id); if (!j) return; if (e.data.progress) return j.progress?.(...e.data.progress); aiJobs.delete(e.data.id); if (e.data.error) { resetWorker(); j.reject(new Error(e.data.error)); } else j.resolve(e.data.blob); };
+      aiWorker.onerror = () => resetWorker();
+    } catch { aiWorker = false; }
+    return aiWorker;
+  }
+  const pageThread = () => import(IMGLY).then(m => m.default || m.removeBackground); // last resort when workers can't load modules
+  const loadImgly = () => imglyP ||= Promise.resolve({
+    removeBackground: (blob, { progress, ...opts } = {}) => { // looks up the current worker on every call: a worker restarted after a failure is picked up
+      const w = workerModule(); if (!w) return pageThread().then(rb => rb(blob, { ...opts, progress }));
+      return new Promise((resolve, reject) => { const id = ++aiSeq; aiJobs.set(id, { resolve, reject, progress }); w.postMessage({ id, blob, opts }); });
+    },
+  });
   /* Offline cut-out ("pro" classical pipeline): learns the background palette from the picture's border and the subject palette from its
      centre (k-means in Lab), refines both a few rounds (GrabCut-style), keeps only background connected to the border, drops specks,
      fills holes and feathers the edge. Used when the AI model cannot be downloaded. */
@@ -129,7 +157,8 @@
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4; if (d[i + 3] < 20) continue; const key = ((d[i] >> 4) << 8) | ((d[i + 1] >> 4) << 4) | (d[i + 2] >> 4); hist.set(key, (hist.get(key) || 0) + 1); n++; if (x < 2 || y < 2 || x >= w - 2 || y >= h - 2) { bord.set(key, (bord.get(key) || 0) + 1); nb++; } }
     const top = [...hist.values()].sort((a, b) => b - a).slice(0, 12).reduce((a, b) => a + b, 0) / Math.max(n, 1), bb = [...bord.entries()].sort((a, b) => b[1] - a[1])[0];
     const transparentEdge = nb < w * 2 + h * 2; // most edge pixels already transparent
-    return { flat: top > 0.82, uniformBorder: !!bb && bb[1] / Math.max(nb, 1) > 0.8, bgKey: bb ? bb[0] : 0, transparentEdge };
+    let onBorder = 0; for (const [key, v] of hist) if ((bord.get(key) || 0) >= 2) onBorder += v; // share of the picture painted in colours that also touch the edge: ~1 for a full-bleed flag, much lower when an object sits on a backdrop
+    return { flat: top > 0.82, flatScore: top, borderColourShare: onBorder / Math.max(n, 1), uniformBorder: !!bb && bb[1] / Math.max(nb, 1) > 0.8, bgKey: bb ? bb[0] : 0, transparentEdge };
   }
   function floodCut(src, { tol = 34, keepWhites = false } = {}) {
     const W0 = src.width, H0 = src.height, out = document.createElement('canvas'); out.width = W0; out.height = H0; const g = out.getContext('2d', { willReadFrequently: true }); g.drawImage(src, 0, 0);
@@ -162,9 +191,10 @@
   /* ---- photos: the best AI model, run twice. Pass 2 zooms into the subject found by pass 1, so hair, fur and thin edges get far more pixels to work with. ---- */
   function alphaOf(c) { const g = c.getContext('2d', { willReadFrequently: true }), d = g.getImageData(0, 0, c.width, c.height).data, a = new Uint8Array(c.width * c.height); for (let i = 0; i < a.length; i++) a[i] = d[i * 4 + 3]; return a; }
   async function aiCut(mod, src, job) {
-    const models = ['isnet_quint8', 'isnet_fp16']; // Cutout Studio's proven setup first, the sharper fp16 model as backup
+    const models = ['isnet_fp16', 'isnet_quint8']; // fp16 first: on fur/hair against grass quint8 left speckles and holes that fp16 does not (QA, Oct 2026). quint8 (half the download) is the backup
     const proc = c => { const k = Math.min(1, 1280 / Math.max(c.width, c.height)); if (k === 1) return canvasToBlob(c); const t = document.createElement('canvas'); t.width = Math.round(c.width * k); t.height = Math.round(c.height * k); const g = t.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(c, 0, 0, t.width, t.height); return new Promise(r => t.toBlob(r, 'image/jpeg', 0.92)); }; // model works at ~1280px: faster and cleaner
-    const run = async (blob, label) => { for (const model of models) { try { return await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 0.85 }, progress: (key, cur, total) => job.set(`${label} ${total ? Math.round((cur / total) * 100) : 0}%`) }); } catch (e) { console.warn('model', model, e); } } throw new Error('no model'); };
+    // the progress callback must return nothing: the library validates it and throws otherwise
+    const run = async (blob, label) => { for (const model of models) { try { return await mod.removeBackground(blob, { model, output: { format: 'image/png', quality: 0.85 }, progress: (key, cur, total) => { job.set(`${/^fetch/.test(key) ? 'Downloading the AI model (one time only)…' : label} ${total ? Math.round((cur / total) * 100) : 0}%`); } }); } catch (e) { console.warn('model', model, e); } } throw new Error('no model'); };
     const first = await run(await proc(src), 'Cut-out (pass 1 of 2)…'); const img1 = await createImageBitmap(first);
     const m1 = document.createElement('canvas'); m1.width = src.width; m1.height = src.height; m1.getContext('2d').drawImage(img1, 0, 0, src.width, src.height);
     const a1 = alphaOf(m1); let x0 = src.width, y0 = src.height, x1 = -1, y1 = -1; for (let y = 0; y < src.height; y++) for (let x = 0; x < src.width; x++) if (a1[y * src.width + x] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
@@ -192,6 +222,20 @@
         if (cov < 0.02 || cov > 0.985) { toast('No plain background found around this graphic — use Refine to paint the parts to keep', '⚠️'); return; }
         await replaceImage(o, res, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 60);
         toast(opt.keepWhites ? 'Background removed — white parts kept' : 'Outer background removed — inner colours kept', '✂️', opt.keepWhites ? undefined : { label: 'Keep white parts', fn: async () => { await replaceImage(o, floodCut(src, { keepWhites: true }), { pristine: src }); toast('White parts kept', '✂️'); } }); return;
+      }
+      if (!opt.forceAI && info.flatScore > 0.9 && info.borderColourShare > 0.92 && !info.uniformBorder && !info.transparentEdge) { // a flag, logo or poster that fills the whole picture: there is no background, and the AI would keep only one detail (e.g. the wheel of a flag) and erase the rest
+        job.done(); toast('This graphic fills the whole picture, so there is no background to remove', 'ℹ️', { label: 'Try AI anyway', fn: () => removeBg(o, { forceAI: true }) }); return;
+      }
+      if (DESK) {
+        if (deskBusy) { job.done(); return toast('The AI is still working on the last picture', 'ℹ️'); }
+        deskBusy = true;
+        try {
+          const big = natCanvas(o, 6000), r = await DESK.removeBackground(toImage(big), {}, p => job.set(`${p.stage}${p.pct != null && !/%/.test(p.stage) ? ` ${p.pct}%` : ''}`));
+          job.done();
+          if (r.coverage < 0.005) { toast('The AI could not find a clear subject — original kept. Try Refine to mark it', '⚠️'); return; }
+          await replaceImage(o, fromImage(r), { pristine: big }); confetti(innerWidth / 2, innerHeight / 2, 80);
+          toast(`Background removed (${r.device}, ${(r.ms / 1000).toFixed(1)} s)`, '✂️'); return;
+        } catch (e) { job.done(); console.warn(e); toast(e.message || 'The AI could not run', '⚠️', { label: 'Retry', fn: () => removeBg(o, opt) }); return; } finally { deskBusy = false; }
       }
       if (vault.state() === 'locked') await vault.ensure();
       if (comfy.available()) { // owner: BiRefNet on your own GPU (best quality), falls back to the in-browser model if your PC is off
@@ -239,6 +283,21 @@
   /* ================= enhance: upscale 2× + unsharp ================= */
   async function enhance(o = needImage()) {
     if (!o) return;
+    if (DESK) {
+      if (deskBusy) return toast('The AI is still working on the last picture', 'ℹ️');
+      const src0 = natCanvas(o, 8000), side = Math.max(src0.width, src0.height);
+      if (side > 3000) return toast(`This picture is already ${side} px — big enough to print sharp. Upscaling works on pictures up to 3000 px`, 'ℹ️');
+      const job = busy('Upscaling with AI…'); deskBusy = true;
+      try {
+        const r = await DESK.upscale(toImage(src0), {}, p => job.set(p.stage));
+        let out = fromImage(r);
+        const maxSide = 12000; // keep the canvas within what the editor can hold
+        if (Math.max(out.width, out.height) > maxSide) { const k = maxSide / Math.max(out.width, out.height), t = document.createElement('canvas'); t.width = Math.round(out.width * k); t.height = Math.round(out.height * k); const g = t.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(out, 0, 0, t.width, t.height); out = t; }
+        job.done(); const n = await replaceImage(o, out, { pristine: o._pristine });
+        toast(`Upscaled ${Math.round(out.width / src0.width)}× with AI (${r.device}, ${(r.ms / 1000).toFixed(0)} s) — now ${dpiOf(n)} DPI at this size`, '🔍');
+      } catch (e) { job.done(); console.warn(e); toast(e.message || 'The AI could not run', '⚠️'); } finally { deskBusy = false; }
+      return;
+    }
     const job = busy('Enhancing quality…'); await tick();
     const src = natCanvas(o, 8000), f = (src.width * src.height * 4 <= (matchMedia('(pointer:coarse)').matches ? 16e6 : 40e6) && Math.max(src.width, src.height) <= 3000) ? 2 : 1; // phones can't allocate huge canvases
     let cur = src;
@@ -483,9 +542,15 @@
   let aiHist = [];
   (async () => { try { const h = await C.kv.get('aihist'); if (Array.isArray(h)) { aiHist = h; renderAiGrid(); } } catch { } })();
   const saveAiHist = () => { try { C.kv.set('aihist', aiHist.slice(0, 18)); } catch { } };
+  let fluxPaid = false; // Pollinations answers 402 (payment required) for model=flux once the anonymous allowance is used; the default model stays free
   async function cloudImage(prompt, w, h) {
-    const url = `https://image.pollinations.ai/prompt/${enc(prompt)}?width=${w}&height=${h}&nologo=true&model=flux&seed=${Math.floor(Math.random() * 1e6)}`;
-    for (let t = 0; t < 3; t++) { const r = await fetch(url + '&t=' + t); if (r.ok) return r.blob(); await new Promise(res => setTimeout(res, 2500 * (t + 1))); } throw new Error('AI busy');
+    const base = `https://image.pollinations.ai/prompt/${enc(prompt)}?width=${w}&height=${h}&nologo=true&seed=${Math.floor(Math.random() * 1e6)}`;
+    for (let t = 0; t < 4; t++) {
+      const r = await fetch(base + (fluxPaid ? '' : '&model=flux') + '&t=' + t); if (r.ok) return r.blob();
+      if (r.status === 402 && !fluxPaid) { fluxPaid = true; continue; } // switch to the free model straight away, no wait
+      await new Promise(res => setTimeout(res, 3000 * (t + 1)));
+    }
+    throw new Error('AI busy');
   }
   $('#aiGo').onclick = async () => {
     const prompt = $('#aiPrompt').value.trim(); if (!prompt) return toast('Describe your image first', '✍️');
