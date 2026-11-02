@@ -244,6 +244,7 @@
         <div class="canvas-wrap" id="canvasWrap">
           <canvas id="c"></canvas>
           <div class="guides" id="guides"></div>
+          <div class="dim-tag" id="dimTag" hidden title="Click to change the unit"></div>
           <div class="float-tb" id="floatTb" hidden>
             <input type="color" id="ftColor" title="Colour">
             <button data-ft="up" title="Bring forward"><i data-ico="arrow-up" data-s="16"></i></button>
@@ -413,7 +414,12 @@
           </section>
 
           <section data-s="position">
-            <h4>Position</h4>
+            <h4>Size &amp; position</h4>
+            <div class="size-grid">
+              <label>W<input type="number" id="sizeW" step="0.1" min="0.05"></label><label>H<input type="number" id="sizeH" step="0.1" min="0.05"></label>
+              <select id="sizeUnit" aria-label="Unit"><option value="cm">cm</option><option value="in">in</option><option value="mm">mm</option><option value="px">px</option></select>
+              <button id="sizeLock" class="ibtn sm" title="Keep proportions" aria-pressed="true"><i data-ico="link" data-s="15"></i></button>
+            </div>
             <label class="slider-row">Rotate <input type="range" id="angle" min="0" max="360" value="0"></label>
             <div class="row3">
               <button id="forward" class="btn" title="Bring forward"><i data-ico="arrow-up" data-s="16"></i>Up</button>
@@ -619,6 +625,7 @@
 <script src="fonts.js"></script>
 <script src="graphics.js"></script>
 <script src="elements.js"></script>
+<script src="uploads.js"></script>
 <script src="templates.js"></script>
 <script src="realtpl.js"></script>
 <script src="mocktpl.js"></script>

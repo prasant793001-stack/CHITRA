@@ -193,6 +193,11 @@
         await replaceImage(o, res, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 60);
         toast(opt.keepWhites ? 'Background removed — white parts kept' : 'Outer background removed — inner colours kept', '✂️', opt.keepWhites ? undefined : { label: 'Keep white parts', fn: async () => { await replaceImage(o, floodCut(src, { keepWhites: true }), { pristine: src }); toast('White parts kept', '✂️'); } }); return;
       }
+      if (vault.state() === 'locked') await vault.ensure();
+      if (comfy.available()) { // owner: BiRefNet on your own GPU (best quality), falls back to the in-browser model if your PC is off
+        try { job.set('Cutting out on your PC (BiRefNet)…'); const blob = await comfy.removeBg(await canvasToBlob(src)), url = await blobToDataURL(blob), cov0 = await coverageOf(url);
+          if (cov0 >= 0.02) { job.done(); await replaceImage(o, url, { pristine: src }); confetti(innerWidth / 2, innerHeight / 2, 80); toast('Background removed (BiRefNet)', '✂️'); return; } } catch (e) { console.warn('ComfyUI cut-out failed, using the in-browser model', e); }
+      }
       const mod = await loadImgly(), res = await aiCut(mod, src, job), cov = await coverageOf(res);
       job.done();
       if (cov < 0.02) { toast('The AI could not find a clear subject — original kept. Try Refine to mark it', '⚠️'); return; }
@@ -446,22 +451,32 @@
   const comfy = {
     cfg() { const k = KEYS || {}; return { url: String(k.comfyUrl || '').replace(/\/$/, ''), token: k.comfyToken || '' }; },
     available() { return !!this.cfg().url; },
-    async generate(prompt, { w = 1024, h = 1024, seed = Math.floor(Math.random() * 1e15), onQueued } = {}) {
-      const { url, token } = this.cfg(), H = { 'content-type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) };
-      const wf = await (await fetch('data/comfy-zimage.json')).json();
-      wf['57:27'].inputs.text = prompt; wf['57:3'].inputs.seed = seed; wf['57:13'].inputs.width = w; wf['57:13'].inputs.height = h; wf['9'].inputs.filename_prefix = 'chitra';
-      const r = await fetch(`${url}/prompt`, { method: 'POST', headers: H, body: JSON.stringify({ prompt: wf, client_id: 'chitra-' + Math.random().toString(36).slice(2) }) }); if (!r.ok) throw new Error('ComfyUI ' + r.status);
-      const { prompt_id } = await r.json(); onQueued && onQueued();
-      for (let i = 0; i < 240; i++) { // up to ~4 minutes
-        await new Promise(res => setTimeout(res, 1000)); const hr = await fetch(`${url}/history/${prompt_id}`, { headers: H }); if (!hr.ok) continue; const hj = await hr.json(), out = hj[prompt_id]; if (!out) continue;
-        const im = Object.values(out.outputs || {}).flatMap(o => o.images || [])[0]; if (!im) throw new Error('ComfyUI returned no image');
-        return (await fetch(`${url}/view?filename=${enc(im.filename)}&subfolder=${enc(im.subfolder || '')}&type=${enc(im.type || 'output')}`, { headers: H })).blob();
+    hdr(json) { const { token } = this.cfg(); return { ...(json ? { 'content-type': 'application/json' } : {}), ...(token ? { Authorization: 'Bearer ' + token } : {}) }; },
+    /* queue a workflow (API format) and wait for the picked output node's first image */
+    async run(wf, outNode) {
+      const { url } = this.cfg(), r = await fetch(`${url}/prompt`, { method: 'POST', headers: this.hdr(true), body: JSON.stringify({ prompt: wf, client_id: 'chitra-' + Math.random().toString(36).slice(2) }) }); if (!r.ok) throw new Error('ComfyUI ' + r.status);
+      const { prompt_id } = await r.json();
+      for (let i = 0; i < 300; i++) { // up to ~5 minutes
+        await new Promise(res => setTimeout(res, 1000)); const hr = await fetch(`${url}/history/${prompt_id}`, { headers: this.hdr() }); if (!hr.ok) continue; const out = (await hr.json())[prompt_id]; if (!out) continue;
+        const o = out.outputs || {}, im = (outNode && o[outNode] ? o[outNode].images || [] : Object.values(o).flatMap(x => x.images || []))[0]; if (!im) throw new Error('ComfyUI returned no image');
+        return (await fetch(`${url}/view?filename=${enc(im.filename)}&subfolder=${enc(im.subfolder || '')}&type=${enc(im.type || 'output')}`, { headers: this.hdr() })).blob();
       }
       throw new Error('ComfyUI timed out');
     },
+    /* text -> image. Z-Image Turbo for everything EXCEPT food / drink (those always use Flux: Z-Image draws them with dots) */
+    async generate(prompt, { w = 1024, h = 1024, seed = Math.floor(Math.random() * 1e15), food = FOOD_RE.test(prompt) } = {}) {
+      if (food) { const wf = await (await fetch('data/comfy-flux.json')).json(); wf['56:51'].inputs.text = prompt; wf['56:52'].inputs.seed = seed; wf['56:50'].inputs.width = w; wf['56:50'].inputs.height = h; wf['9'].inputs.filename_prefix = 'chitra-flux'; return this.run(wf, '9'); }
+      const wf = await (await fetch('data/comfy-zimage.json')).json(); wf['57:27'].inputs.text = prompt; wf['57:3'].inputs.seed = seed; wf['57:13'].inputs.width = w; wf['57:13'].inputs.height = h; wf['9'].inputs.filename_prefix = 'chitra'; return this.run(wf, '9');
+    },
+    /* background removal with BiRefNet on the owner's GPU: upload the picture, run the workflow, get a PNG with alpha */
+    async removeBg(blob) {
+      const { url } = this.cfg(), fd = new FormData(); fd.append('image', blob, `chitra-${Date.now()}.png`); fd.append('overwrite', 'true'); fd.append('type', 'input');
+      const up = await fetch(`${url}/upload/image`, { method: 'POST', headers: this.hdr(), body: fd }); if (!up.ok) throw new Error('ComfyUI upload ' + up.status); const u = await up.json();
+      const wf = await (await fetch('data/comfy-birefnet.json')).json(); wf['17'].inputs.image = u.subfolder ? `${u.subfolder}/${u.name}` : u.name; return this.run(wf, '18');
+    },
   };
   C.localAI = { comfy, isFood: t => FOOD_RE.test(t) };
-  C.aiImage = async (prompt, { w = 1024, h = 1024 } = {}) => { if (vault.state() === 'locked') await vault.ensure(); return comfy.available() && !FOOD_RE.test(prompt) ? comfy.generate(prompt, { w, h }) : cloudImage(prompt, w, h); }; // used by Photo mockups
+  C.aiImage = async (prompt, { w = 1024, h = 1024 } = {}) => { if (vault.state() === 'locked') await vault.ensure(); return comfy.available() ? comfy.generate(prompt, { w, h }) : cloudImage(prompt, w, h); }; // used by Photo mockups (food words are routed to Flux inside generate)
 
   /* ---- AI Art: 3 variations per prompt, kept in the left panel. Nothing goes on the canvas until the user clicks one. ---- */
   const VARIANTS = ['', ', alternative composition, different angle', ', close-up detail, fresh colour palette'];
@@ -475,10 +490,10 @@
   $('#aiGo').onclick = async () => {
     const prompt = $('#aiPrompt').value.trim(); if (!prompt) return toast('Describe your image first', '✍️');
     if (vault.state() === 'locked') await vault.ensure();
-    const [w, h] = $('#aiShape').value.split('x').map(Number), style = AI_STYLES[aiStyle][1], food = FOOD_RE.test(prompt), local = comfy.available() && !food;
+    const [w, h] = $('#aiShape').value.split('x').map(Number), style = AI_STYLES[aiStyle][1], food = FOOD_RE.test(prompt), local = comfy.available();
     const ids = [0, 1, 2].map(i => 'p' + Date.now() + i); ids.forEach(id => aiHist.unshift({ id, pending: true })); renderAiGrid();
     const btn = $('#aiGo'); btn.disabled = true;
-    if (comfy.available() && food) toast('Food prompts use the cloud generator (your local model is skipped for food)', 'ℹ️');
+    if (comfy.available() && food) toast('Food prompt: using Flux on your PC (Z-Image is never used for food)', 'ℹ️');
     const one = async (i, id) => {
       const full = prompt + VARIANTS[i] + ', ' + style;
       try { const blob = local ? await comfy.generate(full, { w, h }) : await cloudImage(full, w, h); const data = await blobToDataURL(blob), slot = aiHist.find(x => x.id === id); if (slot) { slot.pending = false; slot.data = data; slot.prompt = prompt; } }

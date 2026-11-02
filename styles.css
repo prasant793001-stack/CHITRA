@@ -741,3 +741,17 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .pm-pick{position:absolute;inset:0;z-index:5;background:#fff;border-radius:18px;padding:18px;overflow:auto}.pm-pick-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;padding-right:40px}
 .pm-hero{display:grid;gap:3px;width:100%;text-align:left;border:0;border-radius:16px;padding:16px;margin-bottom:14px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;cursor:pointer;position:relative}.pm-hero b{font-size:16px}.pm-hero small{opacity:.85;font-size:12px;max-width:80%}.pm-hero span{position:absolute;right:14px;top:14px;opacity:.7}
 @media (max-width:800px){.pm-body{grid-template-columns:1fr}.pm{max-height:96vh}}
+
+/* live size readout */
+.dim-tag{position:fixed;z-index:70;transform:translateX(-50%);padding:5px 12px;border-radius:99px;background:#1b1535;color:#fff;font:600 12px "Plus Jakarta Sans",system-ui,sans-serif;white-space:nowrap;cursor:pointer;box-shadow:0 6px 18px rgba(20,10,60,.35);pointer-events:auto}
+.dim-tag b{font-weight:800}.dim-tag em{font-style:normal;opacity:.65;margin-left:2px}
+.size-grid{display:grid;grid-template-columns:1fr 1fr auto auto;gap:6px;align-items:end;margin-bottom:10px}
+.size-grid label{display:grid;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}.size-grid input{width:100%!important;text-align:left!important}
+.size-grid select{height:36px;border-radius:8px;border:1px solid var(--line);padding:0 6px}.size-grid .ibtn.on{background:#ece8ff;color:#4a24c9}
+
+/* uploads library + connected folder */
+.upl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0 12px}
+.upl-card{position:relative;aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:#f4f3f8 repeating-conic-gradient(#ececf2 0 25%,transparent 0 50%) 0 0/12px 12px;padding:0;overflow:hidden;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.upl-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,160,.18)}.upl-card img{width:100%;height:100%;object-fit:contain;display:block}
+.upl-card i{position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);font-style:normal;line-height:20px;text-align:center;font-size:14px;opacity:0;transition:.15s}.upl-card:hover i{opacity:1}
+@media (hover:none){.upl-card i{opacity:1}}

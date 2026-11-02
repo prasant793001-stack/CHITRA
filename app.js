@@ -200,6 +200,7 @@
     $('#zoomLabel').textContent = Math.round(zoom * 100) + '%';
     $('#zoomSlider').value = Math.round(zoom * 100);
     canvas.requestRenderAll(); placeFloat();
+    updateDim();
   }
   const fitZoom = () => { const s = $('#stage'); return Math.min((s.clientWidth - 40) / W, (s.clientHeight - (isMobile() ? 70 : 150)) / H, 1); };
   function fit() { lastW = $('#stage').clientWidth; zoom = fitZoom(); applyZoom(); }
@@ -430,7 +431,7 @@
     });
   }
   const readFiles = files => [...files].filter(f => f.type.startsWith('image/')).forEach(f => {
-    const r = new FileReader(); r.onload = () => addImageFromURL(r.result); r.readAsDataURL(f);
+    const r = new FileReader(); r.onload = () => { addImageFromURL(r.result); chitra.uploads && chitra.uploads.save(f); }; r.readAsDataURL(f);
   });
   $('#imgUpload').onchange = e => { readFiles(e.target.files); e.target.value = ''; };
   $('#stage').addEventListener('dragover', e => { e.preventDefault(); $('#dropzone').classList.add('over'); });
@@ -757,16 +758,39 @@
   }));
 
   /* ---- floating toolbar next to the selection ---- */
+  /* ---- live size readout in real units (cm / in / mm / px), like Canva: shown under the selection and editable in the inspector ---- */
+  const UNITS = { cm: v => v / DPI * 2.54, in: v => v / DPI, mm: v => v / DPI * 25.4, px: v => v }, FROM = { cm: v => v / 2.54 * DPI, in: v => v * DPI, mm: v => v / 25.4 * DPI, px: v => v };
+  let unit = (() => { try { return localStorage.getItem('chitra.unit') || 'cm'; } catch { return 'cm'; } })(); if (!UNITS[unit]) unit = 'cm';
+  const fmtU = (v, u = unit) => (u === 'px' ? Math.round(v) : u === 'in' ? v.toFixed(2) : v.toFixed(1));
+  const setUnit = u => { unit = u; try { localStorage.setItem('chitra.unit', u); } catch { } const sel = $('#sizeUnit'); if (sel) sel.value = u; updateDim(); syncSize(); };
+  function updateDim() {
+    const tag = $('#dimTag'), o = active(); if (!tag) return;
+    if (!o || o.isEditing || !o.getScaledWidth) { tag.hidden = true; return; }
+    const r = o.getBoundingRect(), w = o.getScaledWidth(), h = o.getScaledHeight(), wr = canvas.upperCanvasEl.getBoundingClientRect();
+    tag.hidden = false; tag.innerHTML = `<b>${fmtU(UNITS[unit](w))}</b> × <b>${fmtU(UNITS[unit](h))}</b> <em>${unit}</em>`;
+    const x = wr.left + r.left + r.width / 2, y = wr.top + r.top + r.height + 16; tag.style.left = Math.max(60, Math.min(innerWidth - 60, x)) + 'px'; tag.style.top = Math.min(innerHeight - 40, y) + 'px';
+  }
+  function syncSize() { const o = active(), W_ = $('#sizeW'), H_ = $('#sizeH'); if (!W_ || !o || !o.getScaledWidth) return; if (document.activeElement !== W_) W_.value = fmtU(UNITS[unit](o.getScaledWidth())); if (document.activeElement !== H_) H_.value = fmtU(UNITS[unit](o.getScaledHeight())); $('#sizeUnit').value = unit; }
+  let sizeLock = true;
+  function applySize(from) {
+    const o = active(); if (!o || !o.width) return; const wv = parseFloat($('#sizeW').value), hv = parseFloat($('#sizeH').value);
+    if (from === 'w' && wv > 0) { const sx = FROM[unit](wv) / (o.getScaledWidth() / o.scaleX); o.set(sizeLock ? { scaleX: sx, scaleY: sx * (o.scaleY / o.scaleX) } : { scaleX: sx }); }
+    if (from === 'h' && hv > 0) { const sy = FROM[unit](hv) / (o.getScaledHeight() / o.scaleY); o.set(sizeLock ? { scaleY: sy, scaleX: sy * (o.scaleX / o.scaleY) } : { scaleY: sy }); }
+    o.setCoords(); canvas.requestRenderAll(); updateDim(); placeFloat(); if (from === 'w') { if (document.activeElement !== $('#sizeH')) $('#sizeH').value = fmtU(UNITS[unit](o.getScaledHeight())); } else if (document.activeElement !== $('#sizeW')) $('#sizeW').value = fmtU(UNITS[unit](o.getScaledWidth()));
+  }
+  $('#sizeW').oninput = () => applySize('w'); $('#sizeH').oninput = () => applySize('h'); $('#sizeW').onchange = $('#sizeH').onchange = commit;
+  $('#sizeUnit').onchange = e => setUnit(e.target.value); $('#sizeLock').onclick = e => { sizeLock = !sizeLock; e.currentTarget.setAttribute('aria-pressed', String(sizeLock)); e.currentTarget.classList.toggle('on', sizeLock); }; $('#sizeLock').classList.add('on');
+  $('#dimTag').onclick = () => setUnit(['cm', 'in', 'mm', 'px'][(['cm', 'in', 'mm', 'px'].indexOf(unit) + 1) % 4]);
   function placeFloat() {
     const tb = $('#floatTb'), o = active();
-    if (!o) { tb.hidden = true; return; }
+    if (!o) { tb.hidden = true; updateDim(); return; }
     const r = o.getBoundingRect(), above = r.top > 110;
     tb.hidden = false;
     tb.style.left = r.left + r.width / 2 + 'px';
     tb.style.top = (above ? r.top - (o.locked || isCoarse ? 14 : 58) : r.top + r.height + 14) + 'px'; // sits above the rotate handle so it never hides it
     tb.style.transform = `translate(-50%,${above ? '-100%' : '0'})`;
     tb.style.setProperty('--ft-t', tb.style.transform);
-    $('[data-ft=lock]').innerHTML = ico(o.locked ? 'lock-open' : 'lock', 18);
+    $('[data-ft=lock]').innerHTML = ico(o.locked ? 'lock-open' : 'lock', 18); updateDim(); syncSize();
   }
   ['object:moving', 'object:scaling', 'object:rotating', 'object:modified', 'selection:created', 'selection:updated', 'selection:cleared'].forEach(e => canvas.on(e, placeFloat));
   $$('[data-ft]').forEach(b => b.onclick = () => ({ up: () => $('#forward').click(), down: () => $('#backward').click(), dup: duplicate, lock: toggleLock, del: remove })[b.dataset.ft]());

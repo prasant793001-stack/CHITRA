@@ -49,7 +49,7 @@ module.exports = [
     const metas = await p.evaluate(async () => (await chitra.store.list()).map(m => m.name + '|' + m.w + 'x' + m.h));
     ok('Magic Resize created 2 copies', metas.some(m => /Resize me · Story.*1080x1920/.test(m)) && metas.some(m => /Resize me · A4/.test(m)), metas.slice(0, 4).join(' ; '));
     ok('resized copy has content', await p.evaluate(() => chitra.canvas.getObjects().length) > 0);
-    const d = await p.evaluate(() => chitra.describe('birthday mug for dad')); ok('describe finds a mug template', /^mug|^tee|^ig/.test(d.id) && d.title.toLowerCase().includes('dad'), JSON.stringify(d));
+    const d = await p.evaluate(() => chitra.describe('birthday mug for dad')); ok('describe finds a mug template', /^mug|^tee|^ig|^tp-/.test(d.id) && d.title.toLowerCase().includes('dad'), JSON.stringify(d));
     await p.evaluate(() => chitra.magic('eid mug')); await p.waitForTimeout(1500);
     ok('magic opens a mug design', await p.evaluate(() => document.querySelector('#productName').textContent) === '11 oz mug wrap');
     await p.evaluate(() => chitra.canvas.add(new fabric.Rect({ width: 50, height: 50, left: 10, top: 10 }))); await p.evaluate(() => chitra.saveNow()); await p.evaluate(() => chitra.openHistory()); await p.click('#verNow'); await p.waitForTimeout(600);
@@ -209,6 +209,45 @@ module.exports = [
     ok('swiping the sheet down closes it', !(await st()).open);
     await p.tap('#ctxBar [data-key=font]'); await p.waitForTimeout(300); await p.tap('#ctxBar [data-key=dup]'); await p.waitForTimeout(400); ok('picking an action (Duplicate) tucks the open sheet away', !(await st()).open);
     const hs = await p.evaluate(() => fabric.Object.prototype.cornerSize); ok('selection handles are slim on phones', hs <= 18, hs);
+  } },
+  { name: 'size readout in cm + editable size', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(() => { localStorage.setItem('chitra.unit', 'cm'); return chitra.newDocument({ product: chitra.productByName('A4'), template: 'blank' }); }); await p.waitForTimeout(500);
+    await p.evaluate(() => { const r = new fabric.Rect({ width: 300, height: 600, fill: '#f00' }); chitra.place(r); r.set({ scaleX: 1, scaleY: 1 }); r.setCoords(); chitra.canvas.setActiveObject(r); chitra.canvas.fire('object:modified', { target: r }); chitra.refreshProps(); }); await p.waitForTimeout(400);
+    const t = await p.evaluate(() => document.getElementById('dimTag').textContent.replace(/\s+/g, ' ').trim()); ok('size tag shows real centimetres (300 px at 300 dpi = 2.5 cm)', /2\.5 × 5\.1 cm/.test(t), t);
+    await p.evaluate(() => { const w = document.getElementById('sizeW'); w.value = '5'; w.dispatchEvent(new Event('input')); });
+    const r = await p.evaluate(() => { const o = chitra.active(); return { w: o.getScaledWidth(), h: o.getScaledHeight() }; }); ok('typing a width in cm resizes the object, keeping proportions', Math.abs(r.w - 590.55) < 1 && Math.abs(r.h - 1181.1) < 2, JSON.stringify(r));
+    await p.evaluate(() => document.getElementById('dimTag').click()); ok('clicking the tag cycles the unit', (await p.evaluate(() => document.getElementById('dimTag').textContent)).includes('in'));
+    await p.evaluate(() => localStorage.setItem('chitra.unit', 'cm'));
+  } },
+  { name: 'uploads are remembered and re-usable', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(async () => { await chitra.kv.set('uplidx', []); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); document.querySelector('#rail [data-tab=upload]').click(); }); await p.waitForTimeout(400);
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+    await p.setInputFiles('#imgUpload', { name: 'logo-test.png', mimeType: 'image/png', buffer: png }); await p.waitForTimeout(1200);
+    ok('upload lands on the canvas', await p.evaluate(() => chitra.canvas.getObjects().length === 1));
+    ok('and is saved in Your uploads', await p.locator('#uplGrid .upl-card').count() === 1);
+    await p.evaluate(() => chitra.canvas.clear()); await p.evaluate(() => document.querySelector('#uplGrid .upl-card').click()); await p.waitForTimeout(800);
+    ok('clicking a saved upload adds it again', await p.evaluate(() => chitra.canvas.getObjects().length === 1));
+    ok('same file is not saved twice', await (async () => { await p.setInputFiles('#imgUpload', { name: 'logo-test.png', mimeType: 'image/png', buffer: png }); await p.waitForTimeout(900); return (await p.locator('#uplGrid .upl-card').count()) === 1; })());
+    ok('folder connect button is present', await p.locator('#folPick').count() === 1);
+  } },
+  { name: 'owner ComfyUI: Z-Image, Flux for food, BiRefNet cut-out', only: 'desktop', run: async (p, ok, mobile, ctx) => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64'), posted = [];
+    await ctx.route('http://127.0.0.1:8188/**', async r => { const u = new URL(r.request().url()), h = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' };
+      if (r.request().method() === 'OPTIONS') return r.fulfill({ status: 204, headers: h });
+      if (u.pathname === '/prompt') { posted.push(JSON.parse(r.request().postData()).prompt); return r.fulfill({ status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({ prompt_id: 'pid' + posted.length }) }); }
+      if (u.pathname.startsWith('/history/')) { const id = u.pathname.split('/').pop(); return r.fulfill({ status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({ [id]: { outputs: { '9': { images: [{ filename: 'a.png', subfolder: '', type: 'output' }] }, '18': { images: [{ filename: 'b.png', subfolder: '', type: 'temp' }] }, '20': { images: [{ filename: 'mask.png', subfolder: '', type: 'temp' }] } } } }) }); }
+      if (u.pathname === '/upload/image') return r.fulfill({ status: 200, contentType: 'application/json', headers: h, body: JSON.stringify({ name: 'up.png', subfolder: '', type: 'input' }) });
+      if (u.pathname === '/view') return r.fulfill({ status: 200, contentType: 'image/png', headers: h, body: png }); r.fulfill({ status: 404, headers: h, body: '' }); });
+    await ctx.route('https://image.pollinations.ai/**', r => r.fulfill({ status: 200, contentType: 'image/png', body: png }));
+    await p.evaluate(async () => { localStorage.removeItem('chitra.vault'); await chitra.vault.save({ comfyUrl: 'http://127.0.0.1:8188' }, 'secret1', false); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' }); });
+    await p.evaluate(() => { document.querySelector('#rail [data-tab=ai]').click(); document.querySelector('#aiPrompt').value = 'a neon fox'; document.querySelector('#aiCut').checked = false; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(9000);
+    ok('normal prompts use Z-Image on your PC', posted.length >= 3 && posted.every(w => w['57:27']), posted.length);
+    const n1 = posted.length; await p.evaluate(() => { document.querySelector('#aiPrompt').value = 'fresh pizza on a table'; document.querySelector('#aiGo').click(); }); await p.waitForTimeout(9000);
+    const food = posted.slice(n1); ok('food prompts use Flux, never Z-Image', food.length >= 3 && food.every(w => w['56:51'] && !w['57:27']), food.length);
+    await p.evaluate(async () => { const c = document.createElement('canvas'); c.width = 120; c.height = 90; const g = c.getContext('2d'); for (let i = 0; i < 600; i++) { g.fillStyle = `hsl(${i * 37 % 360},70%,${30 + i % 40}%)`; g.fillRect((i * 53) % 120, (i * 29) % 90, 14, 14); } await new Promise(r => fabric.Image.fromURL(c.toDataURL(), i => { chitra.place(i); r(); })); }); await p.waitForTimeout(400);
+    const n2 = posted.length; await p.evaluate(() => chitra.removeBg()); await p.waitForTimeout(5000);
+    ok('background removal runs BiRefNet on your PC', posted.length === n2 + 1 && posted[n2]['19:13'] && posted[n2]['17'].inputs.image === 'up.png', JSON.stringify(Object.keys(posted[n2] || {})));
+    await p.evaluate(() => { localStorage.removeItem('chitra.vault'); });
   } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
