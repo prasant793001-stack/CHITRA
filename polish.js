@@ -1,8 +1,7 @@
 /* Chitra Studio – polish layer: accessibility, keyboard shortcuts, save status, offline banner, first-run tour, shortcut help. */
 (() => {
   const C = window.chitra, { $, $$, toast } = C;
-  const LOGO = '<svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true"><path d="M43 22.5A15 15 0 1 0 43 41.5" fill="none" stroke="#fff" stroke-width="7.5" stroke-linecap="round"/><path d="M47 9l2.6 6.4L56 18l-6.4 2.6L47 27l-2.6-6.4L38 18l6.4-2.6z" fill="#ffc93c"/></svg>';
-  $$('.logo-mark').forEach(m => { m.innerHTML = LOGO; });
+  $$('.logo-mark').forEach(m => { m.innerHTML = '<svg class="lg" viewBox="0 0 128 128" aria-hidden="true"><use href="#chitra-logo"/></svg>'; });
 
   /* ---------- accessibility: names for icon-only controls, dialogs, focus ---------- */
   function label(root = document) {

@@ -1,0 +1,182 @@
+/* =====================================================================================================
+   Chitra Studio – LIQUID GLASS theme (loaded after styles.css).  Dark glass is the default; <html data-theme="glass-light"> is the light variant.
+   Frosted translucent surfaces over a slow-moving aurora, bright specular edges, spring-physics motion (Apple-style easing), bold gradients.
+   Everything is driven by the tokens below so both variants share one stylesheet.
+   ===================================================================================================== */
+:root{--spring:cubic-bezier(.32,.72,0,1);--spring2:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.22,1,.36,1)}
+:root[data-theme^="glass"]{
+  color-scheme:dark;
+  --bg:#0a0820;--panel:rgba(255,255,255,.07);--stage:transparent;
+  --text:#f4f2ff;--muted:#b0abd6;--line:rgba(255,255,255,.14);--line2:rgba(255,255,255,.08);
+  --f1:rgba(255,255,255,.04);--f2:rgba(255,255,255,.08);--f3:rgba(255,255,255,.13);
+  --orange:#9a7bff;--orange2:#b49dff;--orange-d:#c9bbff;--orange-l:rgba(154,123,255,.2);
+  --yellow-l:rgba(255,201,60,.16);--yellow-d:#ffd97a;--green-l:rgba(18,184,134,.18);--green-d:#52e3b6;
+  --accent:#9a7bff;
+  --g-surface:rgba(255,255,255,.075);--g-surface2:rgba(255,255,255,.12);--g-strong:rgba(28,24,64,.72);--g-border:rgba(255,255,255,.17);
+  --g-hi:inset 0 1px 0 rgba(255,255,255,.26),inset 0 -1px 0 rgba(255,255,255,.05),inset 1px 0 0 rgba(255,255,255,.06);
+  --g-blur:blur(26px) saturate(1.7);--g-blur-s:blur(14px) saturate(1.5);
+  --g-shadow:0 14px 44px rgba(3,0,22,.5),0 2px 6px rgba(3,0,22,.3);
+  --shadow:0 6px 24px rgba(3,0,22,.4);--shadow-lg:0 22px 70px rgba(3,0,22,.6),0 4px 12px rgba(3,0,22,.35);
+  --g-input:rgba(255,255,255,.09);--g-card-bg:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.045));
+  --g-aurora-a:rgba(124,92,255,.55);--g-aurora-b:rgba(45,212,255,.38);--g-aurora-c:rgba(255,92,200,.32);--g-base:#0a0820;
+}
+:root[data-theme="glass-light"]{
+  color-scheme:light;
+  --bg:#eef0ff;--panel:rgba(255,255,255,.6);--text:#1b1740;--muted:#615c8f;--line:rgba(60,40,160,.14);--line2:rgba(60,40,160,.08);
+  --f1:rgba(60,40,160,.04);--f2:rgba(60,40,160,.07);--f3:rgba(60,40,160,.11);
+  --orange:#6d4aff;--orange2:#8a6bff;--orange-d:#4a24c9;--orange-l:rgba(109,74,255,.13);--yellow-d:#8a5d00;--green-d:#0c8f67;
+  --accent:#6d4aff;--shadow:0 6px 24px rgba(60,40,160,.14);--shadow-lg:0 22px 60px rgba(60,40,160,.22);
+  --g-surface:rgba(255,255,255,.58);--g-surface2:rgba(255,255,255,.82);--g-strong:rgba(255,255,255,.88);--g-border:rgba(255,255,255,.9);
+  --g-hi:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(120,100,220,.12);
+  --g-shadow:0 14px 44px rgba(70,50,170,.16),0 2px 6px rgba(70,50,170,.08);--g-input:rgba(255,255,255,.7);
+  --g-card-bg:linear-gradient(145deg,rgba(255,255,255,.9),rgba(255,255,255,.55));
+  --g-aurora-a:rgba(150,120,255,.5);--g-aurora-b:rgba(90,200,255,.42);--g-aurora-c:rgba(255,150,220,.38);--g-base:#eef0ff;
+}
+
+/* ---------- living aurora background + film grain ---------- */
+:root[data-theme^="glass"] body{background:var(--g-base)}
+:root[data-theme^="glass"] body::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;
+  background:radial-gradient(38% 34% at 18% 22%,var(--g-aurora-a),transparent 70%),radial-gradient(34% 38% at 82% 18%,var(--g-aurora-b),transparent 70%),radial-gradient(40% 40% at 70% 86%,var(--g-aurora-c),transparent 70%),radial-gradient(30% 30% at 12% 82%,var(--g-aurora-b),transparent 72%);
+  filter:blur(30px);animation:auroraDrift 38s var(--ease-out) infinite alternate;will-change:transform}
+:root[data-theme^="glass"] body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+@keyframes auroraDrift{0%{transform:translate3d(-3%,-2%,0) scale(1)}50%{transform:translate3d(3%,2%,0) scale(1.08)}100%{transform:translate3d(-2%,4%,0) scale(1.03)}}
+
+/* ---------- glass surfaces ---------- */
+:root[data-theme^="glass"] .topbar,:root[data-theme^="glass"] .hm-top,:root[data-theme^="glass"] .rail,:root[data-theme^="glass"] .hm-nav,:root[data-theme^="glass"] .flyout,:root[data-theme^="glass"] .inspector,:root[data-theme^="glass"] .pagebar{
+  background:var(--g-surface);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border-color:var(--g-border);box-shadow:var(--g-hi)}
+:root[data-theme^="glass"] .topbar,:root[data-theme^="glass"] .hm-top{border-bottom:1px solid var(--g-border)}
+:root[data-theme^="glass"] .dock,:root[data-theme^="glass"] .float-tb,:root[data-theme^="glass"] .menu,:root[data-theme^="glass"] .cmd-box,:root[data-theme^="glass"] .toast,:root[data-theme^="glass"] .pg-menu{
+  background:var(--g-strong);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border:1px solid var(--g-border);box-shadow:var(--g-shadow),var(--g-hi);color:var(--text)}
+:root[data-theme^="glass"] .modal{background:rgba(6,4,24,.55);-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2)}
+:root[data-theme="glass-light"] .modal{background:rgba(190,185,240,.4)}
+:root[data-theme^="glass"] .sheet,:root[data-theme^="glass"] .fp,:root[data-theme^="glass"] .pm-pick,:root[data-theme^="glass"] .tour-card,:root[data-theme^="glass"] .studio-sheet{
+  background:var(--g-strong);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);border:1px solid var(--g-border);box-shadow:var(--shadow-lg),var(--g-hi);color:var(--text)}
+:root[data-theme^="glass"] .studio-sheet iframe{background:#fff;border-radius:inherit}
+:root[data-theme^="glass"] .ctxbar,:root[data-theme^="glass"] .sheet-head{background:var(--g-strong);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur)}
+:root[data-theme^="glass"] .stage-wrap,:root[data-theme^="glass"] #home{background:transparent}
+:root[data-theme^="glass"] .workspace{gap:10px;padding:0 10px 10px}
+:root[data-theme^="glass"] .rail,:root[data-theme^="glass"] .flyout,:root[data-theme^="glass"] .inspector{border-radius:22px;border:1px solid var(--g-border)}
+:root[data-theme^="glass"] .pagebar{border-radius:18px 18px 0 0;border:1px solid var(--g-border);border-bottom:0}
+:root[data-theme^="glass"] .canvas-wrap{box-shadow:0 30px 80px rgba(3,0,22,.55),0 0 0 1px rgba(255,255,255,.25),0 0 90px rgba(154,123,255,.25)}
+
+/* ---------- cards, tiles, chips, buttons ---------- */
+:root[data-theme^="glass"] .pcard2,:root[data-theme^="glass"] .lcard,:root[data-theme^="glass"] .tcard,:root[data-theme^="glass"] .tcard2,:root[data-theme^="glass"] .lay-card,:root[data-theme^="glass"] .pcard,:root[data-theme^="glass"] .mock-card,:root[data-theme^="glass"] .plan,:root[data-theme^="glass"] .magic-card,:root[data-theme^="glass"] .mk-item,:root[data-theme^="glass"] .pm-card,:root[data-theme^="glass"] .layers li,:root[data-theme^="glass"] .photo-card,:root[data-theme^="glass"] .gfx-card,:root[data-theme^="glass"] .upl-card,:root[data-theme^="glass"] .st-grid button,:root[data-theme^="glass"] .quick button{
+  background:var(--g-card-bg);border:1px solid var(--g-border);box-shadow:var(--g-hi),0 8px 22px rgba(3,0,22,.22);color:var(--text);transition:transform .45s var(--spring),box-shadow .45s var(--spring),border-color .3s,background .3s}
+:root[data-theme^="glass"] .tcard:hover,:root[data-theme^="glass"] .lcard:hover,:root[data-theme^="glass"] .pcard2:hover,:root[data-theme^="glass"] .tcard2:hover,:root[data-theme^="glass"] .lay-card:hover,:root[data-theme^="glass"] .pcard:hover,:root[data-theme^="glass"] .gfx-card:hover,:root[data-theme^="glass"] .upl-card:hover,:root[data-theme^="glass"] .photo-card:hover{
+  transform:translateY(-4px) scale(1.015);border-color:rgba(190,170,255,.7);box-shadow:var(--g-hi),0 22px 46px rgba(3,0,22,.45),0 0 32px rgba(154,123,255,.28)}
+:root[data-theme^="glass"] .pcard.on,:root[data-theme^="glass"] .lay-card.on,:root[data-theme^="glass"] .layers li.sel,:root[data-theme^="glass"] .plan.cur{border-color:#b49dff;box-shadow:var(--g-hi),0 0 0 2px rgba(180,157,255,.5),0 0 30px rgba(154,123,255,.35)}
+:root[data-theme^="glass"] .cat-tile{background:linear-gradient(140deg,color-mix(in srgb,var(--tint,#9a7bff) 40%,transparent),rgba(255,255,255,.05));border:1px solid var(--g-border);box-shadow:var(--g-hi),0 10px 26px rgba(3,0,22,.25);transition:transform .45s var(--spring),box-shadow .45s var(--spring)}
+:root[data-theme="glass-light"] .cat-tile{background:linear-gradient(140deg,color-mix(in srgb,var(--tint,#9a7bff) 70%,#fff),rgba(255,255,255,.6))}
+:root[data-theme^="glass"] .cat-tile:hover{transform:translateY(-4px) scale(1.02);box-shadow:var(--g-hi),0 20px 44px rgba(3,0,22,.4)}
+:root[data-theme^="glass"] .cat-tile span{color:#fff;opacity:.5}
+:root[data-theme^="glass"] .thumb,:root[data-theme^="glass"] .lay-card img{background-color:rgba(255,255,255,.06)}
+:root[data-theme^="glass"] .tcard .meta,:root[data-theme^="glass"] .tcard2 b{color:var(--text)}
+:root[data-theme^="glass"] .btn,:root[data-theme^="glass"] .ibtn,:root[data-theme^="glass"] select,:root[data-theme^="glass"] .chip{
+  background:var(--g-surface2);border:1px solid var(--g-border);color:var(--text);box-shadow:var(--g-hi);-webkit-backdrop-filter:var(--g-blur-s);backdrop-filter:var(--g-blur-s);transition:transform .35s var(--spring),background .25s,border-color .25s,box-shadow .35s var(--spring)}
+:root[data-theme^="glass"] .btn:hover,:root[data-theme^="glass"] .ibtn:hover,:root[data-theme^="glass"] select:hover,:root[data-theme^="glass"] .chip:hover{background:rgba(255,255,255,.2);border-color:rgba(200,180,255,.7);transform:translateY(-1px)}
+:root[data-theme="glass-light"] .btn:hover,:root[data-theme="glass-light"] .ibtn:hover,:root[data-theme="glass-light"] .chip:hover{background:#fff}
+:root[data-theme^="glass"] .btn:active,:root[data-theme^="glass"] .ibtn:active,:root[data-theme^="glass"] .chip:active,:root[data-theme^="glass"] .cta:active{transform:scale(.95);transition-duration:.12s}
+:root[data-theme^="glass"] .chip.on,:root[data-theme^="glass"] .btn.on,:root[data-theme^="glass"] .gx-tabs button.on,:root[data-theme^="glass"] .tabs button.on{background:linear-gradient(135deg,#8a6bff,#5b8cff);border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(110,90,255,.5),inset 0 1px 0 rgba(255,255,255,.4)}
+:root[data-theme^="glass"] .cta,:root[data-theme^="glass"] .btn.gold{border:1px solid rgba(255,255,255,.35);box-shadow:0 10px 30px rgba(110,90,255,.55),inset 0 1px 0 rgba(255,255,255,.5);background:linear-gradient(135deg,#8f6bff 0%,#5b7cff 55%,#2dc4ff 120%);color:#fff;transition:transform .4s var(--spring2),box-shadow .35s}
+:root[data-theme^="glass"] .btn.gold{background:linear-gradient(135deg,#ffd45e,#ff9d3d);color:#3a2200;box-shadow:0 10px 28px rgba(255,170,60,.45),inset 0 1px 0 rgba(255,255,255,.6)}
+:root[data-theme^="glass"] .cta:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 16px 40px rgba(110,90,255,.7),inset 0 1px 0 rgba(255,255,255,.5)}
+:root[data-theme^="glass"] .btn.hot,:root[data-theme^="glass"] .inspector .btn.hot{background:linear-gradient(135deg,rgba(154,123,255,.35),rgba(91,140,255,.22));color:var(--text);border-color:rgba(190,170,255,.45)}
+:root[data-theme^="glass"] .btn.danger,:root[data-theme^="glass"] button.danger{color:#ff7b92}
+:root[data-theme^="glass"] .btn.danger-solid{background:#d92d4a;color:#fff}
+
+/* ---------- inputs ---------- */
+:root[data-theme^="glass"] input[type=number],:root[data-theme^="glass"] .text-in,:root[data-theme^="glass"] input[type=text],:root[data-theme^="glass"] input[type=search],:root[data-theme^="glass"] input:not([type]),:root[data-theme^="glass"] textarea,:root[data-theme^="glass"] .searchbar,:root[data-theme^="glass"] .panel-search,:root[data-theme^="glass"] .hero-search,:root[data-theme^="glass"] .hm-search,:root[data-theme^="glass"] .project-name{
+  background:var(--g-input);border:1px solid var(--g-border);color:var(--text);box-shadow:inset 0 1px 3px rgba(0,0,0,.18)}
+:root[data-theme^="glass"] .hero-search{background:var(--g-surface2);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur)}
+:root[data-theme^="glass"] ::placeholder{color:var(--muted);opacity:.85}
+:root[data-theme^="glass"] input:focus,:root[data-theme^="glass"] textarea:focus,:root[data-theme^="glass"] select:focus{outline:2px solid rgba(180,157,255,.8);outline-offset:1px}
+:root[data-theme^="glass"] .product-btn,:root[data-theme^="glass"] .group,:root[data-theme^="glass"] .mini,:root[data-theme^="glass"] .font-btn,:root[data-theme^="glass"] .font-list{background:var(--g-surface2);border:1px solid var(--g-border);color:var(--text);box-shadow:var(--g-hi)}
+:root[data-theme^="glass"] .product-btn:hover,:root[data-theme^="glass"] .project-name:hover{background:rgba(255,255,255,.18);border-color:rgba(200,180,255,.6)}
+:root[data-theme^="glass"] .switch i{background:rgba(255,255,255,.22)}:root[data-theme^="glass"] .switch input:checked+i{background:linear-gradient(135deg,#8a6bff,#2dc4ff)}
+:root[data-theme^="glass"] input[type=range]{accent-color:#a78bff}
+:root[data-theme^="glass"] input[type=color]{background:var(--g-input);border-color:var(--g-border)}
+:root[data-theme^="glass"] .inspector .btn,:root[data-theme^="glass"] .inspector .row3,:root[data-theme^="glass"] .inspector .font-btn,:root[data-theme^="glass"] .inspector input[type=number],:root[data-theme^="glass"] .inspector .text-in{background:var(--g-input);border:1px solid var(--g-line,rgba(255,255,255,.1));color:var(--text)}
+:root[data-theme^="glass"] .inspector .row3 .btn,:root[data-theme^="glass"] .inspector section:not(#textSec) .row3 .btn{background:transparent;border-color:transparent}
+:root[data-theme^="glass"] .inspector .row3 .btn:hover{background:rgba(255,255,255,.14)}
+:root[data-theme^="glass"] .inspector .slider-row,:root[data-theme^="glass"] .inspector h4{color:var(--text)}
+:root[data-theme^="glass"] .inspector .tabs button{color:var(--muted)}:root[data-theme^="glass"] .inspector .tabs button.on{background:none;box-shadow:none;border-bottom-color:#b49dff;color:var(--text)}
+:root[data-theme^="glass"] .inspector section>div+div,:root[data-theme^="glass"] .inspector section+section{border-color:var(--g-border)}
+:root[data-theme^="glass"] .inspector .swatches button{box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
+:root[data-theme^="glass"] .inspector .mascot,:root[data-theme^="glass"] .inspector kbd{background:var(--g-surface2);color:var(--muted)}
+
+/* ---------- navigation rails + logo ---------- */
+:root[data-theme^="glass"] .rail button,:root[data-theme^="glass"] .hm-nav button{color:var(--muted);transition:transform .4s var(--spring),background .3s,color .3s}
+:root[data-theme^="glass"] .rail button:hover,:root[data-theme^="glass"] .hm-nav button:hover{background:rgba(255,255,255,.1);color:var(--text);transform:translateX(2px)}
+:root[data-theme^="glass"] .rail button.on,:root[data-theme^="glass"] .hm-nav button.on{background:linear-gradient(140deg,rgba(154,123,255,.55),rgba(91,140,255,.35));color:#fff;box-shadow:var(--g-hi),0 8px 24px rgba(110,90,255,.45)}
+:root[data-theme^="glass"] .logo-btn b,:root[data-theme^="glass"] .hm-logo b{background:linear-gradient(120deg,#fff 10%,#cdbdff 55%,#7fe4ff);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+:root[data-theme="glass-light"] .logo-btn b,:root[data-theme="glass-light"] .hm-logo b{background:linear-gradient(120deg,#3a1fb0,#7c4dff 60%,#17a6d6);-webkit-background-clip:text;background-clip:text}
+.logo-mark{background:none!important;box-shadow:none!important;width:34px;height:34px;display:inline-grid;place-items:center;color:inherit}
+.logo-mark svg.lg{width:34px;height:34px;display:block;filter:drop-shadow(0 6px 14px rgba(110,80,255,.55));transition:transform .6s var(--spring2)}
+.logo-btn:hover .lg,.hm-logo:hover .lg{transform:rotate(-8deg) scale(1.08)}
+
+/* ---------- home ---------- */
+:root[data-theme^="glass"] .hero{background:linear-gradient(120deg,rgba(124,92,255,.55),rgba(45,212,255,.3) 55%,rgba(255,92,200,.38));border:1px solid var(--g-border);box-shadow:var(--g-hi),0 24px 70px rgba(70,40,200,.38);-webkit-backdrop-filter:var(--g-blur);backdrop-filter:var(--g-blur);color:#fff}
+:root[data-theme="glass-light"] .hero{background:linear-gradient(120deg,rgba(170,240,230,.85),rgba(207,195,255,.85) 52%,rgba(243,195,255,.85));color:#1b1740}
+:root[data-theme^="glass"] .hero h1,:root[data-theme^="glass"] .hero p{color:inherit}
+:root[data-theme^="glass"] .hero h1 em,:root[data-theme^="glass"] .hero h1 span{background:linear-gradient(100deg,#fff,#cfc2ff 50%,#7fe8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root[data-theme^="glass"] .hero-card{background:var(--g-surface2);border:1px solid var(--g-border);box-shadow:0 22px 50px rgba(3,0,22,.5),var(--g-hi)}
+:root[data-theme^="glass"] .empty-card,:root[data-theme^="glass"] .empty-card.retry{background:var(--g-surface);border:1px dashed rgba(255,255,255,.3);color:var(--muted)}
+:root[data-theme^="glass"] .empty-card b{color:var(--text)}
+:root[data-theme^="glass"] .sec-head h2,:root[data-theme^="glass"] h1,:root[data-theme^="glass"] h2,:root[data-theme^="glass"] h3{color:var(--text)}
+:root[data-theme^="glass"] .sec-head small,:root[data-theme^="glass"] .tip,:root[data-theme^="glass"] small{color:var(--muted)}
+:root[data-theme^="glass"] .trial-pill{background:rgba(154,123,255,.3);color:#fff}
+:root[data-theme^="glass"] .pm-stage,:root[data-theme^="glass"] .upl-card,:root[data-theme^="glass"] .gfx-card{background-color:rgba(255,255,255,.05)}
+:root[data-theme^="glass"] .gfx-card svg,:root[data-theme^="glass"] .gfx-card img{filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+
+/* ---------- editor chrome ---------- */
+:root[data-theme^="glass"] .dim-tag{background:rgba(20,16,50,.85);border:1px solid var(--g-border);-webkit-backdrop-filter:var(--g-blur-s);backdrop-filter:var(--g-blur-s)}
+:root[data-theme^="glass"] .pg{background:var(--g-surface2);border-color:var(--g-border)}:root[data-theme^="glass"] .pg.on{border-color:#b49dff;box-shadow:0 0 0 2px rgba(180,157,255,.5),0 0 24px rgba(154,123,255,.4)}
+:root[data-theme^="glass"] .ctxbar button{color:var(--text)}
+:root[data-theme^="glass"] .menu button:hover,:root[data-theme^="glass"] .cmd-box li.on,:root[data-theme^="glass"] .cmd-box li:hover{background:rgba(255,255,255,.14)}
+:root[data-theme^="glass"] .toast .tact{background:#fff;color:#1b1740}
+:root[data-theme^="glass"] .pg-menu button:hover{background:rgba(255,255,255,.14)}
+:root[data-theme^="glass"] .float-tb button{color:var(--text)}:root[data-theme^="glass"] .float-tb button:hover{background:rgba(255,255,255,.16)}
+:root[data-theme^="glass"] .plan.hot{background:linear-gradient(160deg,rgba(154,123,255,.35),rgba(255,255,255,.06) 60%);border-color:#b49dff;box-shadow:var(--g-hi),0 0 40px rgba(154,123,255,.4)}
+:root[data-theme^="glass"] .plan em{background:linear-gradient(135deg,#ffd45e,#ff9d3d);color:#3a2200}
+
+/* ---------- motion: Apple-style springs ---------- */
+:root[data-theme^="glass"] .modal{animation:glassFade .35s var(--ease-out)}
+:root[data-theme^="glass"] .sheet,:root[data-theme^="glass"] .fp,:root[data-theme^="glass"] .studio-sheet{animation:glassPop .55s var(--spring2)}
+:root[data-theme^="glass"] .toast{animation:toastIn .6s var(--spring2)}
+:root[data-theme^="glass"] .menu,:root[data-theme^="glass"] .pg-menu,:root[data-theme^="glass"] .cmd-box{animation:glassPop .4s var(--spring2);transform-origin:top center}
+:root[data-theme^="glass"] .tcard,:root[data-theme^="glass"] .tcard2,:root[data-theme^="glass"] .lcard,:root[data-theme^="glass"] .pcard,:root[data-theme^="glass"] .gfx-card,:root[data-theme^="glass"] .upl-card,:root[data-theme^="glass"] .photo-card,:root[data-theme^="glass"] .cat-tile{animation:cardIn .6s var(--ease-out) both}
+:root[data-theme^="glass"] .tcard:nth-child(3n+2),:root[data-theme^="glass"] .tcard2:nth-child(3n+2),:root[data-theme^="glass"] .gfx-card:nth-child(3n+2){animation-delay:.05s}
+:root[data-theme^="glass"] .tcard:nth-child(3n),:root[data-theme^="glass"] .tcard2:nth-child(3n),:root[data-theme^="glass"] .gfx-card:nth-child(3n){animation-delay:.1s}
+:root[data-theme^="glass"] #home:not([hidden]){animation:glassFade .5s var(--ease-out)}
+:root[data-theme^="glass"] .flyout:not(.collapsed) .panel:not([hidden]){animation:panelIn .5s var(--spring)}
+:root[data-theme^="glass"] .workspace .flyout{transition:width .5s var(--spring),padding .5s var(--spring),opacity .35s}
+:root[data-theme^="glass"] .shimmer,:root[data-theme^="glass"] .thumb.chk:has(img[data-tpl]:not(.ready)){background:linear-gradient(100deg,rgba(255,255,255,.06) 30%,rgba(255,255,255,.18) 50%,rgba(255,255,255,.06) 70%);background-size:220% 100%}
+@keyframes glassFade{from{opacity:0}to{opacity:1}}
+@keyframes glassPop{from{opacity:0;transform:translateY(18px) scale(.94);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+@keyframes toastIn{from{opacity:0;transform:translateY(-16px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes panelIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+
+/* theme switch */
+#themeBtn{position:relative;overflow:hidden}#themeBtn .ic{transition:transform .6s var(--spring2)}#themeBtn:hover .ic{transform:rotate(25deg) scale(1.15)}
+
+/* phones: lighter blur (battery + speed), edge-to-edge sheets */
+@media (max-width:800px){
+  :root[data-theme^="glass"]{--g-blur:blur(18px) saturate(1.5)}
+  :root[data-theme^="glass"] .workspace{padding:0}
+  :root[data-theme^="glass"] .rail,:root[data-theme^="glass"] .flyout,:root[data-theme^="glass"] .inspector{border-radius:24px 24px 0 0}
+  :root[data-theme^="glass"] body::before{animation-duration:60s}
+}
+@media (prefers-reduced-motion:reduce){:root[data-theme^="glass"] *,:root[data-theme^="glass"] *::before{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+/* ---- refinements ---- */
+:root[data-theme^="glass"] .hero-search input,:root[data-theme^="glass"] .hm-search input,:root[data-theme^="glass"] .searchbar input,:root[data-theme^="glass"] .magic-form input,:root[data-theme^="glass"] .panel-search input{background:transparent;border:0;box-shadow:none}
+:root[data-theme^="glass"] .quick button{border-radius:16px}
+:root[data-theme^="glass"] .quick button i.qi{background:rgba(255,255,255,.12);color:var(--text)}
+:root[data-theme^="glass"] .magic-form{background:var(--g-input);border:1px solid var(--g-border);box-shadow:inset 0 1px 3px rgba(0,0,0,.18)}
+:root[data-theme^="glass"] .hero-btn{border:1px solid rgba(255,255,255,.35);box-shadow:0 10px 30px rgba(20,184,166,.4),inset 0 1px 0 rgba(255,255,255,.5)}
+:root[data-theme^="glass"] .hero-btn small{color:rgba(255,255,255,.85)}
+@media (max-width:800px){
+  :root[data-theme="glass"] .flyout,:root[data-theme="glass"] .inspector,:root[data-theme="glass"] .ctxbar,:root[data-theme="glass"] .sheet-head,:root[data-theme="glass"] .rail{background:rgba(22,18,52,.94)}
+  :root[data-theme="glass-light"] .flyout,:root[data-theme="glass-light"] .inspector,:root[data-theme="glass-light"] .ctxbar,:root[data-theme="glass-light"] .sheet-head,:root[data-theme="glass-light"] .rail{background:rgba(255,255,255,.95)}
+}
