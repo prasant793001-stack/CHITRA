@@ -180,7 +180,8 @@
     sc.setZoom(k);
     def.slots.forEach(s => {
       const r = new fabric.Rect({ left: s.x * 300, top: s.y * 300, width: s.w * 300, height: s.h * 300, fill: 'rgba(124,58,237,.14)', stroke: '#7c3aed', strokeWidth: 8, strokeDashArray: [30, 20] }); sc.add(r);
-      sc.add(new fabric.Text(s.label.replace(/ \d+ in$/, ''), { left: (s.x + s.w / 2) * 300, top: (s.y + s.h / 2) * 300, originX: 'center', originY: 'center', fontSize: Math.min(s.w, s.h) * 300 * 0.16, fill: '#e65a00', fontFamily: 'Space Grotesk, sans-serif', fontWeight: 'bold' }));
+      const lab = s.label.replace(/ \d+(\.\d+)?(×\d+(\.\d+)?)? in$/, '').replace(/ \d+ in$/, ''), box = Math.min(s.w, s.h) * 300, fs = Math.max(30, Math.min(box * 0.16, (s.w * 300 * 0.82) / (lab.length * 0.56))); // label always fits inside its print area
+      sc.add(new fabric.Text(lab, { left: (s.x + s.w / 2) * 300, top: (s.y + s.h / 2) * 300, originX: 'center', originY: 'center', fontSize: fs, fill: '#6d3df0', fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif', fontWeight: '800' }));
     });
     sc.renderAll(); const url = sc.toDataURL({ format: 'png' }); sc.dispose?.(); return url;
   }

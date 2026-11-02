@@ -755,3 +755,12 @@ body.viewing #app,body.viewing #home,body.viewing #splash{display:none!important
 .upl-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(60,30,160,.18)}.upl-card img{width:100%;height:100%;object-fit:contain;display:block}
 .upl-card i{position:absolute;right:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);font-style:normal;line-height:20px;text-align:center;font-size:14px;opacity:0;transition:.15s}.upl-card:hover i{opacity:1}
 @media (hover:none){.upl-card i{opacity:1}}
+
+/* print-layout thumbnails: whole sheet always visible, never cropped */
+.lcard .thumb{display:grid;place-items:center;height:170px;background:#fff}.lcard .thumb img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.lay-card img{object-fit:contain}
+
+/* premium art */
+.ar-grid{grid-template-columns:repeat(2,1fr)}.ar-grid .gfx-card canvas{width:100%;height:100%;object-fit:contain;border-radius:8px}
+.ar-pal{display:flex;gap:7px;margin:10px 0 4px;flex-wrap:wrap}.ar-sw{width:26px;height:26px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 4px 10px rgba(0,0,0,.25);cursor:pointer;transition:transform .3s var(--spring2,ease)}
+.ar-sw:hover{transform:scale(1.15)}.ar-sw.on{border-color:#fff;transform:scale(1.12)}

@@ -61,11 +61,11 @@
     let pack = 'All', q = '', shown = 60;
     const draw = () => {
       const list = ALL.filter(it => (pack === 'All' || it.pack === pack) && (!q || it.tags.includes(q)));
-      view.innerHTML = `<div class="gx-tabs"><button data-m="p">Premium</button><button class="on">Shapes &amp; decor</button></div><div class="chips" id="gxChips">${PACKS.map(n => `<button class="chip${n === pack ? ' on' : ''}" data-p="${n}">${n}</button>`).join('')}</div>
+      view.innerHTML = `${tabsHtml('b')}<div class="chips" id="gxChips">${PACKS.map(n => `<button class="chip${n === pack ? ' on' : ''}" data-p="${n}">${n}</button>`).join('')}</div>
         <div class="gfx-grid">${list.slice(0, shown).map(it => `<button class="gfx-card" data-id="${it.id}" title="${it.name}">${svgOf(it).svg.replace(/width="\d+" height="\d+"/, 'width="100%" height="100%"')}</button>`).join('')}</div>
         ${list.length > shown ? '<button class="btn wide" id="gxMore" style="margin-top:10px">Show more</button>' : ''}${list.length ? '' : '<p class="tip">No built-in graphics match.</p>'}
         <button class="btn wide" id="gxOnline" style="margin-top:12px">${C.ico('search', 15)} Search millions more online</button><p class="tip">Click to add. Select a graphic to recolour it.</p>`;
-      $$('.gx-tabs [data-m=p]', view).forEach(b => b.onclick = () => C.graphicsView(view, fallback));
+      bindTabs(view, fallback);
       $$('#gxChips [data-p]', view).forEach(b => b.onclick = () => { pack = b.dataset.p; shown = 60; draw(); });
       $$('.gfx-card', view).forEach(b => b.onclick = () => add(ALL.find(x => x.id === b.dataset.id)));
       $('#gxMore', view) && ($('#gxMore', view).onclick = () => { shown += 60; draw(); });
@@ -90,13 +90,13 @@
   let COUNTRY; // "india" → "in" from the browser's own country names (no hand-kept table); first code wins so "united kingdom" → gb, not the UK alias
   const countryCode = text => { if (!COUNTRY) { COUNTRY = { usa: 'us', america: 'us', uk: 'gb', england: 'gb', britain: 'gb', uae: 'ae', emirates: 'ae' }; try { const dn = new Intl.DisplayNames(['en'], { type: 'region' }), A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; for (const a of A) for (const b of A) { const c = a + b, nm = dn.of(c); const k = nm && nm.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); if (k && nm !== c && !COUNTRY[k]) COUNTRY[k] = c.toLowerCase(); } } catch { } }
     const t = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\bflags?\b/g, ' ').replace(/[^a-z ]/g, ' ').replace(/\s+/g, ' ').trim(); return t && COUNTRY[t] || null; };
-  C.premiumView = (view, kind, builtin) => {
+  C.premiumView = (view, kind, builtin, fallback0) => {
     let q = '', start = 0, token = 0, sets = SETS[kind] || SETS.graphics, flags = false, words = null;
     const draw = () => {
-      view.innerHTML = `<div class="gx-tabs"><button class="on" data-m="p">Premium</button>${builtin ? '<button data-m="b">Shapes &amp; decor</button>' : ''}</div><div class="chips" id="pxChips">${(CHIPS[kind] || CHIPS.graphics).map(([c, w]) => `<button class="chip" data-q="${c}" data-w="${w}">${c}</button>`).join('')}<button class="chip" data-q="@flags">🏳️ Flags</button></div>
+      view.innerHTML = `${tabsHtml('p')}<div class="chips" id="pxChips">${(CHIPS[kind] || CHIPS.graphics).map(([c, w]) => `<button class="chip" data-q="${c}" data-w="${w}">${c}</button>`).join('')}<button class="chip" data-q="@flags">🏳️ Flags</button></div>
         <div class="gfx-grid" id="pxGrid"></div><button id="pxMore" class="btn wide" hidden style="margin-top:10px">Load more</button><p class="tip" id="pxNote"></p>
         <p class="tip" style="font-size:11px">Colour graphics: Microsoft Fluent Emoji (MIT), Google Noto (Apache-2.0), Circle Flags &amp; Flat Color Icons (MIT), via Iconify.</p>`;
-      $$('.gx-tabs [data-m=b]', view).forEach(b => b.onclick = () => builtin());
+      bindTabs(view, fallback0 || builtin);
       $$('#pxChips [data-q]', view).forEach(b => b.onclick = () => { flags = b.dataset.q === '@flags'; q = flags ? 'flag' : b.dataset.q; words = flags ? null : b.dataset.w.split(' '); $('#elSearch').value = flags ? '' : q; $$('#pxChips .chip', view).forEach(x => x.classList.toggle('on', x === b)); run(true); });
       $('#pxMore', view).onclick = () => run(false);
     };
@@ -128,6 +128,56 @@
       window.fabric.loadSVGFromString(svg, (objs, opts) => { const g = window.fabric.util.groupSVGElements(objs, opts), s = (u() * 0.32) / Math.max(g.width || 512, g.height || 512); g.set({ scaleX: s, scaleY: s }); C.place(g); C.commit(); });
     } catch { C.toast('Could not load that graphic — check your connection', '⚠️'); }
   }
-  C.graphicsView = (view, fallback) => C.premiumView(view, 'graphics', () => builtinView(view, fallback));
+
+  /* ---- Premium art: glossy 3D orbs, frosted glass, aurora meshes, glows, fine line art — drawn on demand, crisp at any size, no cartoon look ---- */
+  const DUO = [['#7c5cff', '#2dd4ff', 'Aurora'], ['#ff5ec8', '#ffb86b', 'Sunset'], ['#00e0a4', '#2d8cff', 'Lagoon'], ['#ff8a3d', '#ff3d6e', 'Ember'], ['#a78bfa', '#f0abfc', 'Orchid'], ['#22d3ee', '#6366f1', 'Ocean'], ['#facc15', '#f97316', 'Gold'], ['#e5e7eb', '#8b93a7', 'Chrome']];
+  const mixc = (a, b, t) => { const p = h => { if (h.length === 4) h = '#' + [...h.slice(1)].map(x => x + x).join(''); return [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); }, A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
+  const cvs = S => { const c = document.createElement('canvas'); c.width = c.height = S; return [c, c.getContext('2d')]; };
+  const grain = (g, S, a = 0.07) => { const d = g.getImageData(0, 0, S, S), px = d.data, r = rng(5); for (let i = 0; i < px.length; i += 4) { const n = (r() - 0.5) * 255 * a; px[i] += n; px[i + 1] += n; px[i + 2] += n; } g.putImageData(d, 0, 0); };
+  const ART = [
+    ['Glossy orb', 'Orbs', (S, p) => { const [c, g] = cvs(S), r = S * 0.4, cx = S / 2, cy = S * 0.47; g.save(); g.filter = `blur(${S * 0.03}px)`; g.fillStyle = 'rgba(0,0,0,.28)'; g.beginPath(); g.ellipse(cx, S * 0.9, r * 0.8, S * 0.04, 0, 0, 7); g.fill(); g.restore();
+      let gr = g.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.05, cx, cy, r); gr.addColorStop(0, mixc(p[0], '#ffffff', 0.55)); gr.addColorStop(0.35, p[0]); gr.addColorStop(0.8, mixc(p[0], p[1], 0.7)); gr.addColorStop(1, mixc(p[1], '#000000', 0.35)); g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill();
+      gr = g.createRadialGradient(cx + r * 0.4, cy + r * 0.55, r * 0.1, cx + r * 0.2, cy + r * 0.3, r * 0.95); gr.addColorStop(0, 'rgba(255,255,255,.45)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.globalCompositeOperation = 'source-atop'; g.fillStyle = gr; g.fillRect(0, 0, S, S); g.globalCompositeOperation = 'source-over';
+      g.save(); g.filter = `blur(${S * 0.008}px)`; g.fillStyle = 'rgba(255,255,255,.8)'; g.beginPath(); g.ellipse(cx - r * 0.36, cy - r * 0.5, r * 0.3, r * 0.15, -0.6, 0, 7); g.fill(); g.restore(); return c; }],
+    ['Glass ring', 'Orbs', (S, p) => { const [c, g] = cvs(S), cx = S / 2, cy = S / 2, R = S * 0.36, w = S * 0.15; g.save(); g.filter = `blur(${S * 0.03}px)`; g.strokeStyle = 'rgba(0,0,0,.25)'; g.lineWidth = w; g.beginPath(); g.arc(cx, cy + S * 0.04, R, 0, 7); g.stroke(); g.restore();
+      let gr = g.createLinearGradient(cx - R, cy - R, cx + R, cy + R); gr.addColorStop(0, mixc(p[0], '#fff', 0.5)); gr.addColorStop(0.5, p[0]); gr.addColorStop(1, p[1]); g.strokeStyle = gr; g.lineWidth = w; g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
+      gr = g.createLinearGradient(cx - R, cy - R, cx + R * 0.3, cy + R * 0.3); gr.addColorStop(0, 'rgba(255,255,255,.95)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.strokeStyle = gr; g.lineWidth = w * 0.22; g.beginPath(); g.arc(cx, cy, R - w * 0.22, Math.PI * 0.95, Math.PI * 1.75); g.stroke(); return c; }],
+    ['Pill', 'Orbs', (S, p) => { const [c, g] = cvs(S), w = S * 0.8, h = S * 0.3, x = (S - w) / 2, y = (S - h) / 2; g.save(); g.filter = `blur(${S * 0.025}px)`; g.fillStyle = 'rgba(0,0,0,.3)'; g.beginPath(); g.roundRect(x + S * 0.02, y + S * 0.05, w, h, h / 2); g.fill(); g.restore();
+      const gr = g.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, mixc(p[0], '#fff', 0.45)); gr.addColorStop(0.5, p[0]); gr.addColorStop(1, mixc(p[1], '#000', 0.2)); g.fillStyle = gr; g.beginPath(); g.roundRect(x, y, w, h, h / 2); g.fill();
+      g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.roundRect(x + h * 0.3, y + h * 0.1, w - h * 0.6, h * 0.3, h * 0.15); g.fill(); return c; }],
+    ['Frosted glass', 'Glass', (S, p) => { const [c, g] = cvs(S), m = S * 0.1, w = S - m * 2, h = S * 0.62, y = (S - h) / 2, r = S * 0.08; g.save(); g.filter = `blur(${S * 0.035}px)`; g.fillStyle = 'rgba(10,5,40,.4)'; g.beginPath(); g.roundRect(m, y + S * 0.04, w, h, r); g.fill(); g.restore();
+      let gr = g.createLinearGradient(m, y, m + w, y + h); gr.addColorStop(0, mixc(p[0], '#fff', 0.7) + 'cc'); gr.addColorStop(1, mixc(p[1], '#fff', 0.5) + '40'); g.fillStyle = gr; g.beginPath(); g.roundRect(m, y, w, h, r); g.fill();
+      gr = g.createLinearGradient(m, y, m + w * 0.6, y + h * 0.9); gr.addColorStop(0, 'rgba(255,255,255,.95)'); gr.addColorStop(0.5, 'rgba(255,255,255,.12)'); gr.addColorStop(1, 'rgba(255,255,255,.5)'); g.strokeStyle = gr; g.lineWidth = S * 0.006; g.beginPath(); g.roundRect(m, y, w, h, r); g.stroke(); return c; }],
+    ['Glass circle', 'Glass', (S, p) => { const [c, g] = cvs(S), r = S * 0.38; g.save(); g.filter = `blur(${S * 0.035}px)`; g.fillStyle = 'rgba(10,5,40,.35)'; g.beginPath(); g.arc(S / 2, S / 2 + S * 0.04, r, 0, 7); g.fill(); g.restore();
+      let gr = g.createRadialGradient(S * 0.38, S * 0.32, r * 0.1, S / 2, S / 2, r); gr.addColorStop(0, 'rgba(255,255,255,.75)'); gr.addColorStop(0.55, mixc(p[0], '#fff', 0.6) + '55'); gr.addColorStop(1, p[1] + '88'); g.fillStyle = gr; g.beginPath(); g.arc(S / 2, S / 2, r, 0, 7); g.fill();
+      gr = g.createLinearGradient(S * 0.2, S * 0.2, S * 0.8, S * 0.8); gr.addColorStop(0, 'rgba(255,255,255,.95)'); gr.addColorStop(0.5, 'rgba(255,255,255,.1)'); gr.addColorStop(1, 'rgba(255,255,255,.6)'); g.strokeStyle = gr; g.lineWidth = S * 0.007; g.beginPath(); g.arc(S / 2, S / 2, r, 0, 7); g.stroke(); return c; }],
+    ['Aurora mesh', 'Backgrounds', (S, p) => { const [c, g] = cvs(S), r = rng(p[0].charCodeAt(2) + p[1].charCodeAt(3)); g.fillStyle = mixc(p[0], '#05030f', 0.78); g.fillRect(0, 0, S, S); g.filter = `blur(${S * 0.1}px)`;
+      [[0.2, 0.25, p[0]], [0.8, 0.2, p[1]], [0.7, 0.85, mixc(p[0], p[1], 0.5)], [0.15, 0.8, p[1]], [0.5, 0.5, mixc(p[0], '#ffffff', 0.25)]].forEach(([x, y, col], i) => { g.globalAlpha = i === 4 ? 0.45 : 0.9; g.fillStyle = col; g.beginPath(); g.arc((x + (r() - 0.5) * 0.12) * S, (y + (r() - 0.5) * 0.12) * S, S * (0.26 + r() * 0.1), 0, 7); g.fill(); }); g.globalAlpha = 1; g.filter = 'none'; grain(g, S, 0.1); return c; }],
+    ['Soft gradient', 'Backgrounds', (S, p) => { const [c, g] = cvs(S), gr = g.createLinearGradient(0, 0, S, S); gr.addColorStop(0, mixc(p[0], '#fff', 0.15)); gr.addColorStop(1, mixc(p[1], '#fff', 0.1)); g.fillStyle = gr; g.fillRect(0, 0, S, S); const h = g.createRadialGradient(S * 0.2, S * 0.1, 0, S * 0.2, S * 0.1, S * 0.9); h.addColorStop(0, 'rgba(255,255,255,.45)'); h.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = h; g.fillRect(0, 0, S, S); grain(g, S, 0.12); return c; }],
+    ['Glow', 'Light', (S, p) => { const [c, g] = cvs(S), gr = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2); gr.addColorStop(0, 'rgba(255,255,255,.95)'); gr.addColorStop(0.18, mixc(p[0], '#fff', 0.5) + 'dd'); gr.addColorStop(0.5, p[1] + '55'); gr.addColorStop(1, p[1] + '00'); g.fillStyle = gr; g.fillRect(0, 0, S, S); return c; }],
+    ['Star burst', 'Light', (S, p) => { const [c, g] = cvs(S), cx = S / 2; const glow = g.createRadialGradient(cx, cx, 0, cx, cx, S * 0.45); glow.addColorStop(0, 'rgba(255,255,255,.7)'); glow.addColorStop(0.3, p[0] + '66'); glow.addColorStop(1, p[0] + '00'); g.fillStyle = glow; g.fillRect(0, 0, S, S);
+      const star = (len, th) => { g.beginPath(); g.moveTo(cx, cx - len); g.quadraticCurveTo(cx + th, cx - th, cx + len, cx); g.quadraticCurveTo(cx + th, cx + th, cx, cx + len); g.quadraticCurveTo(cx - th, cx + th, cx - len, cx); g.quadraticCurveTo(cx - th, cx - th, cx, cx - len); g.closePath(); }; const gr = g.createLinearGradient(cx - S * 0.3, cx - S * 0.3, cx + S * 0.3, cx + S * 0.3); gr.addColorStop(0, '#fff'); gr.addColorStop(1, mixc(p[0], '#fff', 0.6)); g.fillStyle = gr; star(S * 0.38, S * 0.035); g.fill(); g.save(); g.translate(cx, cx); g.rotate(Math.PI / 4); g.translate(-cx, -cx); g.fillStyle = 'rgba(255,255,255,.7)'; star(S * 0.22, S * 0.025); g.fill(); g.restore(); return c; }],
+    ['Orbit lines', 'Line art', (S, p) => { const [c, g] = cvs(S); g.strokeStyle = mixc(p[0], '#fff', 0.3); g.lineWidth = S * 0.004; for (let i = 0; i < 7; i++) { g.globalAlpha = 0.9 - i * 0.1; g.beginPath(); g.ellipse(S / 2, S / 2, S * (0.46 - i * 0.012), S * (0.12 + i * 0.045), (i * Math.PI) / 9, 0, 7); g.stroke(); } g.globalAlpha = 1; g.fillStyle = p[1]; g.beginPath(); g.arc(S * 0.5, S * 0.5, S * 0.035, 0, 7); g.fill(); return c; }],
+    ['Wave lines', 'Line art', (S, p) => { const [c, g] = cvs(S); for (let i = 0; i < 18; i++) { g.strokeStyle = mixc(p[0], p[1], i / 17); g.globalAlpha = 0.85; g.lineWidth = S * 0.004; g.beginPath(); for (let x = 0; x <= S; x += 6) { const y = S * 0.5 + Math.sin(x / S * 6.28 * 1.2 + i * 0.28) * S * 0.12 + (i - 9) * S * 0.018; x ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); } return c; }],
+    ['Grid floor', 'Line art', (S, p) => { const [c, g] = cvs(S); g.strokeStyle = p[1]; g.lineWidth = S * 0.004; for (let i = -10; i <= 10; i++) { g.globalAlpha = 0.7; g.beginPath(); g.moveTo(S / 2 + i * S * 0.015, S * 0.45); g.lineTo(S / 2 + i * S * 0.1, S); g.stroke(); } for (let j = 0; j < 9; j++) { const y = S * 0.45 + Math.pow(j / 8, 1.8) * S * 0.55; g.globalAlpha = 0.25 + j * 0.07; g.beginPath(); g.moveTo(0, y); g.lineTo(S, y); g.stroke(); } g.globalAlpha = 1; return c; }],
+  ];
+  const ART_PACKS = ['All', ...new Set(ART.map(a => a[1]))], artCache = new Map();
+  const artOf = (it, pal, size) => { const k = `${it[0]}|${pal}|${size}`; if (!artCache.has(k)) artCache.set(k, it[2](size, DUO[pal])); return artCache.get(k); };
+  C.artView = (view, fallback) => {
+    let pack = 'All', pal = 0;
+    const draw = () => {
+      const items = ART.filter(a => pack === 'All' || a[1] === pack);
+      view.innerHTML = `${tabsHtml('a')}<div class="chips" id="arChips">${ART_PACKS.map(n => `<button class="chip${n === pack ? ' on' : ''}" data-p="${n}">${n}</button>`).join('')}</div>
+        <div class="ar-pal" id="arPal">${DUO.map((d, i) => `<button class="ar-sw${i === pal ? ' on' : ''}" data-i="${i}" title="${d[2]}" style="background:linear-gradient(135deg,${d[0]},${d[1]})"></button>`).join('')}</div>
+        <div class="gfx-grid ar-grid" id="arGrid"></div><p class="tip">Click to add. Colourway applies to everything. Crisp at any size — scale freely.</p>`;
+      const grid = $('#arGrid', view); items.forEach(it => { const b = document.createElement('button'); b.className = 'gfx-card'; b.title = it[0]; const cv2 = artOf(it, pal, 220); const im = document.createElement('canvas'); im.width = im.height = 220; im.getContext('2d').drawImage(cv2, 0, 0); b.appendChild(im); b.onclick = () => addArt(it); grid.appendChild(b); });
+      $$('#arChips [data-p]', view).forEach(b => b.onclick = () => { pack = b.dataset.p; draw(); }); $$('#arPal [data-i]', view).forEach(b => b.onclick = () => { pal = +b.dataset.i; draw(); }); bindTabs(view, fallback);
+    };
+    const addArt = it => { const big = artOf(it, pal, 1024), isBg = it[1] === 'Backgrounds'; window.fabric.Image.fromURL(big.toDataURL('image/png'), img => { const k = isBg ? Math.max(C.W / img.width, C.H / img.height) : (u() * 0.5) / img.width; img.set({ adj: C.DEFAULT_ADJ?.() }).scale(k); C.place(img); if (isBg) { C.canvas.sendToBack(img); img.set({ left: C.W / 2, top: C.H / 2 }); img.setCoords(); C.canvas.requestRenderAll(); } C.commit(); }); };
+    draw(); const hook = () => { }; C.__gxHook = hook; return hook;
+  };
+  const tabsHtml = cur => `<div class="gx-tabs"><button data-m="a" class="${cur === 'a' ? 'on' : ''}">Premium art</button><button data-m="p" class="${cur === 'p' ? 'on' : ''}">Icons &amp; stickers</button><button data-m="b" class="${cur === 'b' ? 'on' : ''}">Basic shapes</button></div>`;
+  const bindTabs = (view, fallback) => { $$('.gx-tabs [data-m]', view).forEach(b => { if (b.classList.contains('on')) return; b.onclick = () => { const m = b.dataset.m; C.__gxHook = null; if (m === 'a') C.artView(view, fallback); else if (m === 'p') C.premiumView(view, 'graphics', null, fallback); else builtinView(view, fallback); }; }); };
+  C.graphicsView = (view, fallback) => { const h = C.artView(view, fallback); return v => C.__gxHook && C.__gxHook(v); void h; };
 
 })();

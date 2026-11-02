@@ -124,7 +124,7 @@ module.exports = [
     const answers = { cat: ['noto:cat-face', 'fluent-emoji:pizza'], dog: ['noto:dog', 'noto:birthday-cake'], in: ['circle-flags:in', 'circle-flags:in-ka'] }; // Iconify matches icon names, one word at a time
     await ctx.route('https://api.iconify.design/**', r => { const u = new URL(r.request().url()); if (u.pathname.endsWith('/search')) { const icons = answers[u.searchParams.get('query')] || []; return r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify({ icons, total: icons.length }) }); } r.fulfill({ status: 200, contentType: 'image/svg+xml', headers: { 'access-control-allow-origin': '*' }, body: svg }); });
     await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
-    await p.click('#rail [data-tab=shapes]'); await p.evaluate(() => { document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(1200);
+    await p.click('#rail [data-tab=shapes]'); await p.evaluate(() => { document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(500); await p.evaluate(() => document.querySelector('.gx-tabs [data-m=p]').click()); await p.waitForTimeout(1200);
     const titles = () => p.$$eval('#pxGrid .gfx-card', b => b.map(x => x.title));
     const first = await titles(); ok('premium graphics open on Animals and merge several words', first.includes('cat face') && first.includes('dog'), first.join(','));
     ok('food/drink graphics are filtered out (owner rule)', !first.some(t => /pizza|cake/.test(t)), first.join(','));
@@ -260,6 +260,14 @@ module.exports = [
     ok('background removal runs BiRefNet on your PC', posted.length === n2 + 1 && posted[n2]['19:13'] && posted[n2]['17'].inputs.image === 'up.png', JSON.stringify(Object.keys(posted[n2] || {})));
     await p.evaluate(() => chitra.vault.wipe());
   } },
+  { name: 'premium art (glass, orbs, aurora)', only: 'desktop', run: async (p, ok) => {
+    await p.evaluate(() => chitra.newDocument({ product: chitra.productByName('Instagram post'), template: 'blank' })); await p.waitForTimeout(500);
+    await p.evaluate(() => { document.querySelector('#rail [data-tab=shapes]').click(); document.querySelector('#elBack')?.click(); document.querySelector('#catGrid [data-el=graphics]').click(); }); await p.waitForTimeout(900);
+    ok('Premium art is the first tab and shows 10+ pieces', await p.locator('#arGrid .gfx-card').count() >= 10, await p.locator('#arGrid .gfx-card').count());
+    await p.evaluate(() => document.querySelector('#arGrid .gfx-card').click()); await p.waitForTimeout(900);
+    ok('clicking a premium piece places a crisp image', await p.evaluate(() => { const o = chitra.canvas.getObjects(); return o.length === 1 && o[0].type === 'image' && o[0].width >= 1000; }));
+    await p.evaluate(() => document.querySelector('#arPal [data-i="1"]').click()); await p.waitForTimeout(500); ok('colourways switch', await p.locator('#arPal .ar-sw.on').count() === 1);
+  } },
   { name: 'real-photo templates (fixture catalog)', only: 'desktop', run: async (p, ok, mobile, ctx) => {
     const q = await ctx.newPage(); const errs = []; q.on('pageerror', e => errs.push(e.message));
     await q.goto('http://localhost:8123/?nosplash&catalog=tests/fixtures/photos.json'); await q.waitForTimeout(2500);
@@ -269,7 +277,7 @@ module.exports = [
     await q.evaluate(async () => { const id = chitra.listTemplates({}).find(i => chitra.TEMPLATE_META[i].real); await chitra.ensureTpl(id, 'full'); await chitra.newDocument({ product: chitra.productByName('Instagram post'), template: id }); }); await q.waitForTimeout(1200);
     const r = await q.evaluate(() => { const im = chitra.canvas.getObjects().find(o => o.type === 'image'); return { img: !!im, credit: im?.credit?.by, text: chitra.canvas.getObjects().some(o => /textbox/.test(o.type)) }; }); ok('real template opens with a photo + live text', r.img && r.text && r.credit === 'Test Photographer', JSON.stringify(r));
     ok('credits file lists the photographer', (await q.evaluate(() => chitra.collectCredits().map(c => c.by))).includes('Test Photographer'));
-    const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
+    await q.waitForTimeout(2500); const px = await q.evaluate(() => { const c = chitra.canvas.lowerCanvasEl, g = c.getContext('2d'), d = g.getImageData(0, 0, c.width, c.height).data; const seen = new Set(); for (let i = 0; i < d.length; i += 400) seen.add((d[i] >> 5) + ',' + (d[i + 1] >> 5) + ',' + (d[i + 2] >> 5)); return seen.size; }); ok('canvas shows a real image (many colours)', px > 12, px);
     await q.evaluate(() => chitra.showHome()); await q.waitForTimeout(500); await q.click('#hmCatTiles [data-ct=mug]'); await q.waitForTimeout(6000);
     const kinds = await q.evaluate(() => [...document.querySelectorAll('#hmTplGrid img[data-tpl].ready')].slice(0, 6).map(i => i.src.slice(0, 22))); ok('mug templates are shown on a realistic mug', kinds.length > 0 && kinds.every(k => k.startsWith('data:image/jpeg')), kinds.join(' | '));
     ok('no page errors in real-template flow', errs.length === 0, errs.join('|')); await q.close(); } },

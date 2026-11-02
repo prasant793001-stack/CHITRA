@@ -50,6 +50,17 @@ Open Canva and Chitra side by side (desktop + phone). For the 12 most common job
 ## Task 6 — Windows app (optional, needs a Windows PC)
 Wrap the site in Tauri (preferred, small) or Electron; make it work offline (fonts and the background-removal model are currently fetched from CDNs — bundle them: `@fontsource/*` packages for the fonts listed in `fonts.js`, and the `@imgly/background-removal` model files). Provide an installer and note the signing certificate needed to avoid SmartScreen warnings.
 
+## Task 7 — Creator Downloader (Pinterest) integration  (needs the owner's Windows PC)
+**Goal.** One-click path from "found it on Pinterest" to "editing in Chitra".
+**What exists.** Uploads panel → *Downloads folder → Connect folder* (File System Access API, Chrome/Edge): Chitra lists the newest pictures of the chosen folder and refreshes whenever the tab regains focus; clicking a picture adds it to the design and saves it to *Your uploads*.
+**To do on the PC.** Open `C:\Program Files\Creator Downloader` (and its settings): (1) find the folder it saves downloads to and tell the owner to connect that folder in Chitra; (2) check whether the app exposes a local HTTP server / custom URL protocol / command line (e.g. `creator-downloader://…`, `http://127.0.0.1:PORT`) — if it does, document the endpoints so Chitra can add a "Send pin URL → download → add to canvas" button; (3) check the folder naming so images from several boards sort sensibly; (4) report licence constraints for Pinterest content (images are the uploaders' copyright — the app should show a reminder before using them in anything sold).
+
+## Task 8 — Verify the ComfyUI integration with the real workflows
+The app posts the owner's API-format workflows (`data/comfy-zimage.json`, `data/comfy-flux.json`, `data/comfy-birefnet.json`) to `http://127.0.0.1:8188` (start ComfyUI with `--enable-cors-header "*"`; enter the address in Owner setup). Check on the real install: (1) AI Art with a non-food prompt returns 3 Z-Image variations; (2) a food/drink prompt ("pizza", "coffee", "cake"…) runs the Flux workflow (never Z-Image); (3) *Remove BG* runs BiRefNet and returns a PNG with alpha (node ids `17` LoadImage, `18` PreviewImage must stay as in the JSON — if the workflows are re-exported, tell the coding assistant the new node ids); (4) Photo mockup → *Make a blank product photo with AI* works. Report timings and any node/model-name mismatch (e.g. different checkpoint file names).
+
+## Task 9 — Look at the new Liquid Glass UI on real devices
+Open the live site (dark and light via the sun/moon button) on: Windows Chrome/Edge, a mid-range Android phone, an iPhone. Report: any unreadable text/low contrast, jank (scrolling the template grid, opening/closing sheets, canvas dragging), battery heat after 5 minutes, and anything that still looks cheap. Attach screenshots.
+
 ---
 
 ### Report-back template
